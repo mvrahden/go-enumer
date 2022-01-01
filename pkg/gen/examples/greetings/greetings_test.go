@@ -16,6 +16,11 @@ func TestGreetings(t *testing.T) {
 		require.Equal(t,
 			[]Greeting{GreetingРоссия, Greeting中國, Greeting日本, Greeting한국, GreetingČeskáRepublika, Greeting𝜋},
 			GreetingValues())
+		t.Run("Ent Interface", func(t *testing.T) {
+			require.Equal(t,
+				[]string{"Россия", "中國", "日本", "한국", "ČeskáRepublika", "𝜋"},
+				Greeting(0).Values())
+		})
 	})
 	t.Run("Lookup", func(t *testing.T) {
 		type testCase struct {

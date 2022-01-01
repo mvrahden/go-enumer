@@ -215,3 +215,7 @@ func (_g *Greeting) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 	return nil
 }
+
+func (Greeting) Values() []string {
+	return GreetingStrings()
+}

@@ -246,6 +246,11 @@ func %[1]sFromStringIgnoreCase(raw string) (%[1]s, bool) {
 	{
 		r.renderSerializers(buf)
 	}
+	{
+		if r.util.supportEntInterface {
+			r.renderEntInterfaceSupport(buf)
+		}
+	}
 
 	return buf.Bytes(), nil
 }
@@ -471,4 +476,13 @@ func (_%[2]s *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 }
 
 `, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
+}
+
+func (r *renderer) renderEntInterfaceSupport(buf *bytes.Buffer) {
+	buf.WriteString(fmt.Sprintf(`
+
+func (%[1]s) Values() []string {
+	return %[1]sStrings()
+}
+`, r.cfg.TypeAliasName))
 }
