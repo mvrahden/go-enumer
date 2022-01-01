@@ -1,3 +1,4 @@
 ---
 typeAlias: Pill
+transform: upper-kebab
 serializers: ['binary', 'json', 'sql', 'text', 'yaml']

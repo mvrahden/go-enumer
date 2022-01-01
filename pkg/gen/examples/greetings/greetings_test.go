@@ -2,6 +2,7 @@ package greetings
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -10,11 +11,49 @@ import (
 func TestGreetings(t *testing.T) {
 	t.Run("Value Sets", func(t *testing.T) {
 		require.Equal(t,
-			[]string{"россия", "中國", "日本", "한국", "ČeskáRepublika", "𝜋"},
+			[]string{"Россия", "中國", "日本", "한국", "ČeskáRepublika", "𝜋"},
 			GreetingStrings())
 		require.Equal(t,
-			[]Greeting{Greetingроссия, Greeting中國, Greeting日本, Greeting한국, GreetingČeskáRepublika, Greeting𝜋},
+			[]Greeting{GreetingРоссия, Greeting中國, Greeting日本, Greeting한국, GreetingČeskáRepublika, Greeting𝜋},
 			GreetingValues())
+	})
+	t.Run("Lookup", func(t *testing.T) {
+		type testCase struct {
+			enum  Greeting
+			upper string
+			lower string
+		}
+		testCases := []testCase{
+			{GreetingРоссия, "Россия", "россия"},
+			{Greeting中國, "中國", "中國"},
+			{Greeting日本, "日本", "日本"},
+			{Greeting한국, "한국", "한국"},
+			{GreetingČeskáRepublika, "ČeskáRepublika", "ČeskáRepublika"},
+			{Greeting𝜋, "𝜋", "𝜋"},
+		}
+		for idx, tC := range testCases {
+			t.Run(fmt.Sprintf("Case-sensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
+				p, ok := GreetingFromString(tC.upper)
+				require.True(t, ok)
+				require.Equal(t, tC.enum, p)
+				p, ok = GreetingFromString(tC.lower)
+				if tC.lower == tC.upper {
+					require.True(t, ok)
+					require.Equal(t, tC.enum, p)
+				} else {
+					require.False(t, ok)
+					require.Equal(t, Greeting(0), p)
+				}
+			})
+			t.Run(fmt.Sprintf("Case-insensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
+				p, ok := GreetingFromStringIgnoreCase(tC.upper)
+				require.True(t, ok)
+				require.Equal(t, tC.enum, p)
+				p, ok = GreetingFromStringIgnoreCase(tC.lower)
+				require.True(t, ok)
+				require.Equal(t, tC.enum, p)
+			})
+		}
 	})
 	t.Run("Serialization", func(t *testing.T) {
 		testCases := []struct {
@@ -25,7 +64,7 @@ func TestGreetings(t *testing.T) {
 		}{
 			{serialized: "", g: Greeting(0), invalid: true, stringer: "Greeting(0)"},
 			{serialized: "", g: Greeting(7), invalid: true, stringer: "Greeting(7)"},
-			{serialized: "россия", g: Greetingроссия, stringer: "россия"},
+			{serialized: "Россия", g: GreetingРоссия, stringer: "россия"},
 			{serialized: "中國", g: Greeting中國, stringer: "中國"},
 			{serialized: "日本", g: Greeting日本, stringer: "日本"},
 			{serialized: "한국", g: Greeting한국, stringer: "한국"},

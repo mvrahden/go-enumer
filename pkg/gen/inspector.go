@@ -191,7 +191,7 @@ func (i inspector) evaluateValueSpec(idx int, v valueSpec, pkg *packages.Package
 	if err != nil {
 		return nil, err
 	}
-	val, err := i.determineValueOfExpr(v.Value, pkg)
+	val, valStr, err := i.determineValueOfExpr(v.Value, pkg)
 	if err != nil {
 		return nil, err
 	}
@@ -205,9 +205,10 @@ func (i inspector) evaluateValueSpec(idx int, v valueSpec, pkg *packages.Package
 	return &ValueSpec{
 		Index:          idx,
 		IdentifierName: v.Value.Name,
-		NameString:     name,
+		EnumString:     name,
 		Type:           typ,
 		Value:          val,
+		ValueString:    valStr,
 	}, nil
 }
 
@@ -230,46 +231,46 @@ func (i inspector) determineTypeOfExpr(e ast.Expr) (GoType, error) {
 	return GoTypeUnknown, fmt.Errorf("Unhandled Expression Type: %+v", e)
 }
 
-func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint64, error) {
+func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint64, string, error) {
 	c, ok := e.(*ast.Ident)
 	if !ok {
-		return 0, fmt.Errorf("internal error: a value slipped our type evaluation (type: %+v)", e)
+		return 0, "", fmt.Errorf("internal error: a value slipped our type evaluation (type: %+v)", e)
 	}
 	obj, ok := pkg.TypesInfo.Defs[c]
 	if !ok {
-		return 0, fmt.Errorf("no value for constant %q", c)
+		return 0, "", fmt.Errorf("no value for constant %q", c)
 	}
 	objT := obj.Type()
 	if objT == nil {
-		return 0, fmt.Errorf("definition type for constant %q is <nil>", c)
+		return 0, "", fmt.Errorf("definition type for constant %q is <nil>", c)
 	}
 	ul := objT.Underlying()
 	if ul == nil {
-		return 0, fmt.Errorf("underlying was expected to be a basic type, but was <nil>")
+		return 0, "", fmt.Errorf("underlying was expected to be a basic type, but was <nil>")
 	}
 	bul, ok := ul.(*types.Basic)
 	if !ok {
-		return 0, fmt.Errorf("underlying type for constant %q is not a basic type", c)
+		return 0, "", fmt.Errorf("underlying type for constant %q is not a basic type", c)
 	}
 	info := bul.Info()
 	if info&types.IsInteger == 0 {
-		return 0, fmt.Errorf("type %q is not an constant of type integer", i.cfg.TypeAliasName)
+		return 0, "", fmt.Errorf("type %q is not an constant of type integer", i.cfg.TypeAliasName)
 	}
 	cobj, ok := obj.(*types.Const)
 	if !ok {
-		return 0, fmt.Errorf("internal error: a value slipped our type evaluation (type: %+v is not a const)", e)
+		return 0, "", fmt.Errorf("internal error: a value slipped our type evaluation (type: %+v is not a const)", e)
 	}
 	value := cobj.Val()
 	if value.Kind() != constant.Int {
-		return 0, fmt.Errorf("can't happen: constant is not an integer %q", c)
+		return 0, "", fmt.Errorf("can't happen: constant is not an integer %q", c)
 	}
 	i64, isInt := constant.Int64Val(value)
 	u64, isUint := constant.Uint64Val(value)
 	if !isInt && !isUint {
-		return 0, fmt.Errorf("internal error: value of %s is not an integer: %s", c, value.String())
+		return 0, "", fmt.Errorf("internal error: value of %s is not an integer: %s", c, value.String())
 	}
 	if !isInt {
 		u64 = uint64(i64)
 	}
-	return u64, nil
+	return u64, value.String(), nil
 }

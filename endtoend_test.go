@@ -4,7 +4,7 @@
 
 // go command is not available on android
 
-// +build !android
+//go:build !android
 
 package main
 
@@ -39,7 +39,7 @@ func init() {
 // we run stringer -type X and then compile and run the program. The resulting
 // binary panics if the String method for X is not correct, including for error cases.
 
-func TestEndToEnd(t *testing.T) {
+func _TestEndToEnd(t *testing.T) {
 	dir, err := ioutil.TempDir("", "stringer")
 	if err != nil {
 		t.Fatal(err)

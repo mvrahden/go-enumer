@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/mvrahden/go-enumer/config"
+	"github.com/mvrahden/go-enumer/pkg/gen"
 )
 
 var (
@@ -25,7 +26,7 @@ type Generator interface {
 	Generate(targetPkg string) ([]byte, error)
 }
 
-func Execute(g Generator) {
+func Execute() {
 	flag.Parse()
 	cfg := config.LoadWith(&args)
 
@@ -40,6 +41,10 @@ func Execute(g Generator) {
 	}
 	defer f.Close()
 
+	g := gen.NewGenerator(
+		gen.NewInspector(cfg),
+		gen.NewRenderer(cfg),
+	)
 	buf, err := g.Generate(targetDir)
 	if err != nil {
 		log.Fatalf("failed generating code. err: %s", err)

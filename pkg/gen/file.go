@@ -31,7 +31,8 @@ type Import struct {
 
 type ValueSpec struct {
 	Index                      int
-	IdentifierName, NameString string
+	IdentifierName, EnumString string
 	Type                       GoType
 	Value                      uint64 // sign is infered by value/type combination
+	ValueString                string
 }

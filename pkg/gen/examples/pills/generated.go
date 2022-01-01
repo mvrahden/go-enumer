@@ -9,16 +9,16 @@ import (
 )
 
 const (
-	_PillString      = "PlaceboAspirinIbuprofenAcetaminophen"
-	_PillLowerString = "placeboaspirinibuprofenacetaminophen"
+	_PillString      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
+	_PillLowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
 )
 
 var (
-	_PillIndices = [5]uint8{0, 7, 14, 23, 36}
+	_PillValueRange = [2]Pill{0, 4}
 
-	_PillValues = []Pill{PillPlacebo, PillAspirin, PillIbuprofen, PillAcetaminophen}
+	_PillValues = []Pill{0, 1, 2, 3, 4}
 
-	_PillStrings = []string{_PillString[0:7], _PillString[7:14], _PillString[14:23], _PillString[23:36]}
+	_PillStrings = []string{_PillString[0:7], _PillString[7:14], _PillString[14:23], _PillString[23:34], _PillString[47:56]}
 )
 
 // PillValues returns all values of the enum.
@@ -37,8 +37,7 @@ func PillStrings() []string {
 
 // IsValid inspects whether the value is valid enum value.
 func (_p Pill) IsValid() bool {
-	idx := int(_p)
-	return idx >= 0 && idx < len(_PillIndices)-1
+	return _p >= _PillValueRange[0] && _p <= _PillValueRange[1]
 }
 
 // String returns the string of the enum value.
@@ -48,24 +47,44 @@ func (_p Pill) String() string {
 		return fmt.Sprintf("Pill(%d)", _p)
 	}
 	idx := int(_p)
-	return _PillString[_PillIndices[idx]:_PillIndices[idx+1]]
+	return _PillStrings[idx]
 }
 
 var (
 	_PillStringToValueMap = map[string]Pill{
-		_PillString[0:7]:        PillPlacebo,
+		_PillString[0:7]:   PillPlacebo,
+		_PillString[7:14]:  PillAspirin,
+		_PillString[14:23]: PillIbuprofen,
+		_PillString[23:34]: PillParacetamol,
+		_PillString[34:47]: PillAcetaminophen,
+		_PillString[47:56]: PillVitaminC,
+	}
+	_PillLowerStringToValueMap = map[string]Pill{
 		_PillLowerString[0:7]:   PillPlacebo,
-		_PillString[7:14]:       PillAspirin,
 		_PillLowerString[7:14]:  PillAspirin,
-		_PillString[14:23]:      PillIbuprofen,
 		_PillLowerString[14:23]: PillIbuprofen,
-		_PillString[23:36]:      PillAcetaminophen,
-		_PillLowerString[23:36]: PillAcetaminophen,
+		_PillLowerString[23:34]: PillParacetamol,
+		_PillLowerString[34:47]: PillAcetaminophen,
+		_PillLowerString[47:56]: PillVitaminC,
 	}
 )
 
+// PillFromString determines the enum value with an exact case match.
 func PillFromString(raw string) (Pill, bool) {
 	v, ok := _PillStringToValueMap[raw]
+	if !ok {
+		return Pill(0), false
+	}
+	return v, true
+}
+
+// PillFromStringIgnoreCase determines the enum value with an case-insensitive match.
+func PillFromStringIgnoreCase(raw string) (Pill, bool) {
+	v, ok := PillFromString(raw)
+	if ok {
+		return v, ok
+	}
+	v, ok = _PillLowerStringToValueMap[raw]
 	if !ok {
 		return Pill(0), false
 	}

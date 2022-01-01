@@ -9,14 +9,14 @@ import (
 )
 
 const (
-	_GreetingString      = "россия中國日本한국ČeskáRepublika𝜋"
+	_GreetingString      = "Россия中國日本한국ČeskáRepublika𝜋"
 	_GreetingLowerString = "россия中國日本한국českárepublika𝜋"
 )
 
 var (
-	_GreetingIndices = [7]uint8{0, 12, 18, 24, 30, 46, 50}
+	_GreetingValueRange = [2]Greeting{1, 6}
 
-	_GreetingValues = []Greeting{Greetingроссия, Greeting中國, Greeting日本, Greeting한국, GreetingČeskáRepublika, Greeting𝜋}
+	_GreetingValues = []Greeting{1, 2, 3, 4, 5, 6}
 
 	_GreetingStrings = []string{_GreetingString[0:12], _GreetingString[12:18], _GreetingString[18:24], _GreetingString[24:30], _GreetingString[30:46], _GreetingString[46:50]}
 )
@@ -37,8 +37,7 @@ func GreetingStrings() []string {
 
 // IsValid inspects whether the value is valid enum value.
 func (_g Greeting) IsValid() bool {
-	idx := int(_g) - 1
-	return idx >= 0 && idx < len(_GreetingIndices)-1
+	return _g >= _GreetingValueRange[0] && _g <= _GreetingValueRange[1]
 }
 
 // String returns the string of the enum value.
@@ -48,28 +47,44 @@ func (_g Greeting) String() string {
 		return fmt.Sprintf("Greeting(%d)", _g)
 	}
 	idx := int(_g) - 1
-	return _GreetingString[_GreetingIndices[idx]:_GreetingIndices[idx+1]]
+	return _GreetingStrings[idx]
 }
 
 var (
 	_GreetingStringToValueMap = map[string]Greeting{
-		_GreetingString[0:12]:       Greetingроссия,
-		_GreetingLowerString[0:12]:  Greetingроссия,
-		_GreetingString[12:18]:      Greeting中國,
+		_GreetingString[0:12]:  GreetingРоссия,
+		_GreetingString[12:18]: Greeting中國,
+		_GreetingString[18:24]: Greeting日本,
+		_GreetingString[24:30]: Greeting한국,
+		_GreetingString[30:46]: GreetingČeskáRepublika,
+		_GreetingString[46:50]: Greeting𝜋,
+	}
+	_GreetingLowerStringToValueMap = map[string]Greeting{
+		_GreetingLowerString[0:12]:  GreetingРоссия,
 		_GreetingLowerString[12:18]: Greeting中國,
-		_GreetingString[18:24]:      Greeting日本,
 		_GreetingLowerString[18:24]: Greeting日本,
-		_GreetingString[24:30]:      Greeting한국,
 		_GreetingLowerString[24:30]: Greeting한국,
-		_GreetingString[30:46]:      GreetingČeskáRepublika,
 		_GreetingLowerString[30:46]: GreetingČeskáRepublika,
-		_GreetingString[46:50]:      Greeting𝜋,
 		_GreetingLowerString[46:50]: Greeting𝜋,
 	}
 )
 
+// GreetingFromString determines the enum value with an exact case match.
 func GreetingFromString(raw string) (Greeting, bool) {
 	v, ok := _GreetingStringToValueMap[raw]
+	if !ok {
+		return Greeting(0), false
+	}
+	return v, true
+}
+
+// GreetingFromStringIgnoreCase determines the enum value with an case-insensitive match.
+func GreetingFromStringIgnoreCase(raw string) (Greeting, bool) {
+	v, ok := GreetingFromString(raw)
+	if ok {
+		return v, ok
+	}
+	v, ok = _GreetingLowerStringToValueMap[raw]
 	if !ok {
 		return Greeting(0), false
 	}

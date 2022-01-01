@@ -41,10 +41,16 @@ func withTransformStrategy(c *config.Options, r *renderer) {
 		r.util.transform = camelCaseTransformer
 	case "kebab":
 		r.util.transform = kebabCaseTransformer
+	case "upper-kebab":
+		r.util.transform = upperKebabCaseTransformer
 	case "pascal":
 		r.util.transform = pascalCaseTransformer
 	case "snake":
 		r.util.transform = snakeCaseTransformer
+	case "upper-snake":
+		r.util.transform = upperSnakeCaseTransformer
+	case "whitespace":
+		r.util.transform = whitespaceCaseTransformer
 	}
 }
 
@@ -66,6 +72,10 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		return buf.Bytes(), nil
 	}
 
+	for _, v := range f.ValueSpecs {
+		v.EnumString = r.util.transform(v.EnumString)
+	}
+
 	// write imports list
 	buf.WriteString("import (\n")
 	for _, v := range f.Imports {
@@ -82,41 +92,43 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 
 	// write consts
 	tempBuf := new(bytes.Buffer)
-	var namestringLen int
 	{
 		for _, v := range f.ValueSpecs {
-			tempBuf.WriteString(v.NameString)
+			tempBuf.WriteString(v.EnumString)
 		}
 		buf.WriteString("const (\n")
 		buf.WriteString(fmt.Sprintf("\t_%sString = \"%s\"\n", r.cfg.TypeAliasName, tempBuf.String()))
 		buf.WriteString(fmt.Sprintf("\t_%sLowerString = \"%s\"\n", r.cfg.TypeAliasName, strings.ToLower(tempBuf.String())))
-		buf.WriteString(")\n")
-		namestringLen = tempBuf.Len()
+		buf.WriteString(")\n\n")
 	}
 
 	// write vars
 	{
-		tempBuf.Reset()
-		for idx, acc := 0, 0; idx < len(f.ValueSpecs); idx++ {
-			acc += len(f.ValueSpecs[idx].NameString)
-			tempBuf.WriteString(fmt.Sprintf(", %d", acc))
-		}
 		buf.WriteString("var (\n")
-		buf.WriteString(fmt.Sprintf("\t_%sIndices = [%d]uint%d{0%s}\n\n", r.cfg.TypeAliasName, len(f.ValueSpecs)+1, usize(namestringLen), tempBuf.String()))
-		tempBuf.Reset()
 
-		for idx := 0; idx < len(f.ValueSpecs); idx++ {
-			tempBuf.WriteString(fmt.Sprintf("%s, ", f.ValueSpecs[idx].IdentifierName))
+		buf.WriteString(fmt.Sprintf("\t_%[1]sValueRange = [2]%[1]s{%d, %d}\n\n", r.cfg.TypeAliasName, f.ValueSpecs[0].Value, f.ValueSpecs[len(f.ValueSpecs)-1].Value))
+
+		tempBuf.Reset()
+		for idx, prev := 0, uint64(0); idx < len(f.ValueSpecs); idx++ {
+			if idx != 0 && prev == f.ValueSpecs[idx].Value {
+				continue
+			}
+			prev = f.ValueSpecs[idx].Value
+			tempBuf.WriteString(fmt.Sprintf("%s, ", f.ValueSpecs[idx].ValueString))
 		}
 		buf.WriteString(fmt.Sprintf("\t_%sValues = []%s{%s}\n\n", r.cfg.TypeAliasName, r.cfg.TypeAliasName, tempBuf.String()))
 		tempBuf.Reset()
 
-		for idx, prev := 0, 0; idx < len(f.ValueSpecs); idx++ {
-			l := prev + len(f.ValueSpecs[idx].NameString)
-			tempBuf.WriteString(fmt.Sprintf("_%sString[%d:%d], ", r.cfg.TypeAliasName, prev, l))
-			prev = l
+		for idx, acc, prev := 0, 0, uint64(0); idx < len(f.ValueSpecs); idx++ {
+			_prev := acc
+			acc += len(f.ValueSpecs[idx].EnumString)
+			if idx != 0 && prev == f.ValueSpecs[idx].Value {
+				continue
+			}
+			prev = f.ValueSpecs[idx].Value
+			tempBuf.WriteString(fmt.Sprintf("_%sString[%d:%d], ", r.cfg.TypeAliasName, _prev, acc))
 		}
-		buf.WriteString(fmt.Sprintf("\t_%sStrings = []string{%s}\n\n", r.cfg.TypeAliasName, tempBuf.String()))
+		buf.WriteString(fmt.Sprintf("\t_%sStrings = []string{%s}\n", r.cfg.TypeAliasName, tempBuf.String()))
 		buf.WriteString(")\n\n")
 	}
 
@@ -141,8 +153,7 @@ func %[1]sStrings() []string {
 
 // IsValid inspects whether the value is valid enum value.
 func (_%[2]s %[1]s) IsValid() bool {
-	idx := int(_%[2]s)%[3]s
-	return idx >= 0 && idx < len(_%[1]sIndices)-1
+	return _%[2]s >= _%[1]sValueRange[0] && _%[2]s <= _%[1]sValueRange[1]
 }
 
 // String returns the string of the enum value.
@@ -152,21 +163,42 @@ func (_%[2]s %[1]s) String() string {
 		return fmt.Sprintf("%[1]s(%%d)", _%[2]s)
 	}
 	idx := int(_%[2]s)%[3]s
-	return _%[1]sString[_%[1]sIndices[idx]:_%[1]sIndices[idx+1]]
+	return _%[1]sStrings[idx]
 }
 
 `, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), offset))
 
 		buf.WriteString(fmt.Sprintf("var (\n\t_%[1]sStringToValueMap = map[string]%[1]s{\n", r.cfg.TypeAliasName))
 		for idx, prev := 0, 0; idx < len(f.ValueSpecs); idx++ {
-			l := prev + len(f.ValueSpecs[idx].NameString)
+			l := prev + len(f.ValueSpecs[idx].EnumString)
 			buf.WriteString(fmt.Sprintf("\t_%[1]sString[%[2]d:%[3]d]: %[4]s,\n", r.cfg.TypeAliasName, prev, l, f.ValueSpecs[idx].IdentifierName))
+			prev = l
+		}
+		buf.WriteString("}\n")
+
+		buf.WriteString(fmt.Sprintf("\t_%[1]sLowerStringToValueMap = map[string]%[1]s{\n", r.cfg.TypeAliasName))
+		for idx, prev := 0, 0; idx < len(f.ValueSpecs); idx++ {
+			l := prev + len(f.ValueSpecs[idx].EnumString)
 			buf.WriteString(fmt.Sprintf("\t_%[1]sLowerString[%[2]d:%[3]d]: %[4]s,\n", r.cfg.TypeAliasName, prev, l, f.ValueSpecs[idx].IdentifierName))
 			prev = l
 		}
 		buf.WriteString("}\n)\n\n")
-		buf.WriteString(fmt.Sprintf(`func %[1]sFromString(raw string) (%[1]s, bool) {
+		buf.WriteString(fmt.Sprintf(`// %[1]sFromString determines the enum value with an exact case match.
+func %[1]sFromString(raw string) (%[1]s, bool) {
 	v, ok := _%[1]sStringToValueMap[raw]
+	if !ok {
+		return %[1]s(0), false
+	}
+	return v, true
+}
+
+// %[1]sFromStringIgnoreCase determines the enum value with an case-insensitive match.
+func %[1]sFromStringIgnoreCase(raw string) (%[1]s, bool) {
+	v, ok := %[1]sFromString(raw)
+	if ok {
+		return v, ok
+	}
+	v, ok = _%[1]sLowerStringToValueMap[raw]
 	if !ok {
 		return %[1]s(0), false
 	}
@@ -183,32 +215,19 @@ func (_%[2]s %[1]s) String() string {
 	return buf.Bytes(), nil
 }
 
-// usize returns the number of bits of the smallest unsigned integer
-// type that will hold n. Used to create the smallest possible slice of
-// integers to use as indexes into the concatenated strings.
-func usize(n int) int {
-	switch {
-	case n < 1<<8:
-		return 8
-	case n < 1<<16:
-		return 16
-	case n < 1<<32:
-		return 32
-	default:
-		return 64
-	}
-}
-
 type renderutil struct {
 	transform stringCaseTransformer
 }
 
 var (
 	noopCaseTransformer = func(value string) string {
-		return strcase.ToSnake(value)
+		return value
 	}
 	snakeCaseTransformer = func(value string) string {
 		return strcase.ToSnake(value)
+	}
+	upperSnakeCaseTransformer = func(value string) string {
+		return strcase.ToSNAKE(value)
 	}
 	camelCaseTransformer = func(value string) string {
 		return strcase.ToCamel(value)
@@ -218,6 +237,12 @@ var (
 	}
 	kebabCaseTransformer = func(value string) string {
 		return strcase.ToKebab(value)
+	}
+	upperKebabCaseTransformer = func(value string) string {
+		return strcase.ToKEBAB(value)
+	}
+	whitespaceCaseTransformer = func(value string) string {
+		return strcase.ToCase(value, strcase.Original, ' ')
 	}
 )
 
