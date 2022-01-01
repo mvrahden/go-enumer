@@ -2,7 +2,6 @@ package pills
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -16,9 +15,6 @@ func TestPills(t *testing.T) {
 		require.Equal(t,
 			[]Pill{PillPlacebo, PillAspirin, PillIbuprofen, PillAcetaminophen},
 			PillValues())
-		t.Run("", func(t *testing.T) {
-
-		})
 	})
 	t.Run("Serialization", func(t *testing.T) {
 		testCases := []struct {
@@ -27,7 +23,7 @@ func TestPills(t *testing.T) {
 			invalid    bool
 		}{
 			{serialized: "", p: Pill(-1), invalid: true},
-			{serialized: "Placebo"},
+			{serialized: "Placebo", p: Pill(0)},
 			{serialized: "Aspirin", p: PillAspirin},
 			{serialized: "Ibuprofen", p: PillIbuprofen},
 			{serialized: "Acetaminophen", p: PillAcetaminophen},
@@ -55,15 +51,16 @@ func TestPills(t *testing.T) {
 				})
 			})
 			t.Run("json", func(t *testing.T) {
-				jsonSerialized := fmt.Sprintf("%q", tC.serialized)
+				jsonSerialized, err := json.Marshal(tC.serialized)
+				require.NoError(t, err)
 				t.Run("MarhsalJSON", func(t *testing.T) {
-					j, err := tC.p.MarshalJSON()
+					actual, err := tC.p.MarshalJSON()
 					if tC.invalid {
 						require.Error(t, err)
 						return
 					}
 					require.NoError(t, err)
-					require.Equal(t, jsonSerialized, string(j))
+					require.Equal(t, jsonSerialized, actual)
 				})
 				t.Run("UnmarshalJSON", func(t *testing.T) {
 					p := tC.p
@@ -131,16 +128,23 @@ func TestPills(t *testing.T) {
 					require.Equal(t, tC.serialized, j)
 				})
 				t.Run("Scan", func(t *testing.T) {
-					p := tC.p
-					err := p.Scan(tC.serialized)
-					if tC.invalid {
-						require.Error(t, err)
-						return
+					values := []interface{}{tC.serialized, []byte(tC.serialized), stringer{tC.serialized}}
+					for _, v := range values {
+						p := tC.p
+						err := p.Scan(v)
+						if tC.invalid {
+							require.Error(t, err)
+							return
+						}
+						require.NoError(t, err)
+						require.Equal(t, tC.p, p)
 					}
-					require.NoError(t, err)
-					require.Equal(t, tC.p, p)
 				})
 			})
 		}
 	})
 }
+
+type stringer struct{ v string }
+
+func (s stringer) String() string { return s.v }
