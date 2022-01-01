@@ -49,10 +49,6 @@ func (_p Pill) String() string {
 	return _PillString[_PillIndices[_p]:_PillIndices[_p+1]]
 }
 
-func (Pill) Values() []string {
-	return PillStrings()
-}
-
 var (
 	_PillStringToValueMap = map[string]Pill{
 		_PillString[0:7]:        PillPlacebo,

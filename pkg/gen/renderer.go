@@ -149,10 +149,7 @@ func (_%[2]s %[1]s) String() string {
 	return _%[1]sString[_%[1]sIndices[_%[2]s]:_%[1]sIndices[_%[2]s+1]]
 }
 
-func (%[1]s) Values() []string {
-	return %[1]sStrings()
-}`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1]))))
-		buf.WriteString("\n\n")
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1]))))
 
 		buf.WriteString(fmt.Sprintf("var (\n\t_%[1]sStringToValueMap = map[string]%[1]s{\n", r.cfg.TypeAliasName))
 		for idx, prev := 0, 0; idx < len(f.ValueSpecs); idx++ {
