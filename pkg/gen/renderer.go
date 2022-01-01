@@ -20,7 +20,7 @@ type stringCaseTransformer func(v string) string
 
 func NewRenderer(cfg *config.Options) *renderer {
 	r := renderer{}
-	for _, fn := range []renderOpt{withDefaults, withTransformStrategy} {
+	for _, fn := range []renderOpt{withDefaults, withTransformStrategy, withSupportedFeatures} {
 		fn(cfg, &r)
 	}
 	return &r
@@ -31,7 +31,7 @@ type renderOpt func(c *config.Options, r *renderer)
 func withDefaults(cfg *config.Options, r *renderer) {
 	r.cfg = cfg
 	r.util = renderutil{
-		noopCaseTransformer,
+		transform: noopCaseTransformer,
 	}
 }
 
@@ -52,6 +52,11 @@ func withTransformStrategy(c *config.Options, r *renderer) {
 	case "whitespace":
 		r.util.transform = whitespaceCaseTransformer
 	}
+}
+
+func withSupportedFeatures(c *config.Options, r *renderer) {
+	r.util.supportUndefined = c.SupportedFeatures.Contains(config.SupportUndefined)
+	r.util.supportEntInterface = c.SupportedFeatures.Contains(config.SupportEntInterface)
 }
 
 func (r *renderer) Render(f *File) ([]byte, error) {
@@ -91,24 +96,40 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 	buf.WriteString(")\n\n")
 
 	// write consts
-	tempBuf := new(bytes.Buffer)
 	{
+		tempBuf := new(bytes.Buffer)
 		for _, v := range f.ValueSpecs {
 			tempBuf.WriteString(v.EnumString)
 		}
 		buf.WriteString("const (\n")
 		buf.WriteString(fmt.Sprintf("\t_%sString = \"%s\"\n", r.cfg.TypeAliasName, tempBuf.String()))
 		buf.WriteString(fmt.Sprintf("\t_%sLowerString = \"%s\"\n", r.cfg.TypeAliasName, strings.ToLower(tempBuf.String())))
+		if r.util.supportUndefined {
+			var hasZeroValueDefined bool
+			for _, v := range f.ValueSpecs {
+				if v.Value == 0 {
+					hasZeroValueDefined = true
+					break
+				}
+			}
+			if !hasZeroValueDefined {
+				buf.WriteString(fmt.Sprintf("\t%[1]sUndefined %[1]s = 0\n", r.cfg.TypeAliasName))
+			}
+		}
 		buf.WriteString(")\n\n")
 	}
 
 	// write vars
 	{
+		tempBuf := new(bytes.Buffer)
 		buf.WriteString("var (\n")
 
-		buf.WriteString(fmt.Sprintf("\t_%[1]sValueRange = [2]%[1]s{%d, %d}\n\n", r.cfg.TypeAliasName, f.ValueSpecs[0].Value, f.ValueSpecs[len(f.ValueSpecs)-1].Value))
+		lowerBound := f.ValueSpecs[0].Value
+		if r.util.supportUndefined && lowerBound > 0 {
+			lowerBound = 0
+		}
+		buf.WriteString(fmt.Sprintf("\t_%[1]sValueRange = [2]%[1]s{%d, %d}\n\n", r.cfg.TypeAliasName, lowerBound, f.ValueSpecs[len(f.ValueSpecs)-1].Value))
 
-		tempBuf.Reset()
 		for idx, prev := 0, uint64(0); idx < len(f.ValueSpecs); idx++ {
 			if idx != 0 && prev == f.ValueSpecs[idx].Value {
 				continue
@@ -137,6 +158,13 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		if f.ValueSpecs[0].Value > 0 {
 			offset = fmt.Sprintf("-%d", f.ValueSpecs[0].Value)
 		}
+		undefinedGuard := ""
+		if r.util.supportUndefined {
+			undefinedGuard = fmt.Sprintf(`
+	if _g == %[1]sUndefined {
+		return ""
+	}`, r.cfg.TypeAliasName)
+		}
 		buf.WriteString(fmt.Sprintf(`// %[1]sValues returns all values of the enum.
 func %[1]sValues() []%[1]s {
 	strs := make([]%[1]s, len(_%[1]sValues))
@@ -161,12 +189,12 @@ func (_%[2]s %[1]s) IsValid() bool {
 func (_%[2]s %[1]s) String() string {
 	if !_%[2]s.IsValid() {
 		return fmt.Sprintf("%[1]s(%%d)", _%[2]s)
-	}
+	}%[4]s
 	idx := int(_%[2]s)%[3]s
 	return _%[1]sStrings[idx]
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), offset))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), offset, undefinedGuard))
 
 		buf.WriteString(fmt.Sprintf("var (\n\t_%[1]sStringToValueMap = map[string]%[1]s{\n", r.cfg.TypeAliasName))
 		for idx, prev := 0, 0; idx < len(f.ValueSpecs); idx++ {
@@ -183,8 +211,15 @@ func (_%[2]s %[1]s) String() string {
 			prev = l
 		}
 		buf.WriteString("}\n)\n\n")
+		zeroValueGuard := ""
+		if r.util.supportUndefined {
+			zeroValueGuard = fmt.Sprintf(`
+	if len(raw) == 0 {
+		return %s(0), true
+	}`, r.cfg.TypeAliasName)
+		}
 		buf.WriteString(fmt.Sprintf(`// %[1]sFromString determines the enum value with an exact case match.
-func %[1]sFromString(raw string) (%[1]s, bool) {
+func %[1]sFromString(raw string) (%[1]s, bool) {%[2]s
 	v, ok := _%[1]sStringToValueMap[raw]
 	if !ok {
 		return %[1]s(0), false
@@ -205,7 +240,7 @@ func %[1]sFromStringIgnoreCase(raw string) (%[1]s, bool) {
 	return v, true
 }
 
-`, r.cfg.TypeAliasName))
+`, r.cfg.TypeAliasName, zeroValueGuard))
 	}
 
 	{
@@ -216,7 +251,9 @@ func %[1]sFromStringIgnoreCase(raw string) (%[1]s, bool) {
 }
 
 type renderutil struct {
-	transform stringCaseTransformer
+	transform           stringCaseTransformer
+	supportUndefined    bool
+	supportEntInterface bool
 }
 
 var (
@@ -264,6 +301,13 @@ func (r *renderer) renderSerializers(buf *bytes.Buffer) {
 }
 
 func (r *renderer) renderBinarySerializers(buf *bytes.Buffer) {
+	zeroValueGuard := ""
+	if !r.util.supportUndefined {
+		zeroValueGuard = fmt.Sprintf(`
+	if len(str) == 0 {
+		return fmt.Errorf("%[1]s cannot be derived from empty string")
+	}`, r.cfg.TypeAliasName)
+	}
 	buf.WriteString(fmt.Sprintf(`// MarshalBinary implements the encoding.BinaryMarshaler interface for %[1]s.
 func (_%[2]s %[1]s) MarshalBinary() ([]byte, error) {
 	if !_%[2]s.IsValid() {
@@ -274,10 +318,7 @@ func (_%[2]s %[1]s) MarshalBinary() ([]byte, error) {
 
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for %[1]s.
 func (_%[2]s *%[1]s) UnmarshalBinary(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}
+	str := string(text)%[3]s
 
 	var ok bool
 	*_%[2]s, ok = %[1]sFromString(str)
@@ -287,10 +328,17 @@ func (_%[2]s *%[1]s) UnmarshalBinary(text []byte) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1]))))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
 }
 
 func (r *renderer) renderJsonSerializers(buf *bytes.Buffer) {
+	zeroValueGuard := ""
+	if !r.util.supportUndefined {
+		zeroValueGuard = fmt.Sprintf(`
+	if len(str) == 0 {
+		return fmt.Errorf("%[1]s cannot be derived from empty string")
+	}`, r.cfg.TypeAliasName)
+	}
 	buf.WriteString(fmt.Sprintf(`// MarshalJSON implements the json.Marshaler interface for %[1]s.
 func (_%[2]s %[1]s) MarshalJSON() ([]byte, error) {
 	if !_%[2]s.IsValid() {
@@ -304,10 +352,7 @@ func (_%[2]s *%[1]s) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
 		return fmt.Errorf("%[1]s should be a string, got %%q", data)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}
+	}%[3]s
 
 	var ok bool
 	*_%[2]s, ok = %[1]sFromString(str)
@@ -317,10 +362,17 @@ func (_%[2]s *%[1]s) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1]))))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
 }
 
 func (r *renderer) renderTextSerializers(buf *bytes.Buffer) {
+	zeroValueGuard := ""
+	if !r.util.supportUndefined {
+		zeroValueGuard = fmt.Sprintf(`
+	if len(str) == 0 {
+		return fmt.Errorf("%[1]s cannot be derived from empty string")
+	}`, r.cfg.TypeAliasName)
+	}
 	buf.WriteString(fmt.Sprintf(`// MarshalText implements the encoding.TextMarshaler interface for %[1]s.
 func (_%[2]s %[1]s) MarshalText() ([]byte, error) {
 	if !_%[2]s.IsValid() {
@@ -331,10 +383,7 @@ func (_%[2]s %[1]s) MarshalText() ([]byte, error) {
 
 // UnmarshalText implements the encoding.TextUnmarshaler interface for %[1]s.
 func (_%[2]s *%[1]s) UnmarshalText(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}
+	str := string(text)%[3]s
 
 	var ok bool
 	*_%[2]s, ok = %[1]sFromString(str)
@@ -344,10 +393,17 @@ func (_%[2]s *%[1]s) UnmarshalText(text []byte) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1]))))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
 }
 
 func (r *renderer) renderSqlSerializers(buf *bytes.Buffer) {
+	zeroValueGuard := ""
+	if !r.util.supportUndefined {
+		zeroValueGuard = fmt.Sprintf(`
+	if len(str) == 0 {
+		return fmt.Errorf("%[1]s cannot be derived from empty string")
+	}`, r.cfg.TypeAliasName)
+	}
 	buf.WriteString(fmt.Sprintf(`func (_%[2]s %[1]s) Value() (driver.Value, error) {
 	if !_%[2]s.IsValid() {
 		return nil, fmt.Errorf("Cannot serialize invalid value %%q as %[1]s", _%[2]s.String())
@@ -370,10 +426,7 @@ func (_%[2]s *%[1]s) Scan(value interface{}) error {
 		str = v.String()
 	default:
 		return fmt.Errorf("invalid value of %[1]s: %%[1]T(%%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}
+	}%[3]s
 
 	var ok bool
 	*_%[2]s, ok = %[1]sFromString(str)
@@ -383,10 +436,17 @@ func (_%[2]s *%[1]s) Scan(value interface{}) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1]))))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
 }
 
 func (r *renderer) renderYamlSerializers(buf *bytes.Buffer) {
+	zeroValueGuard := ""
+	if !r.util.supportUndefined {
+		zeroValueGuard = fmt.Sprintf(`
+	if len(str) == 0 {
+		return fmt.Errorf("%[1]s cannot be derived from empty string")
+	}`, r.cfg.TypeAliasName)
+	}
 	buf.WriteString(fmt.Sprintf(`// MarshalYAML implements a YAML Marshaler for %[1]s
 func (_%[2]s %[1]s) MarshalYAML() (interface{}, error) {
 	if !_%[2]s.IsValid() {
@@ -400,10 +460,7 @@ func (_%[2]s *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var str string
 	if err := unmarshal(&str); err != nil {
 		return err
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}
+	}%[3]s
 
 	var ok bool
 	*_%[2]s, ok = %[1]sFromString(str)
@@ -413,5 +470,5 @@ func (_%[2]s *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1]))))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
 }

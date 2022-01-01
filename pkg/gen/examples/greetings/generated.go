@@ -9,12 +9,13 @@ import (
 )
 
 const (
-	_GreetingString      = "Россия中國日本한국ČeskáRepublika𝜋"
-	_GreetingLowerString = "россия中國日本한국českárepublika𝜋"
+	_GreetingString               = "Россия中國日本한국ČeskáRepublika𝜋"
+	_GreetingLowerString          = "россия中國日本한국českárepublika𝜋"
+	GreetingUndefined    Greeting = 0
 )
 
 var (
-	_GreetingValueRange = [2]Greeting{1, 6}
+	_GreetingValueRange = [2]Greeting{0, 6}
 
 	_GreetingValues = []Greeting{1, 2, 3, 4, 5, 6}
 
@@ -46,6 +47,9 @@ func (_g Greeting) String() string {
 	if !_g.IsValid() {
 		return fmt.Sprintf("Greeting(%d)", _g)
 	}
+	if _g == GreetingUndefined {
+		return ""
+	}
 	idx := int(_g) - 1
 	return _GreetingStrings[idx]
 }
@@ -71,6 +75,9 @@ var (
 
 // GreetingFromString determines the enum value with an exact case match.
 func GreetingFromString(raw string) (Greeting, bool) {
+	if len(raw) == 0 {
+		return Greeting(0), true
+	}
 	v, ok := _GreetingStringToValueMap[raw]
 	if !ok {
 		return Greeting(0), false
@@ -102,9 +109,6 @@ func (_g Greeting) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for Greeting.
 func (_g *Greeting) UnmarshalBinary(text []byte) error {
 	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("Greeting cannot be derived from empty string")
-	}
 
 	var ok bool
 	*_g, ok = GreetingFromString(str)
@@ -127,9 +131,6 @@ func (_g *Greeting) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
 		return fmt.Errorf("Greeting should be a string, got %q", data)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("Greeting cannot be derived from empty string")
 	}
 
 	var ok bool
@@ -163,9 +164,6 @@ func (_g *Greeting) Scan(value interface{}) error {
 	default:
 		return fmt.Errorf("invalid value of Greeting: %[1]T(%[1]v)", value)
 	}
-	if len(str) == 0 {
-		return fmt.Errorf("Greeting cannot be derived from empty string")
-	}
 
 	var ok bool
 	*_g, ok = GreetingFromString(str)
@@ -186,9 +184,6 @@ func (_g Greeting) MarshalText() ([]byte, error) {
 // UnmarshalText implements the encoding.TextUnmarshaler interface for Greeting.
 func (_g *Greeting) UnmarshalText(text []byte) error {
 	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("Greeting cannot be derived from empty string")
-	}
 
 	var ok bool
 	*_g, ok = GreetingFromString(str)
@@ -211,9 +206,6 @@ func (_g *Greeting) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var str string
 	if err := unmarshal(&str); err != nil {
 		return err
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("Greeting cannot be derived from empty string")
 	}
 
 	var ok bool

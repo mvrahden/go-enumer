@@ -24,6 +24,7 @@ func TestGreetings(t *testing.T) {
 			lower string
 		}
 		testCases := []testCase{
+			{GreetingUndefined, "", ""},
 			{GreetingРоссия, "Россия", "россия"},
 			{Greeting中國, "中國", "中國"},
 			{Greeting日本, "日本", "日本"},
@@ -62,8 +63,8 @@ func TestGreetings(t *testing.T) {
 			invalid    bool
 			stringer   string
 		}{
-			{serialized: "", g: Greeting(0), invalid: true, stringer: "Greeting(0)"},
-			{serialized: "", g: Greeting(7), invalid: true, stringer: "Greeting(7)"},
+			{serialized: "", g: Greeting(0), invalid: false, stringer: ""},
+			{serialized: "Greeting(7)", g: Greeting(7), invalid: true, stringer: "Greeting(7)"},
 			{serialized: "Россия", g: GreetingРоссия, stringer: "россия"},
 			{serialized: "中國", g: Greeting中國, stringer: "中國"},
 			{serialized: "日本", g: Greeting日本, stringer: "日本"},
@@ -171,16 +172,23 @@ func TestGreetings(t *testing.T) {
 					require.Equal(t, tC.serialized, j)
 				})
 				t.Run("Scan", func(t *testing.T) {
-					p := tC.g
-					err := p.Scan(tC.serialized)
-					if tC.invalid {
-						require.Error(t, err)
-						return
+					values := []interface{}{tC.serialized, []byte(tC.serialized), stringer{tC.serialized}}
+					for _, v := range values {
+						g := tC.g
+						err := g.Scan(v)
+						if tC.invalid {
+							require.Error(t, err)
+							return
+						}
+						require.NoError(t, err)
+						require.Equal(t, tC.g, g)
 					}
-					require.NoError(t, err)
-					require.Equal(t, tC.g, p)
 				})
 			})
 		}
 	})
 }
+
+type stringer struct{ v string }
+
+func (s stringer) String() string { return s.v }

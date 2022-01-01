@@ -1,3 +1,4 @@
 ---
 typeAlias: Greeting
 serializers: ['binary', 'json', 'sql', 'text', 'yaml']
+support: ['undefined']
