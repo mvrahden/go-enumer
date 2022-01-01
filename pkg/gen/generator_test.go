@@ -20,6 +20,7 @@ var examples embed.FS
 func TestGenerator(t *testing.T) {
 	for _, target := range []string{
 		"pills",
+		"greetings",
 	} {
 		pkg := path.Join(packageBase, "/pkg/gen/examples/", target)
 		testdatadir := filepath.Join("examples/", target)

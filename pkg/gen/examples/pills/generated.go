@@ -37,7 +37,8 @@ func PillStrings() []string {
 
 // IsValid inspects whether the value is valid enum value.
 func (_p Pill) IsValid() bool {
-	return _p >= 0 && _p < Pill(len(_PillIndices)-1)
+	idx := int(_p)
+	return idx >= 0 && idx < len(_PillIndices)-1
 }
 
 // String returns the string of the enum value.
@@ -46,7 +47,8 @@ func (_p Pill) String() string {
 	if !_p.IsValid() {
 		return fmt.Sprintf("Pill(%d)", _p)
 	}
-	return _PillString[_PillIndices[_p]:_PillIndices[_p+1]]
+	idx := int(_p)
+	return _PillString[_PillIndices[idx]:_PillIndices[idx+1]]
 }
 
 var (
@@ -65,7 +67,7 @@ var (
 func PillFromString(raw string) (Pill, bool) {
 	v, ok := _PillStringToValueMap[raw]
 	if !ok {
-		return Pill(-1), false
+		return Pill(0), false
 	}
 	return v, true
 }

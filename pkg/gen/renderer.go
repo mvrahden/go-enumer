@@ -121,6 +121,10 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 	}
 
 	{ // standard functions
+		var offset string
+		if f.ValueSpecs[0].Value > 0 {
+			offset = fmt.Sprintf("-%d", f.ValueSpecs[0].Value)
+		}
 		buf.WriteString(fmt.Sprintf(`// %[1]sValues returns all values of the enum.
 func %[1]sValues() []%[1]s {
 	strs := make([]%[1]s, len(_%[1]sValues))
@@ -137,7 +141,8 @@ func %[1]sStrings() []string {
 
 // IsValid inspects whether the value is valid enum value.
 func (_%[2]s %[1]s) IsValid() bool {
-	return _%[2]s >= 0 && _%[2]s < %[1]s(len(_%[1]sIndices)-1)
+	idx := int(_%[2]s)%[3]s
+	return idx >= 0 && idx < len(_%[1]sIndices)-1
 }
 
 // String returns the string of the enum value.
@@ -146,10 +151,11 @@ func (_%[2]s %[1]s) String() string {
 	if !_%[2]s.IsValid() {
 		return fmt.Sprintf("%[1]s(%%d)", _%[2]s)
 	}
-	return _%[1]sString[_%[1]sIndices[_%[2]s]:_%[1]sIndices[_%[2]s+1]]
+	idx := int(_%[2]s)%[3]s
+	return _%[1]sString[_%[1]sIndices[idx]:_%[1]sIndices[idx+1]]
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1]))))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), offset))
 
 		buf.WriteString(fmt.Sprintf("var (\n\t_%[1]sStringToValueMap = map[string]%[1]s{\n", r.cfg.TypeAliasName))
 		for idx, prev := 0, 0; idx < len(f.ValueSpecs); idx++ {
@@ -162,7 +168,7 @@ func (_%[2]s %[1]s) String() string {
 		buf.WriteString(fmt.Sprintf(`func %[1]sFromString(raw string) (%[1]s, bool) {
 	v, ok := _%[1]sStringToValueMap[raw]
 	if !ok {
-		return %[1]s(-1), false
+		return %[1]s(0), false
 	}
 	return v, true
 }
