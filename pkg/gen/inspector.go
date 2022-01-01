@@ -64,13 +64,17 @@ func (i inspector) validateValues(f *File) error {
 	sort.SliceStable(f.ValueSpecs, func(i, j int) bool {
 		return f.ValueSpecs[i].Value < f.ValueSpecs[j].Value
 	})
+	if len(f.ValueSpecs) > 0 &&
+		!(f.ValueSpecs[0].Value == 0 || f.ValueSpecs[0].Value == 1) {
+		return fmt.Errorf("Invalid enum set: Enums need to start with either 0 or 1.")
+	}
 	// ensure we have a linearly incrementing sequence of values.
 	// however, an enum can assign a numeric value multiple times.
 	// therefore we must only dismiss distances > 1.
 	for idx := 1; idx < len(f.ValueSpecs); idx++ {
 		delta := f.ValueSpecs[idx].Value - f.ValueSpecs[idx-1].Value
 		if delta > 1 {
-			return fmt.Errorf("sequence must be linearly incrementing by \"1\"")
+			return fmt.Errorf("Invalid enum set: Enums must be a continuous sequence with linear increments of 1.")
 		}
 	}
 	return nil
@@ -228,7 +232,7 @@ func (i inspector) determineTypeOfExpr(e ast.Expr) (GoType, error) {
 			return i.determineTypeOfExpr(decl.Type)
 		}
 	}
-	return GoTypeUnknown, fmt.Errorf("Unhandled Expression Type: %+v", e)
+	return GoTypeUnknown, fmt.Errorf("Invalid enum set: Enum type must be an integer-like type, found %q.", e)
 }
 
 func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint64, string, error) {

@@ -114,7 +114,14 @@ const PillRowedPlacebo, PillRowedAspirin, PillRowedIbuprofen, PillRowedParacetam
 
 type PillAliased Pill
 
-const PillAliasedPlacebo, PillAliasedAspirin, PillAliasedIbuprofen, PillAliasedParacetamol, PillAliasedAcetaminophen, PillAliasedVitaminC PillAliased = 0, 1, 2, 3, 3, 4
+const (
+	PillAliasedPlacebo PillAliased = iota
+	PillAliasedAspirin
+	PillAliasedIbuprofen
+	PillAliasedParacetamol
+	PillAliasedAcetaminophen PillAliased = iota - 1
+	PillAliasedVitaminC
+)
 
 type PillUndefined int
 
@@ -125,4 +132,34 @@ const (
 	PillUndefinedParacetamol
 	PillUndefinedAcetaminophen PillUndefined = iota
 	PillUndefinedVitaminC
+)
+
+// INVALID TYPES
+
+type PillNotIntegerType float32
+
+const (
+	PillNotIntegerTypePlacebo PillNotIntegerType = 0
+	PillNotIntegerTypeAspirin PillNotIntegerType = 2
+)
+
+type PillViolatesLowerBound int
+
+const (
+	PillViolatesLowerBoundPlacebo PillViolatesLowerBound = -1
+	PillViolatesLowerBoundAspirin
+)
+
+type PillViolatesUpperBound int
+
+const (
+	PillViolatesUpperBoundPlacebo PillViolatesUpperBound = 2
+	PillViolatesUpperBoundAspirin
+)
+
+type PillNotContinuous int
+
+const (
+	PillNotContinuousPlacebo PillNotContinuous = 0
+	PillNotContinuousAspirin PillNotContinuous = 2
 )

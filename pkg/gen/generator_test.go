@@ -37,6 +37,35 @@ func TestGenerator(t *testing.T) {
 	}
 }
 
+func TestEdgeCaseDetection(t *testing.T) {
+	target := "pills"
+
+	pkg := path.Join(packageBase, "/pkg/gen/examples/", target)
+
+	for _, tC := range []struct {
+		errMsg string
+		cfg    config.Options
+	}{
+		{cfg: config.Options{TypeAliasName: "PillNotIntegerType"},
+			errMsg: "Invalid enum set: Enum type must be an integer-like type, found \"float32\"."},
+		{cfg: config.Options{TypeAliasName: "PillViolatesLowerBound"},
+			errMsg: "Invalid enum set: Enums need to start with either 0 or 1."},
+		{cfg: config.Options{TypeAliasName: "PillViolatesUpperBound"},
+			errMsg: "Invalid enum set: Enums need to start with either 0 or 1."},
+		{cfg: config.Options{TypeAliasName: "PillNotContinuous"},
+			errMsg: "Invalid enum set: Enums must be a continuous sequence with linear increments of 1."},
+	} {
+
+		t.Run(fmt.Sprintf("Generate for package %q", target), func(t *testing.T) {
+			g := NewGenerator(NewInspector(&tC.cfg), NewRenderer(&tC.cfg))
+			srcs, err := g.Generate(pkg)
+			require.Error(t, err)
+			require.Contains(t, err.Error(), tC.errMsg)
+			require.Zero(t, srcs)
+		})
+	}
+}
+
 func getConfig(t *testing.T, testdatadir string) *config.Options {
 	cfg := config.LoadFrom(filepath.Join(testdatadir, "/config.yml"))
 	require.NotZero(t, cfg)
