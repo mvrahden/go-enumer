@@ -5,7 +5,6 @@ go 1.17
 require (
 	github.com/ettle/strcase v0.1.1
 	github.com/ilyakaznacheev/cleanenv v1.2.6
-	github.com/pascaldekloe/name v1.0.1
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/tools v0.1.8
 )
