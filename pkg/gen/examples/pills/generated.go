@@ -197,7 +197,7 @@ func (_p *Pill) UnmarshalText(text []byte) error {
 	return nil
 }
 
-// MarshalYAML implements a YAML Marshaler for Pill
+// MarshalYAML implements a YAML Marshaler for Pill.
 func (_p Pill) MarshalYAML() (interface{}, error) {
 	if !_p.IsValid() {
 		return nil, fmt.Errorf("Cannot marshal invalid value %q as Pill", _p.String())
@@ -205,7 +205,7 @@ func (_p Pill) MarshalYAML() (interface{}, error) {
 	return _p.String(), nil
 }
 
-// UnmarshalYAML implements a YAML Unmarshaler for Pill
+// UnmarshalYAML implements a YAML Unmarshaler for Pill.
 func (_p *Pill) UnmarshalYAML(n *yaml.Node) error {
 	const stringTag = "!!str"
 	if n.ShortTag() != stringTag {

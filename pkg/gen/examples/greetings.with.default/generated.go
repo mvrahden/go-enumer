@@ -189,7 +189,7 @@ func (_g *Greeting) UnmarshalText(text []byte) error {
 	return nil
 }
 
-// MarshalYAML implements a YAML Marshaler for Greeting
+// MarshalYAML implements a YAML Marshaler for Greeting.
 func (_g Greeting) MarshalYAML() (interface{}, error) {
 	if !_g.IsValid() {
 		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g.String())
@@ -197,7 +197,7 @@ func (_g Greeting) MarshalYAML() (interface{}, error) {
 	return _g.String(), nil
 }
 
-// UnmarshalYAML implements a YAML Unmarshaler for Greeting
+// UnmarshalYAML implements a YAML Unmarshaler for Greeting.
 func (_g *Greeting) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var str string
 	if err := unmarshal(&str); err != nil {
@@ -212,6 +212,7 @@ func (_g *Greeting) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return nil
 }
 
+// Values returns a slice of all String values of the enum.
 func (Greeting) Values() []string {
 	return GreetingStrings()
 }

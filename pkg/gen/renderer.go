@@ -445,7 +445,7 @@ func (_%[2]s *%[1]s) Scan(value interface{}) error {
 }
 
 func (r *renderer) renderYamlSerializers(buf *bytes.Buffer, isV3 bool) {
-	buf.WriteString(fmt.Sprintf(`// MarshalYAML implements a YAML Marshaler for %[1]s
+	buf.WriteString(fmt.Sprintf(`// MarshalYAML implements a YAML Marshaler for %[1]s.
 func (_%[2]s %[1]s) MarshalYAML() (interface{}, error) {
 	if !_%[2]s.IsValid() {
 		return nil, fmt.Errorf("Cannot marshal invalid value %%q as %[1]s", _%[2]s.String())
@@ -463,7 +463,7 @@ func (_%[2]s %[1]s) MarshalYAML() (interface{}, error) {
 	}
 	if isV3 {
 		buf.WriteString(fmt.Sprintf(`
-// UnmarshalYAML implements a YAML Unmarshaler for %[1]s
+// UnmarshalYAML implements a YAML Unmarshaler for %[1]s.
 func (_%[2]s *%[1]s) UnmarshalYAML(n *yaml.Node) error {
 	const stringTag = "!!str"
 	if n.ShortTag() != stringTag {
@@ -486,7 +486,7 @@ func (_%[2]s *%[1]s) UnmarshalYAML(n *yaml.Node) error {
 		return
 	}
 	buf.WriteString(fmt.Sprintf(`
-// UnmarshalYAML implements a YAML Unmarshaler for %[1]s
+// UnmarshalYAML implements a YAML Unmarshaler for %[1]s.
 func (_%[2]s *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var str string
 	if err := unmarshal(&str); err != nil {
@@ -506,7 +506,7 @@ func (_%[2]s *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 func (r *renderer) renderEntInterfaceSupport(buf *bytes.Buffer) {
 	buf.WriteString(fmt.Sprintf(`
-
+// Values returns a slice of all String values of the enum.
 func (%[1]s) Values() []string {
 	return %[1]sStrings()
 }
