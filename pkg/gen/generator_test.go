@@ -9,9 +9,14 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/mvrahden/go-enumer/about"
 	"github.com/mvrahden/go-enumer/config"
-	"github.com/stretchr/testify/require"
+)
+
+const (
+	packageBase = about.Repo
 )
 
 //go:embed examples

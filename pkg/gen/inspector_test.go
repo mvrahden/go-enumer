@@ -6,12 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/mvrahden/go-enumer/about"
 	"github.com/stretchr/testify/require"
-)
-
-const (
-	packageBase = about.Repo
 )
 
 func TestInspectorOutput(t *testing.T) {
