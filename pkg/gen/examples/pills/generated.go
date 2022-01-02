@@ -6,6 +6,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -207,11 +208,12 @@ func (_p Pill) MarshalYAML() (interface{}, error) {
 }
 
 // UnmarshalYAML implements a YAML Unmarshaler for Pill
-func (_p *Pill) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	var str string
-	if err := unmarshal(&str); err != nil {
-		return err
+func (_p *Pill) UnmarshalYAML(n *yaml.Node) error {
+	const stringTag = "!!str"
+	if n.ShortTag() != stringTag {
+		return fmt.Errorf("Pill must be derived from a string node")
 	}
+	str := n.Value
 	if len(str) == 0 {
 		return fmt.Errorf("Pill cannot be derived from empty string")
 	}

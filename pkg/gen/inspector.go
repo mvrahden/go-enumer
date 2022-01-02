@@ -56,6 +56,8 @@ func (i inspector) inspectImports(f *File) {
 			f.Imports = append(f.Imports, &Import{Path: "encoding/json"})
 		case "sql":
 			f.Imports = append(f.Imports, &Import{Path: "database/sql/driver"})
+		case "yaml.v3":
+			f.Imports = append(f.Imports, &Import{Path: "gopkg.in/yaml.v3"})
 		}
 	}
 }

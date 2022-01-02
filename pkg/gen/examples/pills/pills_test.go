@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v3"
 )
 
 func TestPills(t *testing.T) {
@@ -158,9 +159,7 @@ func TestPills(t *testing.T) {
 				})
 				t.Run("UnmarshalYAML", func(t *testing.T) {
 					p := tC.p
-					err := p.UnmarshalYAML(func(i interface{}) error {
-						return json.Unmarshal([]byte("\""+tC.serialized+"\""), i)
-					})
+					err := p.UnmarshalYAML(&yaml.Node{Kind: yaml.ScalarNode, Value: tC.serialized})
 					if tC.invalid {
 						require.Error(t, err)
 						return

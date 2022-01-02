@@ -300,7 +300,9 @@ func (r *renderer) renderSerializers(buf *bytes.Buffer) {
 		case "sql":
 			r.renderSqlSerializers(buf)
 		case "yaml":
-			r.renderYamlSerializers(buf)
+			r.renderYamlSerializers(buf, false)
+		case "yaml.v3":
+			r.renderYamlSerializers(buf, true)
 		}
 	}
 }
@@ -444,14 +446,7 @@ func (_%[2]s *%[1]s) Scan(value interface{}) error {
 `, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
 }
 
-func (r *renderer) renderYamlSerializers(buf *bytes.Buffer) {
-	zeroValueGuard := ""
-	if !r.util.supportUndefined {
-		zeroValueGuard = fmt.Sprintf(`
-	if len(str) == 0 {
-		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}`, r.cfg.TypeAliasName)
-	}
+func (r *renderer) renderYamlSerializers(buf *bytes.Buffer, isV3 bool) {
 	buf.WriteString(fmt.Sprintf(`// MarshalYAML implements a YAML Marshaler for %[1]s
 func (_%[2]s %[1]s) MarshalYAML() (interface{}, error) {
 	if !_%[2]s.IsValid() {
@@ -459,7 +454,40 @@ func (_%[2]s %[1]s) MarshalYAML() (interface{}, error) {
 	}
 	return _%[2]s.String(), nil
 }
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1]))))
 
+	zeroValueGuard := ""
+	if !r.util.supportUndefined {
+		zeroValueGuard = fmt.Sprintf(`
+	if len(str) == 0 {
+		return fmt.Errorf("%[1]s cannot be derived from empty string")
+	}`, r.cfg.TypeAliasName)
+	}
+	if isV3 {
+		buf.WriteString(fmt.Sprintf(`
+// UnmarshalYAML implements a YAML Unmarshaler for %[1]s
+func (_%[2]s *%[1]s) UnmarshalYAML(n *yaml.Node) error {
+	const stringTag = "!!str"
+	if n.ShortTag() != stringTag {
+		return fmt.Errorf("%[1]s must be derived from a string node")
+	}
+	str := n.Value
+	if len(str) == 0 {
+		return fmt.Errorf("%[1]s cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_%[2]s, ok = %[1]sFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %%q does not represent a %[1]s", str)
+	}
+	return nil
+}
+
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
+		return
+	}
+	buf.WriteString(fmt.Sprintf(`
 // UnmarshalYAML implements a YAML Unmarshaler for %[1]s
 func (_%[2]s *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var str string
