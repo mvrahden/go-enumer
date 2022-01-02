@@ -41,12 +41,12 @@ func withTransformStrategy(c *config.Options, r *renderer) {
 		r.util.transform = camelCaseTransformer
 	case "kebab":
 		r.util.transform = kebabCaseTransformer
-	case "upper-kebab":
-		r.util.transform = upperKebabCaseTransformer
 	case "pascal":
 		r.util.transform = pascalCaseTransformer
 	case "snake":
 		r.util.transform = snakeCaseTransformer
+	case "upper-kebab":
+		r.util.transform = upperKebabCaseTransformer
 	case "upper-snake":
 		r.util.transform = upperSnakeCaseTransformer
 	case "whitespace":

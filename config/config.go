@@ -1,6 +1,7 @@
 package config
 
 import (
+	"sort"
 	"strings"
 
 	env "github.com/ilyakaznacheev/cleanenv"
@@ -22,6 +23,10 @@ type Options struct {
 }
 
 type stringList []string
+
+func (sl stringList) Sort() {
+	sort.Strings(sl)
+}
 
 func (sl stringList) Contains(s string) bool {
 	for _, v := range sl {
@@ -58,4 +63,6 @@ func LoadFrom(file string) *Options {
 
 func loadFromFile(file string, cfg *Options) {
 	_ = env.ReadConfig(file, cfg)
+	cfg.Serializers.Sort()
+	cfg.SupportedFeatures.Sort()
 }
