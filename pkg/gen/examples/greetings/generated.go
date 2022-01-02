@@ -42,7 +42,8 @@ func (_g Greeting) IsValid() bool {
 }
 
 // String returns the string of the enum value.
-// If the enum value is invalid.
+// If the enum value is invalid, it will produce a string
+// of the following pattern Greeting(%d) instead.
 func (_g Greeting) String() string {
 	if !_g.IsValid() {
 		return fmt.Sprintf("Greeting(%d)", _g)
@@ -149,12 +150,9 @@ func (_g Greeting) Value() (driver.Value, error) {
 }
 
 func (_g *Greeting) Scan(value interface{}) error {
-	if value == nil {
-		return nil
-	}
-
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:

@@ -50,34 +50,36 @@ func TestPills(t *testing.T) {
 			})
 		}
 	})
-	t.Run("Serialization", func(t *testing.T) {
-		type testCase struct {
-			p          Pill
-			serialized string
-			stringer   string
-			invalid    bool
-			shadowedBy Pill
-		}
-		testCases := []testCase{
-			{serialized: "", p: Pill(-1), invalid: true, stringer: "Pill(-1)"},
-			{serialized: "", p: Pill(5), invalid: true, stringer: "Pill(4)"},
-			{serialized: "PLACEBO", p: Pill(0), stringer: "PLACEBO"},
-			{serialized: "ASPIRIN", p: PillAspirin, stringer: "ASPIRIN"},
-			{serialized: "IBUPROFEN", p: PillIbuprofen, stringer: "IBUPROFEN"},
-			{serialized: "PARACETAMOL", p: PillParacetamol, stringer: "PARACETAMOL"},
-			{serialized: "ACETAMINOPHEN", p: PillAcetaminophen, stringer: "ACETAMINOPHEN", shadowedBy: PillParacetamol},
-			{serialized: "VITAMIN-C", p: PillVitaminC, stringer: "VITAMIN-C"},
-		}
-		for _, tC := range testCases {
+	type testCase struct {
+		p               Pill
+		from            string
+		serialized      string
+		wantStringerOut string
+		invalid         bool
+		shadowedBy      Pill
+	}
+	testCases := []testCase{
+		{from: "", serialized: "", p: Pill(-1), invalid: true, wantStringerOut: "Pill(-1)"},
+		{from: "", serialized: "", p: Pill(5), invalid: true, wantStringerOut: "Pill(4)"},
+		{from: "PLACEBO", serialized: "PLACEBO", p: Pill(0), wantStringerOut: "PLACEBO"},
+		{from: "ASPIRIN", serialized: "ASPIRIN", p: PillAspirin, wantStringerOut: "ASPIRIN"},
+		{from: "IBUPROFEN", serialized: "IBUPROFEN", p: PillIbuprofen, wantStringerOut: "IBUPROFEN"},
+		{from: "PARACETAMOL", serialized: "PARACETAMOL", p: PillParacetamol, wantStringerOut: "PARACETAMOL"},
+		{from: "ACETAMINOPHEN", serialized: "ACETAMINOPHEN", p: PillAcetaminophen, wantStringerOut: "ACETAMINOPHEN", shadowedBy: PillParacetamol},
+		{from: "VITAMIN-C", serialized: "VITAMIN-C", p: PillVitaminC, wantStringerOut: "VITAMIN-C"},
+	}
+	for idx, tC := range testCases {
+		t.Run(fmt.Sprintf("Serializers (idx: %d %s)", idx, tC.p), func(t *testing.T) {
 			shadow := func(tC testCase) (after testCase) {
 				if tC.shadowedBy == 0 {
 					return tC
 				}
 				return testCase{
-					p:          tC.shadowedBy,
-					serialized: tC.shadowedBy.String(),
-					stringer:   tC.shadowedBy.String(),
-					invalid:    tC.invalid,
+					p:               tC.shadowedBy,
+					from:            tC.from,
+					serialized:      tC.shadowedBy.String(),
+					wantStringerOut: tC.shadowedBy.String(),
+					invalid:         tC.invalid,
 				}
 			}(tC)
 			t.Run("binary", func(t *testing.T) {
@@ -91,8 +93,8 @@ func TestPills(t *testing.T) {
 					require.Equal(t, shadow.serialized, string(actual))
 				})
 				t.Run("UnmarshalBinary", func(t *testing.T) {
-					p := tC.p
-					err := p.UnmarshalBinary([]byte(tC.serialized))
+					var p Pill
+					err := p.UnmarshalBinary([]byte(tC.from))
 					if tC.invalid {
 						require.Error(t, err)
 						return
@@ -114,16 +116,16 @@ func TestPills(t *testing.T) {
 					require.Equal(t, expected, actual)
 				})
 				t.Run("UnmarshalJSON", func(t *testing.T) {
-					cp := tC.p
-					jsonSerialized, err := json.Marshal(shadow.serialized)
+					var p Pill
+					jsonSerialized, err := json.Marshal(shadow.from)
 					require.NoError(t, err)
-					err = cp.UnmarshalJSON([]byte(jsonSerialized))
+					err = p.UnmarshalJSON([]byte(jsonSerialized))
 					if tC.invalid {
 						require.Error(t, err)
 						return
 					}
 					require.NoError(t, err)
-					require.Equal(t, shadow.p, cp)
+					require.Equal(t, shadow.p, p)
 				})
 			})
 			t.Run("text", func(t *testing.T) {
@@ -137,8 +139,8 @@ func TestPills(t *testing.T) {
 					require.Equal(t, shadow.serialized, string(actual))
 				})
 				t.Run("UnmarshalText", func(t *testing.T) {
-					p := tC.p
-					err := p.UnmarshalText([]byte(tC.serialized))
+					var p Pill
+					err := p.UnmarshalText([]byte(tC.from))
 					if tC.invalid {
 						require.Error(t, err)
 						return
@@ -158,7 +160,7 @@ func TestPills(t *testing.T) {
 					require.Equal(t, shadow.serialized, j)
 				})
 				t.Run("UnmarshalYAML", func(t *testing.T) {
-					p := tC.p
+					var p Pill
 					err := p.UnmarshalYAML(&yaml.Node{Kind: yaml.ScalarNode, Value: tC.serialized})
 					if tC.invalid {
 						require.Error(t, err)
@@ -179,9 +181,9 @@ func TestPills(t *testing.T) {
 					require.Equal(t, shadow.serialized, j)
 				})
 				t.Run("Scan", func(t *testing.T) {
-					values := []interface{}{tC.serialized, []byte(tC.serialized), stringer{tC.serialized}}
+					values := []interface{}{tC.serialized, []byte(tC.from), stringer{tC.serialized}}
 					for _, v := range values {
-						p := tC.p
+						var p Pill
 						err := p.Scan(v)
 						if tC.invalid {
 							require.Error(t, err)
@@ -191,9 +193,16 @@ func TestPills(t *testing.T) {
 						require.Equal(t, shadow.p, p)
 					}
 				})
+				t.Run("Scan <nil>", func(t *testing.T) {
+					var value interface{} = nil
+					var p Pill
+					err := p.Scan(value)
+					require.Error(t, err)
+					require.Zero(t, p)
+				})
 			})
-		}
-	})
+		})
+	}
 }
 
 type stringer struct{ v string }

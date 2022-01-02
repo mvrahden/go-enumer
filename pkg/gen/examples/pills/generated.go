@@ -42,7 +42,8 @@ func (_p Pill) IsValid() bool {
 }
 
 // String returns the string of the enum value.
-// If the enum value is invalid.
+// If the enum value is invalid, it will produce a string
+// of the following pattern Pill(%d) instead.
 func (_p Pill) String() string {
 	if !_p.IsValid() {
 		return fmt.Sprintf("Pill(%d)", _p)
@@ -149,12 +150,9 @@ func (_p Pill) Value() (driver.Value, error) {
 }
 
 func (_p *Pill) Scan(value interface{}) error {
-	if value == nil {
-		return nil
-	}
-
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:

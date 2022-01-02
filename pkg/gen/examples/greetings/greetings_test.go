@@ -61,23 +61,24 @@ func TestGreetings(t *testing.T) {
 			})
 		}
 	})
-	t.Run("Serialization", func(t *testing.T) {
-		testCases := []struct {
-			g          Greeting
-			serialized string
-			invalid    bool
-			stringer   string
-		}{
-			{serialized: "", g: Greeting(0), invalid: false, stringer: ""},
-			{serialized: "Greeting(7)", g: Greeting(7), invalid: true, stringer: "Greeting(7)"},
-			{serialized: "Россия", g: GreetingРоссия, stringer: "россия"},
-			{serialized: "中國", g: Greeting中國, stringer: "中國"},
-			{serialized: "日本", g: Greeting日本, stringer: "日本"},
-			{serialized: "한국", g: Greeting한국, stringer: "한국"},
-			{serialized: "ČeskáRepublika", g: GreetingČeskáRepublika, stringer: "ČeskáRepublika"},
-			{serialized: "𝜋", g: Greeting𝜋, stringer: "𝜋"},
-		}
-		for _, tC := range testCases {
+	testCases := []struct {
+		from       string
+		g          Greeting
+		serialized string
+		invalid    bool
+		stringer   string
+	}{
+		{from: "", serialized: "", g: Greeting(0), invalid: false, stringer: ""},
+		{from: "Greeting(7)", serialized: "Greeting(7)", g: Greeting(7), invalid: true, stringer: "Greeting(7)"},
+		{from: "Россия", serialized: "Россия", g: GreetingРоссия, stringer: "россия"},
+		{from: "中國", serialized: "中國", g: Greeting中國, stringer: "中國"},
+		{from: "日本", serialized: "日本", g: Greeting日本, stringer: "日本"},
+		{from: "한국", serialized: "한국", g: Greeting한국, stringer: "한국"},
+		{from: "ČeskáRepublika", serialized: "ČeskáRepublika", g: GreetingČeskáRepublika, stringer: "ČeskáRepublika"},
+		{from: "𝜋", serialized: "𝜋", g: Greeting𝜋, stringer: "𝜋"},
+	}
+	for idx, tC := range testCases {
+		t.Run(fmt.Sprintf("Serializers (idx: %d %s)", idx, tC.g), func(t *testing.T) {
 			t.Run("binary", func(t *testing.T) {
 				t.Run("MarhsalBinary", func(t *testing.T) {
 					j, err := tC.g.MarshalBinary()
@@ -89,20 +90,20 @@ func TestGreetings(t *testing.T) {
 					require.Equal(t, tC.serialized, string(j))
 				})
 				t.Run("UnmarshalBinary", func(t *testing.T) {
-					p := tC.g
-					err := p.UnmarshalBinary([]byte(tC.serialized))
+					var g Greeting
+					err := g.UnmarshalBinary([]byte(tC.from))
 					if tC.invalid {
 						require.Error(t, err)
 						return
 					}
 					require.NoError(t, err)
-					require.Equal(t, tC.g, p)
+					require.Equal(t, tC.g, g)
 				})
 			})
 			t.Run("json", func(t *testing.T) {
-				jsonSerialized, err := json.Marshal(tC.serialized)
-				require.NoError(t, err)
 				t.Run("MarhsalJSON", func(t *testing.T) {
+					jsonSerialized, err := json.Marshal(tC.serialized)
+					require.NoError(t, err)
 					actual, err := tC.g.MarshalJSON()
 					if tC.invalid {
 						require.Error(t, err)
@@ -112,14 +113,14 @@ func TestGreetings(t *testing.T) {
 					require.Equal(t, jsonSerialized, actual)
 				})
 				t.Run("UnmarshalJSON", func(t *testing.T) {
-					p := tC.g
-					err := p.UnmarshalJSON(jsonSerialized)
+					var g Greeting
+					err := g.UnmarshalJSON([]byte("\"" + tC.from + "\""))
 					if tC.invalid {
 						require.Error(t, err)
 						return
 					}
 					require.NoError(t, err)
-					require.Equal(t, tC.g, p)
+					require.Equal(t, tC.g, g)
 				})
 			})
 			t.Run("text", func(t *testing.T) {
@@ -133,14 +134,14 @@ func TestGreetings(t *testing.T) {
 					require.Equal(t, tC.serialized, string(j))
 				})
 				t.Run("UnmarshalText", func(t *testing.T) {
-					p := tC.g
-					err := p.UnmarshalText([]byte(tC.serialized))
+					var g Greeting
+					err := g.UnmarshalText([]byte(tC.from))
 					if tC.invalid {
 						require.Error(t, err)
 						return
 					}
 					require.NoError(t, err)
-					require.Equal(t, tC.g, p)
+					require.Equal(t, tC.g, g)
 				})
 			})
 			t.Run("yaml", func(t *testing.T) {
@@ -154,8 +155,8 @@ func TestGreetings(t *testing.T) {
 					require.Equal(t, tC.serialized, j)
 				})
 				t.Run("UnmarshalYAML", func(t *testing.T) {
-					p := tC.g
-					err := p.UnmarshalYAML(func(i interface{}) error {
+					var g Greeting
+					err := g.UnmarshalYAML(func(i interface{}) error {
 						return json.Unmarshal([]byte("\""+tC.serialized+"\""), i)
 					})
 					if tC.invalid {
@@ -163,7 +164,7 @@ func TestGreetings(t *testing.T) {
 						return
 					}
 					require.NoError(t, err)
-					require.Equal(t, tC.g, p)
+					require.Equal(t, tC.g, g)
 				})
 			})
 			t.Run("sql", func(t *testing.T) {
@@ -177,9 +178,9 @@ func TestGreetings(t *testing.T) {
 					require.Equal(t, tC.serialized, j)
 				})
 				t.Run("Scan", func(t *testing.T) {
-					values := []interface{}{tC.serialized, []byte(tC.serialized), stringer{tC.serialized}}
+					values := []interface{}{tC.serialized, []byte(tC.from), stringer{tC.serialized}}
 					for _, v := range values {
-						g := tC.g
+						var g Greeting
 						err := g.Scan(v)
 						if tC.invalid {
 							require.Error(t, err)
@@ -189,9 +190,16 @@ func TestGreetings(t *testing.T) {
 						require.Equal(t, tC.g, g)
 					}
 				})
+				t.Run("Scan <nil>", func(t *testing.T) {
+					var value interface{} = nil
+					var g Greeting
+					err := g.Scan(value)
+					require.NoError(t, err) // we have set "undefined"
+					require.Zero(t, g)
+				})
 			})
-		}
-	})
+		})
+	}
 }
 
 type stringer struct{ v string }

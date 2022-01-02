@@ -40,48 +40,48 @@ func TestGreetings(t *testing.T) {
 		}
 		for idx, tC := range testCases {
 			t.Run(fmt.Sprintf("Case-sensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
-				p, ok := GreetingFromString(tC.upper)
+				g, ok := GreetingFromString(tC.upper)
 				require.True(t, ok)
-				require.Equal(t, tC.enum, p)
-				p, ok = GreetingFromString(tC.lower)
+				require.Equal(t, tC.enum, g)
+				g, ok = GreetingFromString(tC.lower)
 				if tC.lower == tC.upper {
 					require.True(t, ok)
-					require.Equal(t, tC.enum, p)
+					require.Equal(t, tC.enum, g)
 				} else {
 					require.False(t, ok)
-					require.Equal(t, Greeting(0), p)
+					require.Equal(t, Greeting(0), g)
 				}
 			})
 			t.Run(fmt.Sprintf("Case-insensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
-				p, ok := GreetingFromStringIgnoreCase(tC.upper)
+				g, ok := GreetingFromStringIgnoreCase(tC.upper)
 				require.True(t, ok)
-				require.Equal(t, tC.enum, p)
-				p, ok = GreetingFromStringIgnoreCase(tC.lower)
+				require.Equal(t, tC.enum, g)
+				g, ok = GreetingFromStringIgnoreCase(tC.lower)
 				require.True(t, ok)
-				require.Equal(t, tC.enum, p)
+				require.Equal(t, tC.enum, g)
 			})
 		}
 	})
-	t.Run("Serialization", func(t *testing.T) {
-		testCases := []struct {
-			g          Greeting
-			from       string
-			serialized string
-			invalid    bool
-			stringer   string
-		}{
-			{from: "World", serialized: "World", g: Greeting(0), invalid: false, stringer: "World"},
-			{from: "Greeting(7)", serialized: "Greeting(7)", g: Greeting(7), invalid: true, stringer: "Greeting(7)"},
-			{from: "", serialized: "World", g: GreetingWorld, stringer: "World"}, // default
-			{from: "World", serialized: "World", g: GreetingWorld, stringer: "World"},
-			{from: "Россия", serialized: "Россия", g: GreetingРоссия, stringer: "россия"},
-			{from: "中國", serialized: "中國", g: Greeting中國, stringer: "中國"},
-			{from: "日本", serialized: "日本", g: Greeting日本, stringer: "日本"},
-			{from: "한국", serialized: "한국", g: Greeting한국, stringer: "한국"},
-			{from: "ČeskáRepublika", serialized: "ČeskáRepublika", g: GreetingČeskáRepublika, stringer: "ČeskáRepublika"},
-			{from: "𝜋", serialized: "𝜋", g: Greeting𝜋, stringer: "𝜋"},
-		}
-		for _, tC := range testCases {
+	testCases := []struct {
+		g          Greeting
+		from       string
+		serialized string
+		invalid    bool
+		stringer   string
+	}{
+		{from: "World", serialized: "World", g: Greeting(0), invalid: false, stringer: "World"},
+		{from: "Greeting(7)", serialized: "Greeting(7)", g: Greeting(7), invalid: true, stringer: "Greeting(7)"},
+		{from: "", serialized: "World", g: GreetingWorld, stringer: "World"}, // default
+		{from: "World", serialized: "World", g: GreetingWorld, stringer: "World"},
+		{from: "Россия", serialized: "Россия", g: GreetingРоссия, stringer: "россия"},
+		{from: "中國", serialized: "中國", g: Greeting中國, stringer: "中國"},
+		{from: "日本", serialized: "日本", g: Greeting日本, stringer: "日本"},
+		{from: "한국", serialized: "한국", g: Greeting한국, stringer: "한국"},
+		{from: "ČeskáRepublika", serialized: "ČeskáRepublika", g: GreetingČeskáRepublika, stringer: "ČeskáRepublika"},
+		{from: "𝜋", serialized: "𝜋", g: Greeting𝜋, stringer: "𝜋"},
+	}
+	for idx, tC := range testCases {
+		t.Run(fmt.Sprintf("Serializers (idx: %d %s)", idx, tC.g), func(t *testing.T) {
 			t.Run("binary", func(t *testing.T) {
 				t.Run("MarhsalBinary", func(t *testing.T) {
 					actual, err := tC.g.MarshalBinary()
@@ -93,14 +93,14 @@ func TestGreetings(t *testing.T) {
 					require.Equal(t, tC.serialized, string(actual))
 				})
 				t.Run("UnmarshalBinary", func(t *testing.T) {
-					p := tC.g
-					err := p.UnmarshalBinary([]byte(tC.from))
+					var g Greeting
+					err := g.UnmarshalBinary([]byte(tC.from))
 					if tC.invalid {
 						require.Error(t, err)
 						return
 					}
 					require.NoError(t, err)
-					require.Equal(t, tC.g, p)
+					require.Equal(t, tC.g, g)
 				})
 			})
 			t.Run("json", func(t *testing.T) {
@@ -116,14 +116,14 @@ func TestGreetings(t *testing.T) {
 					require.Equal(t, jsonSerialized, actual)
 				})
 				t.Run("UnmarshalJSON", func(t *testing.T) {
-					p := tC.g
-					err := p.UnmarshalJSON([]byte("\"" + tC.from + "\""))
+					var g Greeting
+					err := g.UnmarshalJSON([]byte("\"" + tC.from + "\""))
 					if tC.invalid {
 						require.Error(t, err)
 						return
 					}
 					require.NoError(t, err)
-					require.Equal(t, tC.g, p)
+					require.Equal(t, tC.g, g)
 				})
 			})
 			t.Run("text", func(t *testing.T) {
@@ -137,14 +137,14 @@ func TestGreetings(t *testing.T) {
 					require.Equal(t, tC.serialized, string(actual))
 				})
 				t.Run("UnmarshalText", func(t *testing.T) {
-					p := tC.g
-					err := p.UnmarshalText([]byte(tC.from))
+					var g Greeting
+					err := g.UnmarshalText([]byte(tC.from))
 					if tC.invalid {
 						require.Error(t, err)
 						return
 					}
 					require.NoError(t, err)
-					require.Equal(t, tC.g, p)
+					require.Equal(t, tC.g, g)
 				})
 			})
 			t.Run("yaml", func(t *testing.T) {
@@ -158,8 +158,8 @@ func TestGreetings(t *testing.T) {
 					require.Equal(t, tC.serialized, actual)
 				})
 				t.Run("UnmarshalYAML", func(t *testing.T) {
-					p := tC.g
-					err := p.UnmarshalYAML(func(i interface{}) error {
+					var g Greeting
+					err := g.UnmarshalYAML(func(i interface{}) error {
 						return json.Unmarshal([]byte("\""+tC.from+"\""), i)
 					})
 					if tC.invalid {
@@ -167,7 +167,7 @@ func TestGreetings(t *testing.T) {
 						return
 					}
 					require.NoError(t, err)
-					require.Equal(t, tC.g, p)
+					require.Equal(t, tC.g, g)
 				})
 			})
 			t.Run("sql", func(t *testing.T) {
@@ -183,7 +183,7 @@ func TestGreetings(t *testing.T) {
 				t.Run("Scan", func(t *testing.T) {
 					values := []interface{}{tC.from, []byte(tC.from), stringer{tC.from}}
 					for _, v := range values {
-						g := tC.g
+						var g Greeting
 						err := g.Scan(v)
 						if tC.invalid {
 							require.Error(t, err)
@@ -193,9 +193,16 @@ func TestGreetings(t *testing.T) {
 						require.Equal(t, tC.g, g)
 					}
 				})
+				t.Run("Scan <nil>", func(t *testing.T) {
+					var value interface{} = nil
+					var g Greeting
+					err := g.Scan(value)
+					require.NoError(t, err) // we have set a default value
+					require.Zero(t, g)
+				})
 			})
-		}
-	})
+		})
+	}
 }
 
 type stringer struct{ v string }

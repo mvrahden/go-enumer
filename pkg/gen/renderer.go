@@ -185,7 +185,8 @@ func (_%[2]s %[1]s) IsValid() bool {
 }
 
 // String returns the string of the enum value.
-// If the enum value is invalid.
+// If the enum value is invalid, it will produce a string
+// of the following pattern %[1]s(%%d) instead.
 func (_%[2]s %[1]s) String() string {
 	if !_%[2]s.IsValid() {
 		return fmt.Sprintf("%[1]s(%%d)", _%[2]s)
@@ -419,12 +420,9 @@ func (r *renderer) renderSqlSerializers(buf *bytes.Buffer) {
 }
 
 func (_%[2]s *%[1]s) Scan(value interface{}) error {
-	if value == nil {
-		return nil
-	}
-
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
