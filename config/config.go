@@ -37,6 +37,17 @@ func (sl stringList) Contains(s string) bool {
 	return false
 }
 
+func (sl stringList) Unique() (u []string) {
+	sl.Sort()
+	for idx, v := range sl {
+		if idx > 0 && sl[idx-1] == v {
+			continue
+		}
+		u = append(u, v)
+	}
+	return u
+}
+
 func (sl stringList) String() string {
 	return strings.Join(sl, ",")
 }
@@ -63,6 +74,7 @@ func LoadFrom(file string) *Options {
 
 func loadFromFile(file string, cfg *Options) {
 	_ = env.ReadConfig(file, cfg)
-	cfg.Serializers.Sort()
-	cfg.SupportedFeatures.Sort()
+	_ = env.ReadEnv(cfg)
+	cfg.Serializers = cfg.Serializers.Unique()
+	cfg.SupportedFeatures = cfg.SupportedFeatures.Unique()
 }
