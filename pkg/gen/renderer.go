@@ -96,6 +96,7 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 	buf.WriteString(")\n\n")
 
 	// write consts
+	var hasZeroValueDefined bool
 	{
 		tempBuf := new(bytes.Buffer)
 		for _, v := range f.ValueSpecs {
@@ -105,7 +106,6 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		buf.WriteString(fmt.Sprintf("\t_%sString = \"%s\"\n", r.cfg.TypeAliasName, tempBuf.String()))
 		buf.WriteString(fmt.Sprintf("\t_%sLowerString = \"%s\"\n", r.cfg.TypeAliasName, strings.ToLower(tempBuf.String())))
 		if r.util.supportUndefined {
-			var hasZeroValueDefined bool
 			for _, v := range f.ValueSpecs {
 				if v.Value == 0 {
 					hasZeroValueDefined = true
@@ -159,7 +159,7 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 			offset = fmt.Sprintf("-%d", f.ValueSpecs[0].Value)
 		}
 		undefinedGuard := ""
-		if r.util.supportUndefined {
+		if r.util.supportUndefined && !hasZeroValueDefined {
 			undefinedGuard = fmt.Sprintf(`
 	if _g == %[1]sUndefined {
 		return ""
