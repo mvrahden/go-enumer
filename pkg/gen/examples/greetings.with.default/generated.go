@@ -6,6 +6,8 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
+	"io"
+	"strconv"
 )
 
 const (
@@ -108,6 +110,33 @@ func (_g Greeting) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for Greeting.
 func (_g *Greeting) UnmarshalBinary(text []byte) error {
 	str := string(text)
+
+	var ok bool
+	*_g, ok = GreetingFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a Greeting", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface for Greeting.
+func (_g Greeting) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_g.String()))
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface for Greeting.
+func (_g *Greeting) UnmarshalGQL(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of Greeting: %[1]T(%[1]v)", value)
+	}
 
 	var ok bool
 	*_g, ok = GreetingFromString(str)

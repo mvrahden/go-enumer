@@ -1,4 +1,4 @@
 ---
 typeAlias: Greeting
-serializers: ['binary', 'json', 'sql', 'text', 'yaml']
+serializers: ['binary', 'gql', 'json', 'sql', 'text', 'yaml']
 support: ['undefined', ent]

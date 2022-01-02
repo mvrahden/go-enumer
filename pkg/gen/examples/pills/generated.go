@@ -7,6 +7,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"gopkg.in/yaml.v3"
+	"io"
+	"strconv"
 )
 
 const (
@@ -104,6 +106,36 @@ func (_p Pill) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for Pill.
 func (_p *Pill) UnmarshalBinary(text []byte) error {
 	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("Pill cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a Pill", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface for Pill.
+func (_p Pill) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_p.String()))
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface for Pill.
+func (_p *Pill) UnmarshalGQL(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of Pill: %[1]T(%[1]v)", value)
+	}
 	if len(str) == 0 {
 		return fmt.Errorf("Pill cannot be derived from empty string")
 	}

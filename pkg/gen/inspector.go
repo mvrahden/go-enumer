@@ -52,6 +52,9 @@ func (i inspector) inspectImports(f *File) {
 	f.Imports = append(f.Imports, &Import{Path: "fmt"})
 	for _, v := range i.cfg.Serializers {
 		switch v {
+		case "gql":
+			f.Imports = append(f.Imports, &Import{Path: "io"})
+			f.Imports = append(f.Imports, &Import{Path: "strconv"})
 		case "json":
 			f.Imports = append(f.Imports, &Import{Path: "encoding/json"})
 		case "sql":

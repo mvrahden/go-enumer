@@ -294,6 +294,8 @@ func (r *renderer) renderSerializers(buf *bytes.Buffer) {
 		switch v {
 		case "binary":
 			r.renderBinarySerializers(buf)
+		case "gql":
+			r.renderGqlSerializers(buf)
 		case "json":
 			r.renderJsonSerializers(buf)
 		case "text":
@@ -327,6 +329,44 @@ func (_%[2]s %[1]s) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for %[1]s.
 func (_%[2]s *%[1]s) UnmarshalBinary(text []byte) error {
 	str := string(text)%[3]s
+
+	var ok bool
+	*_%[2]s, ok = %[1]sFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %%q does not represent a %[1]s", str)
+	}
+	return nil
+}
+
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
+}
+
+func (r *renderer) renderGqlSerializers(buf *bytes.Buffer) {
+	zeroValueGuard := ""
+	if !r.util.supportUndefined {
+		zeroValueGuard = fmt.Sprintf(`
+	if len(str) == 0 {
+		return fmt.Errorf("%[1]s cannot be derived from empty string")
+	}`, r.cfg.TypeAliasName)
+	}
+	buf.WriteString(fmt.Sprintf(`// MarshalGQL implements the graphql.Marshaler interface for %[1]s.
+func (_%[2]s %[1]s) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_%[2]s.String()))
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface for %[1]s.
+func (_%[2]s *%[1]s) UnmarshalGQL(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of %[1]s: %%[1]T(%%[1]v)", value)
+	}%[3]s
 
 	var ok bool
 	*_%[2]s, ok = %[1]sFromString(str)
