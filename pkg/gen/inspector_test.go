@@ -10,7 +10,6 @@ import (
 )
 
 func TestInspectorOutput(t *testing.T) {
-
 	target := "pills"
 	pkg := path.Join(packageBase, "/pkg/gen/examples/", target)
 	testdatadir := filepath.Join("examples/", target)
