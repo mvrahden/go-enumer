@@ -35,6 +35,10 @@ func Execute() {
 	flag.Parse()
 	cfg := config.LoadWith(&args)
 
+	if cfg.Serializers.Contains("yaml") && cfg.Serializers.Contains("yaml.v3") {
+		log.Fatalf("serializers %q and %q are cannot be applied together.", "yaml", "yaml.v3")
+	}
+
 	targetDir, _ := os.Getwd()
 	if len(scanPath) > 0 {
 		targetDir = filepath.Clean(scanPath)
