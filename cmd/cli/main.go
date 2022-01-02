@@ -2,6 +2,7 @@ package cli
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -16,9 +17,9 @@ var (
 )
 
 func init() {
-	flag.StringVar(&args.Output, "output", "", "the filename of the generated file; defaults to \"<typealias|snake>_enumer.go\".")
-	flag.StringVar(&args.AddPrefix, "addprefix", "", "add given prefix to string values of enum.")
-	flag.StringVar(&args.TransformStrategy, "transform", "noop", "string transformation (camel|snake|kebab|title); defaults to \"noop\" which applies no transormation to the enum value.")
+	// flag.StringVar(&args.Output, "output", "", "the filename of the generated file; defaults to \"<typealias|snake>_enumer.go\".")
+	// flag.StringVar(&args.AddPrefix, "addprefix", "", "add given prefix to string values of enum.")
+	flag.StringVar(&args.TransformStrategy, "transform", "noop", "string transformation (camel|kebab|snake|title|kebab-upper|snake-upper|whitespace); defaults to \"noop\" which applies no transormation to the enum value.")
 	flag.StringVar(&args.TypeAliasName, "typealias", "", "the type alias (or type name) to perform the scan against.")
 }
 
@@ -35,9 +36,9 @@ func Execute() {
 		targetDir = filepath.Clean(scanPath)
 	}
 
-	f, err := os.Create(filepath.Join(targetDir, "types_jsoner.go"))
+	f, err := os.Create(filepath.Join(targetDir, fmt.Sprintf("%s_enumer.go", cfg.TypeAliasName)))
 	if err != nil {
-		log.Fatalf("failed opening %q. err: %s", filepath.Join(targetDir, "types_jsoner.go"), err)
+		log.Fatalf("failed opening %q. err: %s", filepath.Join(targetDir, fmt.Sprintf("%s_enumer.go", cfg.TypeAliasName)), err)
 	}
 	defer f.Close()
 
