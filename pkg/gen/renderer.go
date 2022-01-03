@@ -228,7 +228,7 @@ func %[1]sFromString(raw string) (%[1]s, bool) {%[2]s
 	return v, true
 }
 
-// %[1]sFromStringIgnoreCase determines the enum value with an case-insensitive match.
+// %[1]sFromStringIgnoreCase determines the enum value with a case-insensitive match.
 func %[1]sFromStringIgnoreCase(raw string) (%[1]s, bool) {
 	v, ok := %[1]sFromString(raw)
 	if ok {

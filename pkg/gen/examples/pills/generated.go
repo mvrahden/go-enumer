@@ -82,7 +82,7 @@ func PillFromString(raw string) (Pill, bool) {
 	return v, true
 }
 
-// PillFromStringIgnoreCase determines the enum value with an case-insensitive match.
+// PillFromStringIgnoreCase determines the enum value with a case-insensitive match.
 func PillFromStringIgnoreCase(raw string) (Pill, bool) {
 	v, ok := PillFromString(raw)
 	if ok {

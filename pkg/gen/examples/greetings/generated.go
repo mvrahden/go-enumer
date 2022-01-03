@@ -88,7 +88,7 @@ func GreetingFromString(raw string) (Greeting, bool) {
 	return v, true
 }
 
-// GreetingFromStringIgnoreCase determines the enum value with an case-insensitive match.
+// GreetingFromStringIgnoreCase determines the enum value with a case-insensitive match.
 func GreetingFromStringIgnoreCase(raw string) (Greeting, bool) {
 	v, ok := GreetingFromString(raw)
 	if ok {
