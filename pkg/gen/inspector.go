@@ -207,7 +207,7 @@ func (i inspector) evaluateValueSpec(idx int, v valueSpec, pkg *packages.Package
 	name := v.Value.Name
 	if strings.HasPrefix(v.Value.Name, i.cfg.TypeAliasName) {
 		if len(i.cfg.TypeAliasName) == len(v.Value.Name) {
-			return nil, fmt.Errorf("cannot determine name after trimming prefix (enum value equals type name). make sure to give a meaningful names to your enum values")
+			return nil, fmt.Errorf("cannot determine name after trimming prefix (enum value equals type name). make sure to give a meaningful names to your enum values.")
 		}
 		name = v.Value.Name[len(i.cfg.TypeAliasName):]
 	}

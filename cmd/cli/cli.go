@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	args     config.Args
+	cArgs    config.Args
 	scanPath string
 )
 
@@ -25,12 +25,12 @@ const (
 )
 
 func init() {
-	// flag.StringVar(&args.Output, "output", "", "the filename of the generated file; defaults to \"<typealias|snake>_enumer.go\".")
-	// flag.StringVar(&args.AddPrefix, "addprefix", "", "add given prefix to string values of enum.")
-	flag.StringVar(&args.TransformStrategy, ArgumentKeyTransformStrategy, "noop", "string transformation (camel|pascal|kebab|snake|... see README.md); defaults to \"noop\" which applies no transormation to the enum values.")
-	flag.StringVar(&args.TypeAliasName, ArgumentKeyTypeAlias, "", "the type alias (or type name) to perform the scan against.")
-	flag.Var(&args.Serializers, ArgumentKeySerializers, "a list of opt-in serializers (binary|json|sql|text|yaml).")
-	flag.Var(&args.SupportedFeatures, ArgumentKeySupport, "a list of opt-in supported features (undefined|ent).")
+	// flag.StringVar(&cArgs.Output, "output", "", "the filename of the generated file; defaults to \"<typealias|snake>_enumer.go\".")
+	// flag.StringVar(&cArgs.AddPrefix, "addprefix", "", "add given prefix to string values of enum.")
+	flag.StringVar(&cArgs.TransformStrategy, ArgumentKeyTransformStrategy, "noop", "string transformation (camel|pascal|kebab|snake|... see README.md); defaults to \"noop\" which applies no transormation to the enum values.")
+	flag.StringVar(&cArgs.TypeAliasName, ArgumentKeyTypeAlias, "", "the type alias (or type name) to perform the scan against.")
+	flag.Var(&cArgs.Serializers, ArgumentKeySerializers, "a list of opt-in serializers (binary|json|sql|text|yaml).")
+	flag.Var(&cArgs.SupportedFeatures, ArgumentKeySupport, "a list of opt-in supported features (undefined|ent).")
 	flag.StringVar(&scanPath, ArgumentKeyScanDirectory, "", "directory of target package; defaults to CWD.")
 }
 
@@ -38,9 +38,9 @@ type Generator interface {
 	Generate(targetPkg string) ([]byte, error)
 }
 
-func Execute() error {
-	flag.Parse()
-	cfg := config.LoadWith(&args)
+func Execute(args []string) error {
+	_ = flag.CommandLine.Parse(args)
+	cfg := config.LoadWith(&cArgs)
 
 	if err := validate(cfg); err != nil {
 		return fmt.Errorf("invalid arguments. err: %s", err)
@@ -48,7 +48,11 @@ func Execute() error {
 
 	targetDir, _ := os.Getwd()
 	if len(scanPath) > 0 {
-		targetDir = filepath.Clean(scanPath)
+		if filepath.IsAbs(scanPath) {
+			targetDir = filepath.Clean(scanPath)
+		} else {
+			targetDir = filepath.Join(targetDir, scanPath)
+		}
 	}
 
 	g := gen.NewGenerator(
@@ -73,7 +77,7 @@ func Execute() error {
 	return nil
 }
 
-func targetFilename(dir string, cfg *config.Options) string {
+var targetFilename = func(dir string, cfg *config.Options) string {
 	filename := fmt.Sprintf("%s_enumer.go", strings.ToLower(cfg.TypeAliasName))
 	return filepath.Join(dir, filename)
 }
