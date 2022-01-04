@@ -39,12 +39,16 @@ func withTransformStrategy(c *config.Options, r *renderer) {
 	switch c.TransformStrategy {
 	case "camel":
 		r.util.transform = camelCaseTransformer
-	case "kebab":
-		r.util.transform = kebabCaseTransformer
 	case "pascal":
 		r.util.transform = pascalCaseTransformer
+	case "kebab":
+		r.util.transform = kebabCaseTransformer
 	case "snake":
 		r.util.transform = snakeCaseTransformer
+	case "lower":
+		r.util.transform = lowerCaseTransformer
+	case "upper":
+		r.util.transform = upperCaseTransformer
 	case "upper-kebab":
 		r.util.transform = upperKebabCaseTransformer
 	case "upper-snake":
@@ -266,20 +270,26 @@ var (
 	noopCaseTransformer = func(value string) string {
 		return value
 	}
-	snakeCaseTransformer = func(value string) string {
-		return strcase.ToSnake(value)
-	}
-	upperSnakeCaseTransformer = func(value string) string {
-		return strcase.ToSNAKE(value)
+	pascalCaseTransformer = func(value string) string {
+		return strcase.ToPascal(value)
 	}
 	camelCaseTransformer = func(value string) string {
 		return strcase.ToCamel(value)
 	}
-	pascalCaseTransformer = func(value string) string {
-		return strcase.ToPascal(value)
-	}
 	kebabCaseTransformer = func(value string) string {
 		return strcase.ToKebab(value)
+	}
+	snakeCaseTransformer = func(value string) string {
+		return strcase.ToSnake(value)
+	}
+	lowerCaseTransformer = func(value string) string {
+		return strings.ToLower(value)
+	}
+	upperCaseTransformer = func(value string) string {
+		return strings.ToUpper(value)
+	}
+	upperSnakeCaseTransformer = func(value string) string {
+		return strcase.ToSNAKE(value)
 	}
 	upperKebabCaseTransformer = func(value string) string {
 		return strcase.ToKEBAB(value)
