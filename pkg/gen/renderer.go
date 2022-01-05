@@ -192,9 +192,9 @@ func _%[1]sNoOp() {
 		undefinedGuard := ""
 		if r.util.supportUndefined && hasGeneratedUndefinedValue {
 			undefinedGuard = fmt.Sprintf(`
-	if _g == %[1]sUndefined {
+	if _%[2]s == %[1]sUndefined {
 		return ""
-	}`, r.cfg.TypeAliasName)
+	}`, r.cfg.TypeAliasName, determineOneCharIdentifier(r.cfg.TypeAliasName))
 		}
 		buf.WriteString(fmt.Sprintf(`// %[1]sValues returns all values of the enum.
 func %[1]sValues() []%[1]s {
@@ -226,7 +226,7 @@ func (_%[2]s %[1]s) String() string {
 	return _%[1]sStrings[idx]
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), offset, undefinedGuard))
+`, r.cfg.TypeAliasName, determineOneCharIdentifier(r.cfg.TypeAliasName), offset, undefinedGuard))
 
 		buf.WriteString(fmt.Sprintf("var (\n\t_%[1]sStringToValueMap = map[string]%[1]s{\n", r.cfg.TypeAliasName))
 		for idx, prev := 0, 0; idx < len(f.ValueSpecs); idx++ {
@@ -285,6 +285,13 @@ func %[1]sFromStringIgnoreCase(raw string) (%[1]s, bool) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+func determineOneCharIdentifier(value string) string {
+	for _, v := range value {
+		return strings.ToLower(string(v))
+	}
+	return "x"
 }
 
 type renderutil struct {
@@ -379,7 +386,7 @@ func (_%[2]s *%[1]s) UnmarshalBinary(text []byte) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
+`, r.cfg.TypeAliasName, determineOneCharIdentifier(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
 }
 
 func (r *renderer) renderGqlSerializers(buf *bytes.Buffer, ignoreCase bool) {
@@ -421,7 +428,7 @@ func (_%[2]s *%[1]s) UnmarshalGQL(value interface{}) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
+`, r.cfg.TypeAliasName, determineOneCharIdentifier(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
 }
 
 func (r *renderer) renderJsonSerializers(buf *bytes.Buffer, ignoreCase bool) {
@@ -459,7 +466,7 @@ func (_%[2]s *%[1]s) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
+`, r.cfg.TypeAliasName, determineOneCharIdentifier(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
 }
 
 func (r *renderer) renderTextSerializers(buf *bytes.Buffer, ignoreCase bool) {
@@ -494,7 +501,7 @@ func (_%[2]s *%[1]s) UnmarshalText(text []byte) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
+`, r.cfg.TypeAliasName, determineOneCharIdentifier(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
 }
 
 func (r *renderer) renderSqlSerializers(buf *bytes.Buffer, ignoreCase bool) {
@@ -538,7 +545,7 @@ func (_%[2]s *%[1]s) Scan(value interface{}) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
+`, r.cfg.TypeAliasName, determineOneCharIdentifier(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
 }
 
 func (r *renderer) renderYamlSerializers(buf *bytes.Buffer, ignoreCase, isV3 bool) {
@@ -553,7 +560,7 @@ func (_%[2]s %[1]s) MarshalYAML() (interface{}, error) {
 	}
 	return _%[2]s.String(), nil
 }
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1]))))
+`, r.cfg.TypeAliasName, determineOneCharIdentifier(r.cfg.TypeAliasName)))
 
 	zeroValueGuard := ""
 	if !r.util.supportUndefined {
@@ -580,7 +587,7 @@ func (_%[2]s *%[1]s) UnmarshalYAML(n *yaml.Node) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
+`, r.cfg.TypeAliasName, determineOneCharIdentifier(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
 		return
 	}
 	buf.WriteString(fmt.Sprintf(`
@@ -599,7 +606,7 @@ func (_%[2]s *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
+`, r.cfg.TypeAliasName, determineOneCharIdentifier(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
 }
 
 func (r *renderer) renderEntInterfaceSupport(buf *bytes.Buffer) {
