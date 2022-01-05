@@ -11,17 +11,19 @@ import (
 )
 
 const (
-	_GreetingString               = "Россия中國日本한국ČeskáRepublika𝜋"
-	_GreetingLowerString          = "россия中國日本한국českárepublika𝜋"
-	GreetingUndefined    Greeting = 0
+	_GreetingString      = "Россия中國日本한국ČeskáRepublika𝜋"
+	_GreetingLowerString = "россия中國日本한국českárepublika𝜋"
+)
+
+const (
+	// GreetingUndefined is the generated zero value of the Greeting enum.
+	GreetingUndefined Greeting = 0
 )
 
 var (
 	_GreetingValueRange = [2]Greeting{0, 6}
-
-	_GreetingValues = []Greeting{1, 2, 3, 4, 5, 6}
-
-	_GreetingStrings = []string{_GreetingString[0:12], _GreetingString[12:18], _GreetingString[18:24], _GreetingString[24:30], _GreetingString[30:46], _GreetingString[46:50]}
+	_GreetingValues     = []Greeting{1, 2, 3, 4, 5, 6}
+	_GreetingStrings    = []string{_GreetingString[0:12], _GreetingString[12:18], _GreetingString[18:24], _GreetingString[24:30], _GreetingString[30:46], _GreetingString[46:50]}
 )
 
 // GreetingValues returns all values of the enum.

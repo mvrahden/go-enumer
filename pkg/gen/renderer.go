@@ -100,7 +100,7 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 	buf.WriteString(")\n\n")
 
 	// write consts
-	var hasZeroValueDefined bool
+	var hasGeneratedUndefinedValue bool
 	{
 		tempBuf := new(bytes.Buffer)
 		for _, v := range f.ValueSpecs {
@@ -109,18 +109,26 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		buf.WriteString("const (\n")
 		buf.WriteString(fmt.Sprintf("\t_%sString = \"%s\"\n", r.cfg.TypeAliasName, tempBuf.String()))
 		buf.WriteString(fmt.Sprintf("\t_%sLowerString = \"%s\"\n", r.cfg.TypeAliasName, strings.ToLower(tempBuf.String())))
+		buf.WriteString(")\n\n")
 		if r.util.supportUndefined {
+			var foundZeroValue bool
 			for _, v := range f.ValueSpecs {
 				if v.Value == 0 {
-					hasZeroValueDefined = true
+					foundZeroValue = true
 					break
 				}
 			}
-			if !hasZeroValueDefined {
-				buf.WriteString(fmt.Sprintf("\t%[1]sUndefined %[1]s = 0\n", r.cfg.TypeAliasName))
+			if !foundZeroValue {
+				hasGeneratedUndefinedValue = true
+				buf.WriteString("")
+				buf.WriteString(fmt.Sprintf(`const (
+// GreetingUndefined is the generated zero value of the Greeting enum.
+%[1]sUndefined %[1]s = 0
+)
+
+`, r.cfg.TypeAliasName))
 			}
 		}
-		buf.WriteString(")\n\n")
 	}
 
 	// write vars
@@ -132,7 +140,7 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		if r.util.supportUndefined && lowerBound > 0 {
 			lowerBound = 0
 		}
-		buf.WriteString(fmt.Sprintf("\t_%[1]sValueRange = [2]%[1]s{%d, %d}\n\n", r.cfg.TypeAliasName, lowerBound, f.ValueSpecs[len(f.ValueSpecs)-1].Value))
+		buf.WriteString(fmt.Sprintf("\t_%[1]sValueRange = [2]%[1]s{%d, %d}\n", r.cfg.TypeAliasName, lowerBound, f.ValueSpecs[len(f.ValueSpecs)-1].Value))
 
 		for idx, prev := 0, uint64(0); idx < len(f.ValueSpecs); idx++ {
 			if idx != 0 && prev == f.ValueSpecs[idx].Value {
@@ -141,7 +149,7 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 			prev = f.ValueSpecs[idx].Value
 			tempBuf.WriteString(fmt.Sprintf("%s, ", f.ValueSpecs[idx].ValueString))
 		}
-		buf.WriteString(fmt.Sprintf("\t_%sValues = []%s{%s}\n\n", r.cfg.TypeAliasName, r.cfg.TypeAliasName, tempBuf.String()))
+		buf.WriteString(fmt.Sprintf("\t_%sValues = []%s{%s}\n", r.cfg.TypeAliasName, r.cfg.TypeAliasName, tempBuf.String()))
 		tempBuf.Reset()
 
 		for idx, acc, prev := 0, 0, uint64(0); idx < len(f.ValueSpecs); idx++ {
@@ -163,7 +171,7 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 			offset = fmt.Sprintf("-%d", f.ValueSpecs[0].Value)
 		}
 		undefinedGuard := ""
-		if r.util.supportUndefined && !hasZeroValueDefined {
+		if r.util.supportUndefined && hasGeneratedUndefinedValue {
 			undefinedGuard = fmt.Sprintf(`
 	if _g == %[1]sUndefined {
 		return ""

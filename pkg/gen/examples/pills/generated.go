@@ -18,10 +18,8 @@ const (
 
 var (
 	_PillValueRange = [2]Pill{0, 4}
-
-	_PillValues = []Pill{0, 1, 2, 3, 4}
-
-	_PillStrings = []string{_PillString[0:7], _PillString[7:14], _PillString[14:23], _PillString[23:34], _PillString[47:56]}
+	_PillValues     = []Pill{0, 1, 2, 3, 4}
+	_PillStrings    = []string{_PillString[0:7], _PillString[7:14], _PillString[14:23], _PillString[23:34], _PillString[47:56]}
 )
 
 // PillValues returns all values of the enum.

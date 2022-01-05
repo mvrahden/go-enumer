@@ -17,10 +17,8 @@ const (
 
 var (
 	_GreetingValueRange = [2]Greeting{0, 1}
-
-	_GreetingValues = []Greeting{0, 1}
-
-	_GreetingStrings = []string{_GreetingString[0:5], _GreetingString[5:9]}
+	_GreetingValues     = []Greeting{0, 1}
+	_GreetingStrings    = []string{_GreetingString[0:5], _GreetingString[5:9]}
 )
 
 // GreetingValues returns all values of the enum.
