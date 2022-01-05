@@ -300,27 +300,31 @@ var (
 )
 
 func (r *renderer) renderSerializers(buf *bytes.Buffer) {
+	ignoreCase := r.cfg.SupportedFeatures.Contains("ignore-case")
 	for _, v := range r.cfg.Serializers {
 		switch v {
 		case "binary":
-			r.renderBinarySerializers(buf)
+			r.renderBinarySerializers(buf, ignoreCase)
 		case "gql":
-			r.renderGqlSerializers(buf)
+			r.renderGqlSerializers(buf, ignoreCase)
 		case "json":
-			r.renderJsonSerializers(buf)
+			r.renderJsonSerializers(buf, ignoreCase)
 		case "text":
-			r.renderTextSerializers(buf)
+			r.renderTextSerializers(buf, ignoreCase)
 		case "sql":
-			r.renderSqlSerializers(buf)
-		case "yaml":
-			r.renderYamlSerializers(buf, false)
-		case "yaml.v3":
-			r.renderYamlSerializers(buf, true)
+			r.renderSqlSerializers(buf, ignoreCase)
+		case "yaml", "yaml.v3":
+			isYamlV3 := v == "yaml.v3"
+			r.renderYamlSerializers(buf, ignoreCase, isYamlV3)
 		}
 	}
 }
 
-func (r *renderer) renderBinarySerializers(buf *bytes.Buffer) {
+func (r *renderer) renderBinarySerializers(buf *bytes.Buffer, ignoreCase bool) {
+	lookupMethod := "FromString"
+	if ignoreCase {
+		lookupMethod = "FromStringIgnoreCase"
+	}
 	zeroValueGuard := ""
 	if !r.util.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
@@ -338,20 +342,24 @@ func (_%[2]s %[1]s) MarshalBinary() ([]byte, error) {
 
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for %[1]s.
 func (_%[2]s *%[1]s) UnmarshalBinary(text []byte) error {
-	str := string(text)%[3]s
+	str := string(text)%[4]s
 
 	var ok bool
-	*_%[2]s, ok = %[1]sFromString(str)
+	*_%[2]s, ok = %[1]s%[3]s(str)
 	if !ok {
 		return fmt.Errorf("Value %%q does not represent a %[1]s", str)
 	}
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderGqlSerializers(buf *bytes.Buffer) {
+func (r *renderer) renderGqlSerializers(buf *bytes.Buffer, ignoreCase bool) {
+	lookupMethod := "FromString"
+	if ignoreCase {
+		lookupMethod = "FromStringIgnoreCase"
+	}
 	zeroValueGuard := ""
 	if !r.util.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
@@ -376,20 +384,24 @@ func (_%[2]s *%[1]s) UnmarshalGQL(value interface{}) error {
 		str = v.String()
 	default:
 		return fmt.Errorf("invalid value of %[1]s: %%[1]T(%%[1]v)", value)
-	}%[3]s
+	}%[4]s
 
 	var ok bool
-	*_%[2]s, ok = %[1]sFromString(str)
+	*_%[2]s, ok = %[1]s%[3]s(str)
 	if !ok {
 		return fmt.Errorf("Value %%q does not represent a %[1]s", str)
 	}
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderJsonSerializers(buf *bytes.Buffer) {
+func (r *renderer) renderJsonSerializers(buf *bytes.Buffer, ignoreCase bool) {
+	lookupMethod := "FromString"
+	if ignoreCase {
+		lookupMethod = "FromStringIgnoreCase"
+	}
 	zeroValueGuard := ""
 	if !r.util.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
@@ -410,20 +422,24 @@ func (_%[2]s *%[1]s) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
 		return fmt.Errorf("%[1]s should be a string, got %%q", data)
-	}%[3]s
+	}%[4]s
 
 	var ok bool
-	*_%[2]s, ok = %[1]sFromString(str)
+	*_%[2]s, ok = %[1]s%[3]s(str)
 	if !ok {
 		return fmt.Errorf("Value %%q does not represent a %[1]s", str)
 	}
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderTextSerializers(buf *bytes.Buffer) {
+func (r *renderer) renderTextSerializers(buf *bytes.Buffer, ignoreCase bool) {
+	lookupMethod := "FromString"
+	if ignoreCase {
+		lookupMethod = "FromStringIgnoreCase"
+	}
 	zeroValueGuard := ""
 	if !r.util.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
@@ -441,20 +457,24 @@ func (_%[2]s %[1]s) MarshalText() ([]byte, error) {
 
 // UnmarshalText implements the encoding.TextUnmarshaler interface for %[1]s.
 func (_%[2]s *%[1]s) UnmarshalText(text []byte) error {
-	str := string(text)%[3]s
+	str := string(text)%[4]s
 
 	var ok bool
-	*_%[2]s, ok = %[1]sFromString(str)
+	*_%[2]s, ok = %[1]s%[3]s(str)
 	if !ok {
 		return fmt.Errorf("Value %%q does not represent a %[1]s", str)
 	}
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderSqlSerializers(buf *bytes.Buffer) {
+func (r *renderer) renderSqlSerializers(buf *bytes.Buffer, ignoreCase bool) {
+	lookupMethod := "FromString"
+	if ignoreCase {
+		lookupMethod = "FromStringIgnoreCase"
+	}
 	zeroValueGuard := ""
 	if !r.util.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
@@ -481,20 +501,24 @@ func (_%[2]s *%[1]s) Scan(value interface{}) error {
 		str = v.String()
 	default:
 		return fmt.Errorf("invalid value of %[1]s: %%[1]T(%%[1]v)", value)
-	}%[3]s
+	}%[4]s
 
 	var ok bool
-	*_%[2]s, ok = %[1]sFromString(str)
+	*_%[2]s, ok = %[1]s%[3]s(str)
 	if !ok {
 		return fmt.Errorf("Value %%q does not represent a %[1]s", str)
 	}
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderYamlSerializers(buf *bytes.Buffer, isV3 bool) {
+func (r *renderer) renderYamlSerializers(buf *bytes.Buffer, ignoreCase, isV3 bool) {
+	lookupMethod := "FromString"
+	if ignoreCase {
+		lookupMethod = "FromStringIgnoreCase"
+	}
 	buf.WriteString(fmt.Sprintf(`// MarshalYAML implements a YAML Marshaler for %[1]s.
 func (_%[2]s %[1]s) MarshalYAML() (interface{}, error) {
 	if !_%[2]s.IsValid() {
@@ -519,20 +543,17 @@ func (_%[2]s *%[1]s) UnmarshalYAML(n *yaml.Node) error {
 	if n.ShortTag() != stringTag {
 		return fmt.Errorf("%[1]s must be derived from a string node")
 	}
-	str := n.Value
-	if len(str) == 0 {
-		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}
+	str := n.Value%[4]s
 
 	var ok bool
-	*_%[2]s, ok = %[1]sFromString(str)
+	*_%[2]s, ok = %[1]s%[3]s(str)
 	if !ok {
 		return fmt.Errorf("Value %%q does not represent a %[1]s", str)
 	}
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
 		return
 	}
 	buf.WriteString(fmt.Sprintf(`
@@ -541,17 +562,17 @@ func (_%[2]s *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var str string
 	if err := unmarshal(&str); err != nil {
 		return err
-	}%[3]s
+	}%[4]s
 
 	var ok bool
-	*_%[2]s, ok = %[1]sFromString(str)
+	*_%[2]s, ok = %[1]s%[3]s(str)
 	if !ok {
 		return fmt.Errorf("Value %%q does not represent a %[1]s", str)
 	}
 	return nil
 }
 
-`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), zeroValueGuard))
+`, r.cfg.TypeAliasName, strings.ToLower(string(r.cfg.TypeAliasName[0:1])), lookupMethod, zeroValueGuard))
 }
 
 func (r *renderer) renderEntInterfaceSupport(buf *bytes.Buffer) {

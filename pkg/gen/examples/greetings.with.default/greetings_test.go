@@ -35,7 +35,7 @@ func TestGreetings(t *testing.T) {
 			{Greeting中國, "中國", "中國"},
 			{Greeting日本, "日本", "日本"},
 			{Greeting한국, "한국", "한국"},
-			{GreetingČeskáRepublika, "ČeskáRepublika", "ČeskáRepublika"},
+			{GreetingČeskáRepublika, "ČeskáRepublika", "českárepublika"},
 			{Greeting𝜋, "𝜋", "𝜋"},
 		}
 		for idx, tC := range testCases {
@@ -73,11 +73,14 @@ func TestGreetings(t *testing.T) {
 		{from: "Greeting(7)", serialized: "Greeting(7)", g: Greeting(7), invalid: true, stringer: "Greeting(7)"},
 		{from: "", serialized: "World", g: GreetingWorld, stringer: "World"}, // default
 		{from: "World", serialized: "World", g: GreetingWorld, stringer: "World"},
+		{from: "world", serialized: "World", g: GreetingWorld, stringer: "World"},
 		{from: "Россия", serialized: "Россия", g: GreetingРоссия, stringer: "россия"},
+		{from: "россия", serialized: "Россия", g: GreetingРоссия, stringer: "россия"},
 		{from: "中國", serialized: "中國", g: Greeting中國, stringer: "中國"},
 		{from: "日本", serialized: "日本", g: Greeting日本, stringer: "日本"},
 		{from: "한국", serialized: "한국", g: Greeting한국, stringer: "한국"},
 		{from: "ČeskáRepublika", serialized: "ČeskáRepublika", g: GreetingČeskáRepublika, stringer: "ČeskáRepublika"},
+		{from: "českárepublika", serialized: "ČeskáRepublika", g: GreetingČeskáRepublika, stringer: "ČeskáRepublika"},
 		{from: "𝜋", serialized: "𝜋", g: Greeting𝜋, stringer: "𝜋"},
 	}
 	for idx, tC := range testCases {

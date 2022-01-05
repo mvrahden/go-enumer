@@ -30,7 +30,7 @@ func init() {
 	flag.StringVar(&cArgs.TransformStrategy, ArgumentKeyTransformStrategy, "noop", "string transformation (camel|pascal|kebab|snake|... see README.md); defaults to \"noop\" which applies no transormation to the enum values.")
 	flag.StringVar(&cArgs.TypeAliasName, ArgumentKeyTypeAlias, "", "the type alias (or type name) to perform the scan against.")
 	flag.Var(&cArgs.Serializers, ArgumentKeySerializers, "a list of opt-in serializers (binary|json|sql|text|yaml).")
-	flag.Var(&cArgs.SupportedFeatures, ArgumentKeySupport, "a list of opt-in supported features (undefined|ent).")
+	flag.Var(&cArgs.SupportedFeatures, ArgumentKeySupport, "a list of opt-in supported features (undefined|ignore-case|ent).")
 	flag.StringVar(&scanPath, ArgumentKeyScanDirectory, "", "directory of target package; defaults to CWD.")
 }
 

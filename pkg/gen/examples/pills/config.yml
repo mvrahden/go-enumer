@@ -1,4 +1,4 @@
 ---
 typeAlias: Pill
 transform: upper-kebab
-serializers: ['binary', 'gql', 'json', 'sql', 'text', 'yaml.v3']
+serializers: [binary, gql, json, sql, text, yaml.v3]
