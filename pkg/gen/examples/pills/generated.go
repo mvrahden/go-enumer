@@ -22,6 +22,19 @@ var (
 	_PillStrings    = []string{_PillString[0:7], _PillString[7:14], _PillString[14:23], _PillString[23:34], _PillString[47:56]}
 )
 
+// _PillNoOp is a compile time assertion.
+// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
+// Re-run the enumer command to generate an updated version of Pill.
+func _PillNoOp() {
+	var x [1]struct{}
+	_ = x[PillPlacebo-(0)]
+	_ = x[PillAspirin-(1)]
+	_ = x[PillIbuprofen-(2)]
+	_ = x[PillParacetamol-(3)]
+	_ = x[PillAcetaminophen-(3)]
+	_ = x[PillVitaminC-(4)]
+}
+
 // PillValues returns all values of the enum.
 func PillValues() []Pill {
 	strs := make([]Pill, len(_PillValues))

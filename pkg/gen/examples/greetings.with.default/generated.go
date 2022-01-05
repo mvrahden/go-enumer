@@ -21,6 +21,20 @@ var (
 	_GreetingStrings    = []string{_GreetingString[0:5], _GreetingString[5:17], _GreetingString[17:23], _GreetingString[23:29], _GreetingString[29:35], _GreetingString[35:51], _GreetingString[51:55]}
 )
 
+// _GreetingNoOp is a compile time assertion.
+// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
+// Re-run the enumer command to generate an updated version of Greeting.
+func _GreetingNoOp() {
+	var x [1]struct{}
+	_ = x[GreetingWorld-(0)]
+	_ = x[GreetingРоссия-(1)]
+	_ = x[Greeting中國-(2)]
+	_ = x[Greeting日本-(3)]
+	_ = x[Greeting한국-(4)]
+	_ = x[GreetingČeskáRepublika-(5)]
+	_ = x[Greeting𝜋-(6)]
+}
+
 // GreetingValues returns all values of the enum.
 func GreetingValues() []Greeting {
 	strs := make([]Greeting, len(_GreetingValues))
