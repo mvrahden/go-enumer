@@ -96,7 +96,7 @@ func PillFromStringIgnoreCase(raw string) (Pill, bool) {
 // MarshalBinary implements the encoding.BinaryMarshaler interface for Pill.
 func (_p Pill) MarshalBinary() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Pill", _p.String())
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Pill", _p)
 	}
 	return []byte(_p.String()), nil
 }
@@ -149,7 +149,7 @@ func (_p *Pill) UnmarshalGQL(value interface{}) error {
 // MarshalJSON implements the json.Marshaler interface for Pill.
 func (_p Pill) MarshalJSON() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Pill", _p.String())
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Pill", _p)
 	}
 	return json.Marshal(_p.String())
 }
@@ -174,7 +174,7 @@ func (_p *Pill) UnmarshalJSON(data []byte) error {
 
 func (_p Pill) Value() (driver.Value, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as Pill", _p.String())
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as Pill", _p)
 	}
 	return _p.String(), nil
 }
@@ -207,7 +207,7 @@ func (_p *Pill) Scan(value interface{}) error {
 // MarshalText implements the encoding.TextMarshaler interface for Pill.
 func (_p Pill) MarshalText() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Pill", _p.String())
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Pill", _p)
 	}
 	return []byte(_p.String()), nil
 }
@@ -230,7 +230,7 @@ func (_p *Pill) UnmarshalText(text []byte) error {
 // MarshalYAML implements a YAML Marshaler for Pill.
 func (_p Pill) MarshalYAML() (interface{}, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Pill", _p.String())
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Pill", _p)
 	}
 	return _p.String(), nil
 }

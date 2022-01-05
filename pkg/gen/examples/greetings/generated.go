@@ -106,7 +106,7 @@ func GreetingFromStringIgnoreCase(raw string) (Greeting, bool) {
 // MarshalBinary implements the encoding.BinaryMarshaler interface for Greeting.
 func (_g Greeting) MarshalBinary() ([]byte, error) {
 	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g.String())
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g)
 	}
 	return []byte(_g.String()), nil
 }
@@ -153,7 +153,7 @@ func (_g *Greeting) UnmarshalGQL(value interface{}) error {
 // MarshalJSON implements the json.Marshaler interface for Greeting.
 func (_g Greeting) MarshalJSON() ([]byte, error) {
 	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g.String())
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g)
 	}
 	return json.Marshal(_g.String())
 }
@@ -175,7 +175,7 @@ func (_g *Greeting) UnmarshalJSON(data []byte) error {
 
 func (_g Greeting) Value() (driver.Value, error) {
 	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as Greeting", _g.String())
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as Greeting", _g)
 	}
 	return _g.String(), nil
 }
@@ -205,7 +205,7 @@ func (_g *Greeting) Scan(value interface{}) error {
 // MarshalText implements the encoding.TextMarshaler interface for Greeting.
 func (_g Greeting) MarshalText() ([]byte, error) {
 	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g.String())
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g)
 	}
 	return []byte(_g.String()), nil
 }
@@ -225,7 +225,7 @@ func (_g *Greeting) UnmarshalText(text []byte) error {
 // MarshalYAML implements a YAML Marshaler for Greeting.
 func (_g Greeting) MarshalYAML() (interface{}, error) {
 	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g.String())
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g)
 	}
 	return _g.String(), nil
 }
