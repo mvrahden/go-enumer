@@ -1,79 +1,124 @@
-# Enumer [![GoDoc](https://godoc.org/github.com/dmarkham/enumer?status.svg)](https://godoc.org/github.com/dmarkham/enumer) [![Go Report Card](https://goreportcard.com/badge/github.com/dmarkham/enumer)](https://goreportcard.com/report/github.com/dmarkham/enumer) [![GitHub Release](https://img.shields.io/github/release/dmarkham/enumer.svg)](https://github.com/dmarkham/enumer/releases)[![Build Status](https://travis-ci.com/dmarkham/enumer.svg?branch=master)](https://travis-ci.com/dmarkham/enumer)
+# go-enumer [![GoDoc](https://godoc.org/github.com/mvrahden/go-enumer?status.svg)](https://godoc.org/github.com/mvrahden/go-enumer) [![Go Report Card](https://goreportcard.com/badge/github.com/mvrahden/go-enumer)](https://goreportcard.com/report/github.com/mvrahden/go-enumer) [![GitHub Release](https://img.shields.io/github/release/mvrahden/go-enumer.svg)](https://github.com/mvrahden/go-enumer/releases)[![Build Status](https://travis-ci.com/mvrahden/go-enumer.svg?branch=master)](https://travis-ci.com/mvrahden/go-enumer)
 
+`go-enumer` is a tool to generate Go code to upgrade Go constants (of integer-like types) with useful methods, such as validation and (de-)serialization.
+It is a complete and opinionated remake of the existing [enumer](https://github.com/dmarkham/enumer) package and therefore behaves different in many aspects.
 
-Enumer is a tool to generate Go code that adds useful methods to Go enums (constants with a specific type).
-It started as a fork of [Rob Pike’s Stringer tool](https://godoc.org/golang.org/x/tools/cmd/stringer)
-maintained by [Álvaro López Espinosa](https://github.com/alvaroloes/enumer). 
-This was again forked here as (https://github.com/dmarkham/enumer) picking up where Álvaro left off.
+This remake of `go-enumer` is intended to be:
 
+- strict by default (compliant): it prevents undefined values from being (de-)serialized
+- graceful on opt-in: it allows (de-)serialization from empty values (if you need it to)
 
-```
-$ ./enumer --help
-Enumer is a tool to generate Go code that adds useful methods to Go enums (constants with a specific type).
-Usage of ./enumer:
-        Enumer [flags] -type T [directory]
-        Enumer [flags] -type T files... # Must be a single package
-For more information, see:
-        http://godoc.org/github.com/dmarkham/enumer
-Flags:
-  -addprefix string
-        transform each item name by adding a prefix. Default: ""
-  -comment value
-        comments to include in generated code, can repeat. Default: ""
-  -gqlgen
-        if true, GraphQL marshaling methods for gqlgen will be generated. Default: false
-  -json
-        if true, json marshaling methods will be generated. Default: false
-  -linecomment
-        use line comment text as printed text when present
-  -output string
-        output file name; default srcdir/<type>_string.go
-  -sql
-        if true, the Scanner and Valuer interface will be implemented.
-  -text
-        if true, text marshaling methods will be generated. Default: false
-  -transform string
-        enum item name transformation method. Default: noop (default "noop")
-  -trimprefix string
-        transform each item name by removing a prefix. Default: ""
-  -type string
-        comma-separated list of type names; must be set
-  -yaml
-        if true, yaml marshaling methods will be generated. Default: false
+## What's new?
+
+`go-enumer` is an implementation with improved handling of default values and empty values (Zero Values).
+Additionally the type derivation (lookups) was improved and was given more freedom to preferences of case sensitivity.
+It furthermore introduces a clear and unified usage pattern on how to implement enums, by bringing its own easy to understand and hard to misuse way of defining them.
+
+`go-enumer` defines an enum as a set custom-defined, distinct values which are implemented by defining a range of continuously incrementing constants of a specific integer-like type alias.
+Enum sets must:
+
+- start at either `0` or `1`.
+- consist of continuous linear increments of `1`.
+
+`go-enumer` gives a special semantic meaning to constants with the value `0`.
+The **[Zero Value](https://go.dev/tour/basics/12)** of native integer-like types in Go is `0`.
+Ffor enums of an integer-like alias type it likewise means, that an enum of value `0` is by definition the zero value or the **default** of the enum set.
+Depending on whether your set of values needs a default value, you will chose your sequence to start at value `0` with the your default value being `0`.
+All the other values should be `>= 1`.
+(You may have multiple defaults, see section for [equivalent values](#equivalent-values))
+
+```go
+type Greeting int
+
+const (
+  GreetingWorld Greeting = iota  // <- this is your default
+  GreetingMars
+)
 ```
 
+If you want your default value to be robust against deserialization from zero values (like an empty string) you do not need to do anything. However, if you prefer to also enable deserialization for your **default** enum value from zero values please check out the section for ["undefined"-value](#the-undefined-value).
+
+If your enum set does not define a default value, but you still want to be able to deserialize empty values into an "undefined" value, please check out the section for ["undefined"-value](#the-undefined-value).
+
+```go
+type Greeting int
+
+const (
+  GreetingWorld Greeting = iota + 1  // <- NO default
+  GreetingMars
+)
+```
+
+### Equivalent values
+
+Enums can contain values that are assigned multiple times – such values resemble **equivalent values**.
+These alternative values are shadowed by the dominant value, which is always the one which was assigned first.
+
+### Handling of Name Prefixes
+
+In short: If you prefix constant names, you can only prefix them with their corresponding type alias name. This rule is in place to keep your source code concise. Please see [here](#prefix-auto-stripping) for further information.
+
+### Type Validation
+
+By defining enums on a linear scale, the validation time is of constant complexity.
+Type validation will be performed on every (de-)serialization.
+
+### Supported features
+
+Supported features are targeted with the `support` flag.
+
+#### The "undefined" feature
+
+By default, `go-enumer` fails upon (de-)serialization of any value which is not explicitly defined in your set of enums with an `error` – this rule covers empty values as well.
+It is good practice to start those sequences, that neither contain a default value nor an empty value with the integer value `1`.
+
+The `undefined` feature is an opt-in, which enables the (de-)serialization of zero values.
+In case you applied the `undefined` feature, lookups with an empty value will resolve as an "undefined" constant.
+If you do not have a **default** constant (with the value `0`) as `go-enumer` will generate one for you.
+Your source code will now support an "undefined" value alongside your explicitly defined set of enums.
+However, **unknown** values will still fail upon serialization or deserialization.
+
+#### Other supported features
+
+With `ent` a method will be generated to return all valid Value strings. This allows you to use your enum type with the ent framework.
 
 ## Generated functions and methods
 
-When Enumer is applied to a type, it will generate:
+When `go-enumer` is applied to a type, it will generate:
 
 - The following basic methods/functions:
 
   - Method `String()`: returns the string representation of the enum value. This makes the enum conform
-    the `Stringer` interface, so whenever you print an enum value, you'll get the string name instead of a number.
-  - Function `<Type>String(s string)`: returns the enum value from its string representation. This is useful
+    to the `Stringer` interface, so whenever you print an enum value, you'll get the string name instead of its numeric counterpart.
+  - Function `<Type>FromString(raw string)`: returns the enum value from its string representation. This is useful
     when you need to read enum values from command line arguments, from a configuration file, or
     from a REST API request... In short, from those places where using the real enum value (an integer) would
-    be almost meaningless or hard to trace or use by a human. `s` string is Case Insensitive.
-  - Function `<Type>Values()`: returns a slice with all the values of the enum
-  - Function `<Type>Strings()`: returns a slice with all the Strings of the enum
-  - Method `IsA<Type>()`: returns true only if the current value is among the values of the enum. Useful for validations.
+    be almost meaningless or hard to trace or use by a human. `raw` string is case sensitive.
+  - Function `<Type>FromStringIgnoreCase(raw string)`: we can not always guarantee the case matching because some systems out of our reach
+    are insensitive to exact case matching. In these situations `<Type>FromStringIgnoreCase(raw string)` comes in handy.
+    It acts the same as `<Type>FromString(raw string)` with the little difference of `raw` being case insensitive.
+  - Function `<Type>Values()`: returns a slice with all the numeric values of the enum, ignoring any alternative values.
+  - Function `<Type>Strings()`: returns a slice with all the string representations of the enum.
+  - Method `IsValid()`: returns true if the current value is a value of the defined enum set.
 
-- When the flag `json` is provided, two additional methods will be generated, `MarshalJSON()` and `UnmarshalJSON()`. These make
-  the enum conform to the `json.Marshaler` and `json.Unmarshaler` interfaces. Very useful to use it in JSON APIs.
-- When the flag `text` is provided, two additional methods will be generated, `MarshalText()` and `UnmarshalText()`. These make
-  the enum conform to the `encoding.TextMarshaler` and `encoding.TextUnmarshaler` interfaces.
-  **Note:** If you use your enum values as keys in a map and you encode the map as _JSON_, you need this flag set to true to properly
-  convert the map keys to json (strings). If not, the numeric values will be used instead
-- When the flag `yaml` is provided, two additional methods will be generated, `MarshalYAML()` and `UnmarshalYAML()`. These make
-  the enum conform to the `gopkg.in/yaml.v2.Marshaler` and `gopkg.in/yaml.v2.Unmarshaler` interfaces.
-- When the flag `sql` is provided, the methods for implementing the `Scanner` and `Valuer` interfaces.
-  Useful when storing the enum in a database.
+- The flag `serializers` in addition with any of the following values, additional methods for serialization are added.
+  Valid values are:
 
+  - `binary` makes the enum conform to the `encoding.BinaryMarshaler` and `encoding.BinaryUnmarshaler` interfaces.
+  - `gql` makes the enum conform to the `graphql.Marshaler` and `graphql.Unmarshaler` interfaces.
+  - `json` makes the enum conform to the `json.Marshaler` and `json.Unmarshaler` interfaces.
+  - `sql` makes the enum conform to the `sql.Scanner` and `sql.Valuer` interfaces.
+  - `text` makes the enum conform to the `encoding.TextMarshaler` and `encoding.TextUnmarshaler` interfaces.
+    **Note:** If you use your enum values as keys in a map and you encode the map as _JSON_,
+    you need this flag set to true to properly convert the map keys to json (strings). If not, the numeric values will be used instead
+  - `yaml` makes the enum conform to the `gopkg.in/yaml.v2.Marshaler` and `gopkg.in/yaml.v2.Unmarshaler` interfaces.
+  - `yaml.v3` makes the enum conform to the `gopkg.in/yaml.v3.Marshaler` and `gopkg.in/yaml.v3.Unmarshaler` interfaces.
+    **Note:** Supplying both yaml values (`yaml` and `yaml.v3`) will fail due to interface incompatibility.
 
 For example, if we have an enum type called `Pill`,
 
 ```go
+//go:generate github.com/mvrahden/go-enumer -typealias=Pill -serializers=json
 type Pill int
 
 const (
@@ -85,26 +130,30 @@ const (
 )
 ```
 
-executing `enumer -type=Pill -json` will generate a new file with four basic methods and two extra for JSON:
+executing `enumer -typealias=Pill -serializers=json` will generate a new file with four basic package functions and four methods (of which two are for JSON (de-)serialization):
 
 ```go
+func PillValues() []Pill {
+  //...
+}
+
+func PillStrings() []string {
+  //...
+}
+
+func PillFromString(s string) (Pill, error) {
+  //...
+}
+
+func PillFromStringIgnoreCase(s string) (Pill, error) {
+  //...
+}
+
 func (i Pill) String() string {
 	//...
 }
 
-func PillString(s string) (Pill, error) {
-	//...
-}
-
-func PillValues() []Pill {
-	//...
-}
-
-func PillStrings() []string {
-	//...
-}
-
-func (i Pill) IsAPill() bool {
+func (i Pill) IsValid() bool {
 	//...
 }
 
@@ -152,63 +201,93 @@ pillJSON := Aspirin.MarshalJSON()
 The generated code is exactly the same as the Stringer tool plus the mentioned additions, so you can use
 **Enumer** where you are already using **Stringer** without any code change.
 
-## Transforming the string representation of the enum value
+## The string representation of the enum value
 
-By default, Enumer uses the same name of the enum value for generating the string representation (usually CamelCase in Go).
+### Prefix auto-stripping
+
+When dealing with a lot of exported enum values of different type aliases in your project it can easily happen that you run into naming collisions.
+To avoid naming collisions while maintaining the same enum string, `go-enumer` automatically strips off the type alias name when determining any string values.
+Consider the following example, which will generate the same string values:
+
+```go
+type Greeting int
+
+const (
+  Россия Greeting = iota + 1
+  中國
+  日本
+  한국
+  ČeskáRepublika
+)
+
+type GreetingWithPrefix int
+
+const (
+  GreetingWithPrefixРоссия Greeting = iota + 1
+  GreetingWithPrefix中國
+  GreetingWithPrefix日本
+  GreetingWithPrefix한국
+  GreetingWithPrefixČeskáRepublika
+)
+```
+
+By default, `go-enumer` uses the same name of the enum value for generating the string representation (usually PascalCase in Go).
+
+```go
+type Greeting int
+
+ ...
+
+fmt.Print(ČeskáRepublika) // name => "ČeskáRepublika"
+```
+
+Sometimes you need to use some other string representation format than PascalCase.
+To transform the string values from PascalCase to another format, you can use the `transform` flag.
+
+For example, the command `enumer -typealias=MyType -transform=whitespace` would generate the following string representation:
+
+```go
+fmt.Print(ČeskáRepublika) // name => "Česká Republika"
+```
+
+**Note**: If you are missing a transformation please raise an issue and/or open a Pull Request.
+
+### Transformers
+
+Please take the example transformation from the following table for this example:
 
 ```go
 type MyType int
 
- ...
-
-name := MyTypeValue.String() // name => "MyTypeValue"
+const (
+  FooBar MyType = iota
+  // ...
+)
 ```
 
-Sometimes you need to use some other string representation format than CamelCase (i.e. in JSON).
-
-To transform it from CamelCase to another format, you can use the `transform` flag.
-
-For example, the command `enumer -type=MyType -json -transform=snake` would generate the following string representation:
-
-```go
-name := MyTypeValue.String() // name => "my_type_value"
-```
-
-**Note**: The transformation only works from CamelCase to snake_case or kebab-case, not the other way around.
-
-### Transformers
-
-- snake
-- snake-upper
-- kebab
-- kebab-upper
-- lower (lowercase)
-- upper (UPPERCASE)
-- title (TitleCase)
-- title-lower (titleCase)
-- first (Use first character of string)
-- first-lower (same as first only lower case)
-- first-upper (same as first only upper case)
-- whitespace
+| Transformer Name | Example (Stringer value) |
+|---|----|
+| noop (default) | FooBar |
+| camel  | fooBar |
+| pascal | FooBar |
+| kebab  | foo-bar |
+| snake  | foo_bar |
+| lower  | foobar |
+| upper  | FOOBAR |
+| upper-kebab | FOO-BAR |
+| upper-snake | FOO_BAR |
+| whitespace | Foo Bar |
 
 ## How to use
 
-There are four boolean flags: `json`, `text`, `yaml` and `sql`. You can use any combination of them (i.e. `enumer -type=Pill -json -text`),
+On every run you have to set the `typealias` to determine the target type to run the code generation for.
 
-For enum string representation transformation the `transform` and `trimprefix` flags
-were added (i.e. `enumer -type=MyType -json -transform=snake`).
-Possible transform values are listed above in the [transformers](#transformers) section.
-The default value for `transform` flag is `noop` which means no transformation will be performed.
+Additionally you can add:
 
-If a prefix is provided via the `trimprefix` flag, it will be trimmed from the start of each name (before
-it is transformed). If a name doesn't have the prefix it will be passed unchanged.
-
-If a prefix is provided via the `addprefix` flag, it will be added to the start of each name (after trimming and after transforming).
-
-The boolean flag `values` will additionally create an alternative string values method `Values() []string` to fullfill the `EnumValues` interface of [ent](https://entgo.io/docs/schema-fields/#enum-fields).
+- transformation with `transform` option, e.g. `transform=kebab`.
+- serializers with `serializers` option, e.g. `serializers=json,sql,...`.
+- supported features `support` option, e.g. `support=undefined,ent`
 
 ## Inspiring projects
 
-- [Álvaro López Espinosa](https://github.com/alvaroloes/enumer)
-- [Stringer](https://godoc.org/golang.org/x/tools/cmd/stringer)
-- [jsonenums](https://github.com/campoy/jsonenums)
+- [enumer](https://github.com/dmarkham/enumer)
