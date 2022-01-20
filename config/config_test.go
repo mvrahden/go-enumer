@@ -19,20 +19,18 @@ func TestConfigLoading(t *testing.T) {
 	t.Run("Load from Config file", func(t *testing.T) {
 		err := os.WriteFile(configFile, []byte(`---
 typeAlias: abc
-output: def
-transform: ghi
-addPrefix: jkl
-serializers: [mno,pqr]
+transform: def
+addPrefix: ghi
+serializers: [jkl,mno,pqr]
 support: [stu,vwx,yz]`), os.ModePerm)
 		require.NoError(t, err)
 
 		cfg := LoadFrom(configFile)
 		require.Equal(t, &Options{
 			TypeAliasName:     "abc",
-			Output:            "def",
-			TransformStrategy: "ghi",
-			AddPrefix:         "jkl",
-			Serializers:       []string{"mno", "pqr"},
+			TransformStrategy: "def",
+			AddPrefix:         "ghi",
+			Serializers:       []string{"jkl", "mno", "pqr"},
 			SupportedFeatures: []string{"stu", "vwx", "yz"},
 		}, cfg)
 	})

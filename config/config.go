@@ -15,7 +15,6 @@ const (
 type Args Options
 type Options struct {
 	TypeAliasName     string     `yaml:"typeAlias"`
-	Output            string     `yaml:"output"`
 	TransformStrategy string     `yaml:"transform" env-default:"noop"`
 	AddPrefix         string     `yaml:"addPrefix"`
 	Serializers       stringList `yaml:"serializers"`

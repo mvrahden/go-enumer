@@ -14,7 +14,7 @@ func TestCli(t *testing.T) {
 			"/path/to/helloworld_enumer.go",
 			targetFilename("/path/to", &config.Options{TypeAliasName: "HelloWorld"}))
 	})
-	t.Run("validation fails", func(t *testing.T) {
+	t.Run("input validation fails", func(t *testing.T) {
 		t.Cleanup(CleanUpPackage)
 		testcases := []struct {
 			desc string
@@ -38,7 +38,7 @@ func TestCli(t *testing.T) {
 			})
 		}
 	})
-	t.Run("generation fails", func(t *testing.T) {
+	t.Run("code generation fails", func(t *testing.T) {
 		testcases := []struct {
 			desc string
 			args []string
@@ -48,7 +48,7 @@ func TestCli(t *testing.T) {
 				"on unknown typealias", []string{"-typealias=UnknownType"}, "no constants detected.",
 			},
 			{
-				"on unknown typealias", []string{"-typealias=Greeting", "-dir=/Users/menno/go/src/github.com/mvrahden/enumer/cmd/cli/testdata/hello"}, "no constants detected.",
+				"on unknown typealias (due to wrong path)", []string{"-typealias=Greeting", "-dir=testdata/nothing-here"}, "no constants detected.",
 			},
 		}
 		for _, tC := range testcases {
@@ -61,7 +61,7 @@ func TestCli(t *testing.T) {
 	})
 }
 
-func PatchTargetFilename(t *testing.T, targetPath string) {
+func PatchTargetFilenameFunc(t *testing.T, targetPath string) {
 	targetFilename = func(file string, cfg *config.Options) string {
 		return filepath.Clean(targetPath)
 	}

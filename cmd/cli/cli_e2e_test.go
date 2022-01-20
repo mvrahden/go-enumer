@@ -37,7 +37,7 @@ func TestE2E(t *testing.T) {
 
 			tmpDir := t.TempDir()
 			tmpFile := filepath.Join(tmpDir, tC.outFilename)
-			cli.PatchTargetFilename(t, tmpFile)
+			cli.PatchTargetFilenameFunc(t, tmpFile)
 
 			defaultArgs := []string{"-typealias=" + tC.typealias, "-dir=testdata/" + tC.dirName}
 			err := cli.Execute(append(defaultArgs, tC.args...))
