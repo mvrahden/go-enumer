@@ -15,14 +15,26 @@ Additionally the type derivation (lookups) was improved and was given more freed
 It furthermore introduces a clear and unified usage pattern on how to implement enums, by bringing its own easy to understand and hard to misuse way of defining them.
 
 `go-enumer` defines an enum as a set custom-defined, distinct values which are implemented by defining a range of continuously incrementing constants of a specific integer-like type alias.
-Enum sets must:
+By convention, enum sets must:
 
-- start at either `0` or `1`.
+- start at `1` or in defined edge cases with `0`.
 - consist of continuous linear increments of `1`.
+
+Due to the nature of enums being distinct values, the majority of enum sequences will start at `1`, as you can see in the following snippet.
+
+```go
+type Greeting int
+
+const (
+  GreetingWorld Greeting = iota + 1
+  GreetingMars
+)
+```
 
 `go-enumer` gives a special semantic meaning to constants with the value `0`.
 The **[Zero Value](https://go.dev/tour/basics/12)** of native integer-like types in Go is `0`.
-Ffor enums of an integer-like alias type it likewise means, that an enum of value `0` is by definition the zero value or the **default** of the enum set.
+For enums of an integer-like alias type it likewise means, that an enum of value `0` is by definition the zero value or the **default** of the enum set.
+In some situations you may find yourself in the need of such a **default** value.
 Depending on whether your set of values needs a default value, you will chose your sequence to start at value `0` with the your default value being `0`.
 All the other values should be `>= 1`.
 (You may have multiple defaults, see section for [equivalent values](#equivalent-values))
@@ -36,16 +48,15 @@ const (
 )
 ```
 
-If you want your default value to be robust against deserialization from zero values (like an empty string) you do not need to do anything. However, if you prefer to also enable deserialization for your **default** enum value from zero values please check out the section for ["undefined"-value](#the-undefined-value).
+If you want your default value to be robust against deserialization from zero values (like an empty string), then rest assured you do not need to do anything.
+However, if you need to also enable deserialization for your **default** enum value from a zero values please check out the section for ["undefined"-value](#the-undefined-value).
 
 If your enum set does not define a default value, but you still want to be able to deserialize empty values into an "undefined" value, please check out the section for ["undefined"-value](#the-undefined-value).
+`go-enumer` can generate this "undefined" value for you, as follows and makes it available to you.
 
 ```go
-type Greeting int
-
 const (
-  GreetingWorld Greeting = iota + 1  // <- NO default
-  GreetingMars
+  GreetingUndefined Greeting = 0
 )
 ```
 
@@ -56,7 +67,7 @@ These alternative values are shadowed by the dominant value, which is always the
 
 ### Handling of Name Prefixes
 
-In short: If you prefix constant names, you can only prefix them with their corresponding type alias name. This rule is in place to keep your source code concise. Please see [here](#prefix-auto-stripping) for further information.
+In short: You can prefix constant names with their corresponding type alias name and `go-enumer` will automatically strip that off its value – meaning: it will turn `GreetingMars` (with type alias `Greeting`) into e.g. `"MARS"` (assuming an `upper` transformation was applied). It does not allow any other prefixes. This rule is in place to keep your source code concise. Please see [here](#prefix-auto-stripping) for further information.
 
 ### Type Validation
 
@@ -69,12 +80,14 @@ Supported features are targeted with the `support` flag.
 
 #### The "undefined" feature
 
-By default, `go-enumer` fails upon (de-)serialization of any value which is not explicitly defined in your set of enums with an `error` – this rule covers empty values as well.
-It is good practice to start those sequences, that neither contain a default value nor an empty value with the integer value `1`.
+`go-enumer` returns with an error upon (de-)serialization of any value which is not explicitly defined in your set of enums with an `error` – this rule covers empty values as well.
+Therefore those sequences, that neither contain a default value nor an empty value must start with the integer value of `1`.
 
 The `undefined` feature is an opt-in, which enables the (de-)serialization of zero values.
-In case you applied the `undefined` feature, lookups with an empty value will resolve as an "undefined" constant.
-If you do not have a **default** constant (with the value `0`) as `go-enumer` will generate one for you.
+In case you applied the `undefined` feature, lookups with an empty value will resolve as an "undefined" constant, representing an empty string.
+The undefined constant is considered being a **valid** member of the enum set now.
+However it will not be represented in the list of possible values.
+If you do not have a **default** constant (with the value `0`) `go-enumer` will generate one for you.
 Your source code will now support an "undefined" value alongside your explicitly defined set of enums.
 However, **unknown** values will still fail upon serialization or deserialization.
 
