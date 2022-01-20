@@ -50,6 +50,9 @@ func TestCli(t *testing.T) {
 			{
 				"on unknown typealias (due to wrong path)", []string{"-typealias=Greeting", "-dir=testdata/nothing-here"}, "no constants detected.",
 			},
+			{
+				"on unknown typealias", []string{"-typealias=InvalidNonContinuousGreeting", "-dir=testdata/greeting"}, "Invalid enum set: Enums must be a continuous sequence with linear increments of 1.",
+			},
 		}
 		for _, tC := range testcases {
 			t.Run(tC.desc, func(t *testing.T) {
