@@ -7,6 +7,10 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+const (
+	packageEvalMode = packages.NeedSyntax | packages.NeedName | packages.NeedTypes | packages.NeedTypesInfo
+)
+
 type gen struct {
 	i Inspector
 	r Renderer
@@ -26,7 +30,7 @@ func NewGenerator(i Inspector, r Renderer) *gen {
 
 func loadPackage(targetPkg string) (*packages.Package, error) {
 	p, err := packages.Load(&packages.Config{
-		Mode:  packages.NeedSyntax | packages.NeedName | packages.NeedTypes | packages.NeedTypesInfo,
+		Mode:  packageEvalMode,
 		Tests: false,
 	}, targetPkg)
 	if err != nil {
