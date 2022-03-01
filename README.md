@@ -1,7 +1,7 @@
 # go-enumer [![GoDoc](https://godoc.org/github.com/mvrahden/go-enumer?status.svg)](https://godoc.org/github.com/mvrahden/go-enumer) [![Go Report Card](https://goreportcard.com/badge/github.com/mvrahden/go-enumer)](https://goreportcard.com/report/github.com/mvrahden/go-enumer) [![GitHub Release](https://img.shields.io/github/release/mvrahden/go-enumer.svg)](https://github.com/mvrahden/go-enumer/releases)[![Build Status](https://travis-ci.com/mvrahden/go-enumer.svg?branch=master)](https://travis-ci.com/mvrahden/go-enumer)
 
 `go-enumer` is a tool to generate Go code to upgrade Go constants (of integer-like types) with useful methods, such as validation and (de-)serialization.
-It is a complete and opinionated remake of the existing [enumer](https://github.com/dmarkham/enumer) package and therefore behaves different in many aspects.
+It is an opinionated remake of the existing [enumer](https://github.com/dmarkham/enumer) package and therefore behaves different in many aspects.
 
 This remake of `go-enumer` is intended to be:
 
@@ -300,6 +300,9 @@ Additionally you can add:
 - transformation with `transform` option, e.g. `transform=kebab`.
 - serializers with `serializers` option, e.g. `serializers=json,sql,...`.
 - supported features `support` option, e.g. `support=undefined,ent`
+  - `undefined`, see ["undefined"-value](#the-undefined-value)
+  - `ent`, adds interface support for [entgo.io](https://github.com/ent/ent)
+  - `ignore-case`, adds support for case-insensitive lookup
 
 ## Inspiring projects
 
