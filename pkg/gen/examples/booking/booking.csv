@@ -1,0 +1,6 @@
+0,Created,The booking was created successfully
+1,Unavailable,The booking was not available
+2,Failed,The booking failed
+3,Canceled,The booking was canceled
+4,NotFound,The booking was not found
+5,Deleted,The booking was deleted

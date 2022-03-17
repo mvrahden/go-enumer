@@ -1,9 +1,9 @@
 package gen
 
 type File struct {
-	Header     Header
-	Imports    []*Import
-	ValueSpecs []*ValueSpec
+	Header    Header
+	Imports   []*Import
+	TypeSpecs []*TypeSpec
 }
 
 type Header struct {
@@ -29,8 +29,25 @@ type Import struct {
 	Path string
 }
 
+type TypeSpec struct {
+	Index         int
+	Name          string
+	Docstring     string
+	Type          GoType
+	ValueSpecs    []*ValueSpec
+	Filepath      string
+	VirtualValues []*VirtualValue
+}
+
+type VirtualValue struct {
+	Index          int
+	Value          uint64
+	ValueString    string
+	EnumValue      string
+	CanonicalValue string
+}
+
 type ValueSpec struct {
-	Index                      int
 	IdentifierName, EnumString string
 	Type                       GoType
 	Value                      uint64 // sign is infered by value/type combination

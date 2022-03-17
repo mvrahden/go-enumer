@@ -1,14 +1,19 @@
 package gen
 
 import (
+	"bytes"
+	"encoding/csv"
 	"fmt"
 	"go/ast"
 	"go/constant"
 	"go/token"
 	"go/types"
 	"log"
+	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/mvrahden/go-enumer/config"
@@ -41,11 +46,68 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 	if err := i.inspectValues(pkg, out); err != nil {
 		return nil, err
 	}
-	if err := i.validateValues(out); err != nil {
+	// TODO:
+	// - evaluate doc string configuration and merge with runtime config
+	if err := i.inspectDocstrings(pkg, out); err != nil {
+		return nil, err
+	}
+	// - generate "virtual" ValueSpecs for CSV source
+
+	if err := i.validateFile(out); err != nil {
 		return nil, err
 	}
 	i.inspectImports(out)
 	return out, nil
+}
+
+func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
+	for _, ts := range f.TypeSpecs {
+		args := strings.Split(ts.Docstring, " ")
+		for _, arg := range args {
+			if strings.HasPrefix(arg, "-from=") {
+				err := i.readFromCSV(ts, arg)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func (i inspector) readFromCSV(ts *TypeSpec, arg string) error {
+	p := strings.TrimPrefix(arg, "-from=")
+	dir := filepath.Dir(ts.Filepath)
+	p = filepath.Join(dir, p)
+	buf, err := os.ReadFile(p)
+	if err != nil {
+		return err
+	}
+	if len(buf) == 0 {
+		return fmt.Errorf("found empty csv source")
+	}
+	cr := csv.NewReader(bytes.NewBuffer(buf))
+	records, err := cr.ReadAll()
+	if err != nil {
+		return err
+	}
+	for idx, row := range records {
+		u64, err := strconv.ParseUint(row[0], 10, 64)
+		if err != nil {
+			return fmt.Errorf("failed converting %q to uint64", row[0])
+		}
+		vv := VirtualValue{
+			Index:       idx,
+			Value:       u64,
+			ValueString: row[0],
+			EnumValue:   row[1],
+		}
+		if len(row) == 3 {
+			vv.CanonicalValue = row[2]
+		}
+		ts.VirtualValues = append(ts.VirtualValues, &vv)
+	}
+	return nil
 }
 
 func (i inspector) inspectImports(f *File) {
@@ -65,21 +127,24 @@ func (i inspector) inspectImports(f *File) {
 	}
 }
 
-func (i inspector) validateValues(f *File) error {
-	sort.SliceStable(f.ValueSpecs, func(i, j int) bool {
-		return f.ValueSpecs[i].Value < f.ValueSpecs[j].Value
-	})
-	if len(f.ValueSpecs) > 0 &&
-		!(f.ValueSpecs[0].Value == 0 || f.ValueSpecs[0].Value == 1) {
-		return fmt.Errorf("Invalid enum set: Enums need to start with either 0 or 1.")
-	}
-	// ensure we have a linearly incrementing sequence of values.
-	// however, an enum can assign a numeric value multiple times.
-	// therefore we must only dismiss distances > 1.
-	for idx := 1; idx < len(f.ValueSpecs); idx++ {
-		delta := f.ValueSpecs[idx].Value - f.ValueSpecs[idx-1].Value
-		if delta > 1 {
-			return fmt.Errorf("Invalid enum set: Enums must be a continuous sequence with linear increments of 1.")
+func (i inspector) validateFile(f *File) error {
+	for _, v := range f.TypeSpecs {
+		sort.SliceStable(v.ValueSpecs, func(i, j int) bool {
+			return v.ValueSpecs[i].Value < v.ValueSpecs[j].Value
+		})
+		// validate start value of enum sequence
+		if len(v.ValueSpecs) > 0 &&
+			!(v.ValueSpecs[0].Value == 0 || v.ValueSpecs[0].Value == 1) {
+			return fmt.Errorf("Invalid enum set: Enums need to start with either 0 or 1.")
+		}
+		// ensure we have a linearly incrementing sequence of values.
+		// however, an enum can assign a numeric value multiple times.
+		// therefore we must only dismiss distances > 1.
+		for idx := 1; idx < len(v.ValueSpecs); idx++ {
+			delta := v.ValueSpecs[idx].Value - v.ValueSpecs[idx-1].Value
+			if delta > 1 {
+				return fmt.Errorf("Invalid enum set: Enums must be a continuous sequence with linear increments of 1.")
+			}
 		}
 	}
 	return nil
@@ -117,13 +182,29 @@ func (inspector) inspectHeader(pkg *packages.Package, out *File) {
 }
 
 func (i inspector) inspectValues(pkg *packages.Package, out *File) error {
-	specs := i.determinePackageScopedValueSpecs(pkg.Syntax, out)
+	specs, err := i.determinePackageScopedEnumTypeSpecs(pkg, out)
+	if err != nil {
+		return err
+	}
 	for idx, s := range specs {
-		vspec, err := i.evaluateValueSpec(idx, s, pkg)
+		typ, err := i.determineTypeOfExpr(s.TypeSpec.Name)
 		if err != nil {
 			return err
 		}
-		out.ValueSpecs = append(out.ValueSpecs, vspec)
+		out.TypeSpecs = append(out.TypeSpecs, &TypeSpec{
+			Index:     idx,
+			Name:      s.TypeSpec.Name.Name,
+			Type:      typ,
+			Docstring: s.EnumMarker,
+			Filepath:  s.File.Name(),
+		})
+		for _, v := range s.values {
+			vspec, err := i.evaluateValueSpec(s, v, pkg)
+			if err != nil {
+				return err
+			}
+			out.TypeSpecs[idx].ValueSpecs = append(out.TypeSpecs[idx].ValueSpecs, vspec)
+		}
 	}
 	return nil
 }
@@ -141,21 +222,79 @@ func (i inspector) isGeneratedFile(f *ast.File) bool {
 	return false
 }
 
+type typeSpec struct {
+	Decl       *ast.GenDecl
+	TypeSpec   *ast.TypeSpec
+	Type       *types.Basic
+	File       *token.File
+	EnumMarker string
+	values     []valueSpec
+}
+
 type valueSpec struct {
-	Type  *ast.ValueSpec
 	Value *ast.Ident
 }
 
-func (i *inspector) determinePackageScopedValueSpecs(files []*ast.File, out *File) []valueSpec {
-	var typeSpecs []valueSpec
-	for _, f := range files {
+func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, out *File) ([]typeSpec, error) {
+	var typeSpecs []typeSpec
+	for _, f := range pkg.Syntax {
+		// determine typeSpecs
+		for _, v := range f.Decls {
+			decl, ok := v.(*ast.GenDecl)
+			if !ok || decl.Tok != token.TYPE {
+				// We only care about type declarations.
+				continue
+			}
+			if len(decl.Specs) != 1 {
+				continue
+			}
+
+			// Detect enum marker in doc-string
+			if decl.Doc == nil {
+				continue
+			}
+			var isEnum bool
+			var enumMarker string
+			for _, cv := range decl.Doc.List {
+				if strings.HasPrefix(cv.Text, "//go:enumer") {
+					isEnum = true
+					enumMarker = cv.Text
+					break
+				}
+			}
+			if !isEnum {
+				continue
+			}
+			ts, ok := decl.Specs[0].(*ast.TypeSpec)
+			if !ok {
+				continue
+			}
+
+			typ := pkg.TypesInfo.TypeOf(ts.Type)
+			if typ == nil {
+				return nil, fmt.Errorf("definition type for constant %q is <nil>", typ)
+			}
+			ul := typ.Underlying()
+			if ul == nil {
+				return nil, fmt.Errorf("underlying was expected to be a basic type, but was <nil>")
+			}
+			btyp, ok := ul.(*types.Basic)
+			if !ok {
+				return nil, fmt.Errorf("underlying type for constant %q is not a basic type", ul)
+			}
+			f := pkg.Fset.File(decl.TokPos)
+			typeSpecs = append(typeSpecs, typeSpec{Decl: decl, TypeSpec: ts, Type: btyp, File: f, EnumMarker: enumMarker})
+		}
+
+		// determine values for typeSpecs
 		for _, v := range f.Decls {
 			decl, ok := v.(*ast.GenDecl)
 			if !ok || decl.Tok != token.CONST {
 				// We only care about const declarations.
 				continue
 			}
-			var prevType *ast.Ident // for blocks with implicit typing
+
+			var prevType *ast.Ident // for blocks with implicit types
 			for _, spec := range decl.Specs {
 				vspec, ok := spec.(*ast.ValueSpec)
 				if !ok {
@@ -164,58 +303,58 @@ func (i *inspector) determinePackageScopedValueSpecs(files []*ast.File, out *Fil
 				if vspec.Type == nil && len(vspec.Values) > 0 {
 					continue
 				}
+
 				if vspec.Type != nil {
 					var ok bool
 					ident, ok := vspec.Type.(*ast.Ident)
 					if !ok || ident == nil {
-						// not the type we're searching for (as per configuration)
+						// not the type we're searching for
 						continue
 					}
 					prevType = ident
 				}
-				if prevType == nil || prevType.Name != i.cfg.TypeAliasName {
-					prevType = nil
+				if prevType == nil {
 					continue
 				}
 				if vspec.Type == nil {
 					// for those with implicit type, assign the previous type
 					vspec.Type = prevType
 				}
-
-				for _, v := range vspec.Names {
-					if v.Name == "_" {
-						// blank identifier, not what we're interested in
-						continue
+				// determine the right typespec
+				for idx, vts := range typeSpecs {
+					if vts.TypeSpec.Name.Name == prevType.Name {
+						// add all names
+						for _, v := range vspec.Names {
+							if v.Name == "_" {
+								// blank identifier, not what we're interested in
+								continue
+							}
+							typeSpecs[idx].values = append(vts.values, valueSpec{v})
+						}
 					}
-					typeSpecs = append(typeSpecs, valueSpec{vspec, v})
 				}
 			}
 		}
 	}
-	return typeSpecs
+	return typeSpecs, nil
 }
 
-func (i inspector) evaluateValueSpec(idx int, v valueSpec, pkg *packages.Package) (*ValueSpec, error) {
-	typ, err := i.determineTypeOfExpr(v.Type.Type)
+func (i inspector) evaluateValueSpec(t typeSpec, s valueSpec, pkg *packages.Package) (*ValueSpec, error) {
+	val, valStr, err := i.determineValueOfExpr(s.Value, pkg)
 	if err != nil {
 		return nil, err
 	}
-	val, valStr, err := i.determineValueOfExpr(v.Value, pkg)
-	if err != nil {
-		return nil, err
-	}
-	name := v.Value.Name
-	if strings.HasPrefix(v.Value.Name, i.cfg.TypeAliasName) {
-		if len(i.cfg.TypeAliasName) == len(v.Value.Name) {
-			return nil, fmt.Errorf("cannot determine name after trimming prefix (enum value equals type name). make sure to give a meaningful names to your enum values.")
+	name := s.Value.Name
+	// auto-strip prefix
+	if strings.HasPrefix(s.Value.Name, t.TypeSpec.Name.Name) {
+		if len(t.TypeSpec.Name.Name) == len(s.Value.Name) {
+			return nil, fmt.Errorf("failed to auto-strip prefix (enum value equals type name). make sure to give a meaningful names to your enum values.")
 		}
-		name = v.Value.Name[len(i.cfg.TypeAliasName):]
+		name = s.Value.Name[len(t.TypeSpec.Name.Name):]
 	}
 	return &ValueSpec{
-		Index:          idx,
-		IdentifierName: v.Value.Name,
+		IdentifierName: s.Value.Name,
 		EnumString:     name,
-		Type:           typ,
 		Value:          val,
 		ValueString:    valStr,
 	}, nil
@@ -245,9 +384,9 @@ func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint
 	if !ok {
 		return 0, "", fmt.Errorf("internal error: a value slipped our type evaluation (type: %+v)", e)
 	}
-	obj, ok := pkg.TypesInfo.Defs[c]
-	if !ok {
-		return 0, "", fmt.Errorf("no value for constant %q", c)
+	obj := pkg.TypesInfo.ObjectOf(c)
+	if obj == nil {
+		return 0, "", fmt.Errorf("no type object for constant %q", c)
 	}
 	objT := obj.Type()
 	if objT == nil {
@@ -263,7 +402,7 @@ func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint
 	}
 	info := bul.Info()
 	if info&types.IsInteger == 0 {
-		return 0, "", fmt.Errorf("type %q is not an constant of type integer", i.cfg.TypeAliasName)
+		return 0, "", fmt.Errorf("%q is not a constant of type integer", c.Name)
 	}
 	cobj, ok := obj.(*types.Const)
 	if !ok {

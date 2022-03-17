@@ -1,0 +1,4 @@
+---
+typeAlias: BookingState
+serializers: [yaml]
+support: [ent]

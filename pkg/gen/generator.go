@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	packageEvalMode = packages.NeedSyntax | packages.NeedName | packages.NeedTypes | packages.NeedTypesInfo
+	packageEvalMode = packages.NeedSyntax | packages.NeedName | packages.NeedTypes | packages.NeedTypesInfo | packages.NeedModule
 )
 
 type gen struct {
@@ -51,8 +51,8 @@ func (g *gen) Generate(targetPkg string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if len(out.ValueSpecs) == 0 {
-		return nil, fmt.Errorf("no constants detected.")
+	if len(out.TypeSpecs) == 0 {
+		return nil, fmt.Errorf("no enums detected.")
 	}
 	buf, err := g.r.Render(out)
 	if err != nil {

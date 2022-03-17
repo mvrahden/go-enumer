@@ -36,25 +36,31 @@ func withDefaults(cfg *config.Options, r *renderer) {
 }
 
 func withTransformStrategy(c *config.Options, r *renderer) {
+	r.util.transform = getTransformStrategy(c)
+}
+
+func getTransformStrategy(c *config.Options) func(string) string {
 	switch c.TransformStrategy {
 	case "camel":
-		r.util.transform = camelCaseTransformer
+		return camelCaseTransformer
 	case "pascal":
-		r.util.transform = pascalCaseTransformer
+		return pascalCaseTransformer
 	case "kebab":
-		r.util.transform = kebabCaseTransformer
+		return kebabCaseTransformer
 	case "snake":
-		r.util.transform = snakeCaseTransformer
+		return snakeCaseTransformer
 	case "lower":
-		r.util.transform = lowerCaseTransformer
+		return lowerCaseTransformer
 	case "upper":
-		r.util.transform = upperCaseTransformer
+		return upperCaseTransformer
 	case "upper-kebab":
-		r.util.transform = upperKebabCaseTransformer
+		return upperKebabCaseTransformer
 	case "upper-snake":
-		r.util.transform = upperSnakeCaseTransformer
+		return upperSnakeCaseTransformer
 	case "whitespace":
-		r.util.transform = whitespaceCaseTransformer
+		return whitespaceCaseTransformer
+	default:
+		return noopCaseTransformer
 	}
 }
 
@@ -78,12 +84,15 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		return strings.Compare(f.Imports[i].Path, f.Imports[j].Path) < 0
 	})
 
-	if len(f.ValueSpecs) == 0 { // nothing to generate further
+	if len(f.TypeSpecs) == 0 { // nothing to generate further
 		return buf.Bytes(), nil
 	}
 
-	for _, v := range f.ValueSpecs {
-		v.EnumString = r.util.transform(v.EnumString)
+	for _, ts := range f.TypeSpecs {
+		transformFn := getTransformStrategy(r.cfg)
+		for _, v := range ts.ValueSpecs {
+			v.EnumString = transformFn(v.EnumString)
+		}
 	}
 
 	{ // write imports list
@@ -101,19 +110,26 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		buf.WriteString(")\n\n")
 	}
 
+	for _, ts := range f.TypeSpecs {
+		r.renderForTypeSpec(buf, ts)
+	}
+	return buf.Bytes(), nil
+}
+
+func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 	var hasGeneratedUndefinedValue bool
 	{ // write consts
 		tempBuf := new(bytes.Buffer)
-		for _, v := range f.ValueSpecs {
+		for _, v := range ts.ValueSpecs {
 			tempBuf.WriteString(v.EnumString)
 		}
 		buf.WriteString("const (\n")
-		buf.WriteString(fmt.Sprintf("\t_%sString = \"%s\"\n", r.cfg.TypeAliasName, tempBuf))
-		buf.WriteString(fmt.Sprintf("\t_%sLowerString = \"%s\"\n", r.cfg.TypeAliasName, strings.ToLower(tempBuf.String())))
+		buf.WriteString(fmt.Sprintf("\t_%sString = \"%s\"\n", ts.Name, tempBuf))
+		buf.WriteString(fmt.Sprintf("\t_%sLowerString = \"%s\"\n", ts.Name, strings.ToLower(tempBuf.String())))
 		buf.WriteString(")\n\n")
 		if r.util.supportUndefined {
 			var foundZeroValue bool
-			for _, v := range f.ValueSpecs {
+			for _, v := range ts.ValueSpecs {
 				if v.Value == 0 {
 					foundZeroValue = true
 					break
@@ -127,7 +143,7 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 %[1]sUndefined %[1]s = 0
 )
 
-`, r.cfg.TypeAliasName))
+`, ts.Name))
 			}
 		}
 	}
@@ -136,41 +152,41 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		tempBuf := new(bytes.Buffer)
 		buf.WriteString("var (\n")
 
-		lowerBound := f.ValueSpecs[0].Value
+		lowerBound := ts.ValueSpecs[0].Value
 		if r.util.supportUndefined && lowerBound > 0 {
 			lowerBound = 0
 		}
-		buf.WriteString(fmt.Sprintf("\t_%[1]sValueRange = [2]%[1]s{%d, %d}\n", r.cfg.TypeAliasName, lowerBound, f.ValueSpecs[len(f.ValueSpecs)-1].Value))
+		buf.WriteString(fmt.Sprintf("\t_%[1]sValueRange = [2]%[1]s{%d, %d}\n", ts.Name, lowerBound, ts.ValueSpecs[len(ts.ValueSpecs)-1].Value))
 
-		for idx, prev := 0, uint64(0); idx < len(f.ValueSpecs); idx++ {
-			if idx != 0 && prev == f.ValueSpecs[idx].Value {
+		for idx, prev := 0, uint64(0); idx < len(ts.ValueSpecs); idx++ {
+			if idx != 0 && prev == ts.ValueSpecs[idx].Value {
 				continue
 			}
-			prev = f.ValueSpecs[idx].Value
-			tempBuf.WriteString(fmt.Sprintf("%s, ", f.ValueSpecs[idx].ValueString))
+			prev = ts.ValueSpecs[idx].Value
+			tempBuf.WriteString(fmt.Sprintf("%s, ", ts.ValueSpecs[idx].ValueString))
 		}
-		buf.WriteString(fmt.Sprintf("\t_%sValues = []%s{%s}\n", r.cfg.TypeAliasName, r.cfg.TypeAliasName, tempBuf))
+		buf.WriteString(fmt.Sprintf("\t_%sValues = []%s{%s}\n", ts.Name, ts.Name, tempBuf))
 		tempBuf.Reset()
 
-		for idx, acc, prev := 0, 0, uint64(0); idx < len(f.ValueSpecs); idx++ {
+		for idx, acc, prev := 0, 0, uint64(0); idx < len(ts.ValueSpecs); idx++ {
 			_prev := acc
-			acc += len(f.ValueSpecs[idx].EnumString)
-			if idx != 0 && prev == f.ValueSpecs[idx].Value {
+			acc += len(ts.ValueSpecs[idx].EnumString)
+			if idx != 0 && prev == ts.ValueSpecs[idx].Value {
 				continue
 			}
-			prev = f.ValueSpecs[idx].Value
-			tempBuf.WriteString(fmt.Sprintf("_%sString[%d:%d], ", r.cfg.TypeAliasName, _prev, acc))
+			prev = ts.ValueSpecs[idx].Value
+			tempBuf.WriteString(fmt.Sprintf("_%sString[%d:%d], ", ts.Name, _prev, acc))
 		}
-		buf.WriteString(fmt.Sprintf("\t_%sStrings = []string{%s}\n", r.cfg.TypeAliasName, tempBuf))
+		buf.WriteString(fmt.Sprintf("\t_%sStrings = []string{%s}\n", ts.Name, tempBuf))
 		buf.WriteString(")\n\n")
 	}
 
 	{ // compiletime assertion of numeric sequence
 		tempBuf := new(bytes.Buffer)
 		if hasGeneratedUndefinedValue {
-			tempBuf.WriteString(fmt.Sprintf("\t_ = x[%[1]sUndefined-(0)]\n", r.cfg.TypeAliasName))
+			tempBuf.WriteString(fmt.Sprintf("\t_ = x[%[1]sUndefined-(0)]\n", ts.Name))
 		}
-		for _, v := range f.ValueSpecs {
+		for _, v := range ts.ValueSpecs {
 			tempBuf.WriteString(fmt.Sprintf("\t_ = x[%s-(%s)]\n", v.IdentifierName, v.ValueString))
 		}
 
@@ -181,20 +197,20 @@ func _%[1]sNoOp() {
 	var x [1]struct{}
 %[2]s}
 
-	`, r.cfg.TypeAliasName, tempBuf))
+	`, ts.Name, tempBuf))
 	}
 
 	{ // standard functions
 		var offset string
-		if f.ValueSpecs[0].Value > 0 {
-			offset = fmt.Sprintf("-%d", f.ValueSpecs[0].Value)
+		if ts.ValueSpecs[0].Value > 0 {
+			offset = fmt.Sprintf("-%d", ts.ValueSpecs[0].Value)
 		}
 		undefinedGuard := ""
 		if r.util.supportUndefined && hasGeneratedUndefinedValue {
 			undefinedGuard = fmt.Sprintf(`
 	if _%[2]s == %[1]sUndefined {
 		return ""
-	}`, r.cfg.TypeAliasName, determineReceiverName(r.cfg.TypeAliasName))
+	}`, ts.Name, determineReceiverName(ts.Name))
 		}
 		buf.WriteString(fmt.Sprintf(`// %[1]sValues returns all values of the enum.
 func %[1]sValues() []%[1]s {
@@ -226,20 +242,20 @@ func (_%[2]s %[1]s) String() string {
 	return _%[1]sStrings[idx]
 }
 
-`, r.cfg.TypeAliasName, determineReceiverName(r.cfg.TypeAliasName), offset, undefinedGuard))
+`, ts.Name, determineReceiverName(ts.Name), offset, undefinedGuard))
 
-		buf.WriteString(fmt.Sprintf("var (\n\t_%[1]sStringToValueMap = map[string]%[1]s{\n", r.cfg.TypeAliasName))
-		for idx, prev := 0, 0; idx < len(f.ValueSpecs); idx++ {
-			l := prev + len(f.ValueSpecs[idx].EnumString)
-			buf.WriteString(fmt.Sprintf("\t_%[1]sString[%[2]d:%[3]d]: %[4]s,\n", r.cfg.TypeAliasName, prev, l, f.ValueSpecs[idx].IdentifierName))
+		buf.WriteString(fmt.Sprintf("var (\n\t_%[1]sStringToValueMap = map[string]%[1]s{\n", ts.Name))
+		for idx, prev := 0, 0; idx < len(ts.ValueSpecs); idx++ {
+			l := prev + len(ts.ValueSpecs[idx].EnumString)
+			buf.WriteString(fmt.Sprintf("\t_%[1]sString[%[2]d:%[3]d]: %[4]s,\n", ts.Name, prev, l, ts.ValueSpecs[idx].IdentifierName))
 			prev = l
 		}
 		buf.WriteString("}\n")
 
-		buf.WriteString(fmt.Sprintf("\t_%[1]sLowerStringToValueMap = map[string]%[1]s{\n", r.cfg.TypeAliasName))
-		for idx, prev := 0, 0; idx < len(f.ValueSpecs); idx++ {
-			l := prev + len(f.ValueSpecs[idx].EnumString)
-			buf.WriteString(fmt.Sprintf("\t_%[1]sLowerString[%[2]d:%[3]d]: %[4]s,\n", r.cfg.TypeAliasName, prev, l, f.ValueSpecs[idx].IdentifierName))
+		buf.WriteString(fmt.Sprintf("\t_%[1]sLowerStringToValueMap = map[string]%[1]s{\n", ts.Name))
+		for idx, prev := 0, 0; idx < len(ts.ValueSpecs); idx++ {
+			l := prev + len(ts.ValueSpecs[idx].EnumString)
+			buf.WriteString(fmt.Sprintf("\t_%[1]sLowerString[%[2]d:%[3]d]: %[4]s,\n", ts.Name, prev, l, ts.ValueSpecs[idx].IdentifierName))
 			prev = l
 		}
 		buf.WriteString("}\n)\n\n")
@@ -248,7 +264,7 @@ func (_%[2]s %[1]s) String() string {
 			zeroValueGuard = fmt.Sprintf(`
 	if len(raw) == 0 {
 		return %s(0), true
-	}`, r.cfg.TypeAliasName)
+	}`, ts.Name)
 		}
 		buf.WriteString(fmt.Sprintf(`// %[1]sFromString determines the enum value with an exact case match.
 func %[1]sFromString(raw string) (%[1]s, bool) {%[2]s
@@ -272,19 +288,17 @@ func %[1]sFromStringIgnoreCase(raw string) (%[1]s, bool) {
 	return v, true
 }
 
-`, r.cfg.TypeAliasName, zeroValueGuard))
+`, ts.Name, zeroValueGuard))
 	}
 
 	{
-		r.renderSerializers(buf)
+		r.renderSerializers(buf, ts)
 	}
 	{
 		if r.util.supportEntInterface {
-			r.renderEntInterfaceSupport(buf)
+			r.renderEntInterfaceSupport(buf, ts)
 		}
 	}
-
-	return buf.Bytes(), nil
 }
 
 func determineReceiverName(value string) string {
@@ -333,28 +347,28 @@ var (
 	}
 )
 
-func (r *renderer) renderSerializers(buf *bytes.Buffer) {
+func (r *renderer) renderSerializers(buf *bytes.Buffer, ts *TypeSpec) {
 	ignoreCase := r.cfg.SupportedFeatures.Contains("ignore-case")
 	for _, v := range r.cfg.Serializers {
 		switch v {
 		case "binary":
-			r.renderBinarySerializers(buf, ignoreCase)
+			r.renderBinarySerializers(buf, ts, ignoreCase)
 		case "gql":
-			r.renderGqlSerializers(buf, ignoreCase)
+			r.renderGqlSerializers(buf, ts, ignoreCase)
 		case "json":
-			r.renderJsonSerializers(buf, ignoreCase)
+			r.renderJsonSerializers(buf, ts, ignoreCase)
 		case "text":
-			r.renderTextSerializers(buf, ignoreCase)
+			r.renderTextSerializers(buf, ts, ignoreCase)
 		case "sql":
-			r.renderSqlSerializers(buf, ignoreCase)
+			r.renderSqlSerializers(buf, ts, ignoreCase)
 		case "yaml", "yaml.v3":
 			isYamlV3 := v == "yaml.v3"
-			r.renderYamlSerializers(buf, ignoreCase, isYamlV3)
+			r.renderYamlSerializers(buf, ts, ignoreCase, isYamlV3)
 		}
 	}
 }
 
-func (r *renderer) renderBinarySerializers(buf *bytes.Buffer, ignoreCase bool) {
+func (r *renderer) renderBinarySerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
@@ -364,7 +378,7 @@ func (r *renderer) renderBinarySerializers(buf *bytes.Buffer, ignoreCase bool) {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}`, r.cfg.TypeAliasName)
+	}`, ts.Name)
 	}
 	buf.WriteString(fmt.Sprintf(`// MarshalBinary implements the encoding.BinaryMarshaler interface for %[1]s.
 func (_%[2]s %[1]s) MarshalBinary() ([]byte, error) {
@@ -386,10 +400,10 @@ func (_%[2]s *%[1]s) UnmarshalBinary(text []byte) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, determineReceiverName(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
+`, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderGqlSerializers(buf *bytes.Buffer, ignoreCase bool) {
+func (r *renderer) renderGqlSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
@@ -399,7 +413,7 @@ func (r *renderer) renderGqlSerializers(buf *bytes.Buffer, ignoreCase bool) {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}`, r.cfg.TypeAliasName)
+	}`, ts.Name)
 	}
 	buf.WriteString(fmt.Sprintf(`// MarshalGQL implements the graphql.Marshaler interface for %[1]s.
 func (_%[2]s %[1]s) MarshalGQL(w io.Writer) {
@@ -428,10 +442,10 @@ func (_%[2]s *%[1]s) UnmarshalGQL(value interface{}) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, determineReceiverName(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
+`, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderJsonSerializers(buf *bytes.Buffer, ignoreCase bool) {
+func (r *renderer) renderJsonSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
@@ -441,7 +455,7 @@ func (r *renderer) renderJsonSerializers(buf *bytes.Buffer, ignoreCase bool) {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}`, r.cfg.TypeAliasName)
+	}`, ts.Name)
 	}
 	buf.WriteString(fmt.Sprintf(`// MarshalJSON implements the json.Marshaler interface for %[1]s.
 func (_%[2]s %[1]s) MarshalJSON() ([]byte, error) {
@@ -466,10 +480,10 @@ func (_%[2]s *%[1]s) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, determineReceiverName(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
+`, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderTextSerializers(buf *bytes.Buffer, ignoreCase bool) {
+func (r *renderer) renderTextSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
@@ -479,7 +493,7 @@ func (r *renderer) renderTextSerializers(buf *bytes.Buffer, ignoreCase bool) {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}`, r.cfg.TypeAliasName)
+	}`, ts.Name)
 	}
 	buf.WriteString(fmt.Sprintf(`// MarshalText implements the encoding.TextMarshaler interface for %[1]s.
 func (_%[2]s %[1]s) MarshalText() ([]byte, error) {
@@ -501,10 +515,10 @@ func (_%[2]s *%[1]s) UnmarshalText(text []byte) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, determineReceiverName(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
+`, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderSqlSerializers(buf *bytes.Buffer, ignoreCase bool) {
+func (r *renderer) renderSqlSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
@@ -514,7 +528,7 @@ func (r *renderer) renderSqlSerializers(buf *bytes.Buffer, ignoreCase bool) {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}`, r.cfg.TypeAliasName)
+	}`, ts.Name)
 	}
 	buf.WriteString(fmt.Sprintf(`func (_%[2]s %[1]s) Value() (driver.Value, error) {
 	if !_%[2]s.IsValid() {
@@ -545,10 +559,10 @@ func (_%[2]s *%[1]s) Scan(value interface{}) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, determineReceiverName(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
+`, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderYamlSerializers(buf *bytes.Buffer, ignoreCase, isV3 bool) {
+func (r *renderer) renderYamlSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase, isV3 bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
@@ -560,14 +574,14 @@ func (_%[2]s %[1]s) MarshalYAML() (interface{}, error) {
 	}
 	return _%[2]s.String(), nil
 }
-`, r.cfg.TypeAliasName, determineReceiverName(r.cfg.TypeAliasName)))
+`, ts.Name, determineReceiverName(ts.Name)))
 
 	zeroValueGuard := ""
 	if !r.util.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
-	}`, r.cfg.TypeAliasName)
+	}`, ts.Name)
 	}
 	if isV3 {
 		buf.WriteString(fmt.Sprintf(`
@@ -587,7 +601,7 @@ func (_%[2]s *%[1]s) UnmarshalYAML(n *yaml.Node) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, determineReceiverName(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
+`, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 		return
 	}
 	buf.WriteString(fmt.Sprintf(`
@@ -606,14 +620,14 @@ func (_%[2]s *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return nil
 }
 
-`, r.cfg.TypeAliasName, determineReceiverName(r.cfg.TypeAliasName), lookupMethod, zeroValueGuard))
+`, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderEntInterfaceSupport(buf *bytes.Buffer) {
+func (r *renderer) renderEntInterfaceSupport(buf *bytes.Buffer, ts *TypeSpec) {
 	buf.WriteString(fmt.Sprintf(`
 // Values returns a slice of all String values of the enum.
 func (%[1]s) Values() []string {
 	return %[1]sStrings()
 }
-`, r.cfg.TypeAliasName))
+`, ts.Name))
 }
