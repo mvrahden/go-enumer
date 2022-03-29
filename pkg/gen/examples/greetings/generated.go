@@ -69,7 +69,7 @@ func (_g Greeting) String() string {
 	if _g == GreetingUndefined {
 		return ""
 	}
-	idx := int(_g) - 1
+	idx := uint(_g) - 1
 	return _GreetingStrings[idx]
 }
 

@@ -259,7 +259,7 @@ func (_%[2]s %[1]s) String() string {
 	if !_%[2]s.IsValid() {
 		return fmt.Sprintf("%[1]s(%%d)", _%[2]s)
 	}%[4]s
-	idx := int(_%[2]s)%[3]s
+	idx := uint(_%[2]s)%[3]s
 	return _%[1]sStrings[idx]
 }
 
@@ -273,7 +273,7 @@ func (_%[2]s %[1]s) CanonicalValue() string {
 	if !_%[2]s.IsValid() {
 		return fmt.Sprintf("%[1]s(%%d)", _%[2]s)
 	}
-	idx := int(_%[2]s)
+	idx := uint(_%[2]s)
 	return _%[1]sCanonicalValues[idx]
 }
 

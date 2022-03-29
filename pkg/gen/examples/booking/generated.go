@@ -45,7 +45,7 @@ func (_b BookingState) String() string {
 	if !_b.IsValid() {
 		return fmt.Sprintf("BookingState(%d)", _b)
 	}
-	idx := int(_b)
+	idx := uint(_b)
 	return _BookingStateStrings[idx]
 }
 
@@ -56,7 +56,7 @@ func (_b BookingState) CanonicalValue() string {
 	if !_b.IsValid() {
 		return fmt.Sprintf("BookingState(%d)", _b)
 	}
-	idx := int(_b)
+	idx := uint(_b)
 	return _BookingStateCanonicalValues[idx]
 }
 

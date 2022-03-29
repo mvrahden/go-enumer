@@ -57,7 +57,7 @@ func (_g Greeting) String() string {
 	if !_g.IsValid() {
 		return fmt.Sprintf("Greeting(%d)", _g)
 	}
-	idx := int(_g)
+	idx := uint(_g)
 	return _GreetingStrings[idx]
 }
 

@@ -61,7 +61,7 @@ func (_p Pill) String() string {
 	if !_p.IsValid() {
 		return fmt.Sprintf("Pill(%d)", _p)
 	}
-	idx := int(_p)
+	idx := uint(_p)
 	return _PillStrings[idx]
 }
 
