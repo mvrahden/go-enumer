@@ -24,9 +24,9 @@ var examples embed.FS
 
 func TestGenerator(t *testing.T) {
 	for _, target := range []string{
-		// "pills",
-		// "greetings",
-		// "greetings.with.default",
+		"pills",
+		"greetings",
+		"greetings.with.default",
 		"booking",
 	} {
 		pkg := path.Join(packageBase, "/pkg/gen/examples/", target)
@@ -45,29 +45,30 @@ func TestGenerator(t *testing.T) {
 }
 
 func TestEdgeCaseDetection(t *testing.T) {
-	target := "pills"
-
-	pkg := path.Join(packageBase, "/pkg/gen/examples/", target)
-
 	for _, tC := range []struct {
-		errMsg string
-		cfg    config.Options
+		directory string
+		errMsg    string
+		cfg       config.Options
 	}{
-		{cfg: config.Options{TypeAliasName: "PillNotIntegerType"},
+		{directory: "noninteger",
 			errMsg: "Invalid enum set: Enum type must be an integer-like type, found \"float32\"."},
-		{cfg: config.Options{TypeAliasName: "PillViolatesLowerBound"},
+		{directory: "lowerbound",
+			errMsg: "Invalid enum set: values cannot be in a negative range."},
+		{directory: "upperbound",
 			errMsg: "Invalid enum set: Enums need to start with either 0 or 1."},
-		{cfg: config.Options{TypeAliasName: "PillViolatesUpperBound"},
-			errMsg: "Invalid enum set: Enums need to start with either 0 or 1."},
-		{cfg: config.Options{TypeAliasName: "PillNotContinuous"},
+		{directory: "noncontinuous",
+			errMsg: "Invalid enum set: Enums must be a continuous sequence with linear increments of 1."},
+		{directory: "noncontinuous2",
 			errMsg: "Invalid enum set: Enums must be a continuous sequence with linear increments of 1."},
 	} {
 
-		t.Run(fmt.Sprintf("Generate for package %q", target), func(t *testing.T) {
+		t.Run(fmt.Sprintf("Generate for package %q", tC.directory), func(t *testing.T) {
+			pkg := path.Join(packageBase, "/pkg/gen/examples/invalid/", tC.directory)
+
 			g := NewGenerator(NewInspector(&tC.cfg), NewRenderer(&tC.cfg))
 			srcs, err := g.Generate(pkg)
 			require.Error(t, err)
-			require.Contains(t, err.Error(), tC.errMsg)
+			require.ErrorContains(t, err, tC.errMsg)
 			require.Zero(t, srcs)
 		})
 	}

@@ -14,11 +14,18 @@ const (
 
 type Args Options
 type Options struct {
-	TypeAliasName     string     `yaml:"typeAlias"`
 	TransformStrategy string     `yaml:"transform" env-default:"noop"`
 	AddPrefix         string     `yaml:"addPrefix"`
 	Serializers       stringList `yaml:"serializers"`
 	SupportedFeatures stringList `yaml:"support"`
+}
+
+func (o *Options) Clone() *Options {
+	if o == nil {
+		return nil
+	}
+	args := Args(*o)
+	return (*Options)(&args)
 }
 
 type stringList []string

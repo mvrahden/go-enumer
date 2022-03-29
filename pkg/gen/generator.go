@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	packageEvalMode = packages.NeedSyntax | packages.NeedName | packages.NeedTypes | packages.NeedTypesInfo | packages.NeedModule
+	packageEvalMode = packages.NeedSyntax | packages.NeedName | packages.NeedTypes | packages.NeedTypesInfo
 )
 
 type gen struct {

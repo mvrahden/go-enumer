@@ -1,5 +1,6 @@
 package greetings
 
+//go:enumer
 type Greeting uint8
 
 const (

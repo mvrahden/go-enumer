@@ -1,5 +1,6 @@
 package pills
 
+//go:enumer
 type Pill int
 
 const PillPlacebo Pill = 0
@@ -132,34 +133,4 @@ const (
 	PillUndefinedParacetamol
 	PillUndefinedAcetaminophen PillUndefined = iota
 	PillUndefinedVitaminC
-)
-
-// INVALID TYPES
-
-type PillNotIntegerType float32
-
-const (
-	PillNotIntegerTypePlacebo PillNotIntegerType = 0
-	PillNotIntegerTypeAspirin PillNotIntegerType = 2
-)
-
-type PillViolatesLowerBound int
-
-const (
-	PillViolatesLowerBoundPlacebo PillViolatesLowerBound = -1
-	PillViolatesLowerBoundAspirin
-)
-
-type PillViolatesUpperBound int
-
-const (
-	PillViolatesUpperBoundPlacebo PillViolatesUpperBound = 2
-	PillViolatesUpperBoundAspirin
-)
-
-type PillNotContinuous int
-
-const (
-	PillNotContinuousPlacebo PillNotContinuous = 0
-	PillNotContinuousAspirin PillNotContinuous = 2
 )

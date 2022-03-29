@@ -14,22 +14,21 @@ func TestE2E_Cli(t *testing.T) {
 	testcases := []struct {
 		desc        string
 		dirName     string
-		typealias   string
 		args        []string
 		outFilename string
 	}{
 		{"no args",
-			"greeting", "Greeting", nil, "gen.golden"},
+			"greeting", nil, "gen.golden"},
 		{"standard serializers",
-			"greeting", "Greeting", []string{"-serializers=binary,gql,json,sql,text,yaml"}, "gen.serializers.golden"},
+			"greeting", []string{"-serializers=binary,gql,json,sql,text,yaml"}, "gen.serializers.golden"},
 		{"standard serializers - different order, same result",
-			"greeting", "Greeting", []string{"-serializers=sql,gql,json,yaml,binary,text"}, "gen.serializers.golden"},
+			"greeting", []string{"-serializers=sql,gql,json,yaml,binary,text"}, "gen.serializers.golden"},
 		{"serializers and yaml.v3",
-			"greeting", "Greeting", []string{"-serializers=binary,gql,json,sql,text,yaml.v3"}, "gen.serializers.yaml_v3.golden"},
+			"greeting", []string{"-serializers=binary,gql,json,sql,text,yaml.v3"}, "gen.serializers.yaml_v3.golden"},
 		{"standard serializers - deserialize with ignore case",
-			"greeting", "Greeting", []string{"-serializers=sql,gql,json,yaml,binary,text", "-support=ignore-case"}, "gen.serializers.ignore-case.golden"},
+			"greeting", []string{"-serializers=sql,gql,json,yaml,binary,text", "-support=ignore-case"}, "gen.serializers.ignore-case.golden"},
 		{"standard output and ent interface",
-			"greeting", "Greeting", []string{"-support=ent"}, "gen.ent.golden"},
+			"greeting", []string{"-support=ent"}, "gen.ent.golden"},
 	}
 	for idx, tC := range testcases {
 		t.Run(fmt.Sprintf("Generate (idx: %d %q)", idx, tC.desc), func(t *testing.T) {
@@ -39,7 +38,7 @@ func TestE2E_Cli(t *testing.T) {
 			tmpFile := filepath.Join(tmpDir, tC.outFilename)
 			cli.PatchTargetFilenameFunc(t, tmpFile)
 
-			defaultArgs := []string{"-typealias=" + tC.typealias, "-dir=testdata/" + tC.dirName}
+			defaultArgs := []string{"-dir=testdata/" + tC.dirName}
 			err := cli.Execute(append(defaultArgs, tC.args...))
 			require.NoError(t, err)
 			require.FileExists(t, tmpFile)

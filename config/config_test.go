@@ -18,7 +18,6 @@ func TestConfigLoading(t *testing.T) {
 	})
 	t.Run("Load from Config file", func(t *testing.T) {
 		err := os.WriteFile(configFile, []byte(`---
-typeAlias: abc
 transform: def
 addPrefix: ghi
 serializers: [jkl,mno,pqr]
@@ -27,7 +26,6 @@ support: [stu,vwx,yz]`), os.ModePerm)
 
 		cfg := LoadFrom(configFile)
 		require.Equal(t, &Options{
-			TypeAliasName:     "abc",
 			TransformStrategy: "def",
 			AddPrefix:         "ghi",
 			Serializers:       []string{"jkl", "mno", "pqr"},
@@ -36,21 +34,30 @@ support: [stu,vwx,yz]`), os.ModePerm)
 	})
 	t.Run("Load with Args", func(t *testing.T) {
 		t.Run("joins with defaults if value not present", func(t *testing.T) {
-			args := &Args{TypeAliasName: "abc"}
+			args := &Args{}
 			cfg := LoadWith(args)
 			require.Equal(t, &Options{
-				TypeAliasName:     "abc",
 				TransformStrategy: "noop",
 			}, cfg)
 		})
 		t.Run("preserves value if value present", func(t *testing.T) {
-			args := &Args{TypeAliasName: "abc", TransformStrategy: "def"}
+			args := &Args{TransformStrategy: "def"}
 			cfg := LoadWith(args)
 			require.Equal(t, &Options{
-				TypeAliasName:     "abc",
 				TransformStrategy: "def",
 			}, cfg)
 		})
+	})
+}
+
+func TestCopy(t *testing.T) {
+	t.Run("copies to a new instance with equal values", func(t *testing.T) {
+		cfg := LoadFrom("")
+		cfg.AddPrefix = "ABC"
+		cfg.Serializers = stringList{"DEF"}
+		cfg2 := cfg.Clone()
+		require.NotSame(t, cfg, cfg2)
+		require.Equal(t, cfg, cfg2)
 	})
 }
 

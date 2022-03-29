@@ -91,7 +91,7 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 	for _, ts := range f.TypeSpecs {
 		transformFn := getTransformStrategy(r.cfg)
 		for _, v := range ts.ValueSpecs {
-			v.EnumString = transformFn(v.EnumString)
+			v.EnumValue = transformFn(v.EnumValue)
 		}
 	}
 
@@ -121,7 +121,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 	{ // write consts
 		tempBuf := new(bytes.Buffer)
 		for _, v := range ts.ValueSpecs {
-			tempBuf.WriteString(v.EnumString)
+			tempBuf.WriteString(v.EnumValue)
 		}
 		buf.WriteString("const (\n")
 		buf.WriteString(fmt.Sprintf("\t_%sString = \"%s\"\n", ts.Name, tempBuf))
@@ -170,7 +170,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 
 		for idx, acc, prev := 0, 0, uint64(0); idx < len(ts.ValueSpecs); idx++ {
 			_prev := acc
-			acc += len(ts.ValueSpecs[idx].EnumString)
+			acc += len(ts.ValueSpecs[idx].EnumValue)
 			if idx != 0 && prev == ts.ValueSpecs[idx].Value {
 				continue
 			}
@@ -246,16 +246,25 @@ func (_%[2]s %[1]s) String() string {
 
 		buf.WriteString(fmt.Sprintf("var (\n\t_%[1]sStringToValueMap = map[string]%[1]s{\n", ts.Name))
 		for idx, prev := 0, 0; idx < len(ts.ValueSpecs); idx++ {
-			l := prev + len(ts.ValueSpecs[idx].EnumString)
-			buf.WriteString(fmt.Sprintf("\t_%[1]sString[%[2]d:%[3]d]: %[4]s,\n", ts.Name, prev, l, ts.ValueSpecs[idx].IdentifierName))
+			l := prev + len(ts.ValueSpecs[idx].EnumValue)
+			value := ts.ValueSpecs[idx].IdentifierName
+			if ts.IsFromCsvSource {
+				value = ts.ValueSpecs[idx].ValueString
+			}
+			buf.WriteString(fmt.Sprintf("\t_%[1]sString[%[2]d:%[3]d]: %[4]s,\n", ts.Name, prev, l, value))
 			prev = l
 		}
 		buf.WriteString("}\n")
 
 		buf.WriteString(fmt.Sprintf("\t_%[1]sLowerStringToValueMap = map[string]%[1]s{\n", ts.Name))
 		for idx, prev := 0, 0; idx < len(ts.ValueSpecs); idx++ {
-			l := prev + len(ts.ValueSpecs[idx].EnumString)
-			buf.WriteString(fmt.Sprintf("\t_%[1]sLowerString[%[2]d:%[3]d]: %[4]s,\n", ts.Name, prev, l, ts.ValueSpecs[idx].IdentifierName))
+			l := prev + len(ts.ValueSpecs[idx].EnumValue)
+			value := ts.ValueSpecs[idx].IdentifierName
+			if ts.IsFromCsvSource {
+				value = ts.ValueSpecs[idx].ValueString
+			}
+
+			buf.WriteString(fmt.Sprintf("\t_%[1]sLowerString[%[2]d:%[3]d]: %[4]s,\n", ts.Name, prev, l, value))
 			prev = l
 		}
 		buf.WriteString("}\n)\n\n")

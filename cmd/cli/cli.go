@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/mvrahden/go-enumer/config"
 	"github.com/mvrahden/go-enumer/pkg/gen"
@@ -17,7 +16,6 @@ var (
 )
 
 const (
-	ArgumentKeyTypeAlias         = "typealias"
 	ArgumentKeySupport           = "support"
 	ArgumentKeySerializers       = "serializers"
 	ArgumentKeyTransformStrategy = "transform"
@@ -26,9 +24,7 @@ const (
 
 func init() {
 	// flag.StringVar(&cArgs.Output, "output", "", "the filename of the generated file; defaults to \"<typealias|snake>_enumer.go\".")
-	// flag.StringVar(&cArgs.AddPrefix, "addprefix", "", "add given prefix to string values of enum.")
 	flag.StringVar(&cArgs.TransformStrategy, ArgumentKeyTransformStrategy, "noop", "string transformation (camel|pascal|kebab|snake|... see README.md); defaults to \"noop\" which applies no transormation to the enum values.")
-	flag.StringVar(&cArgs.TypeAliasName, ArgumentKeyTypeAlias, "", "the type alias (or type name) to perform the scan against.")
 	flag.Var(&cArgs.Serializers, ArgumentKeySerializers, "a list of opt-in serializers (binary|json|sql|text|yaml).")
 	flag.Var(&cArgs.SupportedFeatures, ArgumentKeySupport, "a list of opt-in supported features (undefined|ignore-case|ent).")
 	flag.StringVar(&scanPath, ArgumentKeyScanDirectory, "", "directory of target package; defaults to CWD.")
@@ -78,14 +74,11 @@ func Execute(args []string) error {
 }
 
 var targetFilename = func(dir string, cfg *config.Options) string {
-	filename := fmt.Sprintf("%s_enumer.go", strings.ToLower(cfg.TypeAliasName))
+	filename := "types_enumer.go"
 	return filepath.Join(dir, filename)
 }
 
 func validate(cfg *config.Options) error {
-	if len(cfg.TypeAliasName) == 0 {
-		return fmt.Errorf("argument %q cannot be empty.", ArgumentKeyTypeAlias)
-	}
 	if cfg.Serializers.Contains("yaml") && cfg.Serializers.Contains("yaml.v3") {
 		return fmt.Errorf("serializers %q and %q are cannot be applied together.", "yaml", "yaml.v3")
 	}

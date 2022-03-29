@@ -1,5 +1,7 @@
 package gen
 
+import "github.com/mvrahden/go-enumer/config"
+
 type File struct {
 	Header    Header
 	Imports   []*Import
@@ -30,26 +32,22 @@ type Import struct {
 }
 
 type TypeSpec struct {
-	Index         int
-	Name          string
-	Docstring     string
-	Type          GoType
-	ValueSpecs    []*ValueSpec
-	Filepath      string
-	VirtualValues []*VirtualValue
-}
-
-type VirtualValue struct {
-	Index          int
-	Value          uint64
-	ValueString    string
-	EnumValue      string
-	CanonicalValue string
+	Index              int
+	Name               string
+	Docstring          string
+	Type               GoType
+	ValueSpecs         []*ValueSpec
+	Filepath           string
+	Config             config.Options
+	IsFromCsvSource    bool
+	HasCanonicalValues bool
 }
 
 type ValueSpec struct {
-	IdentifierName, EnumString string
-	Type                       GoType
-	Value                      uint64 // sign is infered by value/type combination
-	ValueString                string
+	Index          int
+	Value          uint64 // The numeric value of an enum constant
+	ValueString    string // String representation of Value
+	IdentifierName string
+	EnumValue      string
+	CanonicalValue string // A canonical representation of the enum
 }

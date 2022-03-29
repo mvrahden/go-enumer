@@ -11,8 +11,8 @@ import (
 func TestCli(t *testing.T) {
 	t.Run("generate filename", func(t *testing.T) {
 		require.Equal(t,
-			"/path/to/helloworld_enumer.go",
-			targetFilename("/path/to", &config.Options{TypeAliasName: "HelloWorld"}))
+			"/path/to/enumer.go",
+			targetFilename("/path/to", &config.Options{}))
 	})
 	t.Run("input validation fails", func(t *testing.T) {
 		t.Cleanup(CleanUpPackage)
@@ -22,11 +22,8 @@ func TestCli(t *testing.T) {
 			msg  string
 		}{
 			{
-				"on missing typealias", nil, "argument \"typealias\" cannot be empty.",
-			},
-			{
 				"on conflicting yaml serializers",
-				[]string{"-typealias=MyType", "-serializers=yaml,yaml.v3"},
+				[]string{"-serializers=yaml,yaml.v3"},
 				"serializers \"yaml\" and \"yaml.v3\" are cannot be applied together.",
 			},
 		}

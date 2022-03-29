@@ -5,8 +5,11 @@ It is an opinionated remake of the existing [enumer](https://github.com/dmarkham
 
 This remake of `go-enumer` is intended to be:
 
-- strict by default (compliant): it prevents undefined values from being (de-)serialized
-- graceful on opt-in: it allows (de-)serialization from empty values (if you need it to)
+- strict by default (principle of least surprise)
+- flexible via opt-in
+
+> E.g. it prevents `undefined` values from being (de-)serialized by default,
+> but allows (de-)serialization from empty/undefined values if you configure it to do so.
 
 ## What's new?
 
@@ -23,6 +26,7 @@ By convention, enum sets must:
 Due to the nature of enums being distinct values, the majority of enum sequences will start at `1`, as you can see in the following snippet.
 
 ```go
+//go:enumer
 type Greeting int
 
 const (
@@ -40,6 +44,7 @@ All the other values should be `>= 1`.
 (You may have multiple defaults, see section for [equivalent values](#equivalent-values))
 
 ```go
+//go:enumer
 type Greeting int
 
 const (
@@ -57,6 +62,27 @@ If your enum set does not define a default value, but you still want to be able 
 ```go
 const (
   GreetingUndefined Greeting = 0
+)
+```
+
+### Single pass screening
+
+Thanks to `go-enumer` [magic comments `//go:enumer`](#magic-comment-goenumer) we can now determine all enums of a package in a single pass, making the code generation much more efficient.
+
+### Magic comment `//go:enumer`
+
+The magic comment `//go:enumer` allows for a finegrained configuration on an enum type level, giving the ability to overwrite the global configuration. The following example will generate `json` and `yaml` interfaces for the `Greeting` enum, while only generating `json` for all the other enums it can find.
+Currently the magic comment supports for all configuration options, which are availble on a global configuration level.
+
+```go
+//go:generate github.com/mvrahden/go-enumer -serializers=json
+
+//go:enumer -serializers=json,yaml
+type Greeting int
+
+const (
+  GreetingWorld Greeting = iota
+  GreetingMars
 )
 ```
 
@@ -90,6 +116,13 @@ However it will not be represented in the list of possible values.
 If you do not have a **default** constant (with the value `0`) `go-enumer` will generate one for you.
 Your source code will now support an "undefined" value alongside your explicitly defined set of enums.
 However, **unknown** values will still fail upon serialization or deserialization.
+
+| Has Default Value | Supports Undefined | Enum Type can deserialize from undefined | Is Nullable |
+|:-----------------:|:------------------:|:----------------------------------------:|:-----------:|
+|        no         |         no         |                    no                    |     no      |
+|        yes        |         no         |                    no                    |     no      |
+|        yes        |        yes         |                   yes                    |     no      |
+|        no         |        yes         |                   yes                    |     yes     |
 
 #### Other supported features
 
@@ -131,19 +164,21 @@ When `go-enumer` is applied to a type, it will generate:
 For example, if we have an enum type called `Pill`,
 
 ```go
-//go:generate github.com/mvrahden/go-enumer -typealias=Pill -serializers=json
+//go:generate github.com/mvrahden/go-enumer -serializers=json
+
+//go:enumer
 type Pill int
 
 const (
-	Placebo Pill = iota
-	Aspirin
-	Ibuprofen
-	Paracetamol
-	Acetaminophen = Paracetamol
+  Placebo Pill = iota
+  Aspirin
+  Ibuprofen
+  Paracetamol
+  Acetaminophen = Paracetamol
 )
 ```
 
-executing `enumer -typealias=Pill -serializers=json` will generate a new file with four basic package functions and four methods (of which two are for JSON (de-)serialization):
+executing `//go:generate github.com/mvrahden/go-enumer -serializers=json` will generate a new file with four basic package functions and four methods (of which two are for JSON (de-)serialization):
 
 ```go
 func PillValues() []Pill {
@@ -163,19 +198,19 @@ func PillFromStringIgnoreCase(s string) (Pill, error) {
 }
 
 func (i Pill) String() string {
-	//...
+  //...
 }
 
 func (i Pill) IsValid() bool {
-	//...
+  //...
 }
 
 func (i Pill) MarshalJSON() ([]byte, error) {
-	//...
+  //...
 }
 
 func (i *Pill) UnmarshalJSON(data []byte) error {
-	//...
+  //...
 }
 ```
 
@@ -202,7 +237,7 @@ fmt.Println(allPills) // Will print [Placebo Aspirin Ibuprofen Paracetamol]
 // Check if a value belongs to the Pill enum values
 var notAPill Pill = 42
 if (notAPill.IsAPill()) {
-	fmt.Println(notAPill, "is not a value of the Pill enum")
+  fmt.Println(notAPill, "is not a value of the Pill enum")
 }
 
 // Marshal/unmarshal to/from json strings, either directly or automatically when
@@ -223,6 +258,7 @@ To avoid naming collisions while maintaining the same enum string, `go-enumer` a
 Consider the following example, which will generate the same string values:
 
 ```go
+//go:enumer
 type Greeting int
 
 const (
@@ -233,6 +269,7 @@ const (
   ČeskáRepublika
 )
 
+//go:enumer
 type GreetingWithPrefix int
 
 const (
@@ -247,6 +284,7 @@ const (
 By default, `go-enumer` uses the same name of the enum value for generating the string representation (usually PascalCase in Go).
 
 ```go
+//go:enumer
 type Greeting int
 
  ...
@@ -257,7 +295,7 @@ fmt.Print(ČeskáRepublika) // name => "ČeskáRepublika"
 Sometimes you need to use some other string representation format than PascalCase.
 To transform the string values from PascalCase to another format, you can use the `transform` flag.
 
-For example, the command `enumer -typealias=MyType -transform=whitespace` would generate the following string representation:
+For example, the command `//go:generate github.com/mvrahden/go-enumer -transform=whitespace` would generate the following string representation:
 
 ```go
 fmt.Print(ČeskáRepublika) // name => "Česká Republika"
@@ -270,6 +308,7 @@ fmt.Print(ČeskáRepublika) // name => "Česká Republika"
 Please take the example transformation from the following table for this example:
 
 ```go
+//go:enumer
 type MyType int
 
 const (
@@ -291,18 +330,16 @@ const (
 | upper-snake | FOO_BAR |
 | whitespace | Foo Bar |
 
-## How to use
+## Configuration Options
 
-On every run you have to set the `typealias` to determine the target type to run the code generation for.
-
-Additionally you can add:
+You can add:
 
 - transformation with `transform` option, e.g. `transform=kebab`.
 - serializers with `serializers` option, e.g. `serializers=json,sql,...`.
 - supported features `support` option, e.g. `support=undefined,ent`
   - `undefined`, see ["undefined"-value](#the-undefined-value)
-  - `ent`, adds interface support for [entgo.io](https://github.com/ent/ent)
   - `ignore-case`, adds support for case-insensitive lookup
+  - `ent`, adds interface support for [entgo.io](https://github.com/ent/ent)
 
 ## Inspiring projects
 

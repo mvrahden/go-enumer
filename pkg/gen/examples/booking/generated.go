@@ -7,16 +7,16 @@ import (
 )
 
 const (
-	_BookingStateString          = "CreatedUnavailableFailedCanceledNotFoundDeleted"
-	_BookingStateLowerString     = "createdunavailablefailedcancelednotfounddeleted"
-	_BookingStateCanonicalString = "The booking was created successfullyThe booking was not availableThe booking failedThe booking was canceledThe booking was not foundThe booking was deleted"
+	_BookingStateString         = "CreatedUnavailableFailedCanceledNotFoundDeleted"
+	_BookingStateLowerString    = "createdunavailablefailedcancelednotfounddeleted"
+	_BookingStateCanonicalValue = "The booking was created successfullyThe booking was not availableThe booking failedThe booking was canceledThe booking was not foundThe booking was deleted"
 )
 
 var (
-	_BookingStateValueRange       = [2]BookingState{0, 5}
-	_BookingStateValues           = []BookingState{0, 1, 2, 3, 4, 5}
-	_BookingStateStrings          = []string{_BookingStateString[0:7], _BookingStateString[7:18], _BookingStateString[18:24], _BookingStateString[24:32], _BookingStateString[32:40], _BookingStateString[40:47]}
-	_BookingStateCanonicalValues = []string{_BookingStateCanonicalString[0:36], _BookingStateCanonicalString[7:18], _BookingStateCanonicalString[18:24], _BookingStateCanonicalString[24:32], _BookingStateCanonicalString[32:40], _BookingStateCanonicalString[40:47]}
+	_BookingStateValueRange      = [2]BookingState{0, 5}
+	_BookingStateValues          = []BookingState{0, 1, 2, 3, 4, 5}
+	_BookingStateStrings         = []string{_BookingStateString[0:7], _BookingStateString[7:18], _BookingStateString[18:24], _BookingStateString[24:32], _BookingStateString[32:40], _BookingStateString[40:47]}
+	_BookingStateCanonicalValues = []string{_BookingStateCanonicalValue[0:36], _BookingStateCanonicalValue[36:65], _BookingStateCanonicalValue[65:83], _BookingStateCanonicalValue[83:107], _BookingStateCanonicalValue[107:132], _BookingStateCanonicalValue[132:155]}
 )
 
 // _BookingStateNoOp is a compile time assertion.

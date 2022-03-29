@@ -3,6 +3,7 @@ package gen
 import (
 	"bytes"
 	"encoding/csv"
+	"flag"
 	"fmt"
 	"go/ast"
 	"go/constant"
@@ -46,12 +47,9 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 	if err := i.inspectValues(pkg, out); err != nil {
 		return nil, err
 	}
-	// TODO:
-	// - evaluate doc string configuration and merge with runtime config
 	if err := i.inspectDocstrings(pkg, out); err != nil {
 		return nil, err
 	}
-	// - generate "virtual" ValueSpecs for CSV source
 
 	if err := i.validateFile(out); err != nil {
 		return nil, err
@@ -63,20 +61,34 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 	for _, ts := range f.TypeSpecs {
 		args := strings.Split(ts.Docstring, " ")
-		for _, arg := range args {
-			if strings.HasPrefix(arg, "-from=") {
-				err := i.readFromCSV(ts, arg)
-				if err != nil {
-					return err
-				}
-			}
+		newCfg := i.cfg.Clone()
+		if len(args) <= 1 {
+			ts.Config = *newCfg
+			continue
+		}
+		var fs flag.FlagSet
+		var fromSource string
+		fs.StringVar(&newCfg.TransformStrategy, "transform", newCfg.TransformStrategy, "")
+		fs.Var(&newCfg.Serializers, "serializers", "")
+		fs.Var(&newCfg.SupportedFeatures, "support", "")
+		fs.StringVar(&fromSource, "from", "", "")
+		err := fs.Parse(args[1:])
+		if err != nil {
+			return err
+		}
+
+		if len(fromSource) == 0 {
+			continue
+		}
+		err = i.readFromCSV(ts, fromSource)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
 }
 
-func (i inspector) readFromCSV(ts *TypeSpec, arg string) error {
-	p := strings.TrimPrefix(arg, "-from=")
+func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 	dir := filepath.Dir(ts.Filepath)
 	p = filepath.Join(dir, p)
 	buf, err := os.ReadFile(p)
@@ -91,21 +103,24 @@ func (i inspector) readFromCSV(ts *TypeSpec, arg string) error {
 	if err != nil {
 		return err
 	}
+	ts.IsFromCsvSource = true    // hint: mark type as derived from CSV
+	ts.HasCanonicalValues = true // hint: mark type for canocical value support
+	ts.ValueSpecs = make([]*ValueSpec, len(records))
 	for idx, row := range records {
 		u64, err := strconv.ParseUint(row[0], 10, 64)
 		if err != nil {
 			return fmt.Errorf("failed converting %q to uint64", row[0])
 		}
-		vv := VirtualValue{
-			Index:       idx,
-			Value:       u64,
-			ValueString: row[0],
-			EnumValue:   row[1],
+		ts.ValueSpecs[idx] = &ValueSpec{
+			Index:          idx,
+			Value:          u64,
+			IdentifierName: "", // hint: no identifier here
+			EnumValue:      row[1],
+			ValueString:    row[0],
 		}
 		if len(row) == 3 {
-			vv.CanonicalValue = row[2]
+			ts.ValueSpecs[idx].CanonicalValue = row[2]
 		}
-		ts.VirtualValues = append(ts.VirtualValues, &vv)
 	}
 	return nil
 }
@@ -354,7 +369,7 @@ func (i inspector) evaluateValueSpec(t typeSpec, s valueSpec, pkg *packages.Pack
 	}
 	return &ValueSpec{
 		IdentifierName: s.Value.Name,
-		EnumString:     name,
+		EnumValue:      name,
 		Value:          val,
 		ValueString:    valStr,
 	}, nil
@@ -410,12 +425,15 @@ func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint
 	}
 	value := cobj.Val()
 	if value.Kind() != constant.Int {
-		return 0, "", fmt.Errorf("can't happen: constant is not an integer %q", c)
+		return 0, "", fmt.Errorf("constant is not an integer %q", c)
 	}
 	i64, isInt := constant.Int64Val(value)
 	u64, isUint := constant.Uint64Val(value)
 	if !isInt && !isUint {
-		return 0, "", fmt.Errorf("internal error: value of %s is not an integer: %s", c, value.String())
+		return 0, "", fmt.Errorf("internal error: value of %q is not an integer: %s", c, value.String())
+	}
+	if isInt && i64 < 0 {
+		return 0, "", fmt.Errorf("Invalid enum set: values cannot be in a negative range.")
 	}
 	if !isInt {
 		u64 = uint64(i64)
