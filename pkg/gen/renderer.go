@@ -126,6 +126,13 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 		buf.WriteString("const (\n")
 		buf.WriteString(fmt.Sprintf("\t_%sString = \"%s\"\n", ts.Name, tempBuf))
 		buf.WriteString(fmt.Sprintf("\t_%sLowerString = \"%s\"\n", ts.Name, strings.ToLower(tempBuf.String())))
+		if ts.HasCanonicalValues {
+			tempBuf.Reset()
+			for _, v := range ts.ValueSpecs {
+				tempBuf.WriteString(v.CanonicalValue)
+			}
+			buf.WriteString(fmt.Sprintf("\t_%sCanonicalValue = \"%s\"\n", ts.Name, tempBuf))
+		}
 		buf.WriteString(")\n\n")
 		if r.util.supportUndefined {
 			var foundZeroValue bool
@@ -178,10 +185,24 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 			tempBuf.WriteString(fmt.Sprintf("_%sString[%d:%d], ", ts.Name, _prev, acc))
 		}
 		buf.WriteString(fmt.Sprintf("\t_%sStrings = []string{%s}\n", ts.Name, tempBuf))
+		tempBuf.Reset()
+
+		if ts.HasCanonicalValues {
+			for idx, acc, prev := 0, 0, uint64(0); idx < len(ts.ValueSpecs); idx++ {
+				_prev := acc
+				acc += len(ts.ValueSpecs[idx].CanonicalValue)
+				if idx != 0 && prev == ts.ValueSpecs[idx].Value {
+					continue
+				}
+				prev = ts.ValueSpecs[idx].Value
+				tempBuf.WriteString(fmt.Sprintf("_%sCanonicalValue[%d:%d], ", ts.Name, _prev, acc))
+			}
+			buf.WriteString(fmt.Sprintf("\t_%sCanonicalValues = []string{%s}\n", ts.Name, tempBuf))
+		}
 		buf.WriteString(")\n\n")
 	}
 
-	{ // compiletime assertion of numeric sequence
+	if !ts.IsFromCsvSource { // compiletime assertion of numeric sequence
 		tempBuf := new(bytes.Buffer)
 		if hasGeneratedUndefinedValue {
 			tempBuf.WriteString(fmt.Sprintf("\t_ = x[%[1]sUndefined-(0)]\n", ts.Name))
@@ -244,30 +265,47 @@ func (_%[2]s %[1]s) String() string {
 
 `, ts.Name, determineReceiverName(ts.Name), offset, undefinedGuard))
 
-		buf.WriteString(fmt.Sprintf("var (\n\t_%[1]sStringToValueMap = map[string]%[1]s{\n", ts.Name))
-		for idx, prev := 0, 0; idx < len(ts.ValueSpecs); idx++ {
-			l := prev + len(ts.ValueSpecs[idx].EnumValue)
-			value := ts.ValueSpecs[idx].IdentifierName
-			if ts.IsFromCsvSource {
-				value = ts.ValueSpecs[idx].ValueString
-			}
-			buf.WriteString(fmt.Sprintf("\t_%[1]sString[%[2]d:%[3]d]: %[4]s,\n", ts.Name, prev, l, value))
-			prev = l
-		}
-		buf.WriteString("}\n")
+		if ts.HasCanonicalValues { // string method for canonical strings
+			buf.WriteString(fmt.Sprintf(`// CanonicalValue returns the canonical string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern %[1]s(%%d) instead.
+func (_%[2]s %[1]s) CanonicalValue() string {
+	if !_%[2]s.IsValid() {
+		return fmt.Sprintf("%[1]s(%%d)", _%[2]s)
+	}
+	idx := int(_%[2]s)
+	return _%[1]sCanonicalValues[idx]
+}
 
-		buf.WriteString(fmt.Sprintf("\t_%[1]sLowerStringToValueMap = map[string]%[1]s{\n", ts.Name))
-		for idx, prev := 0, 0; idx < len(ts.ValueSpecs); idx++ {
-			l := prev + len(ts.ValueSpecs[idx].EnumValue)
-			value := ts.ValueSpecs[idx].IdentifierName
-			if ts.IsFromCsvSource {
-				value = ts.ValueSpecs[idx].ValueString
-			}
-
-			buf.WriteString(fmt.Sprintf("\t_%[1]sLowerString[%[2]d:%[3]d]: %[4]s,\n", ts.Name, prev, l, value))
-			prev = l
+`, ts.Name, determineReceiverName(ts.Name)))
 		}
-		buf.WriteString("}\n)\n\n")
+
+		{ // string to numeric value mappings
+			buf.WriteString(fmt.Sprintf("var (\n\t_%[1]sStringToValueMap = map[string]%[1]s{\n", ts.Name))
+			for idx, prev := 0, 0; idx < len(ts.ValueSpecs); idx++ {
+				l := prev + len(ts.ValueSpecs[idx].EnumValue)
+				value := ts.ValueSpecs[idx].IdentifierName
+				if ts.IsFromCsvSource {
+					value = ts.ValueSpecs[idx].ValueString
+				}
+				buf.WriteString(fmt.Sprintf("\t_%[1]sString[%[2]d:%[3]d]: %[4]s,\n", ts.Name, prev, l, value))
+				prev = l
+			}
+			buf.WriteString("}\n")
+
+			buf.WriteString(fmt.Sprintf("\t_%[1]sLowerStringToValueMap = map[string]%[1]s{\n", ts.Name))
+			for idx, prev := 0, 0; idx < len(ts.ValueSpecs); idx++ {
+				l := prev + len(ts.ValueSpecs[idx].EnumValue)
+				value := ts.ValueSpecs[idx].IdentifierName
+				if ts.IsFromCsvSource {
+					value = ts.ValueSpecs[idx].ValueString
+				}
+
+				buf.WriteString(fmt.Sprintf("\t_%[1]sLowerString[%[2]d:%[3]d]: %[4]s,\n", ts.Name, prev, l, value))
+				prev = l
+			}
+			buf.WriteString("}\n)\n\n")
+		}
 		zeroValueGuard := ""
 		if r.util.supportUndefined {
 			zeroValueGuard = fmt.Sprintf(`

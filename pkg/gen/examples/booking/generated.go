@@ -19,19 +19,6 @@ var (
 	_BookingStateCanonicalValues = []string{_BookingStateCanonicalValue[0:36], _BookingStateCanonicalValue[36:65], _BookingStateCanonicalValue[65:83], _BookingStateCanonicalValue[83:107], _BookingStateCanonicalValue[107:132], _BookingStateCanonicalValue[132:155]}
 )
 
-// _BookingStateNoOp is a compile time assertion.
-// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of BookingState.
-func _BookingStateNoOp() {
-	var x [1]struct{}
-	_ = x[BookingStateCreated-(0)]
-	_ = x[BookingStateUnavailable-(1)]
-	_ = x[BookingStateFailed-(2)]
-	_ = x[BookingStateCanceled-(3)]
-	_ = x[BookingStateNotFound-(4)]
-	_ = x[BookingStateDeleted-(5)]
-}
-
 // BookingStateValues returns all values of the enum.
 func BookingStateValues() []BookingState {
 	strs := make([]BookingState, len(_BookingStateValues))
@@ -75,20 +62,20 @@ func (_b BookingState) CanonicalValue() string {
 
 var (
 	_BookingStateStringToValueMap = map[string]BookingState{
-		_BookingStateString[0:7]:   BookingStateCreated,
-		_BookingStateString[7:18]:  BookingStateUnavailable,
-		_BookingStateString[18:24]: BookingStateFailed,
-		_BookingStateString[24:32]: BookingStateCanceled,
-		_BookingStateString[32:40]: BookingStateNotFound,
-		_BookingStateString[40:47]: BookingStateDeleted,
+		_BookingStateString[0:7]:   0,
+		_BookingStateString[7:18]:  1,
+		_BookingStateString[18:24]: 2,
+		_BookingStateString[24:32]: 3,
+		_BookingStateString[32:40]: 4,
+		_BookingStateString[40:47]: 5,
 	}
 	_BookingStateLowerStringToValueMap = map[string]BookingState{
-		_BookingStateLowerString[0:7]:   BookingStateCreated,
-		_BookingStateLowerString[7:18]:  BookingStateUnavailable,
-		_BookingStateLowerString[18:24]: BookingStateFailed,
-		_BookingStateLowerString[24:32]: BookingStateCanceled,
-		_BookingStateLowerString[32:40]: BookingStateNotFound,
-		_BookingStateLowerString[40:47]: BookingStateDeleted,
+		_BookingStateLowerString[0:7]:   0,
+		_BookingStateLowerString[7:18]:  1,
+		_BookingStateLowerString[18:24]: 2,
+		_BookingStateLowerString[24:32]: 3,
+		_BookingStateLowerString[32:40]: 4,
+		_BookingStateLowerString[40:47]: 5,
 	}
 )
 
