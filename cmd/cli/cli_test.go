@@ -38,30 +38,6 @@ func TestCli(t *testing.T) {
 			})
 		}
 	})
-	t.Run("code generation fails", func(t *testing.T) {
-		testcases := []struct {
-			desc string
-			args []string
-			msg  string
-		}{
-			{
-				"on unknown typealias", []string{"-typealias=UnknownType"}, "no constants detected.",
-			},
-			{
-				"on unknown typealias (due to wrong path)", []string{"-typealias=Greeting", "-dir=testdata/nothing-here"}, "no constants detected.",
-			},
-			{
-				"on unknown typealias", []string{"-typealias=InvalidNonContinuousGreeting", "-dir=testdata/greeting"}, "Invalid enum set: Enums must be a continuous sequence with linear increments of 1.",
-			},
-		}
-		for _, tC := range testcases {
-			t.Run(tC.desc, func(t *testing.T) {
-				t.Cleanup(CleanUpPackage)
-				err := Execute(tC.args)
-				require.EqualError(t, err, "failed generating code. err: "+tC.msg)
-			})
-		}
-	})
 }
 
 func PatchTargetFilenameFunc(t *testing.T, targetPath string) {

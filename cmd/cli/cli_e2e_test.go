@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestE2E(t *testing.T) {
+func TestE2E_Cli(t *testing.T) {
 	testcases := []struct {
 		desc        string
 		dirName     string
@@ -49,6 +49,31 @@ func TestE2E(t *testing.T) {
 			expected, err := os.ReadFile("testdata/" + tC.dirName + "/" + tC.outFilename)
 			require.NoError(t, err)
 			require.Equal(t, string(expected), string(actual))
+		})
+	}
+}
+
+func TestE2E_Errors(t *testing.T) {
+	testcases := []struct {
+		desc string
+		args []string
+		msg  string
+	}{
+		{
+			"on no enums in CWD", nil, "no enums detected.",
+		},
+		{
+			"on no enums in given directory (wrong path)", []string{"-dir=testdata/nothing-here"}, "no enums detected.",
+		},
+		{
+			"on invalid enum sequence", []string{"-dir=testdata/error_cases/non_continuous_sequence"}, "Invalid enum set: Enums must be a continuous sequence with linear increments of 1.",
+		},
+	}
+	for _, tC := range testcases {
+		t.Run(tC.desc, func(t *testing.T) {
+			t.Cleanup(cli.CleanUpPackage)
+			err := cli.Execute(tC.args)
+			require.EqualError(t, err, "failed generating code. err: "+tC.msg)
 		})
 	}
 }
