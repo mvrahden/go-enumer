@@ -11,7 +11,7 @@ import (
 func TestCli(t *testing.T) {
 	t.Run("generate filename", func(t *testing.T) {
 		require.Equal(t,
-			"/path/to/enumer.go",
+			"/path/to/types_enumer.go",
 			targetFilename("/path/to", &config.Options{}))
 	})
 	t.Run("input validation fails", func(t *testing.T) {
