@@ -1,7 +1,7 @@
 package booking
 
 // BookingState is an indicator for bookings.
-//go:enumer -from=booking.csv -serializers=json -support=undefined
+//go:enumer -from=booking.csv -serializers=json,yaml -support=undefined
 type BookingState int
 
 const (

@@ -61,16 +61,17 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 	for _, ts := range f.TypeSpecs {
 		args := strings.Split(ts.Docstring, " ")
-		newCfg := i.cfg.Clone()
+		ts.Config = i.cfg.Clone()
+
 		if len(args) <= 1 {
-			ts.Config = *newCfg
 			continue
 		}
+
+		ts.Config.TransformStrategy = "noop"
 		var fs flag.FlagSet
 		var fromSource string
-		fs.StringVar(&newCfg.TransformStrategy, "transform", newCfg.TransformStrategy, "")
-		fs.Var(&newCfg.Serializers, "serializers", "")
-		fs.Var(&newCfg.SupportedFeatures, "support", "")
+		fs.Var(&ts.Config.Serializers, "serializers", "")
+		fs.Var(&ts.Config.SupportedFeatures, "support", "")
 		fs.StringVar(&fromSource, "from", "", "")
 		err := fs.Parse(args[1:])
 		if err != nil {
@@ -127,17 +128,19 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 
 func (i inspector) inspectImports(f *File) {
 	f.Imports = append(f.Imports, &Import{Path: "fmt"})
-	for _, v := range i.cfg.Serializers {
-		switch v {
-		case "gql":
-			f.Imports = append(f.Imports, &Import{Path: "io"})
-			f.Imports = append(f.Imports, &Import{Path: "strconv"})
-		case "json":
-			f.Imports = append(f.Imports, &Import{Path: "encoding/json"})
-		case "sql":
-			f.Imports = append(f.Imports, &Import{Path: "database/sql/driver"})
-		case "yaml.v3":
-			f.Imports = append(f.Imports, &Import{Path: "gopkg.in/yaml.v3"})
+	for _, ts := range f.TypeSpecs {
+		for _, v := range ts.Config.Serializers {
+			switch v {
+			case "gql":
+				f.Imports = append(f.Imports, &Import{Path: "io"})
+				f.Imports = append(f.Imports, &Import{Path: "strconv"})
+			case "json":
+				f.Imports = append(f.Imports, &Import{Path: "encoding/json"})
+			case "sql":
+				f.Imports = append(f.Imports, &Import{Path: "database/sql/driver"})
+			case "yaml.v3":
+				f.Imports = append(f.Imports, &Import{Path: "gopkg.in/yaml.v3"})
+			}
 		}
 	}
 }

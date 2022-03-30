@@ -38,7 +38,7 @@ type TypeSpec struct {
 	Type               GoType
 	ValueSpecs         []*ValueSpec
 	Filepath           string
-	Config             config.Options
+	Config             *config.Options
 	IsFromCsvSource    bool
 	HasCanonicalValues bool
 }

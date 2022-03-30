@@ -11,62 +11,35 @@ import (
 	"github.com/mvrahden/go-enumer/config"
 )
 
-type renderer struct {
-	cfg  *config.Options
-	util renderutil
-}
-
-type stringCaseTransformer func(v string) string
+type renderer struct{}
 
 func NewRenderer(cfg *config.Options) *renderer {
 	r := renderer{}
-	for _, fn := range []renderOpt{withDefaults, withTransformStrategy, withSupportedFeatures} {
-		fn(cfg, &r)
+	return &r
+}
+
+func newRenderUtil(cfg *config.Options) *renderUtil {
+	r := renderUtil{}
+	for _, fn := range []renderUtilOpt{withDefaults, withTransformStrategy, withSupportedFeatures} {
+		fn(&r, cfg)
 	}
 	return &r
 }
 
-type renderOpt func(c *config.Options, r *renderer)
+type renderUtilOpt func(r *renderUtil, c *config.Options)
 
-func withDefaults(cfg *config.Options, r *renderer) {
-	r.cfg = cfg
-	r.util = renderutil{
-		transform: noopCaseTransformer,
-	}
+func withDefaults(r *renderUtil, c *config.Options) {
+	r.cfg = c
+	r.transform = noopCaseTransformer
 }
 
-func withTransformStrategy(c *config.Options, r *renderer) {
-	r.util.transform = getTransformStrategy(c)
+func withTransformStrategy(r *renderUtil, c *config.Options) {
+	r.transform = getTransformStrategy(c)
 }
 
-func getTransformStrategy(c *config.Options) func(string) string {
-	switch c.TransformStrategy {
-	case "camel":
-		return camelCaseTransformer
-	case "pascal":
-		return pascalCaseTransformer
-	case "kebab":
-		return kebabCaseTransformer
-	case "snake":
-		return snakeCaseTransformer
-	case "lower":
-		return lowerCaseTransformer
-	case "upper":
-		return upperCaseTransformer
-	case "upper-kebab":
-		return upperKebabCaseTransformer
-	case "upper-snake":
-		return upperSnakeCaseTransformer
-	case "whitespace":
-		return whitespaceCaseTransformer
-	default:
-		return noopCaseTransformer
-	}
-}
-
-func withSupportedFeatures(c *config.Options, r *renderer) {
-	r.util.supportUndefined = c.SupportedFeatures.Contains(config.SupportUndefined)
-	r.util.supportEntInterface = c.SupportedFeatures.Contains(config.SupportEntInterface)
+func withSupportedFeatures(r *renderUtil, c *config.Options) {
+	r.supportUndefined = c.SupportedFeatures.Contains(config.SupportUndefined)
+	r.supportEntInterface = c.SupportedFeatures.Contains(config.SupportEntInterface)
 }
 
 func (r *renderer) Render(f *File) ([]byte, error) {
@@ -86,13 +59,6 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 
 	if len(f.TypeSpecs) == 0 { // nothing to generate further
 		return buf.Bytes(), nil
-	}
-
-	for _, ts := range f.TypeSpecs {
-		transformFn := getTransformStrategy(r.cfg)
-		for _, v := range ts.ValueSpecs {
-			v.EnumValue = transformFn(v.EnumValue)
-		}
 	}
 
 	{ // write imports list
@@ -117,6 +83,12 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 }
 
 func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
+	util := newRenderUtil(ts.Config)
+
+	for _, v := range ts.ValueSpecs {
+		v.EnumValue = util.transform(v.EnumValue)
+	}
+
 	var hasGeneratedUndefinedValue bool
 	{ // write consts
 		tempBuf := new(bytes.Buffer)
@@ -134,7 +106,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 			buf.WriteString(fmt.Sprintf("\t_%sCanonicalValue = \"%s\"\n", ts.Name, tempBuf))
 		}
 		buf.WriteString(")\n\n")
-		if r.util.supportUndefined {
+		if util.supportUndefined {
 			var foundZeroValue bool
 			for _, v := range ts.ValueSpecs {
 				if v.Value == 0 {
@@ -160,7 +132,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 		buf.WriteString("var (\n")
 
 		lowerBound := ts.ValueSpecs[0].Value
-		if r.util.supportUndefined && lowerBound > 0 {
+		if util.supportUndefined && lowerBound > 0 {
 			lowerBound = 0
 		}
 		buf.WriteString(fmt.Sprintf("\t_%[1]sValueRange = [2]%[1]s{%d, %d}\n", ts.Name, lowerBound, ts.ValueSpecs[len(ts.ValueSpecs)-1].Value))
@@ -227,7 +199,7 @@ func _%[1]sNoOp() {
 			offset = fmt.Sprintf("-%d", ts.ValueSpecs[0].Value)
 		}
 		undefinedGuard := ""
-		if r.util.supportUndefined && hasGeneratedUndefinedValue {
+		if util.supportUndefined && hasGeneratedUndefinedValue {
 			undefinedGuard = fmt.Sprintf(`
 	if _%[2]s == %[1]sUndefined {
 		return ""
@@ -307,7 +279,7 @@ func (_%[2]s %[1]s) CanonicalValue() string {
 			buf.WriteString("}\n)\n\n")
 		}
 		zeroValueGuard := ""
-		if r.util.supportUndefined {
+		if util.supportUndefined {
 			zeroValueGuard = fmt.Sprintf(`
 	if len(raw) == 0 {
 		return %s(0), true
@@ -339,11 +311,11 @@ func %[1]sFromStringIgnoreCase(raw string) (%[1]s, bool) {
 	}
 
 	{
-		r.renderSerializers(buf, ts)
+		util.renderSerializers(buf, ts)
 	}
 	{
-		if r.util.supportEntInterface {
-			r.renderEntInterfaceSupport(buf, ts)
+		if util.supportEntInterface {
+			util.renderEntInterfaceSupport(buf, ts)
 		}
 	}
 }
@@ -355,11 +327,14 @@ func determineReceiverName(value string) string {
 	return "x"
 }
 
-type renderutil struct {
+type renderUtil struct {
+	cfg                 *config.Options
 	transform           stringCaseTransformer
 	supportUndefined    bool
 	supportEntInterface bool
 }
+
+type stringCaseTransformer func(v string) string
 
 var (
 	noopCaseTransformer = func(value string) string {
@@ -394,7 +369,32 @@ var (
 	}
 )
 
-func (r *renderer) renderSerializers(buf *bytes.Buffer, ts *TypeSpec) {
+func getTransformStrategy(c *config.Options) func(string) string {
+	switch c.TransformStrategy {
+	case "camel":
+		return camelCaseTransformer
+	case "pascal":
+		return pascalCaseTransformer
+	case "kebab":
+		return kebabCaseTransformer
+	case "snake":
+		return snakeCaseTransformer
+	case "lower":
+		return lowerCaseTransformer
+	case "upper":
+		return upperCaseTransformer
+	case "upper-kebab":
+		return upperKebabCaseTransformer
+	case "upper-snake":
+		return upperSnakeCaseTransformer
+	case "whitespace":
+		return whitespaceCaseTransformer
+	default:
+		return noopCaseTransformer
+	}
+}
+
+func (r *renderUtil) renderSerializers(buf *bytes.Buffer, ts *TypeSpec) {
 	ignoreCase := r.cfg.SupportedFeatures.Contains("ignore-case")
 	for _, v := range r.cfg.Serializers {
 		switch v {
@@ -415,13 +415,13 @@ func (r *renderer) renderSerializers(buf *bytes.Buffer, ts *TypeSpec) {
 	}
 }
 
-func (r *renderer) renderBinarySerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
+func (r *renderUtil) renderBinarySerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
 	}
 	zeroValueGuard := ""
-	if !r.util.supportUndefined {
+	if !r.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
@@ -450,13 +450,13 @@ func (_%[2]s *%[1]s) UnmarshalBinary(text []byte) error {
 `, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderGqlSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
+func (r *renderUtil) renderGqlSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
 	}
 	zeroValueGuard := ""
-	if !r.util.supportUndefined {
+	if !r.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
@@ -492,13 +492,13 @@ func (_%[2]s *%[1]s) UnmarshalGQL(value interface{}) error {
 `, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderJsonSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
+func (r *renderUtil) renderJsonSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
 	}
 	zeroValueGuard := ""
-	if !r.util.supportUndefined {
+	if !r.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
@@ -530,13 +530,13 @@ func (_%[2]s *%[1]s) UnmarshalJSON(data []byte) error {
 `, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderTextSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
+func (r *renderUtil) renderTextSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
 	}
 	zeroValueGuard := ""
-	if !r.util.supportUndefined {
+	if !r.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
@@ -565,13 +565,13 @@ func (_%[2]s *%[1]s) UnmarshalText(text []byte) error {
 `, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderSqlSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
+func (r *renderUtil) renderSqlSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
 	}
 	zeroValueGuard := ""
-	if !r.util.supportUndefined {
+	if !r.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
@@ -609,7 +609,7 @@ func (_%[2]s *%[1]s) Scan(value interface{}) error {
 `, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderYamlSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase, isV3 bool) {
+func (r *renderUtil) renderYamlSerializers(buf *bytes.Buffer, ts *TypeSpec, ignoreCase, isV3 bool) {
 	lookupMethod := "FromString"
 	if ignoreCase {
 		lookupMethod = "FromStringIgnoreCase"
@@ -624,7 +624,7 @@ func (_%[2]s %[1]s) MarshalYAML() (interface{}, error) {
 `, ts.Name, determineReceiverName(ts.Name)))
 
 	zeroValueGuard := ""
-	if !r.util.supportUndefined {
+	if !r.supportUndefined {
 		zeroValueGuard = fmt.Sprintf(`
 	if len(str) == 0 {
 		return fmt.Errorf("%[1]s cannot be derived from empty string")
@@ -670,7 +670,7 @@ func (_%[2]s *%[1]s) UnmarshalYAML(unmarshal func(interface{}) error) error {
 `, ts.Name, determineReceiverName(ts.Name), lookupMethod, zeroValueGuard))
 }
 
-func (r *renderer) renderEntInterfaceSupport(buf *bytes.Buffer, ts *TypeSpec) {
+func (r *renderUtil) renderEntInterfaceSupport(buf *bytes.Buffer, ts *TypeSpec) {
 	buf.WriteString(fmt.Sprintf(`
 // Values returns a slice of all String values of the enum.
 func (%[1]s) Values() []string {

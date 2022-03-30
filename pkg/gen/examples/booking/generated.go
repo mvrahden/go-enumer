@@ -3,6 +3,7 @@
 package booking
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -81,6 +82,9 @@ var (
 
 // BookingStateFromString determines the enum value with an exact case match.
 func BookingStateFromString(raw string) (BookingState, bool) {
+	if len(raw) == 0 {
+		return BookingState(0), true
+	}
 	v, ok := _BookingStateStringToValueMap[raw]
 	if !ok {
 		return BookingState(0), false
@@ -101,6 +105,29 @@ func BookingStateFromStringIgnoreCase(raw string) (BookingState, bool) {
 	return v, true
 }
 
+// MarshalJSON implements the json.Marshaler interface for BookingState.
+func (_b BookingState) MarshalJSON() ([]byte, error) {
+	if !_b.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as BookingState", _b)
+	}
+	return json.Marshal(_b.String())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for BookingState.
+func (_b *BookingState) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		return fmt.Errorf("BookingState should be a string, got %q", data)
+	}
+
+	var ok bool
+	*_b, ok = BookingStateFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a BookingState", str)
+	}
+	return nil
+}
+
 // MarshalYAML implements a YAML Marshaler for BookingState.
 func (_b BookingState) MarshalYAML() (interface{}, error) {
 	if !_b.IsValid() {
@@ -115,9 +142,6 @@ func (_b *BookingState) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	if err := unmarshal(&str); err != nil {
 		return err
 	}
-	if len(str) == 0 {
-		return fmt.Errorf("BookingState cannot be derived from empty string")
-	}
 
 	var ok bool
 	*_b, ok = BookingStateFromString(str)
@@ -125,9 +149,4 @@ func (_b *BookingState) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return fmt.Errorf("Value %q does not represent a BookingState", str)
 	}
 	return nil
-}
-
-// Values returns a slice of all String values of the enum.
-func (BookingState) Values() []string {
-	return BookingStateStrings()
 }
