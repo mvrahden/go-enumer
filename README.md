@@ -67,7 +67,7 @@ const (
 
 ### Single pass screening
 
-Thanks to `go-enumer` [magic comments `//go:enumer`](#magic-comment-goenumer) we can now determine all enums of a package in a single pass, making the code generation much more efficient.
+Thanks to [magic comments](#magic-comment-goenumer) `go-enumer` we can now determine all enums of a package in a single pass, making the code generation much more efficient.
 
 ### Magic comment `//go:enumer`
 

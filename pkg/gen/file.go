@@ -44,7 +44,6 @@ type TypeSpec struct {
 }
 
 type ValueSpec struct {
-	Index          int
 	Value          uint64 // The numeric value of an enum constant
 	ValueString    string // String representation of Value
 	IdentifierName string

@@ -44,7 +44,7 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 
 	i.preparePackage(pkg)
 	i.inspectHeader(pkg, out)
-	if err := i.inspectValues(pkg, out); err != nil {
+	if err := i.inspectTypeSpecs(pkg, out); err != nil {
 		return nil, err
 	}
 	if err := i.inspectDocstrings(pkg, out); err != nil {
@@ -113,7 +113,6 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 			return fmt.Errorf("failed converting %q to uint64", row[0])
 		}
 		ts.ValueSpecs[idx] = &ValueSpec{
-			Index:          idx,
 			Value:          u64,
 			IdentifierName: "", // hint: no identifier here
 			EnumValue:      row[1],
@@ -199,7 +198,7 @@ func (inspector) inspectHeader(pkg *packages.Package, out *File) {
 	}
 }
 
-func (i inspector) inspectValues(pkg *packages.Package, out *File) error {
+func (i inspector) inspectTypeSpecs(pkg *packages.Package, out *File) error {
 	specs, err := i.determinePackageScopedEnumTypeSpecs(pkg, out)
 	if err != nil {
 		return err
@@ -267,21 +266,15 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 				continue
 			}
 
-			// Detect enum marker in doc-string
-			if decl.Doc == nil {
-				continue
+			// Detect magic comment in doc-string
+			if decl.Doc == nil || len(decl.Doc.List) == 0 {
+				continue // missing doc-string
 			}
-			var isEnum bool
-			var enumMarker string
-			for _, cv := range decl.Doc.List {
-				if strings.HasPrefix(cv.Text, "//go:enumer") {
-					isEnum = true
-					enumMarker = cv.Text
-					break
-				}
-			}
-			if !isEnum {
-				continue
+			var magicComment string
+			if lastDoc := decl.Doc.List[len(decl.Doc.List)-1]; !strings.HasPrefix(lastDoc.Text, "//go:enumer") {
+				continue // no magic comment
+			} else {
+				magicComment = lastDoc.Text
 			}
 			ts, ok := decl.Specs[0].(*ast.TypeSpec)
 			if !ok {
@@ -301,7 +294,7 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 				return nil, fmt.Errorf("underlying type for constant %q is not a basic type", ul)
 			}
 			f := pkg.Fset.File(decl.TokPos)
-			typeSpecs = append(typeSpecs, typeSpec{Decl: decl, TypeSpec: ts, Type: btyp, File: f, EnumMarker: enumMarker})
+			typeSpecs = append(typeSpecs, typeSpec{Decl: decl, TypeSpec: ts, Type: btyp, File: f, EnumMarker: magicComment})
 		}
 
 		// determine values for typeSpecs
@@ -318,24 +311,27 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 				if !ok {
 					continue
 				}
-				if vspec.Type == nil && len(vspec.Values) > 0 {
+				if vspec.Type == nil && prevType == nil {
+					// no type information available
 					continue
 				}
 
-				if vspec.Type != nil {
-					var ok bool
-					ident, ok := vspec.Type.(*ast.Ident)
-					if !ok || ident == nil {
-						// not the type we're searching for
-						continue
-					}
+				if vspec.Type == nil && prevType != nil {
+					goto HAS_TYPE
+				}
+				if ident, ok := vspec.Type.(*ast.Ident); !ok {
+					// not the type we're searching for
+					continue
+				} else if ident == nil && prevType == nil {
+					continue
+				} else if ident != nil {
 					prevType = ident
 				}
-				if prevType == nil {
-					continue
-				}
+			HAS_TYPE:
+
 				if vspec.Type == nil {
-					// for those with implicit type, assign the previous type
+					// patch missing type information for those specs
+					// with implicit type
 					vspec.Type = prevType
 				}
 				// determine the right typespec
@@ -347,7 +343,7 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 								// blank identifier, not what we're interested in
 								continue
 							}
-							typeSpecs[idx].values = append(vts.values, valueSpec{v})
+							typeSpecs[idx].values = append(typeSpecs[idx].values, valueSpec{v})
 						}
 					}
 				}
