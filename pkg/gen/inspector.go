@@ -3,6 +3,7 @@ package gen
 import (
 	"bytes"
 	"encoding/csv"
+	"errors"
 	"flag"
 	"fmt"
 	"go/ast"
@@ -75,7 +76,7 @@ func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 		fs.StringVar(&fromSource, "from", "", "")
 		err := fs.Parse(args[1:])
 		if err != nil {
-			return err
+			return fmt.Errorf("Failed parsing doc-string for %q. err: %w", ts.Name, err)
 		}
 
 		if len(fromSource) == 0 {
@@ -83,17 +84,19 @@ func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 		}
 		err = i.readFromCSV(ts, fromSource)
 		if err != nil {
-			return err
+			return fmt.Errorf("Failed reading from CSV for %q. err: %w", ts.Name, err)
 		}
 	}
 	return nil
 }
 
 func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
-	dir := filepath.Dir(ts.Filepath)
-	p = filepath.Join(dir, p)
-	buf, err := os.ReadFile(p)
-	if err != nil {
+	buf, err := os.ReadFile(filepath.Join(filepath.Dir(ts.Filepath), p))
+	if errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("no such file %q", p)
+	} else if errors.Is(err, os.ErrPermission) {
+		return fmt.Errorf("no permission for file %q", p)
+	} else if err != nil {
 		return err
 	}
 	if len(buf) == 0 {
@@ -106,22 +109,23 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 	}
 	ts.IsFromCsvSource = true    // hint: mark type as derived from CSV
 	ts.HasCanonicalValues = true // hint: mark type for canocical value support
-	ts.ValueSpecs = make([]*ValueSpec, len(records))
+	csvValueSpecs := make([]*ValueSpec, len(records))
 	for idx, row := range records {
 		u64, err := strconv.ParseUint(row[0], 10, 64)
 		if err != nil {
 			return fmt.Errorf("failed converting %q to uint64", row[0])
 		}
-		ts.ValueSpecs[idx] = &ValueSpec{
+		csvValueSpecs[idx] = &ValueSpec{
 			Value:          u64,
 			IdentifierName: "", // hint: no identifier here
 			EnumValue:      row[1],
 			ValueString:    row[0],
 		}
 		if len(row) == 3 {
-			ts.ValueSpecs[idx].CanonicalValue = row[2]
+			csvValueSpecs[idx].CanonicalValue = row[2]
 		}
 	}
+	ts.ValueSpecs = csvValueSpecs
 	return nil
 }
 
@@ -145,22 +149,22 @@ func (i inspector) inspectImports(f *File) {
 }
 
 func (i inspector) validateFile(f *File) error {
-	for _, v := range f.TypeSpecs {
-		sort.SliceStable(v.ValueSpecs, func(i, j int) bool {
-			return v.ValueSpecs[i].Value < v.ValueSpecs[j].Value
+	for _, ts := range f.TypeSpecs {
+		sort.SliceStable(ts.ValueSpecs, func(i, j int) bool {
+			return ts.ValueSpecs[i].Value < ts.ValueSpecs[j].Value
 		})
 		// validate start value of enum sequence
-		if len(v.ValueSpecs) > 0 &&
-			!(v.ValueSpecs[0].Value == 0 || v.ValueSpecs[0].Value == 1) {
-			return fmt.Errorf("Invalid enum set: Enums need to start with either 0 or 1.")
+		if len(ts.ValueSpecs) > 0 &&
+			!(ts.ValueSpecs[0].Value == 0 || ts.ValueSpecs[0].Value == 1) {
+			return fmt.Errorf("Enum %q must start with either 0 or 1.", ts.Name)
 		}
 		// ensure we have a linearly incrementing sequence of values.
 		// however, an enum can assign a numeric value multiple times.
 		// therefore we must only dismiss distances > 1.
-		for idx := 1; idx < len(v.ValueSpecs); idx++ {
-			delta := v.ValueSpecs[idx].Value - v.ValueSpecs[idx-1].Value
+		for idx := 1; idx < len(ts.ValueSpecs); idx++ {
+			delta := ts.ValueSpecs[idx].Value - ts.ValueSpecs[idx-1].Value
 			if delta > 1 {
-				return fmt.Errorf("Invalid enum set: Enums must be a continuous sequence with linear increments of 1.")
+				return fmt.Errorf("Enum %q must be a continuous sequence with linear increments of 1.", ts.Name)
 			}
 		}
 	}
@@ -206,7 +210,7 @@ func (i inspector) inspectTypeSpecs(pkg *packages.Package, out *File) error {
 	for idx, s := range specs {
 		typ, err := i.determineTypeOfExpr(s.TypeSpec.Name)
 		if err != nil {
-			return err
+			return fmt.Errorf("Enum type of %q %w", s.TypeSpec.Name, err)
 		}
 		out.TypeSpecs = append(out.TypeSpecs, &TypeSpec{
 			Index:     idx,
@@ -390,7 +394,7 @@ func (i inspector) determineTypeOfExpr(e ast.Expr) (GoType, error) {
 			return i.determineTypeOfExpr(decl.Type)
 		}
 	}
-	return GoTypeUnknown, fmt.Errorf("Invalid enum set: Enum type must be an integer-like type, found %q.", e)
+	return GoTypeUnknown, fmt.Errorf("must be an integer-like type, found %q.", e)
 }
 
 func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint64, string, error) {
@@ -432,7 +436,7 @@ func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint
 		return 0, "", fmt.Errorf("internal error: value of %q is not an integer: %s", c, value.String())
 	}
 	if isInt && i64 < 0 {
-		return 0, "", fmt.Errorf("Invalid enum set: values cannot be in a negative range.")
+		return 0, "", fmt.Errorf("Enum value of %q cannot be in a negative range.", c)
 	}
 	if !isInt {
 		u64 = uint64(i64)

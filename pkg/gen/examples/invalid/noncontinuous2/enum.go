@@ -1,10 +1,10 @@
 package noninteger
 
 //go:enumer
-type NonContinuous uint
+type NonContinuous2 uint
 
 const (
-	NonContinuousA NonContinuous = iota
+	NonContinuous2A NonContinuous2 = iota
 	_
-	NonContinuousB
+	NonContinuous2B
 )

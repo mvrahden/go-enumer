@@ -54,17 +54,24 @@ func TestEdgeCaseDetection(t *testing.T) {
 		cfg       config.Options
 	}{
 		{directory: "noninteger",
-			errMsg: "Invalid enum set: Enum type must be an integer-like type, found \"float32\"."},
+			errMsg: "Enum type of \"NonInteger\" must be an integer-like type, found \"float32\"."},
 		{directory: "lowerbound",
-			errMsg: "Invalid enum set: values cannot be in a negative range."},
+			errMsg: "Enum value of \"LowerBoundA\" cannot be in a negative range."},
 		{directory: "upperbound",
-			errMsg: "Invalid enum set: Enums need to start with either 0 or 1."},
+			errMsg: "Enum \"UpperBound\" must start with either 0 or 1."},
 		{directory: "noncontinuous",
-			errMsg: "Invalid enum set: Enums must be a continuous sequence with linear increments of 1."},
+			errMsg: "Enum \"NonContinuous\" must be a continuous sequence with linear increments of 1."},
 		{directory: "noncontinuous2",
-			errMsg: "Invalid enum set: Enums must be a continuous sequence with linear increments of 1."},
+			errMsg: "Enum \"NonContinuous2\" must be a continuous sequence with linear increments of 1."},
+		{directory: "docstring",
+			errMsg: "Failed parsing doc-string for \"InvalidDocstring\". err: flag provided but not defined: -unsupported"},
+		{directory: "csv.missing-file",
+			errMsg: "Failed reading from CSV for \"MissingCSV\". err: no such file \"source.csv\""},
+		{directory: "csv.empty",
+			errMsg: "Failed reading from CSV for \"EmptyCSV\". err: found empty csv source"},
+		{directory: "csv.invalid-value",
+			errMsg: "Failed reading from CSV for \"NegativeValueInCSV\". err: failed converting \"-1\" to uint64"},
 	} {
-
 		t.Run(fmt.Sprintf("Generate for package %q", tC.directory), func(t *testing.T) {
 			pkg := path.Join(packageBase, "/pkg/gen/examples/invalid/", tC.directory)
 
