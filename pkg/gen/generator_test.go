@@ -23,16 +23,19 @@ const (
 var examples embed.FS
 
 func TestGenerator(t *testing.T) {
-	for _, target := range []string{
-		"pills",
-		"greetings",
-		"greetings.with.default",
-		"booking",
+	for _, tC := range []struct {
+		directory   string
+		description string
+	}{
+		{"booking", "CSV source"},
+		{"pills", "compatibility for various integer-like types"},
+		{"greetings", "standard enum and enum with default value"},
+		{"greetings.ignore-case", "standard enum and enum with default value and ignore case support"},
 	} {
-		pkg := path.Join(packageBase, "/pkg/gen/examples/", target)
-		testdatadir := filepath.Join("examples/", target)
+		pkg := path.Join(packageBase, "/pkg/gen/examples/", tC.directory)
+		testdatadir := filepath.Join("examples/", tC.directory)
 
-		t.Run(fmt.Sprintf("Generate for package %q", target), func(t *testing.T) {
+		t.Run(fmt.Sprintf("Generate for package %q with %s", tC.directory, tC.description), func(t *testing.T) {
 			expected := getExpectedOutputFile(t, testdatadir)
 			cfg := getConfig(t, testdatadir)
 

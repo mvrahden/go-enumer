@@ -15,13 +15,8 @@ const (
 	_GreetingLowerString = "россия中國日本한국českárepublika𝜋"
 )
 
-const (
-	// GreetingUndefined is the generated zero value of the Greeting enum.
-	GreetingUndefined Greeting = 0
-)
-
 var (
-	_GreetingValueRange = [2]Greeting{0, 6}
+	_GreetingValueRange = [2]Greeting{1, 6}
 	_GreetingValues     = []Greeting{1, 2, 3, 4, 5, 6}
 	_GreetingStrings    = []string{_GreetingString[0:12], _GreetingString[12:18], _GreetingString[18:24], _GreetingString[24:30], _GreetingString[30:46], _GreetingString[46:50]}
 )
@@ -31,7 +26,6 @@ var (
 // Re-run the enumer command to generate an updated version of Greeting.
 func _GreetingNoOp() {
 	var x [1]struct{}
-	_ = x[GreetingUndefined-(0)]
 	_ = x[GreetingРоссия-(1)]
 	_ = x[Greeting中國-(2)]
 	_ = x[Greeting日本-(3)]
@@ -66,9 +60,6 @@ func (_g Greeting) String() string {
 	if !_g.IsValid() {
 		return fmt.Sprintf("Greeting(%d)", _g)
 	}
-	if _g == GreetingUndefined {
-		return ""
-	}
 	idx := uint(_g) - 1
 	return _GreetingStrings[idx]
 }
@@ -94,9 +85,6 @@ var (
 
 // GreetingFromString determines the enum value with an exact case match.
 func GreetingFromString(raw string) (Greeting, bool) {
-	if len(raw) == 0 {
-		return Greeting(0), true
-	}
 	v, ok := _GreetingStringToValueMap[raw]
 	if !ok {
 		return Greeting(0), false
@@ -128,9 +116,12 @@ func (_g Greeting) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for Greeting.
 func (_g *Greeting) UnmarshalBinary(text []byte) error {
 	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("Greeting cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingFromString(str)
+	*_g, ok = GreetingFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a Greeting", str)
 	}
@@ -155,9 +146,12 @@ func (_g *Greeting) UnmarshalGQL(value interface{}) error {
 	default:
 		return fmt.Errorf("invalid value of Greeting: %[1]T(%[1]v)", value)
 	}
+	if len(str) == 0 {
+		return fmt.Errorf("Greeting cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingFromString(str)
+	*_g, ok = GreetingFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a Greeting", str)
 	}
@@ -178,9 +172,12 @@ func (_g *Greeting) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &str); err != nil {
 		return fmt.Errorf("Greeting should be a string, got %q", data)
 	}
+	if len(str) == 0 {
+		return fmt.Errorf("Greeting cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingFromString(str)
+	*_g, ok = GreetingFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a Greeting", str)
 	}
@@ -207,9 +204,12 @@ func (_g *Greeting) Scan(value interface{}) error {
 	default:
 		return fmt.Errorf("invalid value of Greeting: %[1]T(%[1]v)", value)
 	}
+	if len(str) == 0 {
+		return fmt.Errorf("Greeting cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingFromString(str)
+	*_g, ok = GreetingFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a Greeting", str)
 	}
@@ -227,9 +227,12 @@ func (_g Greeting) MarshalText() ([]byte, error) {
 // UnmarshalText implements the encoding.TextUnmarshaler interface for Greeting.
 func (_g *Greeting) UnmarshalText(text []byte) error {
 	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("Greeting cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingFromString(str)
+	*_g, ok = GreetingFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a Greeting", str)
 	}
@@ -250,18 +253,16 @@ func (_g *Greeting) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	if err := unmarshal(&str); err != nil {
 		return err
 	}
+	if len(str) == 0 {
+		return fmt.Errorf("Greeting cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingFromString(str)
+	*_g, ok = GreetingFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a Greeting", str)
 	}
 	return nil
-}
-
-// Values returns a slice of all String values of the enum.
-func (Greeting) Values() []string {
-	return GreetingStrings()
 }
 
 const (
@@ -342,9 +343,6 @@ var (
 
 // GreetingWithDefaultFromString determines the enum value with an exact case match.
 func GreetingWithDefaultFromString(raw string) (GreetingWithDefault, bool) {
-	if len(raw) == 0 {
-		return GreetingWithDefault(0), true
-	}
 	v, ok := _GreetingWithDefaultStringToValueMap[raw]
 	if !ok {
 		return GreetingWithDefault(0), false
@@ -376,9 +374,12 @@ func (_g GreetingWithDefault) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for GreetingWithDefault.
 func (_g *GreetingWithDefault) UnmarshalBinary(text []byte) error {
 	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("GreetingWithDefault cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingWithDefaultFromString(str)
+	*_g, ok = GreetingWithDefaultFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a GreetingWithDefault", str)
 	}
@@ -403,9 +404,12 @@ func (_g *GreetingWithDefault) UnmarshalGQL(value interface{}) error {
 	default:
 		return fmt.Errorf("invalid value of GreetingWithDefault: %[1]T(%[1]v)", value)
 	}
+	if len(str) == 0 {
+		return fmt.Errorf("GreetingWithDefault cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingWithDefaultFromString(str)
+	*_g, ok = GreetingWithDefaultFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a GreetingWithDefault", str)
 	}
@@ -426,9 +430,12 @@ func (_g *GreetingWithDefault) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &str); err != nil {
 		return fmt.Errorf("GreetingWithDefault should be a string, got %q", data)
 	}
+	if len(str) == 0 {
+		return fmt.Errorf("GreetingWithDefault cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingWithDefaultFromString(str)
+	*_g, ok = GreetingWithDefaultFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a GreetingWithDefault", str)
 	}
@@ -455,9 +462,12 @@ func (_g *GreetingWithDefault) Scan(value interface{}) error {
 	default:
 		return fmt.Errorf("invalid value of GreetingWithDefault: %[1]T(%[1]v)", value)
 	}
+	if len(str) == 0 {
+		return fmt.Errorf("GreetingWithDefault cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingWithDefaultFromString(str)
+	*_g, ok = GreetingWithDefaultFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a GreetingWithDefault", str)
 	}
@@ -475,9 +485,12 @@ func (_g GreetingWithDefault) MarshalText() ([]byte, error) {
 // UnmarshalText implements the encoding.TextUnmarshaler interface for GreetingWithDefault.
 func (_g *GreetingWithDefault) UnmarshalText(text []byte) error {
 	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("GreetingWithDefault cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingWithDefaultFromString(str)
+	*_g, ok = GreetingWithDefaultFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a GreetingWithDefault", str)
 	}
@@ -498,16 +511,14 @@ func (_g *GreetingWithDefault) UnmarshalYAML(unmarshal func(interface{}) error) 
 	if err := unmarshal(&str); err != nil {
 		return err
 	}
+	if len(str) == 0 {
+		return fmt.Errorf("GreetingWithDefault cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_g, ok = GreetingWithDefaultFromString(str)
+	*_g, ok = GreetingWithDefaultFromStringIgnoreCase(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a GreetingWithDefault", str)
 	}
 	return nil
-}
-
-// Values returns a slice of all String values of the enum.
-func (GreetingWithDefault) Values() []string {
-	return GreetingWithDefaultStrings()
 }

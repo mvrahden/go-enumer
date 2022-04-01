@@ -11,26 +11,19 @@ import (
 func TestGreetings(t *testing.T) {
 	t.Run("Value Sets", func(t *testing.T) {
 		require.Equal(t,
-			[]string{"World", "Россия", "中國", "日本", "한국", "ČeskáRepublika", "𝜋"},
+			[]string{"Россия", "中國", "日本", "한국", "ČeskáRepublika", "𝜋"},
 			GreetingStrings())
 		require.Equal(t,
-			[]Greeting{GreetingWorld, GreetingРоссия, Greeting中國, Greeting日本, Greeting한국, GreetingČeskáRepublika, Greeting𝜋},
+			[]Greeting{GreetingРоссия, Greeting中國, Greeting日本, Greeting한국, GreetingČeskáRepublika, Greeting𝜋},
 			GreetingValues())
-		t.Run("Ent Interface", func(t *testing.T) {
-			require.Equal(t,
-				[]string{"World", "Россия", "中國", "日本", "한국", "ČeskáRepublika", "𝜋"},
-				Greeting(0).Values())
-		})
 	})
-	t.Run("Lookup", func(t *testing.T) {
+	t.Run("Lookup (with ignore case)", func(t *testing.T) {
 		type testCase struct {
 			enum  Greeting
 			upper string
 			lower string
 		}
 		testCases := []testCase{
-			{GreetingWorld, "", ""}, // default value
-			{GreetingWorld, "World", "world"},
 			{GreetingРоссия, "Россия", "россия"},
 			{Greeting中國, "中國", "中國"},
 			{Greeting日本, "日本", "日本"},
@@ -69,11 +62,8 @@ func TestGreetings(t *testing.T) {
 		invalid    bool
 		stringer   string
 	}{
-		{from: "World", serialized: "World", g: Greeting(0), invalid: false, stringer: "World"},
+		{from: "World", serialized: "World", g: Greeting(0), invalid: true, stringer: "Greeting(0)"},
 		{from: "Greeting(7)", serialized: "Greeting(7)", g: Greeting(7), invalid: true, stringer: "Greeting(7)"},
-		{from: "", serialized: "World", g: GreetingWorld, stringer: "World"}, // default
-		{from: "World", serialized: "World", g: GreetingWorld, stringer: "World"},
-		{from: "world", serialized: "World", g: GreetingWorld, stringer: "World"},
 		{from: "Россия", serialized: "Россия", g: GreetingРоссия, stringer: "россия"},
 		{from: "россия", serialized: "Россия", g: GreetingРоссия, stringer: "россия"},
 		{from: "中國", serialized: "中國", g: Greeting中國, stringer: "中國"},
@@ -200,7 +190,7 @@ func TestGreetings(t *testing.T) {
 					var value interface{} = nil
 					var g Greeting
 					err := g.Scan(value)
-					require.NoError(t, err) // we have set a default value
+					require.Error(t, err)
 					require.Zero(t, g)
 				})
 			})
