@@ -9,6 +9,7 @@ Each example is self-contained and part of a wider testing setup to improve QA a
 - `greetings.ignore-case`: Same as `greetings` but with ignore-case.
 - `pills`: Generate enums for all integer-like types.
 - `booking`: Generate enums from CSV source.
+- `project`: A more realistic mix of enums.
 - `_invalid`: Contains various invalid edge cases which are expected to produce specific user-friendly errors.
   You can happily **ignore this directory** as it is for testing puproses only.
 
