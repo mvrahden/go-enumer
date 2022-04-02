@@ -1576,131 +1576,131 @@ func (_c *Currency) UnmarshalYAML(unmarshal func(interface{}) error) error {
 }
 
 const (
-	_StateString      = "STAGEDPROVISIONEDACTIVATEDDEACTIVATEDDEPROVISIONED"
-	_StateLowerString = "stagedprovisionedactivateddeactivateddeprovisioned"
+	_AccountStateString      = "STAGEDPROVISIONEDACTIVATEDDEACTIVATEDDEPROVISIONED"
+	_AccountStateLowerString = "stagedprovisionedactivateddeactivateddeprovisioned"
 )
 
 var (
-	_StateValueRange = [2]State{0, 4}
-	_StateValues     = []State{0, 1, 2, 3, 4}
-	_StateStrings    = []string{_StateString[0:6], _StateString[6:17], _StateString[17:26], _StateString[26:37], _StateString[37:50]}
+	_AccountStateValueRange = [2]AccountState{0, 4}
+	_AccountStateValues     = []AccountState{0, 1, 2, 3, 4}
+	_AccountStateStrings    = []string{_AccountStateString[0:6], _AccountStateString[6:17], _AccountStateString[17:26], _AccountStateString[26:37], _AccountStateString[37:50]}
 )
 
-// _StateNoOp is a compile time assertion.
+// _AccountStateNoOp is a compile time assertion.
 // An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of State.
-func _StateNoOp() {
+// Re-run the enumer command to generate an updated version of AccountState.
+func _AccountStateNoOp() {
 	var x [1]struct{}
-	_ = x[StateStaged-(0)]
-	_ = x[StateProvisioned-(1)]
-	_ = x[StateActivated-(2)]
-	_ = x[StateDeactivated-(3)]
-	_ = x[StateDeprovisioned-(4)]
+	_ = x[AccountStateStaged-(0)]
+	_ = x[AccountStateProvisioned-(1)]
+	_ = x[AccountStateActivated-(2)]
+	_ = x[AccountStateDeactivated-(3)]
+	_ = x[AccountStateDeprovisioned-(4)]
 }
 
-// StateValues returns all values of the enum.
-func StateValues() []State {
-	strs := make([]State, len(_StateValues))
-	copy(strs, _StateValues)
-	return _StateValues
+// AccountStateValues returns all values of the enum.
+func AccountStateValues() []AccountState {
+	strs := make([]AccountState, len(_AccountStateValues))
+	copy(strs, _AccountStateValues)
+	return _AccountStateValues
 }
 
-// StateStrings returns a slice of all String values of the enum.
-func StateStrings() []string {
-	strs := make([]string, len(_StateStrings))
-	copy(strs, _StateStrings)
+// AccountStateStrings returns a slice of all String values of the enum.
+func AccountStateStrings() []string {
+	strs := make([]string, len(_AccountStateStrings))
+	copy(strs, _AccountStateStrings)
 	return strs
 }
 
 // IsValid inspects whether the value is valid enum value.
-func (_s State) IsValid() bool {
-	return _s >= _StateValueRange[0] && _s <= _StateValueRange[1]
+func (_a AccountState) IsValid() bool {
+	return _a >= _AccountStateValueRange[0] && _a <= _AccountStateValueRange[1]
 }
 
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern State(%d) instead.
-func (_s State) String() string {
-	if !_s.IsValid() {
-		return fmt.Sprintf("State(%d)", _s)
+// of the following pattern AccountState(%d) instead.
+func (_a AccountState) String() string {
+	if !_a.IsValid() {
+		return fmt.Sprintf("AccountState(%d)", _a)
 	}
-	idx := uint(_s)
-	return _StateStrings[idx]
+	idx := uint(_a)
+	return _AccountStateStrings[idx]
 }
 
 var (
-	_StateStringToValueMap = map[string]State{
-		_StateString[0:6]:   StateStaged,
-		_StateString[6:17]:  StateProvisioned,
-		_StateString[17:26]: StateActivated,
-		_StateString[26:37]: StateDeactivated,
-		_StateString[37:50]: StateDeprovisioned,
+	_AccountStateStringToValueMap = map[string]AccountState{
+		_AccountStateString[0:6]:   AccountStateStaged,
+		_AccountStateString[6:17]:  AccountStateProvisioned,
+		_AccountStateString[17:26]: AccountStateActivated,
+		_AccountStateString[26:37]: AccountStateDeactivated,
+		_AccountStateString[37:50]: AccountStateDeprovisioned,
 	}
-	_StateLowerStringToValueMap = map[string]State{
-		_StateLowerString[0:6]:   StateStaged,
-		_StateLowerString[6:17]:  StateProvisioned,
-		_StateLowerString[17:26]: StateActivated,
-		_StateLowerString[26:37]: StateDeactivated,
-		_StateLowerString[37:50]: StateDeprovisioned,
+	_AccountStateLowerStringToValueMap = map[string]AccountState{
+		_AccountStateLowerString[0:6]:   AccountStateStaged,
+		_AccountStateLowerString[6:17]:  AccountStateProvisioned,
+		_AccountStateLowerString[17:26]: AccountStateActivated,
+		_AccountStateLowerString[26:37]: AccountStateDeactivated,
+		_AccountStateLowerString[37:50]: AccountStateDeprovisioned,
 	}
 )
 
-// StateFromString determines the enum value with an exact case match.
-func StateFromString(raw string) (State, bool) {
-	v, ok := _StateStringToValueMap[raw]
+// AccountStateFromString determines the enum value with an exact case match.
+func AccountStateFromString(raw string) (AccountState, bool) {
+	v, ok := _AccountStateStringToValueMap[raw]
 	if !ok {
-		return State(0), false
+		return AccountState(0), false
 	}
 	return v, true
 }
 
-// StateFromStringIgnoreCase determines the enum value with a case-insensitive match.
-func StateFromStringIgnoreCase(raw string) (State, bool) {
-	v, ok := StateFromString(raw)
+// AccountStateFromStringIgnoreCase determines the enum value with a case-insensitive match.
+func AccountStateFromStringIgnoreCase(raw string) (AccountState, bool) {
+	v, ok := AccountStateFromString(raw)
 	if ok {
 		return v, ok
 	}
-	v, ok = _StateLowerStringToValueMap[raw]
+	v, ok = _AccountStateLowerStringToValueMap[raw]
 	if !ok {
-		return State(0), false
+		return AccountState(0), false
 	}
 	return v, true
 }
 
-// MarshalJSON implements the json.Marshaler interface for State.
-func (_s State) MarshalJSON() ([]byte, error) {
-	if !_s.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as State", _s)
+// MarshalJSON implements the json.Marshaler interface for AccountState.
+func (_a AccountState) MarshalJSON() ([]byte, error) {
+	if !_a.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as AccountState", _a)
 	}
-	return json.Marshal(_s.String())
+	return json.Marshal(_a.String())
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface for State.
-func (_s *State) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaler interface for AccountState.
+func (_a *AccountState) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("State should be a string, got %q", data)
+		return fmt.Errorf("AccountState should be a string, got %q", data)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("State cannot be derived from empty string")
+		return fmt.Errorf("AccountState cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_s, ok = StateFromString(str)
+	*_a, ok = AccountStateFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a State", str)
+		return fmt.Errorf("Value %q does not represent a AccountState", str)
 	}
 	return nil
 }
 
-func (_s State) Value() (driver.Value, error) {
-	if !_s.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as State", _s)
+func (_a AccountState) Value() (driver.Value, error) {
+	if !_a.IsValid() {
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as AccountState", _a)
 	}
-	return _s.String(), nil
+	return _a.String(), nil
 }
 
-func (_s *State) Scan(value interface{}) error {
+func (_a *AccountState) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -1711,16 +1711,16 @@ func (_s *State) Scan(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of State: %[1]T(%[1]v)", value)
+		return fmt.Errorf("invalid value of AccountState: %[1]T(%[1]v)", value)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("State cannot be derived from empty string")
+		return fmt.Errorf("AccountState cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_s, ok = StateFromString(str)
+	*_a, ok = AccountStateFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a State", str)
+		return fmt.Errorf("Value %q does not represent a AccountState", str)
 	}
 	return nil
 }
