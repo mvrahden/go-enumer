@@ -6,7 +6,7 @@ type BookingState uint
 
 const ()
 
-// BookingStateWithConfig will have it's individual configuration.
+// BookingStateWithConfig will have its own configuration.
 //go:enumer -from=booking.csv -serializers=json,yaml -support=undefined
 type BookingStateWithConfig uint
 
