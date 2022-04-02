@@ -72,7 +72,7 @@ func TestEdgeCaseDetection(t *testing.T) {
 			errMsg: "Enum \"InvalidRangeCSV\" must be a continuous sequence with linear increments of 1."},
 	} {
 		t.Run(fmt.Sprintf("Generate for package %q", tC.directory), func(t *testing.T) {
-			pkg := path.Join(packageBase, "examples", "invalid", tC.directory)
+			pkg := path.Join(packageBase, "examples", "_invalid", tC.directory)
 
 			g := NewGenerator(NewInspector(&tC.cfg), NewRenderer(&tC.cfg))
 			srcs, err := g.Generate(pkg)
