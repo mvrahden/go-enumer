@@ -2,9 +2,9 @@ package gen
 
 import (
 	"bytes"
-	"embed"
 	"fmt"
 	"io"
+	"os"
 	"path"
 	"path/filepath"
 	"testing"
@@ -19,9 +19,6 @@ const (
 	packageBase = about.Repo
 )
 
-//go:embed examples
-var examples embed.FS
-
 func TestGenerator(t *testing.T) {
 	for _, tC := range []struct {
 		directory   string
@@ -32,8 +29,8 @@ func TestGenerator(t *testing.T) {
 		{"greetings", "standard enum and enum with default value"},
 		{"greetings.ignore-case", "standard enum and enum with default value and ignore case support"},
 	} {
-		pkg := path.Join(packageBase, "/pkg/gen/examples/", tC.directory)
-		testdatadir := filepath.Join("examples/", tC.directory)
+		pkg := path.Join(packageBase, "examples", tC.directory)
+		testdatadir := filepath.Join("..", "..", "examples", tC.directory)
 
 		t.Run(fmt.Sprintf("Generate for package %q with %s", tC.directory, tC.description), func(t *testing.T) {
 			expected := getExpectedOutputFile(t, testdatadir)
@@ -71,9 +68,11 @@ func TestEdgeCaseDetection(t *testing.T) {
 			errMsg: "Failed reading from CSV for \"EmptyCSV\". err: found empty csv source"},
 		{directory: "csv.invalid-value",
 			errMsg: "Failed reading from CSV for \"NegativeValueInCSV\". err: failed converting \"-1\" to uint64"},
+		{directory: "csv.invalid-range",
+			errMsg: "Enum \"InvalidRangeCSV\" must be a continuous sequence with linear increments of 1."},
 	} {
 		t.Run(fmt.Sprintf("Generate for package %q", tC.directory), func(t *testing.T) {
-			pkg := path.Join(packageBase, "/pkg/gen/examples/invalid/", tC.directory)
+			pkg := path.Join(packageBase, "examples", "invalid", tC.directory)
 
 			g := NewGenerator(NewInspector(&tC.cfg), NewRenderer(&tC.cfg))
 			srcs, err := g.Generate(pkg)
@@ -91,7 +90,7 @@ func getConfig(t *testing.T, testdatadir string) *config.Options {
 }
 
 func getExpectedOutputFile(t *testing.T, testdatadir string) string {
-	f, err := examples.Open(filepath.Join(testdatadir, "/generated.go"))
+	f, err := os.Open(filepath.Join(testdatadir, "/generated.go"))
 	require.NoError(t, err)
 	defer f.Close()
 
