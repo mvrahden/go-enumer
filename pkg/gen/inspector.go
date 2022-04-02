@@ -68,9 +68,9 @@ func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 			continue
 		}
 
-		ts.Config.TransformStrategy = "noop"
 		var fs flag.FlagSet
 		var fromSource string
+		fs.StringVar(&ts.Config.TransformStrategy, "transform", "noop", "")
 		fs.Var(&ts.Config.Serializers, "serializers", "")
 		fs.Var(&ts.Config.SupportedFeatures, "support", "")
 		fs.StringVar(&fromSource, "from", "", "")
@@ -107,8 +107,7 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 	if err != nil {
 		return err
 	}
-	ts.IsFromCsvSource = true    // hint: mark type as derived from CSV
-	ts.HasCanonicalValues = true // hint: mark type for canocical value support
+	ts.IsFromCsvSource = true // hint: mark type as derived from CSV
 	csvValueSpecs := make([]*ValueSpec, len(records))
 	for idx, row := range records {
 		u64, err := strconv.ParseUint(row[0], 10, 64)
@@ -122,6 +121,7 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 			ValueString:    row[0],
 		}
 		if len(row) == 3 {
+			ts.HasCanonicalValues = true // hint: mark type for canocical value support
 			csvValueSpecs[idx].CanonicalValue = row[2]
 		}
 	}

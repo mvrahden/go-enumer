@@ -28,6 +28,7 @@ func TestGenerator(t *testing.T) {
 		{"pills", "compatibility for various integer-like types"},
 		{"greetings", "standard enum and enum with default value"},
 		{"greetings.ignore-case", "standard enum and enum with default value and ignore case support"},
+		{"project", "a set of more realistic use cases"},
 	} {
 		pkg := path.Join(packageBase, "examples", tC.directory)
 		testdatadir := filepath.Join("..", "..", "examples", tC.directory)
