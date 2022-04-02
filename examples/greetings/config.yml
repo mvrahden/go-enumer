@@ -1,4 +1,3 @@
 ---
-typeAlias: Greeting
 serializers: [binary, gql, json, sql, text, yaml]
 support: [undefined, ent]

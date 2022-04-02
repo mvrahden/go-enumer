@@ -1,4 +1,3 @@
 ---
-typeAlias: BookingState
 serializers: [yaml]
 support: [ent,ignore-case]
