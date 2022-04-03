@@ -69,6 +69,8 @@ func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 		}
 
 		var fs flag.FlagSet
+		fs.SetOutput(io.Discard) // silence flagset StdErr output
+
 		var fromSource string
 		fs.StringVar(&ts.Config.TransformStrategy, "transform", "noop", "")
 		fs.Var(&ts.Config.Serializers, "serializers", "")
