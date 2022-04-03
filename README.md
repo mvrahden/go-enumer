@@ -27,7 +27,7 @@ Due to the nature of enums being distinct values, the majority of enum sequences
 
 ```go
 //go:enumer
-type Greeting int
+type Greeting uint
 
 const (
   GreetingWorld Greeting = iota + 1
@@ -45,7 +45,7 @@ All the other values should be `>= 1`.
 
 ```go
 //go:enumer
-type Greeting int
+type Greeting uint
 
 const (
   GreetingWorld Greeting = iota  // <- this is your default
@@ -78,7 +78,7 @@ Currently the magic comment supports for all configuration options, which are av
 //go:generate github.com/mvrahden/go-enumer -serializers=json
 
 //go:enumer -serializers=json,yaml
-type Greeting int
+type Greeting uint
 
 const (
   GreetingWorld Greeting = iota
@@ -167,7 +167,7 @@ For example, if we have an enum type called `Pill`,
 //go:generate github.com/mvrahden/go-enumer -serializers=json
 
 //go:enumer
-type Pill int
+type Pill uint
 
 const (
   Placebo Pill = iota
@@ -259,7 +259,7 @@ Consider the following example, which will generate the same string values:
 
 ```go
 //go:enumer
-type Greeting int
+type Greeting uint
 
 const (
   Россия Greeting = iota + 1
@@ -270,7 +270,7 @@ const (
 )
 
 //go:enumer
-type GreetingWithPrefix int
+type GreetingWithPrefix uint
 
 const (
   GreetingWithPrefixРоссия Greeting = iota + 1
@@ -285,7 +285,7 @@ By default, `go-enumer` uses the same name of the enum value for generating the 
 
 ```go
 //go:enumer
-type Greeting int
+type Greeting uint
 
  ...
 
@@ -309,7 +309,7 @@ Please take the example transformation from the following table for this example
 
 ```go
 //go:enumer
-type MyType int
+type MyType uint
 
 const (
   FooBar MyType = iota
