@@ -146,6 +146,7 @@ func (_g Greeting) MarshalGQL(w io.Writer) {
 func (_g *Greeting) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -394,6 +395,7 @@ func (_g GreetingWithDefault) MarshalGQL(w io.Writer) {
 func (_g *GreetingWithDefault) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:

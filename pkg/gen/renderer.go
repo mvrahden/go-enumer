@@ -395,7 +395,7 @@ func getTransformStrategy(c *config.Options) func(string) string {
 }
 
 func (r *renderUtil) renderSerializers(buf *bytes.Buffer, ts *TypeSpec) {
-	ignoreCase := r.cfg.SupportedFeatures.Contains("ignore-case")
+	ignoreCase := r.cfg.SupportedFeatures.Contains(config.SupportIgnoreCase)
 	for _, v := range r.cfg.Serializers {
 		switch v {
 		case "binary":
@@ -471,6 +471,7 @@ func (_%[2]s %[1]s) MarshalGQL(w io.Writer) {
 func (_%[2]s *%[1]s) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:

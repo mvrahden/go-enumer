@@ -1,3 +1,0 @@
----
-serializers: [binary, gql, json, sql, text, yaml]
-support: [ignore-case]

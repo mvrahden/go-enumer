@@ -120,7 +120,7 @@ const (
 )
 
 //go:enumer
-type PillRowed int
+type PillRowed uint
 
 const PillRowedPlacebo, PillRowedAspirin, PillRowedIbuprofen, PillRowedParacetamol, PillRowedAcetaminophen, PillRowedVitaminC PillRowed = 0, 1, 2, 3, 3, 4
 
@@ -134,16 +134,4 @@ const (
 	PillAliasedParacetamol
 	PillAliasedAcetaminophen PillAliased = iota - 1
 	PillAliasedVitaminC
-)
-
-//go:enumer
-type PillUndefined int
-
-const (
-	PillUndefinedPlacebo PillUndefined = iota + 1
-	PillUndefinedAspirin
-	PillUndefinedIbuprofen
-	PillUndefinedParacetamol
-	PillUndefinedAcetaminophen PillUndefined = iota
-	PillUndefinedVitaminC
 )

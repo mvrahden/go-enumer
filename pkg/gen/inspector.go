@@ -10,6 +10,7 @@ import (
 	"go/constant"
 	"go/token"
 	"go/types"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -261,11 +262,11 @@ type valueSpec struct {
 func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, out *File) ([]typeSpec, error) {
 	var typeSpecs []typeSpec
 	for _, f := range pkg.Syntax {
-		// determine typeSpecs
+		// determine type specs
 		for _, v := range f.Decls {
 			decl, ok := v.(*ast.GenDecl)
 			if !ok || decl.Tok != token.TYPE {
-				// We only care about type declarations.
+				// we only care about type declarations.
 				continue
 			}
 			if len(decl.Specs) != 1 {
@@ -284,7 +285,7 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 			}
 			ts, ok := decl.Specs[0].(*ast.TypeSpec)
 			if !ok {
-				continue
+				continue // not a type spec
 			}
 
 			typ := pkg.TypesInfo.TypeOf(ts.Type)
@@ -303,15 +304,15 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 			typeSpecs = append(typeSpecs, typeSpec{Decl: decl, TypeSpec: ts, Type: btyp, File: f, EnumMarker: magicComment})
 		}
 
-		// determine values for typeSpecs
+		// determine values for type specs
 		for _, v := range f.Decls {
 			decl, ok := v.(*ast.GenDecl)
 			if !ok || decl.Tok != token.CONST {
-				// We only care about const declarations.
+				// we only care about const declarations.
 				continue
 			}
 
-			var prevType *ast.Ident // for blocks with implicit types
+			var prevType *ast.Ident // needed for blocks with implicit types
 			for _, spec := range decl.Specs {
 				vspec, ok := spec.(*ast.ValueSpec)
 				if !ok {

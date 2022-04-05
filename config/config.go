@@ -9,13 +9,13 @@ import (
 
 const (
 	SupportUndefined    = "undefined"
+	SupportIgnoreCase   = "ignore-case"
 	SupportEntInterface = "ent"
 )
 
 type Args Options
 type Options struct {
 	TransformStrategy string     `yaml:"transform" env-default:"noop"`
-	AddPrefix         string     `yaml:"addPrefix"`
 	Serializers       stringList `yaml:"serializers"`
 	SupportedFeatures stringList `yaml:"support"`
 }

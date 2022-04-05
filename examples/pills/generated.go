@@ -138,6 +138,7 @@ func (_p Pill) MarshalGQL(w io.Writer) {
 func (_p *Pill) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -394,6 +395,7 @@ func (_p PillSigned8) MarshalGQL(w io.Writer) {
 func (_p *PillSigned8) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -650,6 +652,7 @@ func (_p PillSigned16) MarshalGQL(w io.Writer) {
 func (_p *PillSigned16) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -906,6 +909,7 @@ func (_p PillSigned32) MarshalGQL(w io.Writer) {
 func (_p *PillSigned32) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1162,6 +1166,7 @@ func (_p PillSigned64) MarshalGQL(w io.Writer) {
 func (_p *PillSigned64) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1418,6 +1423,7 @@ func (_p PillUnsigned) MarshalGQL(w io.Writer) {
 func (_p *PillUnsigned) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1674,6 +1680,7 @@ func (_p PillUnsigned8) MarshalGQL(w io.Writer) {
 func (_p *PillUnsigned8) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1930,6 +1937,7 @@ func (_p PillUnsigned16) MarshalGQL(w io.Writer) {
 func (_p *PillUnsigned16) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -2186,6 +2194,7 @@ func (_p PillUnsigned32) MarshalGQL(w io.Writer) {
 func (_p *PillUnsigned32) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -2442,6 +2451,7 @@ func (_p PillUnsigned64) MarshalGQL(w io.Writer) {
 func (_p *PillUnsigned64) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -2698,6 +2708,7 @@ func (_p PillRowed) MarshalGQL(w io.Writer) {
 func (_p *PillRowed) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -2954,6 +2965,7 @@ func (_p PillAliased) MarshalGQL(w io.Writer) {
 func (_p *PillAliased) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -3079,262 +3091,6 @@ func (_p *PillAliased) UnmarshalYAML(n *yaml.Node) error {
 	*_p, ok = PillAliasedFromString(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a PillAliased", str)
-	}
-	return nil
-}
-
-const (
-	_PillUndefinedString      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
-	_PillUndefinedLowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
-)
-
-var (
-	_PillUndefinedValueRange = [2]PillUndefined{1, 5}
-	_PillUndefinedValues     = []PillUndefined{1, 2, 3, 4, 5}
-	_PillUndefinedStrings    = []string{_PillUndefinedString[0:7], _PillUndefinedString[7:14], _PillUndefinedString[14:23], _PillUndefinedString[23:34], _PillUndefinedString[47:56]}
-)
-
-// _PillUndefinedNoOp is a compile time assertion.
-// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of PillUndefined.
-func _PillUndefinedNoOp() {
-	var x [1]struct{}
-	_ = x[PillUndefinedPlacebo-(1)]
-	_ = x[PillUndefinedAspirin-(2)]
-	_ = x[PillUndefinedIbuprofen-(3)]
-	_ = x[PillUndefinedParacetamol-(4)]
-	_ = x[PillUndefinedAcetaminophen-(4)]
-	_ = x[PillUndefinedVitaminC-(5)]
-}
-
-// PillUndefinedValues returns all values of the enum.
-func PillUndefinedValues() []PillUndefined {
-	strs := make([]PillUndefined, len(_PillUndefinedValues))
-	copy(strs, _PillUndefinedValues)
-	return _PillUndefinedValues
-}
-
-// PillUndefinedStrings returns a slice of all String values of the enum.
-func PillUndefinedStrings() []string {
-	strs := make([]string, len(_PillUndefinedStrings))
-	copy(strs, _PillUndefinedStrings)
-	return strs
-}
-
-// IsValid inspects whether the value is valid enum value.
-func (_p PillUndefined) IsValid() bool {
-	return _p >= _PillUndefinedValueRange[0] && _p <= _PillUndefinedValueRange[1]
-}
-
-// String returns the string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern PillUndefined(%d) instead.
-func (_p PillUndefined) String() string {
-	if !_p.IsValid() {
-		return fmt.Sprintf("PillUndefined(%d)", _p)
-	}
-	idx := uint(_p) - 1
-	return _PillUndefinedStrings[idx]
-}
-
-var (
-	_PillUndefinedStringToValueMap = map[string]PillUndefined{
-		_PillUndefinedString[0:7]:   PillUndefinedPlacebo,
-		_PillUndefinedString[7:14]:  PillUndefinedAspirin,
-		_PillUndefinedString[14:23]: PillUndefinedIbuprofen,
-		_PillUndefinedString[23:34]: PillUndefinedParacetamol,
-		_PillUndefinedString[34:47]: PillUndefinedAcetaminophen,
-		_PillUndefinedString[47:56]: PillUndefinedVitaminC,
-	}
-	_PillUndefinedLowerStringToValueMap = map[string]PillUndefined{
-		_PillUndefinedLowerString[0:7]:   PillUndefinedPlacebo,
-		_PillUndefinedLowerString[7:14]:  PillUndefinedAspirin,
-		_PillUndefinedLowerString[14:23]: PillUndefinedIbuprofen,
-		_PillUndefinedLowerString[23:34]: PillUndefinedParacetamol,
-		_PillUndefinedLowerString[34:47]: PillUndefinedAcetaminophen,
-		_PillUndefinedLowerString[47:56]: PillUndefinedVitaminC,
-	}
-)
-
-// PillUndefinedFromString determines the enum value with an exact case match.
-func PillUndefinedFromString(raw string) (PillUndefined, bool) {
-	v, ok := _PillUndefinedStringToValueMap[raw]
-	if !ok {
-		return PillUndefined(0), false
-	}
-	return v, true
-}
-
-// PillUndefinedFromStringIgnoreCase determines the enum value with a case-insensitive match.
-func PillUndefinedFromStringIgnoreCase(raw string) (PillUndefined, bool) {
-	v, ok := PillUndefinedFromString(raw)
-	if ok {
-		return v, ok
-	}
-	v, ok = _PillUndefinedLowerStringToValueMap[raw]
-	if !ok {
-		return PillUndefined(0), false
-	}
-	return v, true
-}
-
-// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUndefined.
-func (_p PillUndefined) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUndefined", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUndefined.
-func (_p *PillUndefined) UnmarshalBinary(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PillUndefined cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUndefinedFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUndefined", str)
-	}
-	return nil
-}
-
-// MarshalGQL implements the graphql.Marshaler interface for PillUndefined.
-func (_p PillUndefined) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(_p.String()))
-}
-
-// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUndefined.
-func (_p *PillUndefined) UnmarshalGQL(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PillUndefined: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUndefined cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUndefinedFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUndefined", str)
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaler interface for PillUndefined.
-func (_p PillUndefined) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUndefined", _p)
-	}
-	return json.Marshal(_p.String())
-}
-
-// UnmarshalJSON implements the json.Unmarshaler interface for PillUndefined.
-func (_p *PillUndefined) UnmarshalJSON(data []byte) error {
-	var str string
-	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("PillUndefined should be a string, got %q", data)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUndefined cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUndefinedFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUndefined", str)
-	}
-	return nil
-}
-
-func (_p PillUndefined) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUndefined", _p)
-	}
-	return _p.String(), nil
-}
-
-func (_p *PillUndefined) Scan(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PillUndefined: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUndefined cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUndefinedFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUndefined", str)
-	}
-	return nil
-}
-
-// MarshalText implements the encoding.TextMarshaler interface for PillUndefined.
-func (_p PillUndefined) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUndefined", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUndefined.
-func (_p *PillUndefined) UnmarshalText(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PillUndefined cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUndefinedFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUndefined", str)
-	}
-	return nil
-}
-
-// MarshalYAML implements a YAML Marshaler for PillUndefined.
-func (_p PillUndefined) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUndefined", _p)
-	}
-	return _p.String(), nil
-}
-
-// UnmarshalYAML implements a YAML Unmarshaler for PillUndefined.
-func (_p *PillUndefined) UnmarshalYAML(n *yaml.Node) error {
-	const stringTag = "!!str"
-	if n.ShortTag() != stringTag {
-		return fmt.Errorf("PillUndefined must be derived from a string node")
-	}
-	str := n.Value
-	if len(str) == 0 {
-		return fmt.Errorf("PillUndefined cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUndefinedFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUndefined", str)
 	}
 	return nil
 }

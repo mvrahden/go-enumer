@@ -131,6 +131,7 @@ func (_u UserRole) MarshalGQL(w io.Writer) {
 func (_u *UserRole) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1194,6 +1195,7 @@ func (_t Timezone) MarshalGQL(w io.Writer) {
 func (_t *Timezone) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1447,6 +1449,7 @@ func (_c Currency) MarshalGQL(w io.Writer) {
 func (_c *Currency) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	case nil:
 	case []byte:
 		str = string(v)
 	case string:

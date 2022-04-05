@@ -27,7 +27,6 @@ support: [stu,vwx,yz]`), os.ModePerm)
 		cfg := LoadFrom(configFile)
 		require.Equal(t, &Options{
 			TransformStrategy: "def",
-			AddPrefix:         "ghi",
 			Serializers:       []string{"jkl", "mno", "pqr"},
 			SupportedFeatures: []string{"stu", "vwx", "yz"},
 		}, cfg)
@@ -53,7 +52,6 @@ support: [stu,vwx,yz]`), os.ModePerm)
 func TestCopy(t *testing.T) {
 	t.Run("copies to a new instance with equal values", func(t *testing.T) {
 		cfg := LoadFrom("")
-		cfg.AddPrefix = "ABC"
 		cfg.Serializers = stringList{"DEF"}
 		cfg2 := cfg.Clone()
 		require.NotSame(t, cfg, cfg2)
