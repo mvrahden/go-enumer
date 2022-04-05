@@ -27,7 +27,7 @@ func TestGenerator(t *testing.T) {
 		{"booking", "CSV source"},
 		{"pills", "compatibility for various integer-like types"},
 		{"greetings", "standard enum and enum with default value"},
-		{"greetings.ignore-case", "standard enum and enum with default value and ignore case support"},
+		{"planets", "standard enum and enum with default value support `ignore-case` and `undefined`"},
 		{"project", "a set of more realistic use cases"},
 	} {
 		pkg := path.Join(packageBase, "examples", tC.directory)
@@ -45,7 +45,7 @@ func TestGenerator(t *testing.T) {
 	}
 }
 
-func TestEdgeCaseDetection(t *testing.T) {
+func TestGeneratorEdgeCaseDetection(t *testing.T) {
 	for _, tC := range []struct {
 		directory string
 		errMsg    string

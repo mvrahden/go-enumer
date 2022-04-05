@@ -6,8 +6,8 @@ Each example is self-contained and part of a wider testing setup to improve QA a
 ## Example Use Cases
 
 - `greetings`: Generate enums standard enum and enums with default value (zero value).
-- `greetings.ignore-case`: Same as `greetings` but with ignore-case.
 - `pills`: Generate enums for all integer-like types.
+- `planets`: Generate various combinations of standard/default vs. undefined.
 - `booking`: Generate enums from CSV source.
 - `project`: A more realistic mix of enums.
 - `_invalid`: Contains various invalid edge cases which are expected to produce specific user-friendly errors.
