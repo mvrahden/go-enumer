@@ -12,130 +12,130 @@ import (
 )
 
 const (
-	_PillUnsignedString      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
-	_PillUnsignedLowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
+	_PillAliasedString      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
+	_PillAliasedLowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
 )
 
 var (
-	_PillUnsignedValueRange = [2]PillUnsigned{0, 4}
-	_PillUnsignedValues     = []PillUnsigned{0, 1, 2, 3, 4}
-	_PillUnsignedStrings    = []string{_PillUnsignedString[0:7], _PillUnsignedString[7:14], _PillUnsignedString[14:23], _PillUnsignedString[23:34], _PillUnsignedString[47:56]}
+	_PillAliasedValueRange = [2]PillAliased{0, 4}
+	_PillAliasedValues     = []PillAliased{0, 1, 2, 3, 4}
+	_PillAliasedStrings    = []string{_PillAliasedString[0:7], _PillAliasedString[7:14], _PillAliasedString[14:23], _PillAliasedString[23:34], _PillAliasedString[47:56]}
 )
 
-// _PillUnsignedNoOp is a compile time assertion.
+// _PillAliasedNoOp is a compile time assertion.
 // An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of PillUnsigned.
-func _PillUnsignedNoOp() {
+// Re-run the enumer command to generate an updated version of PillAliased.
+func _PillAliasedNoOp() {
 	var x [1]struct{}
-	_ = x[PillUnsignedPlacebo-(0)]
-	_ = x[PillUnsignedAspirin-(1)]
-	_ = x[PillUnsignedIbuprofen-(2)]
-	_ = x[PillUnsignedParacetamol-(3)]
-	_ = x[PillUnsignedAcetaminophen-(3)]
-	_ = x[PillUnsignedVitaminC-(4)]
+	_ = x[PillAliasedPlacebo-(0)]
+	_ = x[PillAliasedAspirin-(1)]
+	_ = x[PillAliasedIbuprofen-(2)]
+	_ = x[PillAliasedParacetamol-(3)]
+	_ = x[PillAliasedAcetaminophen-(3)]
+	_ = x[PillAliasedVitaminC-(4)]
 }
 
-// PillUnsignedValues returns all values of the enum.
-func PillUnsignedValues() []PillUnsigned {
-	strs := make([]PillUnsigned, len(_PillUnsignedValues))
-	copy(strs, _PillUnsignedValues)
-	return _PillUnsignedValues
+// PillAliasedValues returns all values of the enum.
+func PillAliasedValues() []PillAliased {
+	strs := make([]PillAliased, len(_PillAliasedValues))
+	copy(strs, _PillAliasedValues)
+	return _PillAliasedValues
 }
 
-// PillUnsignedStrings returns a slice of all String values of the enum.
-func PillUnsignedStrings() []string {
-	strs := make([]string, len(_PillUnsignedStrings))
-	copy(strs, _PillUnsignedStrings)
+// PillAliasedStrings returns a slice of all String values of the enum.
+func PillAliasedStrings() []string {
+	strs := make([]string, len(_PillAliasedStrings))
+	copy(strs, _PillAliasedStrings)
 	return strs
 }
 
 // IsValid inspects whether the value is valid enum value.
-func (_p PillUnsigned) IsValid() bool {
-	return _p >= _PillUnsignedValueRange[0] && _p <= _PillUnsignedValueRange[1]
+func (_p PillAliased) IsValid() bool {
+	return _p >= _PillAliasedValueRange[0] && _p <= _PillAliasedValueRange[1]
 }
 
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern PillUnsigned(%d) instead.
-func (_p PillUnsigned) String() string {
+// of the following pattern PillAliased(%d) instead.
+func (_p PillAliased) String() string {
 	if !_p.IsValid() {
-		return fmt.Sprintf("PillUnsigned(%d)", _p)
+		return fmt.Sprintf("PillAliased(%d)", _p)
 	}
 	idx := uint(_p)
-	return _PillUnsignedStrings[idx]
+	return _PillAliasedStrings[idx]
 }
 
 var (
-	_PillUnsignedStringToValueMap = map[string]PillUnsigned{
-		_PillUnsignedString[0:7]:   PillUnsignedPlacebo,
-		_PillUnsignedString[7:14]:  PillUnsignedAspirin,
-		_PillUnsignedString[14:23]: PillUnsignedIbuprofen,
-		_PillUnsignedString[23:34]: PillUnsignedParacetamol,
-		_PillUnsignedString[34:47]: PillUnsignedAcetaminophen,
-		_PillUnsignedString[47:56]: PillUnsignedVitaminC,
+	_PillAliasedStringToValueMap = map[string]PillAliased{
+		_PillAliasedString[0:7]:   PillAliasedPlacebo,
+		_PillAliasedString[7:14]:  PillAliasedAspirin,
+		_PillAliasedString[14:23]: PillAliasedIbuprofen,
+		_PillAliasedString[23:34]: PillAliasedParacetamol,
+		_PillAliasedString[34:47]: PillAliasedAcetaminophen,
+		_PillAliasedString[47:56]: PillAliasedVitaminC,
 	}
-	_PillUnsignedLowerStringToValueMap = map[string]PillUnsigned{
-		_PillUnsignedLowerString[0:7]:   PillUnsignedPlacebo,
-		_PillUnsignedLowerString[7:14]:  PillUnsignedAspirin,
-		_PillUnsignedLowerString[14:23]: PillUnsignedIbuprofen,
-		_PillUnsignedLowerString[23:34]: PillUnsignedParacetamol,
-		_PillUnsignedLowerString[34:47]: PillUnsignedAcetaminophen,
-		_PillUnsignedLowerString[47:56]: PillUnsignedVitaminC,
+	_PillAliasedLowerStringToValueMap = map[string]PillAliased{
+		_PillAliasedLowerString[0:7]:   PillAliasedPlacebo,
+		_PillAliasedLowerString[7:14]:  PillAliasedAspirin,
+		_PillAliasedLowerString[14:23]: PillAliasedIbuprofen,
+		_PillAliasedLowerString[23:34]: PillAliasedParacetamol,
+		_PillAliasedLowerString[34:47]: PillAliasedAcetaminophen,
+		_PillAliasedLowerString[47:56]: PillAliasedVitaminC,
 	}
 )
 
-// PillUnsignedFromString determines the enum value with an exact case match.
-func PillUnsignedFromString(raw string) (PillUnsigned, bool) {
-	v, ok := _PillUnsignedStringToValueMap[raw]
+// PillAliasedFromString determines the enum value with an exact case match.
+func PillAliasedFromString(raw string) (PillAliased, bool) {
+	v, ok := _PillAliasedStringToValueMap[raw]
 	if !ok {
-		return PillUnsigned(0), false
+		return PillAliased(0), false
 	}
 	return v, true
 }
 
-// PillUnsignedFromStringIgnoreCase determines the enum value with a case-insensitive match.
-func PillUnsignedFromStringIgnoreCase(raw string) (PillUnsigned, bool) {
-	v, ok := PillUnsignedFromString(raw)
+// PillAliasedFromStringIgnoreCase determines the enum value with a case-insensitive match.
+func PillAliasedFromStringIgnoreCase(raw string) (PillAliased, bool) {
+	v, ok := PillAliasedFromString(raw)
 	if ok {
 		return v, ok
 	}
-	v, ok = _PillUnsignedLowerStringToValueMap[raw]
+	v, ok = _PillAliasedLowerStringToValueMap[raw]
 	if !ok {
-		return PillUnsigned(0), false
+		return PillAliased(0), false
 	}
 	return v, true
 }
 
-// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned.
-func (_p PillUnsigned) MarshalBinary() ([]byte, error) {
+// MarshalBinary implements the encoding.BinaryMarshaler interface for PillAliased.
+func (_p PillAliased) MarshalBinary() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
 	}
 	return []byte(_p.String()), nil
 }
 
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUnsigned.
-func (_p *PillUnsigned) UnmarshalBinary(text []byte) error {
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillAliased.
+func (_p *PillAliased) UnmarshalBinary(text []byte) error {
 	str := string(text)
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
+		return fmt.Errorf("PillAliased cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsignedFromString(str)
+	*_p, ok = PillAliasedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
+		return fmt.Errorf("Value %q does not represent a PillAliased", str)
 	}
 	return nil
 }
 
-// MarshalGQL implements the graphql.Marshaler interface for PillUnsigned.
-func (_p PillUnsigned) MarshalGQL(w io.Writer) {
+// MarshalGQL implements the graphql.Marshaler interface for PillAliased.
+func (_p PillAliased) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(_p.String()))
 }
 
-// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUnsigned.
-func (_p *PillUnsigned) UnmarshalGQL(value interface{}) error {
+// UnmarshalGQL implements the graphql.Unmarshaler interface for PillAliased.
+func (_p *PillAliased) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -146,54 +146,54 @@ func (_p *PillUnsigned) UnmarshalGQL(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of PillUnsigned: %[1]T(%[1]v)", value)
+		return fmt.Errorf("invalid value of PillAliased: %[1]T(%[1]v)", value)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
+		return fmt.Errorf("PillAliased cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsignedFromString(str)
+	*_p, ok = PillAliasedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
+		return fmt.Errorf("Value %q does not represent a PillAliased", str)
 	}
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaler interface for PillUnsigned.
-func (_p PillUnsigned) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaler interface for PillAliased.
+func (_p PillAliased) MarshalJSON() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
 	}
 	return json.Marshal(_p.String())
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface for PillUnsigned.
-func (_p *PillUnsigned) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaler interface for PillAliased.
+func (_p *PillAliased) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("PillUnsigned should be a string, got %q", data)
+		return fmt.Errorf("PillAliased should be a string, got %q", data)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
+		return fmt.Errorf("PillAliased cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsignedFromString(str)
+	*_p, ok = PillAliasedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
+		return fmt.Errorf("Value %q does not represent a PillAliased", str)
 	}
 	return nil
 }
 
-func (_p PillUnsigned) Value() (driver.Value, error) {
+func (_p PillAliased) Value() (driver.Value, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned", _p)
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillAliased", _p)
 	}
 	return _p.String(), nil
 }
 
-func (_p *PillUnsigned) Scan(value interface{}) error {
+func (_p *PillAliased) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -204,195 +204,195 @@ func (_p *PillUnsigned) Scan(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of PillUnsigned: %[1]T(%[1]v)", value)
+		return fmt.Errorf("invalid value of PillAliased: %[1]T(%[1]v)", value)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
+		return fmt.Errorf("PillAliased cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsignedFromString(str)
+	*_p, ok = PillAliasedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
+		return fmt.Errorf("Value %q does not represent a PillAliased", str)
 	}
 	return nil
 }
 
-// MarshalText implements the encoding.TextMarshaler interface for PillUnsigned.
-func (_p PillUnsigned) MarshalText() ([]byte, error) {
+// MarshalText implements the encoding.TextMarshaler interface for PillAliased.
+func (_p PillAliased) MarshalText() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
 	}
 	return []byte(_p.String()), nil
 }
 
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUnsigned.
-func (_p *PillUnsigned) UnmarshalText(text []byte) error {
+// UnmarshalText implements the encoding.TextUnmarshaler interface for PillAliased.
+func (_p *PillAliased) UnmarshalText(text []byte) error {
 	str := string(text)
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
+		return fmt.Errorf("PillAliased cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsignedFromString(str)
+	*_p, ok = PillAliasedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
+		return fmt.Errorf("Value %q does not represent a PillAliased", str)
 	}
 	return nil
 }
 
-// MarshalYAML implements a YAML Marshaler for PillUnsigned.
-func (_p PillUnsigned) MarshalYAML() (interface{}, error) {
+// MarshalYAML implements a YAML Marshaler for PillAliased.
+func (_p PillAliased) MarshalYAML() (interface{}, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
 	}
 	return _p.String(), nil
 }
 
-// UnmarshalYAML implements a YAML Unmarshaler for PillUnsigned.
-func (_p *PillUnsigned) UnmarshalYAML(n *yaml.Node) error {
+// UnmarshalYAML implements a YAML Unmarshaler for PillAliased.
+func (_p *PillAliased) UnmarshalYAML(n *yaml.Node) error {
 	const stringTag = "!!str"
 	if n.ShortTag() != stringTag {
-		return fmt.Errorf("PillUnsigned must be derived from a string node")
+		return fmt.Errorf("PillAliased must be derived from a string node")
 	}
 	str := n.Value
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
+		return fmt.Errorf("PillAliased cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsignedFromString(str)
+	*_p, ok = PillAliasedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
+		return fmt.Errorf("Value %q does not represent a PillAliased", str)
 	}
 	return nil
 }
 
 const (
-	_PillUnsigned8String      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
-	_PillUnsigned8LowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
+	_PillRowedString      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
+	_PillRowedLowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
 )
 
 var (
-	_PillUnsigned8ValueRange = [2]PillUnsigned8{0, 4}
-	_PillUnsigned8Values     = []PillUnsigned8{0, 1, 2, 3, 4}
-	_PillUnsigned8Strings    = []string{_PillUnsigned8String[0:7], _PillUnsigned8String[7:14], _PillUnsigned8String[14:23], _PillUnsigned8String[23:34], _PillUnsigned8String[47:56]}
+	_PillRowedValueRange = [2]PillRowed{0, 4}
+	_PillRowedValues     = []PillRowed{0, 1, 2, 3, 4}
+	_PillRowedStrings    = []string{_PillRowedString[0:7], _PillRowedString[7:14], _PillRowedString[14:23], _PillRowedString[23:34], _PillRowedString[47:56]}
 )
 
-// _PillUnsigned8NoOp is a compile time assertion.
+// _PillRowedNoOp is a compile time assertion.
 // An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of PillUnsigned8.
-func _PillUnsigned8NoOp() {
+// Re-run the enumer command to generate an updated version of PillRowed.
+func _PillRowedNoOp() {
 	var x [1]struct{}
-	_ = x[PillUnsigned8Placebo-(0)]
-	_ = x[PillUnsigned8Aspirin-(1)]
-	_ = x[PillUnsigned8Ibuprofen-(2)]
-	_ = x[PillUnsigned8Paracetamol-(3)]
-	_ = x[PillUnsigned8Acetaminophen-(3)]
-	_ = x[PillUnsigned8VitaminC-(4)]
+	_ = x[PillRowedPlacebo-(0)]
+	_ = x[PillRowedAspirin-(1)]
+	_ = x[PillRowedIbuprofen-(2)]
+	_ = x[PillRowedParacetamol-(3)]
+	_ = x[PillRowedAcetaminophen-(3)]
+	_ = x[PillRowedVitaminC-(4)]
 }
 
-// PillUnsigned8Values returns all values of the enum.
-func PillUnsigned8Values() []PillUnsigned8 {
-	strs := make([]PillUnsigned8, len(_PillUnsigned8Values))
-	copy(strs, _PillUnsigned8Values)
-	return _PillUnsigned8Values
+// PillRowedValues returns all values of the enum.
+func PillRowedValues() []PillRowed {
+	strs := make([]PillRowed, len(_PillRowedValues))
+	copy(strs, _PillRowedValues)
+	return _PillRowedValues
 }
 
-// PillUnsigned8Strings returns a slice of all String values of the enum.
-func PillUnsigned8Strings() []string {
-	strs := make([]string, len(_PillUnsigned8Strings))
-	copy(strs, _PillUnsigned8Strings)
+// PillRowedStrings returns a slice of all String values of the enum.
+func PillRowedStrings() []string {
+	strs := make([]string, len(_PillRowedStrings))
+	copy(strs, _PillRowedStrings)
 	return strs
 }
 
 // IsValid inspects whether the value is valid enum value.
-func (_p PillUnsigned8) IsValid() bool {
-	return _p >= _PillUnsigned8ValueRange[0] && _p <= _PillUnsigned8ValueRange[1]
+func (_p PillRowed) IsValid() bool {
+	return _p >= _PillRowedValueRange[0] && _p <= _PillRowedValueRange[1]
 }
 
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern PillUnsigned8(%d) instead.
-func (_p PillUnsigned8) String() string {
+// of the following pattern PillRowed(%d) instead.
+func (_p PillRowed) String() string {
 	if !_p.IsValid() {
-		return fmt.Sprintf("PillUnsigned8(%d)", _p)
+		return fmt.Sprintf("PillRowed(%d)", _p)
 	}
 	idx := uint(_p)
-	return _PillUnsigned8Strings[idx]
+	return _PillRowedStrings[idx]
 }
 
 var (
-	_PillUnsigned8StringToValueMap = map[string]PillUnsigned8{
-		_PillUnsigned8String[0:7]:   PillUnsigned8Placebo,
-		_PillUnsigned8String[7:14]:  PillUnsigned8Aspirin,
-		_PillUnsigned8String[14:23]: PillUnsigned8Ibuprofen,
-		_PillUnsigned8String[23:34]: PillUnsigned8Paracetamol,
-		_PillUnsigned8String[34:47]: PillUnsigned8Acetaminophen,
-		_PillUnsigned8String[47:56]: PillUnsigned8VitaminC,
+	_PillRowedStringToValueMap = map[string]PillRowed{
+		_PillRowedString[0:7]:   PillRowedPlacebo,
+		_PillRowedString[7:14]:  PillRowedAspirin,
+		_PillRowedString[14:23]: PillRowedIbuprofen,
+		_PillRowedString[23:34]: PillRowedParacetamol,
+		_PillRowedString[34:47]: PillRowedAcetaminophen,
+		_PillRowedString[47:56]: PillRowedVitaminC,
 	}
-	_PillUnsigned8LowerStringToValueMap = map[string]PillUnsigned8{
-		_PillUnsigned8LowerString[0:7]:   PillUnsigned8Placebo,
-		_PillUnsigned8LowerString[7:14]:  PillUnsigned8Aspirin,
-		_PillUnsigned8LowerString[14:23]: PillUnsigned8Ibuprofen,
-		_PillUnsigned8LowerString[23:34]: PillUnsigned8Paracetamol,
-		_PillUnsigned8LowerString[34:47]: PillUnsigned8Acetaminophen,
-		_PillUnsigned8LowerString[47:56]: PillUnsigned8VitaminC,
+	_PillRowedLowerStringToValueMap = map[string]PillRowed{
+		_PillRowedLowerString[0:7]:   PillRowedPlacebo,
+		_PillRowedLowerString[7:14]:  PillRowedAspirin,
+		_PillRowedLowerString[14:23]: PillRowedIbuprofen,
+		_PillRowedLowerString[23:34]: PillRowedParacetamol,
+		_PillRowedLowerString[34:47]: PillRowedAcetaminophen,
+		_PillRowedLowerString[47:56]: PillRowedVitaminC,
 	}
 )
 
-// PillUnsigned8FromString determines the enum value with an exact case match.
-func PillUnsigned8FromString(raw string) (PillUnsigned8, bool) {
-	v, ok := _PillUnsigned8StringToValueMap[raw]
+// PillRowedFromString determines the enum value with an exact case match.
+func PillRowedFromString(raw string) (PillRowed, bool) {
+	v, ok := _PillRowedStringToValueMap[raw]
 	if !ok {
-		return PillUnsigned8(0), false
+		return PillRowed(0), false
 	}
 	return v, true
 }
 
-// PillUnsigned8FromStringIgnoreCase determines the enum value with a case-insensitive match.
-func PillUnsigned8FromStringIgnoreCase(raw string) (PillUnsigned8, bool) {
-	v, ok := PillUnsigned8FromString(raw)
+// PillRowedFromStringIgnoreCase determines the enum value with a case-insensitive match.
+func PillRowedFromStringIgnoreCase(raw string) (PillRowed, bool) {
+	v, ok := PillRowedFromString(raw)
 	if ok {
 		return v, ok
 	}
-	v, ok = _PillUnsigned8LowerStringToValueMap[raw]
+	v, ok = _PillRowedLowerStringToValueMap[raw]
 	if !ok {
-		return PillUnsigned8(0), false
+		return PillRowed(0), false
 	}
 	return v, true
 }
 
-// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned8.
-func (_p PillUnsigned8) MarshalBinary() ([]byte, error) {
+// MarshalBinary implements the encoding.BinaryMarshaler interface for PillRowed.
+func (_p PillRowed) MarshalBinary() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
 	}
 	return []byte(_p.String()), nil
 }
 
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUnsigned8.
-func (_p *PillUnsigned8) UnmarshalBinary(text []byte) error {
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillRowed.
+func (_p *PillRowed) UnmarshalBinary(text []byte) error {
 	str := string(text)
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+		return fmt.Errorf("PillRowed cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsigned8FromString(str)
+	*_p, ok = PillRowedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
+		return fmt.Errorf("Value %q does not represent a PillRowed", str)
 	}
 	return nil
 }
 
-// MarshalGQL implements the graphql.Marshaler interface for PillUnsigned8.
-func (_p PillUnsigned8) MarshalGQL(w io.Writer) {
+// MarshalGQL implements the graphql.Marshaler interface for PillRowed.
+func (_p PillRowed) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(_p.String()))
 }
 
-// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUnsigned8.
-func (_p *PillUnsigned8) UnmarshalGQL(value interface{}) error {
+// UnmarshalGQL implements the graphql.Unmarshaler interface for PillRowed.
+func (_p *PillRowed) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -403,54 +403,54 @@ func (_p *PillUnsigned8) UnmarshalGQL(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of PillUnsigned8: %[1]T(%[1]v)", value)
+		return fmt.Errorf("invalid value of PillRowed: %[1]T(%[1]v)", value)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+		return fmt.Errorf("PillRowed cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsigned8FromString(str)
+	*_p, ok = PillRowedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
+		return fmt.Errorf("Value %q does not represent a PillRowed", str)
 	}
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaler interface for PillUnsigned8.
-func (_p PillUnsigned8) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaler interface for PillRowed.
+func (_p PillRowed) MarshalJSON() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
 	}
 	return json.Marshal(_p.String())
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface for PillUnsigned8.
-func (_p *PillUnsigned8) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaler interface for PillRowed.
+func (_p *PillRowed) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("PillUnsigned8 should be a string, got %q", data)
+		return fmt.Errorf("PillRowed should be a string, got %q", data)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+		return fmt.Errorf("PillRowed cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsigned8FromString(str)
+	*_p, ok = PillRowedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
+		return fmt.Errorf("Value %q does not represent a PillRowed", str)
 	}
 	return nil
 }
 
-func (_p PillUnsigned8) Value() (driver.Value, error) {
+func (_p PillRowed) Value() (driver.Value, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned8", _p)
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillRowed", _p)
 	}
 	return _p.String(), nil
 }
 
-func (_p *PillUnsigned8) Scan(value interface{}) error {
+func (_p *PillRowed) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -461,837 +461,66 @@ func (_p *PillUnsigned8) Scan(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of PillUnsigned8: %[1]T(%[1]v)", value)
+		return fmt.Errorf("invalid value of PillRowed: %[1]T(%[1]v)", value)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+		return fmt.Errorf("PillRowed cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsigned8FromString(str)
+	*_p, ok = PillRowedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
+		return fmt.Errorf("Value %q does not represent a PillRowed", str)
 	}
 	return nil
 }
 
-// MarshalText implements the encoding.TextMarshaler interface for PillUnsigned8.
-func (_p PillUnsigned8) MarshalText() ([]byte, error) {
+// MarshalText implements the encoding.TextMarshaler interface for PillRowed.
+func (_p PillRowed) MarshalText() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
 	}
 	return []byte(_p.String()), nil
 }
 
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUnsigned8.
-func (_p *PillUnsigned8) UnmarshalText(text []byte) error {
+// UnmarshalText implements the encoding.TextUnmarshaler interface for PillRowed.
+func (_p *PillRowed) UnmarshalText(text []byte) error {
 	str := string(text)
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+		return fmt.Errorf("PillRowed cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsigned8FromString(str)
+	*_p, ok = PillRowedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
+		return fmt.Errorf("Value %q does not represent a PillRowed", str)
 	}
 	return nil
 }
 
-// MarshalYAML implements a YAML Marshaler for PillUnsigned8.
-func (_p PillUnsigned8) MarshalYAML() (interface{}, error) {
+// MarshalYAML implements a YAML Marshaler for PillRowed.
+func (_p PillRowed) MarshalYAML() (interface{}, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
 	}
 	return _p.String(), nil
 }
 
-// UnmarshalYAML implements a YAML Unmarshaler for PillUnsigned8.
-func (_p *PillUnsigned8) UnmarshalYAML(n *yaml.Node) error {
+// UnmarshalYAML implements a YAML Unmarshaler for PillRowed.
+func (_p *PillRowed) UnmarshalYAML(n *yaml.Node) error {
 	const stringTag = "!!str"
 	if n.ShortTag() != stringTag {
-		return fmt.Errorf("PillUnsigned8 must be derived from a string node")
+		return fmt.Errorf("PillRowed must be derived from a string node")
 	}
 	str := n.Value
 	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+		return fmt.Errorf("PillRowed cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillUnsigned8FromString(str)
+	*_p, ok = PillRowedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
-	}
-	return nil
-}
-
-const (
-	_PillUnsigned16String      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
-	_PillUnsigned16LowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
-)
-
-var (
-	_PillUnsigned16ValueRange = [2]PillUnsigned16{0, 4}
-	_PillUnsigned16Values     = []PillUnsigned16{0, 1, 2, 3, 4}
-	_PillUnsigned16Strings    = []string{_PillUnsigned16String[0:7], _PillUnsigned16String[7:14], _PillUnsigned16String[14:23], _PillUnsigned16String[23:34], _PillUnsigned16String[47:56]}
-)
-
-// _PillUnsigned16NoOp is a compile time assertion.
-// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of PillUnsigned16.
-func _PillUnsigned16NoOp() {
-	var x [1]struct{}
-	_ = x[PillUnsigned16Placebo-(0)]
-	_ = x[PillUnsigned16Aspirin-(1)]
-	_ = x[PillUnsigned16Ibuprofen-(2)]
-	_ = x[PillUnsigned16Paracetamol-(3)]
-	_ = x[PillUnsigned16Acetaminophen-(3)]
-	_ = x[PillUnsigned16VitaminC-(4)]
-}
-
-// PillUnsigned16Values returns all values of the enum.
-func PillUnsigned16Values() []PillUnsigned16 {
-	strs := make([]PillUnsigned16, len(_PillUnsigned16Values))
-	copy(strs, _PillUnsigned16Values)
-	return _PillUnsigned16Values
-}
-
-// PillUnsigned16Strings returns a slice of all String values of the enum.
-func PillUnsigned16Strings() []string {
-	strs := make([]string, len(_PillUnsigned16Strings))
-	copy(strs, _PillUnsigned16Strings)
-	return strs
-}
-
-// IsValid inspects whether the value is valid enum value.
-func (_p PillUnsigned16) IsValid() bool {
-	return _p >= _PillUnsigned16ValueRange[0] && _p <= _PillUnsigned16ValueRange[1]
-}
-
-// String returns the string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern PillUnsigned16(%d) instead.
-func (_p PillUnsigned16) String() string {
-	if !_p.IsValid() {
-		return fmt.Sprintf("PillUnsigned16(%d)", _p)
-	}
-	idx := uint(_p)
-	return _PillUnsigned16Strings[idx]
-}
-
-var (
-	_PillUnsigned16StringToValueMap = map[string]PillUnsigned16{
-		_PillUnsigned16String[0:7]:   PillUnsigned16Placebo,
-		_PillUnsigned16String[7:14]:  PillUnsigned16Aspirin,
-		_PillUnsigned16String[14:23]: PillUnsigned16Ibuprofen,
-		_PillUnsigned16String[23:34]: PillUnsigned16Paracetamol,
-		_PillUnsigned16String[34:47]: PillUnsigned16Acetaminophen,
-		_PillUnsigned16String[47:56]: PillUnsigned16VitaminC,
-	}
-	_PillUnsigned16LowerStringToValueMap = map[string]PillUnsigned16{
-		_PillUnsigned16LowerString[0:7]:   PillUnsigned16Placebo,
-		_PillUnsigned16LowerString[7:14]:  PillUnsigned16Aspirin,
-		_PillUnsigned16LowerString[14:23]: PillUnsigned16Ibuprofen,
-		_PillUnsigned16LowerString[23:34]: PillUnsigned16Paracetamol,
-		_PillUnsigned16LowerString[34:47]: PillUnsigned16Acetaminophen,
-		_PillUnsigned16LowerString[47:56]: PillUnsigned16VitaminC,
-	}
-)
-
-// PillUnsigned16FromString determines the enum value with an exact case match.
-func PillUnsigned16FromString(raw string) (PillUnsigned16, bool) {
-	v, ok := _PillUnsigned16StringToValueMap[raw]
-	if !ok {
-		return PillUnsigned16(0), false
-	}
-	return v, true
-}
-
-// PillUnsigned16FromStringIgnoreCase determines the enum value with a case-insensitive match.
-func PillUnsigned16FromStringIgnoreCase(raw string) (PillUnsigned16, bool) {
-	v, ok := PillUnsigned16FromString(raw)
-	if ok {
-		return v, ok
-	}
-	v, ok = _PillUnsigned16LowerStringToValueMap[raw]
-	if !ok {
-		return PillUnsigned16(0), false
-	}
-	return v, true
-}
-
-// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned16.
-func (_p PillUnsigned16) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUnsigned16.
-func (_p *PillUnsigned16) UnmarshalBinary(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned16FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
-	}
-	return nil
-}
-
-// MarshalGQL implements the graphql.Marshaler interface for PillUnsigned16.
-func (_p PillUnsigned16) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(_p.String()))
-}
-
-// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUnsigned16.
-func (_p *PillUnsigned16) UnmarshalGQL(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PillUnsigned16: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned16FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaler interface for PillUnsigned16.
-func (_p PillUnsigned16) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
-	}
-	return json.Marshal(_p.String())
-}
-
-// UnmarshalJSON implements the json.Unmarshaler interface for PillUnsigned16.
-func (_p *PillUnsigned16) UnmarshalJSON(data []byte) error {
-	var str string
-	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("PillUnsigned16 should be a string, got %q", data)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned16FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
-	}
-	return nil
-}
-
-func (_p PillUnsigned16) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned16", _p)
-	}
-	return _p.String(), nil
-}
-
-func (_p *PillUnsigned16) Scan(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PillUnsigned16: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned16FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
-	}
-	return nil
-}
-
-// MarshalText implements the encoding.TextMarshaler interface for PillUnsigned16.
-func (_p PillUnsigned16) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUnsigned16.
-func (_p *PillUnsigned16) UnmarshalText(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned16FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
-	}
-	return nil
-}
-
-// MarshalYAML implements a YAML Marshaler for PillUnsigned16.
-func (_p PillUnsigned16) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
-	}
-	return _p.String(), nil
-}
-
-// UnmarshalYAML implements a YAML Unmarshaler for PillUnsigned16.
-func (_p *PillUnsigned16) UnmarshalYAML(n *yaml.Node) error {
-	const stringTag = "!!str"
-	if n.ShortTag() != stringTag {
-		return fmt.Errorf("PillUnsigned16 must be derived from a string node")
-	}
-	str := n.Value
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned16FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
-	}
-	return nil
-}
-
-const (
-	_PillUnsigned32String      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
-	_PillUnsigned32LowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
-)
-
-var (
-	_PillUnsigned32ValueRange = [2]PillUnsigned32{0, 4}
-	_PillUnsigned32Values     = []PillUnsigned32{0, 1, 2, 3, 4}
-	_PillUnsigned32Strings    = []string{_PillUnsigned32String[0:7], _PillUnsigned32String[7:14], _PillUnsigned32String[14:23], _PillUnsigned32String[23:34], _PillUnsigned32String[47:56]}
-)
-
-// _PillUnsigned32NoOp is a compile time assertion.
-// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of PillUnsigned32.
-func _PillUnsigned32NoOp() {
-	var x [1]struct{}
-	_ = x[PillUnsigned32Placebo-(0)]
-	_ = x[PillUnsigned32Aspirin-(1)]
-	_ = x[PillUnsigned32Ibuprofen-(2)]
-	_ = x[PillUnsigned32Paracetamol-(3)]
-	_ = x[PillUnsigned32Acetaminophen-(3)]
-	_ = x[PillUnsigned32VitaminC-(4)]
-}
-
-// PillUnsigned32Values returns all values of the enum.
-func PillUnsigned32Values() []PillUnsigned32 {
-	strs := make([]PillUnsigned32, len(_PillUnsigned32Values))
-	copy(strs, _PillUnsigned32Values)
-	return _PillUnsigned32Values
-}
-
-// PillUnsigned32Strings returns a slice of all String values of the enum.
-func PillUnsigned32Strings() []string {
-	strs := make([]string, len(_PillUnsigned32Strings))
-	copy(strs, _PillUnsigned32Strings)
-	return strs
-}
-
-// IsValid inspects whether the value is valid enum value.
-func (_p PillUnsigned32) IsValid() bool {
-	return _p >= _PillUnsigned32ValueRange[0] && _p <= _PillUnsigned32ValueRange[1]
-}
-
-// String returns the string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern PillUnsigned32(%d) instead.
-func (_p PillUnsigned32) String() string {
-	if !_p.IsValid() {
-		return fmt.Sprintf("PillUnsigned32(%d)", _p)
-	}
-	idx := uint(_p)
-	return _PillUnsigned32Strings[idx]
-}
-
-var (
-	_PillUnsigned32StringToValueMap = map[string]PillUnsigned32{
-		_PillUnsigned32String[0:7]:   PillUnsigned32Placebo,
-		_PillUnsigned32String[7:14]:  PillUnsigned32Aspirin,
-		_PillUnsigned32String[14:23]: PillUnsigned32Ibuprofen,
-		_PillUnsigned32String[23:34]: PillUnsigned32Paracetamol,
-		_PillUnsigned32String[34:47]: PillUnsigned32Acetaminophen,
-		_PillUnsigned32String[47:56]: PillUnsigned32VitaminC,
-	}
-	_PillUnsigned32LowerStringToValueMap = map[string]PillUnsigned32{
-		_PillUnsigned32LowerString[0:7]:   PillUnsigned32Placebo,
-		_PillUnsigned32LowerString[7:14]:  PillUnsigned32Aspirin,
-		_PillUnsigned32LowerString[14:23]: PillUnsigned32Ibuprofen,
-		_PillUnsigned32LowerString[23:34]: PillUnsigned32Paracetamol,
-		_PillUnsigned32LowerString[34:47]: PillUnsigned32Acetaminophen,
-		_PillUnsigned32LowerString[47:56]: PillUnsigned32VitaminC,
-	}
-)
-
-// PillUnsigned32FromString determines the enum value with an exact case match.
-func PillUnsigned32FromString(raw string) (PillUnsigned32, bool) {
-	v, ok := _PillUnsigned32StringToValueMap[raw]
-	if !ok {
-		return PillUnsigned32(0), false
-	}
-	return v, true
-}
-
-// PillUnsigned32FromStringIgnoreCase determines the enum value with a case-insensitive match.
-func PillUnsigned32FromStringIgnoreCase(raw string) (PillUnsigned32, bool) {
-	v, ok := PillUnsigned32FromString(raw)
-	if ok {
-		return v, ok
-	}
-	v, ok = _PillUnsigned32LowerStringToValueMap[raw]
-	if !ok {
-		return PillUnsigned32(0), false
-	}
-	return v, true
-}
-
-// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned32.
-func (_p PillUnsigned32) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUnsigned32.
-func (_p *PillUnsigned32) UnmarshalBinary(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned32FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
-	}
-	return nil
-}
-
-// MarshalGQL implements the graphql.Marshaler interface for PillUnsigned32.
-func (_p PillUnsigned32) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(_p.String()))
-}
-
-// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUnsigned32.
-func (_p *PillUnsigned32) UnmarshalGQL(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PillUnsigned32: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned32FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaler interface for PillUnsigned32.
-func (_p PillUnsigned32) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
-	}
-	return json.Marshal(_p.String())
-}
-
-// UnmarshalJSON implements the json.Unmarshaler interface for PillUnsigned32.
-func (_p *PillUnsigned32) UnmarshalJSON(data []byte) error {
-	var str string
-	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("PillUnsigned32 should be a string, got %q", data)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned32FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
-	}
-	return nil
-}
-
-func (_p PillUnsigned32) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned32", _p)
-	}
-	return _p.String(), nil
-}
-
-func (_p *PillUnsigned32) Scan(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PillUnsigned32: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned32FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
-	}
-	return nil
-}
-
-// MarshalText implements the encoding.TextMarshaler interface for PillUnsigned32.
-func (_p PillUnsigned32) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUnsigned32.
-func (_p *PillUnsigned32) UnmarshalText(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned32FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
-	}
-	return nil
-}
-
-// MarshalYAML implements a YAML Marshaler for PillUnsigned32.
-func (_p PillUnsigned32) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
-	}
-	return _p.String(), nil
-}
-
-// UnmarshalYAML implements a YAML Unmarshaler for PillUnsigned32.
-func (_p *PillUnsigned32) UnmarshalYAML(n *yaml.Node) error {
-	const stringTag = "!!str"
-	if n.ShortTag() != stringTag {
-		return fmt.Errorf("PillUnsigned32 must be derived from a string node")
-	}
-	str := n.Value
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned32FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
-	}
-	return nil
-}
-
-const (
-	_PillUnsigned64String      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
-	_PillUnsigned64LowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
-)
-
-var (
-	_PillUnsigned64ValueRange = [2]PillUnsigned64{0, 4}
-	_PillUnsigned64Values     = []PillUnsigned64{0, 1, 2, 3, 4}
-	_PillUnsigned64Strings    = []string{_PillUnsigned64String[0:7], _PillUnsigned64String[7:14], _PillUnsigned64String[14:23], _PillUnsigned64String[23:34], _PillUnsigned64String[47:56]}
-)
-
-// _PillUnsigned64NoOp is a compile time assertion.
-// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of PillUnsigned64.
-func _PillUnsigned64NoOp() {
-	var x [1]struct{}
-	_ = x[PillUnsigned64Placebo-(0)]
-	_ = x[PillUnsigned64Aspirin-(1)]
-	_ = x[PillUnsigned64Ibuprofen-(2)]
-	_ = x[PillUnsigned64Paracetamol-(3)]
-	_ = x[PillUnsigned64Acetaminophen-(3)]
-	_ = x[PillUnsigned64VitaminC-(4)]
-}
-
-// PillUnsigned64Values returns all values of the enum.
-func PillUnsigned64Values() []PillUnsigned64 {
-	strs := make([]PillUnsigned64, len(_PillUnsigned64Values))
-	copy(strs, _PillUnsigned64Values)
-	return _PillUnsigned64Values
-}
-
-// PillUnsigned64Strings returns a slice of all String values of the enum.
-func PillUnsigned64Strings() []string {
-	strs := make([]string, len(_PillUnsigned64Strings))
-	copy(strs, _PillUnsigned64Strings)
-	return strs
-}
-
-// IsValid inspects whether the value is valid enum value.
-func (_p PillUnsigned64) IsValid() bool {
-	return _p >= _PillUnsigned64ValueRange[0] && _p <= _PillUnsigned64ValueRange[1]
-}
-
-// String returns the string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern PillUnsigned64(%d) instead.
-func (_p PillUnsigned64) String() string {
-	if !_p.IsValid() {
-		return fmt.Sprintf("PillUnsigned64(%d)", _p)
-	}
-	idx := uint(_p)
-	return _PillUnsigned64Strings[idx]
-}
-
-var (
-	_PillUnsigned64StringToValueMap = map[string]PillUnsigned64{
-		_PillUnsigned64String[0:7]:   PillUnsigned64Placebo,
-		_PillUnsigned64String[7:14]:  PillUnsigned64Aspirin,
-		_PillUnsigned64String[14:23]: PillUnsigned64Ibuprofen,
-		_PillUnsigned64String[23:34]: PillUnsigned64Paracetamol,
-		_PillUnsigned64String[34:47]: PillUnsigned64Acetaminophen,
-		_PillUnsigned64String[47:56]: PillUnsigned64VitaminC,
-	}
-	_PillUnsigned64LowerStringToValueMap = map[string]PillUnsigned64{
-		_PillUnsigned64LowerString[0:7]:   PillUnsigned64Placebo,
-		_PillUnsigned64LowerString[7:14]:  PillUnsigned64Aspirin,
-		_PillUnsigned64LowerString[14:23]: PillUnsigned64Ibuprofen,
-		_PillUnsigned64LowerString[23:34]: PillUnsigned64Paracetamol,
-		_PillUnsigned64LowerString[34:47]: PillUnsigned64Acetaminophen,
-		_PillUnsigned64LowerString[47:56]: PillUnsigned64VitaminC,
-	}
-)
-
-// PillUnsigned64FromString determines the enum value with an exact case match.
-func PillUnsigned64FromString(raw string) (PillUnsigned64, bool) {
-	v, ok := _PillUnsigned64StringToValueMap[raw]
-	if !ok {
-		return PillUnsigned64(0), false
-	}
-	return v, true
-}
-
-// PillUnsigned64FromStringIgnoreCase determines the enum value with a case-insensitive match.
-func PillUnsigned64FromStringIgnoreCase(raw string) (PillUnsigned64, bool) {
-	v, ok := PillUnsigned64FromString(raw)
-	if ok {
-		return v, ok
-	}
-	v, ok = _PillUnsigned64LowerStringToValueMap[raw]
-	if !ok {
-		return PillUnsigned64(0), false
-	}
-	return v, true
-}
-
-// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned64.
-func (_p PillUnsigned64) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUnsigned64.
-func (_p *PillUnsigned64) UnmarshalBinary(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned64FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
-	}
-	return nil
-}
-
-// MarshalGQL implements the graphql.Marshaler interface for PillUnsigned64.
-func (_p PillUnsigned64) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(_p.String()))
-}
-
-// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUnsigned64.
-func (_p *PillUnsigned64) UnmarshalGQL(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PillUnsigned64: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned64FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaler interface for PillUnsigned64.
-func (_p PillUnsigned64) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
-	}
-	return json.Marshal(_p.String())
-}
-
-// UnmarshalJSON implements the json.Unmarshaler interface for PillUnsigned64.
-func (_p *PillUnsigned64) UnmarshalJSON(data []byte) error {
-	var str string
-	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("PillUnsigned64 should be a string, got %q", data)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned64FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
-	}
-	return nil
-}
-
-func (_p PillUnsigned64) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned64", _p)
-	}
-	return _p.String(), nil
-}
-
-func (_p *PillUnsigned64) Scan(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PillUnsigned64: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned64FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
-	}
-	return nil
-}
-
-// MarshalText implements the encoding.TextMarshaler interface for PillUnsigned64.
-func (_p PillUnsigned64) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUnsigned64.
-func (_p *PillUnsigned64) UnmarshalText(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned64FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
-	}
-	return nil
-}
-
-// MarshalYAML implements a YAML Marshaler for PillUnsigned64.
-func (_p PillUnsigned64) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
-	}
-	return _p.String(), nil
-}
-
-// UnmarshalYAML implements a YAML Unmarshaler for PillUnsigned64.
-func (_p *PillUnsigned64) UnmarshalYAML(n *yaml.Node) error {
-	const stringTag = "!!str"
-	if n.ShortTag() != stringTag {
-		return fmt.Errorf("PillUnsigned64 must be derived from a string node")
-	}
-	str := n.Value
-	if len(str) == 0 {
-		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillUnsigned64FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
+		return fmt.Errorf("Value %q does not represent a PillRowed", str)
 	}
 	return nil
 }
@@ -1549,263 +778,6 @@ func (_p *PillSigned) UnmarshalYAML(n *yaml.Node) error {
 	*_p, ok = PillSignedFromString(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a PillSigned", str)
-	}
-	return nil
-}
-
-const (
-	_PillSigned8String      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
-	_PillSigned8LowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
-)
-
-var (
-	_PillSigned8ValueRange = [2]PillSigned8{0, 4}
-	_PillSigned8Values     = []PillSigned8{0, 1, 2, 3, 4}
-	_PillSigned8Strings    = []string{_PillSigned8String[0:7], _PillSigned8String[7:14], _PillSigned8String[14:23], _PillSigned8String[23:34], _PillSigned8String[47:56]}
-)
-
-// _PillSigned8NoOp is a compile time assertion.
-// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of PillSigned8.
-func _PillSigned8NoOp() {
-	var x [1]struct{}
-	_ = x[PillSigned8Placebo-(0)]
-	_ = x[PillSigned8Aspirin-(1)]
-	_ = x[PillSigned8Ibuprofen-(2)]
-	_ = x[PillSigned8Paracetamol-(3)]
-	_ = x[PillSigned8Acetaminophen-(3)]
-	_ = x[PillSigned8VitaminC-(4)]
-}
-
-// PillSigned8Values returns all values of the enum.
-func PillSigned8Values() []PillSigned8 {
-	strs := make([]PillSigned8, len(_PillSigned8Values))
-	copy(strs, _PillSigned8Values)
-	return _PillSigned8Values
-}
-
-// PillSigned8Strings returns a slice of all String values of the enum.
-func PillSigned8Strings() []string {
-	strs := make([]string, len(_PillSigned8Strings))
-	copy(strs, _PillSigned8Strings)
-	return strs
-}
-
-// IsValid inspects whether the value is valid enum value.
-func (_p PillSigned8) IsValid() bool {
-	return _p >= _PillSigned8ValueRange[0] && _p <= _PillSigned8ValueRange[1]
-}
-
-// String returns the string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern PillSigned8(%d) instead.
-func (_p PillSigned8) String() string {
-	if !_p.IsValid() {
-		return fmt.Sprintf("PillSigned8(%d)", _p)
-	}
-	idx := uint(_p)
-	return _PillSigned8Strings[idx]
-}
-
-var (
-	_PillSigned8StringToValueMap = map[string]PillSigned8{
-		_PillSigned8String[0:7]:   PillSigned8Placebo,
-		_PillSigned8String[7:14]:  PillSigned8Aspirin,
-		_PillSigned8String[14:23]: PillSigned8Ibuprofen,
-		_PillSigned8String[23:34]: PillSigned8Paracetamol,
-		_PillSigned8String[34:47]: PillSigned8Acetaminophen,
-		_PillSigned8String[47:56]: PillSigned8VitaminC,
-	}
-	_PillSigned8LowerStringToValueMap = map[string]PillSigned8{
-		_PillSigned8LowerString[0:7]:   PillSigned8Placebo,
-		_PillSigned8LowerString[7:14]:  PillSigned8Aspirin,
-		_PillSigned8LowerString[14:23]: PillSigned8Ibuprofen,
-		_PillSigned8LowerString[23:34]: PillSigned8Paracetamol,
-		_PillSigned8LowerString[34:47]: PillSigned8Acetaminophen,
-		_PillSigned8LowerString[47:56]: PillSigned8VitaminC,
-	}
-)
-
-// PillSigned8FromString determines the enum value with an exact case match.
-func PillSigned8FromString(raw string) (PillSigned8, bool) {
-	v, ok := _PillSigned8StringToValueMap[raw]
-	if !ok {
-		return PillSigned8(0), false
-	}
-	return v, true
-}
-
-// PillSigned8FromStringIgnoreCase determines the enum value with a case-insensitive match.
-func PillSigned8FromStringIgnoreCase(raw string) (PillSigned8, bool) {
-	v, ok := PillSigned8FromString(raw)
-	if ok {
-		return v, ok
-	}
-	v, ok = _PillSigned8LowerStringToValueMap[raw]
-	if !ok {
-		return PillSigned8(0), false
-	}
-	return v, true
-}
-
-// MarshalBinary implements the encoding.BinaryMarshaler interface for PillSigned8.
-func (_p PillSigned8) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillSigned8.
-func (_p *PillSigned8) UnmarshalBinary(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillSigned8FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
-	}
-	return nil
-}
-
-// MarshalGQL implements the graphql.Marshaler interface for PillSigned8.
-func (_p PillSigned8) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(_p.String()))
-}
-
-// UnmarshalGQL implements the graphql.Unmarshaler interface for PillSigned8.
-func (_p *PillSigned8) UnmarshalGQL(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PillSigned8: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillSigned8FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaler interface for PillSigned8.
-func (_p PillSigned8) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
-	}
-	return json.Marshal(_p.String())
-}
-
-// UnmarshalJSON implements the json.Unmarshaler interface for PillSigned8.
-func (_p *PillSigned8) UnmarshalJSON(data []byte) error {
-	var str string
-	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("PillSigned8 should be a string, got %q", data)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillSigned8FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
-	}
-	return nil
-}
-
-func (_p PillSigned8) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillSigned8", _p)
-	}
-	return _p.String(), nil
-}
-
-func (_p *PillSigned8) Scan(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PillSigned8: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillSigned8FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
-	}
-	return nil
-}
-
-// MarshalText implements the encoding.TextMarshaler interface for PillSigned8.
-func (_p PillSigned8) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PillSigned8.
-func (_p *PillSigned8) UnmarshalText(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillSigned8FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
-	}
-	return nil
-}
-
-// MarshalYAML implements a YAML Marshaler for PillSigned8.
-func (_p PillSigned8) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
-	}
-	return _p.String(), nil
-}
-
-// UnmarshalYAML implements a YAML Unmarshaler for PillSigned8.
-func (_p *PillSigned8) UnmarshalYAML(n *yaml.Node) error {
-	const stringTag = "!!str"
-	if n.ShortTag() != stringTag {
-		return fmt.Errorf("PillSigned8 must be derived from a string node")
-	}
-	str := n.Value
-	if len(str) == 0 {
-		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PillSigned8FromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
 	}
 	return nil
 }
@@ -2582,130 +1554,130 @@ func (_p *PillSigned64) UnmarshalYAML(n *yaml.Node) error {
 }
 
 const (
-	_PillRowedString      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
-	_PillRowedLowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
+	_PillSigned8String      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
+	_PillSigned8LowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
 )
 
 var (
-	_PillRowedValueRange = [2]PillRowed{0, 4}
-	_PillRowedValues     = []PillRowed{0, 1, 2, 3, 4}
-	_PillRowedStrings    = []string{_PillRowedString[0:7], _PillRowedString[7:14], _PillRowedString[14:23], _PillRowedString[23:34], _PillRowedString[47:56]}
+	_PillSigned8ValueRange = [2]PillSigned8{0, 4}
+	_PillSigned8Values     = []PillSigned8{0, 1, 2, 3, 4}
+	_PillSigned8Strings    = []string{_PillSigned8String[0:7], _PillSigned8String[7:14], _PillSigned8String[14:23], _PillSigned8String[23:34], _PillSigned8String[47:56]}
 )
 
-// _PillRowedNoOp is a compile time assertion.
+// _PillSigned8NoOp is a compile time assertion.
 // An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of PillRowed.
-func _PillRowedNoOp() {
+// Re-run the enumer command to generate an updated version of PillSigned8.
+func _PillSigned8NoOp() {
 	var x [1]struct{}
-	_ = x[PillRowedPlacebo-(0)]
-	_ = x[PillRowedAspirin-(1)]
-	_ = x[PillRowedIbuprofen-(2)]
-	_ = x[PillRowedParacetamol-(3)]
-	_ = x[PillRowedAcetaminophen-(3)]
-	_ = x[PillRowedVitaminC-(4)]
+	_ = x[PillSigned8Placebo-(0)]
+	_ = x[PillSigned8Aspirin-(1)]
+	_ = x[PillSigned8Ibuprofen-(2)]
+	_ = x[PillSigned8Paracetamol-(3)]
+	_ = x[PillSigned8Acetaminophen-(3)]
+	_ = x[PillSigned8VitaminC-(4)]
 }
 
-// PillRowedValues returns all values of the enum.
-func PillRowedValues() []PillRowed {
-	strs := make([]PillRowed, len(_PillRowedValues))
-	copy(strs, _PillRowedValues)
-	return _PillRowedValues
+// PillSigned8Values returns all values of the enum.
+func PillSigned8Values() []PillSigned8 {
+	strs := make([]PillSigned8, len(_PillSigned8Values))
+	copy(strs, _PillSigned8Values)
+	return _PillSigned8Values
 }
 
-// PillRowedStrings returns a slice of all String values of the enum.
-func PillRowedStrings() []string {
-	strs := make([]string, len(_PillRowedStrings))
-	copy(strs, _PillRowedStrings)
+// PillSigned8Strings returns a slice of all String values of the enum.
+func PillSigned8Strings() []string {
+	strs := make([]string, len(_PillSigned8Strings))
+	copy(strs, _PillSigned8Strings)
 	return strs
 }
 
 // IsValid inspects whether the value is valid enum value.
-func (_p PillRowed) IsValid() bool {
-	return _p >= _PillRowedValueRange[0] && _p <= _PillRowedValueRange[1]
+func (_p PillSigned8) IsValid() bool {
+	return _p >= _PillSigned8ValueRange[0] && _p <= _PillSigned8ValueRange[1]
 }
 
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern PillRowed(%d) instead.
-func (_p PillRowed) String() string {
+// of the following pattern PillSigned8(%d) instead.
+func (_p PillSigned8) String() string {
 	if !_p.IsValid() {
-		return fmt.Sprintf("PillRowed(%d)", _p)
+		return fmt.Sprintf("PillSigned8(%d)", _p)
 	}
 	idx := uint(_p)
-	return _PillRowedStrings[idx]
+	return _PillSigned8Strings[idx]
 }
 
 var (
-	_PillRowedStringToValueMap = map[string]PillRowed{
-		_PillRowedString[0:7]:   PillRowedPlacebo,
-		_PillRowedString[7:14]:  PillRowedAspirin,
-		_PillRowedString[14:23]: PillRowedIbuprofen,
-		_PillRowedString[23:34]: PillRowedParacetamol,
-		_PillRowedString[34:47]: PillRowedAcetaminophen,
-		_PillRowedString[47:56]: PillRowedVitaminC,
+	_PillSigned8StringToValueMap = map[string]PillSigned8{
+		_PillSigned8String[0:7]:   PillSigned8Placebo,
+		_PillSigned8String[7:14]:  PillSigned8Aspirin,
+		_PillSigned8String[14:23]: PillSigned8Ibuprofen,
+		_PillSigned8String[23:34]: PillSigned8Paracetamol,
+		_PillSigned8String[34:47]: PillSigned8Acetaminophen,
+		_PillSigned8String[47:56]: PillSigned8VitaminC,
 	}
-	_PillRowedLowerStringToValueMap = map[string]PillRowed{
-		_PillRowedLowerString[0:7]:   PillRowedPlacebo,
-		_PillRowedLowerString[7:14]:  PillRowedAspirin,
-		_PillRowedLowerString[14:23]: PillRowedIbuprofen,
-		_PillRowedLowerString[23:34]: PillRowedParacetamol,
-		_PillRowedLowerString[34:47]: PillRowedAcetaminophen,
-		_PillRowedLowerString[47:56]: PillRowedVitaminC,
+	_PillSigned8LowerStringToValueMap = map[string]PillSigned8{
+		_PillSigned8LowerString[0:7]:   PillSigned8Placebo,
+		_PillSigned8LowerString[7:14]:  PillSigned8Aspirin,
+		_PillSigned8LowerString[14:23]: PillSigned8Ibuprofen,
+		_PillSigned8LowerString[23:34]: PillSigned8Paracetamol,
+		_PillSigned8LowerString[34:47]: PillSigned8Acetaminophen,
+		_PillSigned8LowerString[47:56]: PillSigned8VitaminC,
 	}
 )
 
-// PillRowedFromString determines the enum value with an exact case match.
-func PillRowedFromString(raw string) (PillRowed, bool) {
-	v, ok := _PillRowedStringToValueMap[raw]
+// PillSigned8FromString determines the enum value with an exact case match.
+func PillSigned8FromString(raw string) (PillSigned8, bool) {
+	v, ok := _PillSigned8StringToValueMap[raw]
 	if !ok {
-		return PillRowed(0), false
+		return PillSigned8(0), false
 	}
 	return v, true
 }
 
-// PillRowedFromStringIgnoreCase determines the enum value with a case-insensitive match.
-func PillRowedFromStringIgnoreCase(raw string) (PillRowed, bool) {
-	v, ok := PillRowedFromString(raw)
+// PillSigned8FromStringIgnoreCase determines the enum value with a case-insensitive match.
+func PillSigned8FromStringIgnoreCase(raw string) (PillSigned8, bool) {
+	v, ok := PillSigned8FromString(raw)
 	if ok {
 		return v, ok
 	}
-	v, ok = _PillRowedLowerStringToValueMap[raw]
+	v, ok = _PillSigned8LowerStringToValueMap[raw]
 	if !ok {
-		return PillRowed(0), false
+		return PillSigned8(0), false
 	}
 	return v, true
 }
 
-// MarshalBinary implements the encoding.BinaryMarshaler interface for PillRowed.
-func (_p PillRowed) MarshalBinary() ([]byte, error) {
+// MarshalBinary implements the encoding.BinaryMarshaler interface for PillSigned8.
+func (_p PillSigned8) MarshalBinary() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
 	}
 	return []byte(_p.String()), nil
 }
 
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillRowed.
-func (_p *PillRowed) UnmarshalBinary(text []byte) error {
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillSigned8.
+func (_p *PillSigned8) UnmarshalBinary(text []byte) error {
 	str := string(text)
 	if len(str) == 0 {
-		return fmt.Errorf("PillRowed cannot be derived from empty string")
+		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillRowedFromString(str)
+	*_p, ok = PillSigned8FromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillRowed", str)
+		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
 	}
 	return nil
 }
 
-// MarshalGQL implements the graphql.Marshaler interface for PillRowed.
-func (_p PillRowed) MarshalGQL(w io.Writer) {
+// MarshalGQL implements the graphql.Marshaler interface for PillSigned8.
+func (_p PillSigned8) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(_p.String()))
 }
 
-// UnmarshalGQL implements the graphql.Unmarshaler interface for PillRowed.
-func (_p *PillRowed) UnmarshalGQL(value interface{}) error {
+// UnmarshalGQL implements the graphql.Unmarshaler interface for PillSigned8.
+func (_p *PillSigned8) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -2716,54 +1688,54 @@ func (_p *PillRowed) UnmarshalGQL(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of PillRowed: %[1]T(%[1]v)", value)
+		return fmt.Errorf("invalid value of PillSigned8: %[1]T(%[1]v)", value)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillRowed cannot be derived from empty string")
+		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillRowedFromString(str)
+	*_p, ok = PillSigned8FromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillRowed", str)
+		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
 	}
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaler interface for PillRowed.
-func (_p PillRowed) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaler interface for PillSigned8.
+func (_p PillSigned8) MarshalJSON() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
 	}
 	return json.Marshal(_p.String())
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface for PillRowed.
-func (_p *PillRowed) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaler interface for PillSigned8.
+func (_p *PillSigned8) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("PillRowed should be a string, got %q", data)
+		return fmt.Errorf("PillSigned8 should be a string, got %q", data)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillRowed cannot be derived from empty string")
+		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillRowedFromString(str)
+	*_p, ok = PillSigned8FromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillRowed", str)
+		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
 	}
 	return nil
 }
 
-func (_p PillRowed) Value() (driver.Value, error) {
+func (_p PillSigned8) Value() (driver.Value, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillRowed", _p)
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillSigned8", _p)
 	}
 	return _p.String(), nil
 }
 
-func (_p *PillRowed) Scan(value interface{}) error {
+func (_p *PillSigned8) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -2774,195 +1746,195 @@ func (_p *PillRowed) Scan(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of PillRowed: %[1]T(%[1]v)", value)
+		return fmt.Errorf("invalid value of PillSigned8: %[1]T(%[1]v)", value)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillRowed cannot be derived from empty string")
+		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillRowedFromString(str)
+	*_p, ok = PillSigned8FromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillRowed", str)
+		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
 	}
 	return nil
 }
 
-// MarshalText implements the encoding.TextMarshaler interface for PillRowed.
-func (_p PillRowed) MarshalText() ([]byte, error) {
+// MarshalText implements the encoding.TextMarshaler interface for PillSigned8.
+func (_p PillSigned8) MarshalText() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
 	}
 	return []byte(_p.String()), nil
 }
 
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PillRowed.
-func (_p *PillRowed) UnmarshalText(text []byte) error {
+// UnmarshalText implements the encoding.TextUnmarshaler interface for PillSigned8.
+func (_p *PillSigned8) UnmarshalText(text []byte) error {
 	str := string(text)
 	if len(str) == 0 {
-		return fmt.Errorf("PillRowed cannot be derived from empty string")
+		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillRowedFromString(str)
+	*_p, ok = PillSigned8FromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillRowed", str)
+		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
 	}
 	return nil
 }
 
-// MarshalYAML implements a YAML Marshaler for PillRowed.
-func (_p PillRowed) MarshalYAML() (interface{}, error) {
+// MarshalYAML implements a YAML Marshaler for PillSigned8.
+func (_p PillSigned8) MarshalYAML() (interface{}, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
 	}
 	return _p.String(), nil
 }
 
-// UnmarshalYAML implements a YAML Unmarshaler for PillRowed.
-func (_p *PillRowed) UnmarshalYAML(n *yaml.Node) error {
+// UnmarshalYAML implements a YAML Unmarshaler for PillSigned8.
+func (_p *PillSigned8) UnmarshalYAML(n *yaml.Node) error {
 	const stringTag = "!!str"
 	if n.ShortTag() != stringTag {
-		return fmt.Errorf("PillRowed must be derived from a string node")
+		return fmt.Errorf("PillSigned8 must be derived from a string node")
 	}
 	str := n.Value
 	if len(str) == 0 {
-		return fmt.Errorf("PillRowed cannot be derived from empty string")
+		return fmt.Errorf("PillSigned8 cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillRowedFromString(str)
+	*_p, ok = PillSigned8FromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillRowed", str)
+		return fmt.Errorf("Value %q does not represent a PillSigned8", str)
 	}
 	return nil
 }
 
 const (
-	_PillAliasedString      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
-	_PillAliasedLowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
+	_PillUnsignedString      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
+	_PillUnsignedLowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
 )
 
 var (
-	_PillAliasedValueRange = [2]PillAliased{0, 4}
-	_PillAliasedValues     = []PillAliased{0, 1, 2, 3, 4}
-	_PillAliasedStrings    = []string{_PillAliasedString[0:7], _PillAliasedString[7:14], _PillAliasedString[14:23], _PillAliasedString[23:34], _PillAliasedString[47:56]}
+	_PillUnsignedValueRange = [2]PillUnsigned{0, 4}
+	_PillUnsignedValues     = []PillUnsigned{0, 1, 2, 3, 4}
+	_PillUnsignedStrings    = []string{_PillUnsignedString[0:7], _PillUnsignedString[7:14], _PillUnsignedString[14:23], _PillUnsignedString[23:34], _PillUnsignedString[47:56]}
 )
 
-// _PillAliasedNoOp is a compile time assertion.
+// _PillUnsignedNoOp is a compile time assertion.
 // An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of PillAliased.
-func _PillAliasedNoOp() {
+// Re-run the enumer command to generate an updated version of PillUnsigned.
+func _PillUnsignedNoOp() {
 	var x [1]struct{}
-	_ = x[PillAliasedPlacebo-(0)]
-	_ = x[PillAliasedAspirin-(1)]
-	_ = x[PillAliasedIbuprofen-(2)]
-	_ = x[PillAliasedParacetamol-(3)]
-	_ = x[PillAliasedAcetaminophen-(3)]
-	_ = x[PillAliasedVitaminC-(4)]
+	_ = x[PillUnsignedPlacebo-(0)]
+	_ = x[PillUnsignedAspirin-(1)]
+	_ = x[PillUnsignedIbuprofen-(2)]
+	_ = x[PillUnsignedParacetamol-(3)]
+	_ = x[PillUnsignedAcetaminophen-(3)]
+	_ = x[PillUnsignedVitaminC-(4)]
 }
 
-// PillAliasedValues returns all values of the enum.
-func PillAliasedValues() []PillAliased {
-	strs := make([]PillAliased, len(_PillAliasedValues))
-	copy(strs, _PillAliasedValues)
-	return _PillAliasedValues
+// PillUnsignedValues returns all values of the enum.
+func PillUnsignedValues() []PillUnsigned {
+	strs := make([]PillUnsigned, len(_PillUnsignedValues))
+	copy(strs, _PillUnsignedValues)
+	return _PillUnsignedValues
 }
 
-// PillAliasedStrings returns a slice of all String values of the enum.
-func PillAliasedStrings() []string {
-	strs := make([]string, len(_PillAliasedStrings))
-	copy(strs, _PillAliasedStrings)
+// PillUnsignedStrings returns a slice of all String values of the enum.
+func PillUnsignedStrings() []string {
+	strs := make([]string, len(_PillUnsignedStrings))
+	copy(strs, _PillUnsignedStrings)
 	return strs
 }
 
 // IsValid inspects whether the value is valid enum value.
-func (_p PillAliased) IsValid() bool {
-	return _p >= _PillAliasedValueRange[0] && _p <= _PillAliasedValueRange[1]
+func (_p PillUnsigned) IsValid() bool {
+	return _p >= _PillUnsignedValueRange[0] && _p <= _PillUnsignedValueRange[1]
 }
 
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern PillAliased(%d) instead.
-func (_p PillAliased) String() string {
+// of the following pattern PillUnsigned(%d) instead.
+func (_p PillUnsigned) String() string {
 	if !_p.IsValid() {
-		return fmt.Sprintf("PillAliased(%d)", _p)
+		return fmt.Sprintf("PillUnsigned(%d)", _p)
 	}
 	idx := uint(_p)
-	return _PillAliasedStrings[idx]
+	return _PillUnsignedStrings[idx]
 }
 
 var (
-	_PillAliasedStringToValueMap = map[string]PillAliased{
-		_PillAliasedString[0:7]:   PillAliasedPlacebo,
-		_PillAliasedString[7:14]:  PillAliasedAspirin,
-		_PillAliasedString[14:23]: PillAliasedIbuprofen,
-		_PillAliasedString[23:34]: PillAliasedParacetamol,
-		_PillAliasedString[34:47]: PillAliasedAcetaminophen,
-		_PillAliasedString[47:56]: PillAliasedVitaminC,
+	_PillUnsignedStringToValueMap = map[string]PillUnsigned{
+		_PillUnsignedString[0:7]:   PillUnsignedPlacebo,
+		_PillUnsignedString[7:14]:  PillUnsignedAspirin,
+		_PillUnsignedString[14:23]: PillUnsignedIbuprofen,
+		_PillUnsignedString[23:34]: PillUnsignedParacetamol,
+		_PillUnsignedString[34:47]: PillUnsignedAcetaminophen,
+		_PillUnsignedString[47:56]: PillUnsignedVitaminC,
 	}
-	_PillAliasedLowerStringToValueMap = map[string]PillAliased{
-		_PillAliasedLowerString[0:7]:   PillAliasedPlacebo,
-		_PillAliasedLowerString[7:14]:  PillAliasedAspirin,
-		_PillAliasedLowerString[14:23]: PillAliasedIbuprofen,
-		_PillAliasedLowerString[23:34]: PillAliasedParacetamol,
-		_PillAliasedLowerString[34:47]: PillAliasedAcetaminophen,
-		_PillAliasedLowerString[47:56]: PillAliasedVitaminC,
+	_PillUnsignedLowerStringToValueMap = map[string]PillUnsigned{
+		_PillUnsignedLowerString[0:7]:   PillUnsignedPlacebo,
+		_PillUnsignedLowerString[7:14]:  PillUnsignedAspirin,
+		_PillUnsignedLowerString[14:23]: PillUnsignedIbuprofen,
+		_PillUnsignedLowerString[23:34]: PillUnsignedParacetamol,
+		_PillUnsignedLowerString[34:47]: PillUnsignedAcetaminophen,
+		_PillUnsignedLowerString[47:56]: PillUnsignedVitaminC,
 	}
 )
 
-// PillAliasedFromString determines the enum value with an exact case match.
-func PillAliasedFromString(raw string) (PillAliased, bool) {
-	v, ok := _PillAliasedStringToValueMap[raw]
+// PillUnsignedFromString determines the enum value with an exact case match.
+func PillUnsignedFromString(raw string) (PillUnsigned, bool) {
+	v, ok := _PillUnsignedStringToValueMap[raw]
 	if !ok {
-		return PillAliased(0), false
+		return PillUnsigned(0), false
 	}
 	return v, true
 }
 
-// PillAliasedFromStringIgnoreCase determines the enum value with a case-insensitive match.
-func PillAliasedFromStringIgnoreCase(raw string) (PillAliased, bool) {
-	v, ok := PillAliasedFromString(raw)
+// PillUnsignedFromStringIgnoreCase determines the enum value with a case-insensitive match.
+func PillUnsignedFromStringIgnoreCase(raw string) (PillUnsigned, bool) {
+	v, ok := PillUnsignedFromString(raw)
 	if ok {
 		return v, ok
 	}
-	v, ok = _PillAliasedLowerStringToValueMap[raw]
+	v, ok = _PillUnsignedLowerStringToValueMap[raw]
 	if !ok {
-		return PillAliased(0), false
+		return PillUnsigned(0), false
 	}
 	return v, true
 }
 
-// MarshalBinary implements the encoding.BinaryMarshaler interface for PillAliased.
-func (_p PillAliased) MarshalBinary() ([]byte, error) {
+// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned.
+func (_p PillUnsigned) MarshalBinary() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
 	}
 	return []byte(_p.String()), nil
 }
 
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillAliased.
-func (_p *PillAliased) UnmarshalBinary(text []byte) error {
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUnsigned.
+func (_p *PillUnsigned) UnmarshalBinary(text []byte) error {
 	str := string(text)
 	if len(str) == 0 {
-		return fmt.Errorf("PillAliased cannot be derived from empty string")
+		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillAliasedFromString(str)
+	*_p, ok = PillUnsignedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillAliased", str)
+		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
 	}
 	return nil
 }
 
-// MarshalGQL implements the graphql.Marshaler interface for PillAliased.
-func (_p PillAliased) MarshalGQL(w io.Writer) {
+// MarshalGQL implements the graphql.Marshaler interface for PillUnsigned.
+func (_p PillUnsigned) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(_p.String()))
 }
 
-// UnmarshalGQL implements the graphql.Unmarshaler interface for PillAliased.
-func (_p *PillAliased) UnmarshalGQL(value interface{}) error {
+// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUnsigned.
+func (_p *PillUnsigned) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -2973,54 +1945,54 @@ func (_p *PillAliased) UnmarshalGQL(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of PillAliased: %[1]T(%[1]v)", value)
+		return fmt.Errorf("invalid value of PillUnsigned: %[1]T(%[1]v)", value)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillAliased cannot be derived from empty string")
+		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillAliasedFromString(str)
+	*_p, ok = PillUnsignedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillAliased", str)
+		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
 	}
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaler interface for PillAliased.
-func (_p PillAliased) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaler interface for PillUnsigned.
+func (_p PillUnsigned) MarshalJSON() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
 	}
 	return json.Marshal(_p.String())
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface for PillAliased.
-func (_p *PillAliased) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaler interface for PillUnsigned.
+func (_p *PillUnsigned) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("PillAliased should be a string, got %q", data)
+		return fmt.Errorf("PillUnsigned should be a string, got %q", data)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillAliased cannot be derived from empty string")
+		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillAliasedFromString(str)
+	*_p, ok = PillUnsignedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillAliased", str)
+		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
 	}
 	return nil
 }
 
-func (_p PillAliased) Value() (driver.Value, error) {
+func (_p PillUnsigned) Value() (driver.Value, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillAliased", _p)
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned", _p)
 	}
 	return _p.String(), nil
 }
 
-func (_p *PillAliased) Scan(value interface{}) error {
+func (_p *PillUnsigned) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -3031,66 +2003,1094 @@ func (_p *PillAliased) Scan(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of PillAliased: %[1]T(%[1]v)", value)
+		return fmt.Errorf("invalid value of PillUnsigned: %[1]T(%[1]v)", value)
 	}
 	if len(str) == 0 {
-		return fmt.Errorf("PillAliased cannot be derived from empty string")
+		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillAliasedFromString(str)
+	*_p, ok = PillUnsignedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillAliased", str)
+		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
 	}
 	return nil
 }
 
-// MarshalText implements the encoding.TextMarshaler interface for PillAliased.
-func (_p PillAliased) MarshalText() ([]byte, error) {
+// MarshalText implements the encoding.TextMarshaler interface for PillUnsigned.
+func (_p PillUnsigned) MarshalText() ([]byte, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
 	}
 	return []byte(_p.String()), nil
 }
 
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PillAliased.
-func (_p *PillAliased) UnmarshalText(text []byte) error {
+// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUnsigned.
+func (_p *PillUnsigned) UnmarshalText(text []byte) error {
 	str := string(text)
 	if len(str) == 0 {
-		return fmt.Errorf("PillAliased cannot be derived from empty string")
+		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillAliasedFromString(str)
+	*_p, ok = PillUnsignedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillAliased", str)
+		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
 	}
 	return nil
 }
 
-// MarshalYAML implements a YAML Marshaler for PillAliased.
-func (_p PillAliased) MarshalYAML() (interface{}, error) {
+// MarshalYAML implements a YAML Marshaler for PillUnsigned.
+func (_p PillUnsigned) MarshalYAML() (interface{}, error) {
 	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
 	}
 	return _p.String(), nil
 }
 
-// UnmarshalYAML implements a YAML Unmarshaler for PillAliased.
-func (_p *PillAliased) UnmarshalYAML(n *yaml.Node) error {
+// UnmarshalYAML implements a YAML Unmarshaler for PillUnsigned.
+func (_p *PillUnsigned) UnmarshalYAML(n *yaml.Node) error {
 	const stringTag = "!!str"
 	if n.ShortTag() != stringTag {
-		return fmt.Errorf("PillAliased must be derived from a string node")
+		return fmt.Errorf("PillUnsigned must be derived from a string node")
 	}
 	str := n.Value
 	if len(str) == 0 {
-		return fmt.Errorf("PillAliased cannot be derived from empty string")
+		return fmt.Errorf("PillUnsigned cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_p, ok = PillAliasedFromString(str)
+	*_p, ok = PillUnsignedFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a PillAliased", str)
+		return fmt.Errorf("Value %q does not represent a PillUnsigned", str)
+	}
+	return nil
+}
+
+const (
+	_PillUnsigned16String      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
+	_PillUnsigned16LowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
+)
+
+var (
+	_PillUnsigned16ValueRange = [2]PillUnsigned16{0, 4}
+	_PillUnsigned16Values     = []PillUnsigned16{0, 1, 2, 3, 4}
+	_PillUnsigned16Strings    = []string{_PillUnsigned16String[0:7], _PillUnsigned16String[7:14], _PillUnsigned16String[14:23], _PillUnsigned16String[23:34], _PillUnsigned16String[47:56]}
+)
+
+// _PillUnsigned16NoOp is a compile time assertion.
+// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
+// Re-run the enumer command to generate an updated version of PillUnsigned16.
+func _PillUnsigned16NoOp() {
+	var x [1]struct{}
+	_ = x[PillUnsigned16Placebo-(0)]
+	_ = x[PillUnsigned16Aspirin-(1)]
+	_ = x[PillUnsigned16Ibuprofen-(2)]
+	_ = x[PillUnsigned16Paracetamol-(3)]
+	_ = x[PillUnsigned16Acetaminophen-(3)]
+	_ = x[PillUnsigned16VitaminC-(4)]
+}
+
+// PillUnsigned16Values returns all values of the enum.
+func PillUnsigned16Values() []PillUnsigned16 {
+	strs := make([]PillUnsigned16, len(_PillUnsigned16Values))
+	copy(strs, _PillUnsigned16Values)
+	return _PillUnsigned16Values
+}
+
+// PillUnsigned16Strings returns a slice of all String values of the enum.
+func PillUnsigned16Strings() []string {
+	strs := make([]string, len(_PillUnsigned16Strings))
+	copy(strs, _PillUnsigned16Strings)
+	return strs
+}
+
+// IsValid inspects whether the value is valid enum value.
+func (_p PillUnsigned16) IsValid() bool {
+	return _p >= _PillUnsigned16ValueRange[0] && _p <= _PillUnsigned16ValueRange[1]
+}
+
+// String returns the string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern PillUnsigned16(%d) instead.
+func (_p PillUnsigned16) String() string {
+	if !_p.IsValid() {
+		return fmt.Sprintf("PillUnsigned16(%d)", _p)
+	}
+	idx := uint(_p)
+	return _PillUnsigned16Strings[idx]
+}
+
+var (
+	_PillUnsigned16StringToValueMap = map[string]PillUnsigned16{
+		_PillUnsigned16String[0:7]:   PillUnsigned16Placebo,
+		_PillUnsigned16String[7:14]:  PillUnsigned16Aspirin,
+		_PillUnsigned16String[14:23]: PillUnsigned16Ibuprofen,
+		_PillUnsigned16String[23:34]: PillUnsigned16Paracetamol,
+		_PillUnsigned16String[34:47]: PillUnsigned16Acetaminophen,
+		_PillUnsigned16String[47:56]: PillUnsigned16VitaminC,
+	}
+	_PillUnsigned16LowerStringToValueMap = map[string]PillUnsigned16{
+		_PillUnsigned16LowerString[0:7]:   PillUnsigned16Placebo,
+		_PillUnsigned16LowerString[7:14]:  PillUnsigned16Aspirin,
+		_PillUnsigned16LowerString[14:23]: PillUnsigned16Ibuprofen,
+		_PillUnsigned16LowerString[23:34]: PillUnsigned16Paracetamol,
+		_PillUnsigned16LowerString[34:47]: PillUnsigned16Acetaminophen,
+		_PillUnsigned16LowerString[47:56]: PillUnsigned16VitaminC,
+	}
+)
+
+// PillUnsigned16FromString determines the enum value with an exact case match.
+func PillUnsigned16FromString(raw string) (PillUnsigned16, bool) {
+	v, ok := _PillUnsigned16StringToValueMap[raw]
+	if !ok {
+		return PillUnsigned16(0), false
+	}
+	return v, true
+}
+
+// PillUnsigned16FromStringIgnoreCase determines the enum value with a case-insensitive match.
+func PillUnsigned16FromStringIgnoreCase(raw string) (PillUnsigned16, bool) {
+	v, ok := PillUnsigned16FromString(raw)
+	if ok {
+		return v, ok
+	}
+	v, ok = _PillUnsigned16LowerStringToValueMap[raw]
+	if !ok {
+		return PillUnsigned16(0), false
+	}
+	return v, true
+}
+
+// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned16.
+func (_p PillUnsigned16) MarshalBinary() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
+	}
+	return []byte(_p.String()), nil
+}
+
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUnsigned16.
+func (_p *PillUnsigned16) UnmarshalBinary(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned16FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface for PillUnsigned16.
+func (_p PillUnsigned16) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_p.String()))
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUnsigned16.
+func (_p *PillUnsigned16) UnmarshalGQL(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of PillUnsigned16: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned16FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaler interface for PillUnsigned16.
+func (_p PillUnsigned16) MarshalJSON() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
+	}
+	return json.Marshal(_p.String())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for PillUnsigned16.
+func (_p *PillUnsigned16) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		return fmt.Errorf("PillUnsigned16 should be a string, got %q", data)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned16FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
+	}
+	return nil
+}
+
+func (_p PillUnsigned16) Value() (driver.Value, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned16", _p)
+	}
+	return _p.String(), nil
+}
+
+func (_p *PillUnsigned16) Scan(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of PillUnsigned16: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned16FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
+	}
+	return nil
+}
+
+// MarshalText implements the encoding.TextMarshaler interface for PillUnsigned16.
+func (_p PillUnsigned16) MarshalText() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
+	}
+	return []byte(_p.String()), nil
+}
+
+// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUnsigned16.
+func (_p *PillUnsigned16) UnmarshalText(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned16FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
+	}
+	return nil
+}
+
+// MarshalYAML implements a YAML Marshaler for PillUnsigned16.
+func (_p PillUnsigned16) MarshalYAML() (interface{}, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
+	}
+	return _p.String(), nil
+}
+
+// UnmarshalYAML implements a YAML Unmarshaler for PillUnsigned16.
+func (_p *PillUnsigned16) UnmarshalYAML(n *yaml.Node) error {
+	const stringTag = "!!str"
+	if n.ShortTag() != stringTag {
+		return fmt.Errorf("PillUnsigned16 must be derived from a string node")
+	}
+	str := n.Value
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned16 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned16FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned16", str)
+	}
+	return nil
+}
+
+const (
+	_PillUnsigned32String      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
+	_PillUnsigned32LowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
+)
+
+var (
+	_PillUnsigned32ValueRange = [2]PillUnsigned32{0, 4}
+	_PillUnsigned32Values     = []PillUnsigned32{0, 1, 2, 3, 4}
+	_PillUnsigned32Strings    = []string{_PillUnsigned32String[0:7], _PillUnsigned32String[7:14], _PillUnsigned32String[14:23], _PillUnsigned32String[23:34], _PillUnsigned32String[47:56]}
+)
+
+// _PillUnsigned32NoOp is a compile time assertion.
+// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
+// Re-run the enumer command to generate an updated version of PillUnsigned32.
+func _PillUnsigned32NoOp() {
+	var x [1]struct{}
+	_ = x[PillUnsigned32Placebo-(0)]
+	_ = x[PillUnsigned32Aspirin-(1)]
+	_ = x[PillUnsigned32Ibuprofen-(2)]
+	_ = x[PillUnsigned32Paracetamol-(3)]
+	_ = x[PillUnsigned32Acetaminophen-(3)]
+	_ = x[PillUnsigned32VitaminC-(4)]
+}
+
+// PillUnsigned32Values returns all values of the enum.
+func PillUnsigned32Values() []PillUnsigned32 {
+	strs := make([]PillUnsigned32, len(_PillUnsigned32Values))
+	copy(strs, _PillUnsigned32Values)
+	return _PillUnsigned32Values
+}
+
+// PillUnsigned32Strings returns a slice of all String values of the enum.
+func PillUnsigned32Strings() []string {
+	strs := make([]string, len(_PillUnsigned32Strings))
+	copy(strs, _PillUnsigned32Strings)
+	return strs
+}
+
+// IsValid inspects whether the value is valid enum value.
+func (_p PillUnsigned32) IsValid() bool {
+	return _p >= _PillUnsigned32ValueRange[0] && _p <= _PillUnsigned32ValueRange[1]
+}
+
+// String returns the string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern PillUnsigned32(%d) instead.
+func (_p PillUnsigned32) String() string {
+	if !_p.IsValid() {
+		return fmt.Sprintf("PillUnsigned32(%d)", _p)
+	}
+	idx := uint(_p)
+	return _PillUnsigned32Strings[idx]
+}
+
+var (
+	_PillUnsigned32StringToValueMap = map[string]PillUnsigned32{
+		_PillUnsigned32String[0:7]:   PillUnsigned32Placebo,
+		_PillUnsigned32String[7:14]:  PillUnsigned32Aspirin,
+		_PillUnsigned32String[14:23]: PillUnsigned32Ibuprofen,
+		_PillUnsigned32String[23:34]: PillUnsigned32Paracetamol,
+		_PillUnsigned32String[34:47]: PillUnsigned32Acetaminophen,
+		_PillUnsigned32String[47:56]: PillUnsigned32VitaminC,
+	}
+	_PillUnsigned32LowerStringToValueMap = map[string]PillUnsigned32{
+		_PillUnsigned32LowerString[0:7]:   PillUnsigned32Placebo,
+		_PillUnsigned32LowerString[7:14]:  PillUnsigned32Aspirin,
+		_PillUnsigned32LowerString[14:23]: PillUnsigned32Ibuprofen,
+		_PillUnsigned32LowerString[23:34]: PillUnsigned32Paracetamol,
+		_PillUnsigned32LowerString[34:47]: PillUnsigned32Acetaminophen,
+		_PillUnsigned32LowerString[47:56]: PillUnsigned32VitaminC,
+	}
+)
+
+// PillUnsigned32FromString determines the enum value with an exact case match.
+func PillUnsigned32FromString(raw string) (PillUnsigned32, bool) {
+	v, ok := _PillUnsigned32StringToValueMap[raw]
+	if !ok {
+		return PillUnsigned32(0), false
+	}
+	return v, true
+}
+
+// PillUnsigned32FromStringIgnoreCase determines the enum value with a case-insensitive match.
+func PillUnsigned32FromStringIgnoreCase(raw string) (PillUnsigned32, bool) {
+	v, ok := PillUnsigned32FromString(raw)
+	if ok {
+		return v, ok
+	}
+	v, ok = _PillUnsigned32LowerStringToValueMap[raw]
+	if !ok {
+		return PillUnsigned32(0), false
+	}
+	return v, true
+}
+
+// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned32.
+func (_p PillUnsigned32) MarshalBinary() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
+	}
+	return []byte(_p.String()), nil
+}
+
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUnsigned32.
+func (_p *PillUnsigned32) UnmarshalBinary(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned32FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface for PillUnsigned32.
+func (_p PillUnsigned32) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_p.String()))
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUnsigned32.
+func (_p *PillUnsigned32) UnmarshalGQL(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of PillUnsigned32: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned32FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaler interface for PillUnsigned32.
+func (_p PillUnsigned32) MarshalJSON() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
+	}
+	return json.Marshal(_p.String())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for PillUnsigned32.
+func (_p *PillUnsigned32) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		return fmt.Errorf("PillUnsigned32 should be a string, got %q", data)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned32FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
+	}
+	return nil
+}
+
+func (_p PillUnsigned32) Value() (driver.Value, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned32", _p)
+	}
+	return _p.String(), nil
+}
+
+func (_p *PillUnsigned32) Scan(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of PillUnsigned32: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned32FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
+	}
+	return nil
+}
+
+// MarshalText implements the encoding.TextMarshaler interface for PillUnsigned32.
+func (_p PillUnsigned32) MarshalText() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
+	}
+	return []byte(_p.String()), nil
+}
+
+// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUnsigned32.
+func (_p *PillUnsigned32) UnmarshalText(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned32FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
+	}
+	return nil
+}
+
+// MarshalYAML implements a YAML Marshaler for PillUnsigned32.
+func (_p PillUnsigned32) MarshalYAML() (interface{}, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
+	}
+	return _p.String(), nil
+}
+
+// UnmarshalYAML implements a YAML Unmarshaler for PillUnsigned32.
+func (_p *PillUnsigned32) UnmarshalYAML(n *yaml.Node) error {
+	const stringTag = "!!str"
+	if n.ShortTag() != stringTag {
+		return fmt.Errorf("PillUnsigned32 must be derived from a string node")
+	}
+	str := n.Value
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned32 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned32FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned32", str)
+	}
+	return nil
+}
+
+const (
+	_PillUnsigned64String      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
+	_PillUnsigned64LowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
+)
+
+var (
+	_PillUnsigned64ValueRange = [2]PillUnsigned64{0, 4}
+	_PillUnsigned64Values     = []PillUnsigned64{0, 1, 2, 3, 4}
+	_PillUnsigned64Strings    = []string{_PillUnsigned64String[0:7], _PillUnsigned64String[7:14], _PillUnsigned64String[14:23], _PillUnsigned64String[23:34], _PillUnsigned64String[47:56]}
+)
+
+// _PillUnsigned64NoOp is a compile time assertion.
+// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
+// Re-run the enumer command to generate an updated version of PillUnsigned64.
+func _PillUnsigned64NoOp() {
+	var x [1]struct{}
+	_ = x[PillUnsigned64Placebo-(0)]
+	_ = x[PillUnsigned64Aspirin-(1)]
+	_ = x[PillUnsigned64Ibuprofen-(2)]
+	_ = x[PillUnsigned64Paracetamol-(3)]
+	_ = x[PillUnsigned64Acetaminophen-(3)]
+	_ = x[PillUnsigned64VitaminC-(4)]
+}
+
+// PillUnsigned64Values returns all values of the enum.
+func PillUnsigned64Values() []PillUnsigned64 {
+	strs := make([]PillUnsigned64, len(_PillUnsigned64Values))
+	copy(strs, _PillUnsigned64Values)
+	return _PillUnsigned64Values
+}
+
+// PillUnsigned64Strings returns a slice of all String values of the enum.
+func PillUnsigned64Strings() []string {
+	strs := make([]string, len(_PillUnsigned64Strings))
+	copy(strs, _PillUnsigned64Strings)
+	return strs
+}
+
+// IsValid inspects whether the value is valid enum value.
+func (_p PillUnsigned64) IsValid() bool {
+	return _p >= _PillUnsigned64ValueRange[0] && _p <= _PillUnsigned64ValueRange[1]
+}
+
+// String returns the string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern PillUnsigned64(%d) instead.
+func (_p PillUnsigned64) String() string {
+	if !_p.IsValid() {
+		return fmt.Sprintf("PillUnsigned64(%d)", _p)
+	}
+	idx := uint(_p)
+	return _PillUnsigned64Strings[idx]
+}
+
+var (
+	_PillUnsigned64StringToValueMap = map[string]PillUnsigned64{
+		_PillUnsigned64String[0:7]:   PillUnsigned64Placebo,
+		_PillUnsigned64String[7:14]:  PillUnsigned64Aspirin,
+		_PillUnsigned64String[14:23]: PillUnsigned64Ibuprofen,
+		_PillUnsigned64String[23:34]: PillUnsigned64Paracetamol,
+		_PillUnsigned64String[34:47]: PillUnsigned64Acetaminophen,
+		_PillUnsigned64String[47:56]: PillUnsigned64VitaminC,
+	}
+	_PillUnsigned64LowerStringToValueMap = map[string]PillUnsigned64{
+		_PillUnsigned64LowerString[0:7]:   PillUnsigned64Placebo,
+		_PillUnsigned64LowerString[7:14]:  PillUnsigned64Aspirin,
+		_PillUnsigned64LowerString[14:23]: PillUnsigned64Ibuprofen,
+		_PillUnsigned64LowerString[23:34]: PillUnsigned64Paracetamol,
+		_PillUnsigned64LowerString[34:47]: PillUnsigned64Acetaminophen,
+		_PillUnsigned64LowerString[47:56]: PillUnsigned64VitaminC,
+	}
+)
+
+// PillUnsigned64FromString determines the enum value with an exact case match.
+func PillUnsigned64FromString(raw string) (PillUnsigned64, bool) {
+	v, ok := _PillUnsigned64StringToValueMap[raw]
+	if !ok {
+		return PillUnsigned64(0), false
+	}
+	return v, true
+}
+
+// PillUnsigned64FromStringIgnoreCase determines the enum value with a case-insensitive match.
+func PillUnsigned64FromStringIgnoreCase(raw string) (PillUnsigned64, bool) {
+	v, ok := PillUnsigned64FromString(raw)
+	if ok {
+		return v, ok
+	}
+	v, ok = _PillUnsigned64LowerStringToValueMap[raw]
+	if !ok {
+		return PillUnsigned64(0), false
+	}
+	return v, true
+}
+
+// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned64.
+func (_p PillUnsigned64) MarshalBinary() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
+	}
+	return []byte(_p.String()), nil
+}
+
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUnsigned64.
+func (_p *PillUnsigned64) UnmarshalBinary(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned64FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface for PillUnsigned64.
+func (_p PillUnsigned64) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_p.String()))
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUnsigned64.
+func (_p *PillUnsigned64) UnmarshalGQL(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of PillUnsigned64: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned64FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaler interface for PillUnsigned64.
+func (_p PillUnsigned64) MarshalJSON() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
+	}
+	return json.Marshal(_p.String())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for PillUnsigned64.
+func (_p *PillUnsigned64) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		return fmt.Errorf("PillUnsigned64 should be a string, got %q", data)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned64FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
+	}
+	return nil
+}
+
+func (_p PillUnsigned64) Value() (driver.Value, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned64", _p)
+	}
+	return _p.String(), nil
+}
+
+func (_p *PillUnsigned64) Scan(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of PillUnsigned64: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned64FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
+	}
+	return nil
+}
+
+// MarshalText implements the encoding.TextMarshaler interface for PillUnsigned64.
+func (_p PillUnsigned64) MarshalText() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
+	}
+	return []byte(_p.String()), nil
+}
+
+// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUnsigned64.
+func (_p *PillUnsigned64) UnmarshalText(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned64FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
+	}
+	return nil
+}
+
+// MarshalYAML implements a YAML Marshaler for PillUnsigned64.
+func (_p PillUnsigned64) MarshalYAML() (interface{}, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
+	}
+	return _p.String(), nil
+}
+
+// UnmarshalYAML implements a YAML Unmarshaler for PillUnsigned64.
+func (_p *PillUnsigned64) UnmarshalYAML(n *yaml.Node) error {
+	const stringTag = "!!str"
+	if n.ShortTag() != stringTag {
+		return fmt.Errorf("PillUnsigned64 must be derived from a string node")
+	}
+	str := n.Value
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned64 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned64FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned64", str)
+	}
+	return nil
+}
+
+const (
+	_PillUnsigned8String      = "PLACEBOASPIRINIBUPROFENPARACETAMOLACETAMINOPHENVITAMIN-C"
+	_PillUnsigned8LowerString = "placeboaspirinibuprofenparacetamolacetaminophenvitamin-c"
+)
+
+var (
+	_PillUnsigned8ValueRange = [2]PillUnsigned8{0, 4}
+	_PillUnsigned8Values     = []PillUnsigned8{0, 1, 2, 3, 4}
+	_PillUnsigned8Strings    = []string{_PillUnsigned8String[0:7], _PillUnsigned8String[7:14], _PillUnsigned8String[14:23], _PillUnsigned8String[23:34], _PillUnsigned8String[47:56]}
+)
+
+// _PillUnsigned8NoOp is a compile time assertion.
+// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
+// Re-run the enumer command to generate an updated version of PillUnsigned8.
+func _PillUnsigned8NoOp() {
+	var x [1]struct{}
+	_ = x[PillUnsigned8Placebo-(0)]
+	_ = x[PillUnsigned8Aspirin-(1)]
+	_ = x[PillUnsigned8Ibuprofen-(2)]
+	_ = x[PillUnsigned8Paracetamol-(3)]
+	_ = x[PillUnsigned8Acetaminophen-(3)]
+	_ = x[PillUnsigned8VitaminC-(4)]
+}
+
+// PillUnsigned8Values returns all values of the enum.
+func PillUnsigned8Values() []PillUnsigned8 {
+	strs := make([]PillUnsigned8, len(_PillUnsigned8Values))
+	copy(strs, _PillUnsigned8Values)
+	return _PillUnsigned8Values
+}
+
+// PillUnsigned8Strings returns a slice of all String values of the enum.
+func PillUnsigned8Strings() []string {
+	strs := make([]string, len(_PillUnsigned8Strings))
+	copy(strs, _PillUnsigned8Strings)
+	return strs
+}
+
+// IsValid inspects whether the value is valid enum value.
+func (_p PillUnsigned8) IsValid() bool {
+	return _p >= _PillUnsigned8ValueRange[0] && _p <= _PillUnsigned8ValueRange[1]
+}
+
+// String returns the string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern PillUnsigned8(%d) instead.
+func (_p PillUnsigned8) String() string {
+	if !_p.IsValid() {
+		return fmt.Sprintf("PillUnsigned8(%d)", _p)
+	}
+	idx := uint(_p)
+	return _PillUnsigned8Strings[idx]
+}
+
+var (
+	_PillUnsigned8StringToValueMap = map[string]PillUnsigned8{
+		_PillUnsigned8String[0:7]:   PillUnsigned8Placebo,
+		_PillUnsigned8String[7:14]:  PillUnsigned8Aspirin,
+		_PillUnsigned8String[14:23]: PillUnsigned8Ibuprofen,
+		_PillUnsigned8String[23:34]: PillUnsigned8Paracetamol,
+		_PillUnsigned8String[34:47]: PillUnsigned8Acetaminophen,
+		_PillUnsigned8String[47:56]: PillUnsigned8VitaminC,
+	}
+	_PillUnsigned8LowerStringToValueMap = map[string]PillUnsigned8{
+		_PillUnsigned8LowerString[0:7]:   PillUnsigned8Placebo,
+		_PillUnsigned8LowerString[7:14]:  PillUnsigned8Aspirin,
+		_PillUnsigned8LowerString[14:23]: PillUnsigned8Ibuprofen,
+		_PillUnsigned8LowerString[23:34]: PillUnsigned8Paracetamol,
+		_PillUnsigned8LowerString[34:47]: PillUnsigned8Acetaminophen,
+		_PillUnsigned8LowerString[47:56]: PillUnsigned8VitaminC,
+	}
+)
+
+// PillUnsigned8FromString determines the enum value with an exact case match.
+func PillUnsigned8FromString(raw string) (PillUnsigned8, bool) {
+	v, ok := _PillUnsigned8StringToValueMap[raw]
+	if !ok {
+		return PillUnsigned8(0), false
+	}
+	return v, true
+}
+
+// PillUnsigned8FromStringIgnoreCase determines the enum value with a case-insensitive match.
+func PillUnsigned8FromStringIgnoreCase(raw string) (PillUnsigned8, bool) {
+	v, ok := PillUnsigned8FromString(raw)
+	if ok {
+		return v, ok
+	}
+	v, ok = _PillUnsigned8LowerStringToValueMap[raw]
+	if !ok {
+		return PillUnsigned8(0), false
+	}
+	return v, true
+}
+
+// MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned8.
+func (_p PillUnsigned8) MarshalBinary() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+	}
+	return []byte(_p.String()), nil
+}
+
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PillUnsigned8.
+func (_p *PillUnsigned8) UnmarshalBinary(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned8FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface for PillUnsigned8.
+func (_p PillUnsigned8) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_p.String()))
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface for PillUnsigned8.
+func (_p *PillUnsigned8) UnmarshalGQL(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of PillUnsigned8: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned8FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaler interface for PillUnsigned8.
+func (_p PillUnsigned8) MarshalJSON() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+	}
+	return json.Marshal(_p.String())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for PillUnsigned8.
+func (_p *PillUnsigned8) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		return fmt.Errorf("PillUnsigned8 should be a string, got %q", data)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned8FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
+	}
+	return nil
+}
+
+func (_p PillUnsigned8) Value() (driver.Value, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned8", _p)
+	}
+	return _p.String(), nil
+}
+
+func (_p *PillUnsigned8) Scan(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of PillUnsigned8: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned8FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
+	}
+	return nil
+}
+
+// MarshalText implements the encoding.TextMarshaler interface for PillUnsigned8.
+func (_p PillUnsigned8) MarshalText() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+	}
+	return []byte(_p.String()), nil
+}
+
+// UnmarshalText implements the encoding.TextUnmarshaler interface for PillUnsigned8.
+func (_p *PillUnsigned8) UnmarshalText(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned8FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
+	}
+	return nil
+}
+
+// MarshalYAML implements a YAML Marshaler for PillUnsigned8.
+func (_p PillUnsigned8) MarshalYAML() (interface{}, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+	}
+	return _p.String(), nil
+}
+
+// UnmarshalYAML implements a YAML Unmarshaler for PillUnsigned8.
+func (_p *PillUnsigned8) UnmarshalYAML(n *yaml.Node) error {
+	const stringTag = "!!str"
+	if n.ShortTag() != stringTag {
+		return fmt.Errorf("PillUnsigned8 must be derived from a string node")
+	}
+	str := n.Value
+	if len(str) == 0 {
+		return fmt.Errorf("PillUnsigned8 cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PillUnsigned8FromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PillUnsigned8", str)
 	}
 	return nil
 }

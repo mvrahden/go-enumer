@@ -11,176 +11,131 @@ import (
 )
 
 const (
-	_UserRoleString      = "standardeditorrevieweradmin"
-	_UserRoleLowerString = "standardeditorrevieweradmin"
+	_AccountStateString      = "STAGEDPROVISIONEDACTIVATEDDEACTIVATEDDEPROVISIONED"
+	_AccountStateLowerString = "stagedprovisionedactivateddeactivateddeprovisioned"
 )
 
 var (
-	_UserRoleValueRange = [2]UserRole{0, 3}
-	_UserRoleValues     = []UserRole{0, 1, 2, 3}
-	_UserRoleStrings    = []string{_UserRoleString[0:8], _UserRoleString[8:14], _UserRoleString[14:22], _UserRoleString[22:27]}
+	_AccountStateValueRange = [2]AccountState{0, 4}
+	_AccountStateValues     = []AccountState{0, 1, 2, 3, 4}
+	_AccountStateStrings    = []string{_AccountStateString[0:6], _AccountStateString[6:17], _AccountStateString[17:26], _AccountStateString[26:37], _AccountStateString[37:50]}
 )
 
-// _UserRoleNoOp is a compile time assertion.
+// _AccountStateNoOp is a compile time assertion.
 // An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of UserRole.
-func _UserRoleNoOp() {
+// Re-run the enumer command to generate an updated version of AccountState.
+func _AccountStateNoOp() {
 	var x [1]struct{}
-	_ = x[UserRoleStandard-(0)]
-	_ = x[UserRoleEditor-(1)]
-	_ = x[UserRoleReviewer-(2)]
-	_ = x[UserRoleAdmin-(3)]
+	_ = x[AccountStateStaged-(0)]
+	_ = x[AccountStateProvisioned-(1)]
+	_ = x[AccountStateActivated-(2)]
+	_ = x[AccountStateDeactivated-(3)]
+	_ = x[AccountStateDeprovisioned-(4)]
 }
 
-// UserRoleValues returns all values of the enum.
-func UserRoleValues() []UserRole {
-	strs := make([]UserRole, len(_UserRoleValues))
-	copy(strs, _UserRoleValues)
-	return _UserRoleValues
+// AccountStateValues returns all values of the enum.
+func AccountStateValues() []AccountState {
+	strs := make([]AccountState, len(_AccountStateValues))
+	copy(strs, _AccountStateValues)
+	return _AccountStateValues
 }
 
-// UserRoleStrings returns a slice of all String values of the enum.
-func UserRoleStrings() []string {
-	strs := make([]string, len(_UserRoleStrings))
-	copy(strs, _UserRoleStrings)
+// AccountStateStrings returns a slice of all String values of the enum.
+func AccountStateStrings() []string {
+	strs := make([]string, len(_AccountStateStrings))
+	copy(strs, _AccountStateStrings)
 	return strs
 }
 
 // IsValid inspects whether the value is valid enum value.
-func (_u UserRole) IsValid() bool {
-	return _u >= _UserRoleValueRange[0] && _u <= _UserRoleValueRange[1]
+func (_a AccountState) IsValid() bool {
+	return _a >= _AccountStateValueRange[0] && _a <= _AccountStateValueRange[1]
 }
 
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern UserRole(%d) instead.
-func (_u UserRole) String() string {
-	if !_u.IsValid() {
-		return fmt.Sprintf("UserRole(%d)", _u)
+// of the following pattern AccountState(%d) instead.
+func (_a AccountState) String() string {
+	if !_a.IsValid() {
+		return fmt.Sprintf("AccountState(%d)", _a)
 	}
-	idx := uint(_u)
-	return _UserRoleStrings[idx]
+	idx := uint(_a)
+	return _AccountStateStrings[idx]
 }
 
 var (
-	_UserRoleStringToValueMap = map[string]UserRole{
-		_UserRoleString[0:8]:   UserRoleStandard,
-		_UserRoleString[8:14]:  UserRoleEditor,
-		_UserRoleString[14:22]: UserRoleReviewer,
-		_UserRoleString[22:27]: UserRoleAdmin,
+	_AccountStateStringToValueMap = map[string]AccountState{
+		_AccountStateString[0:6]:   AccountStateStaged,
+		_AccountStateString[6:17]:  AccountStateProvisioned,
+		_AccountStateString[17:26]: AccountStateActivated,
+		_AccountStateString[26:37]: AccountStateDeactivated,
+		_AccountStateString[37:50]: AccountStateDeprovisioned,
 	}
-	_UserRoleLowerStringToValueMap = map[string]UserRole{
-		_UserRoleLowerString[0:8]:   UserRoleStandard,
-		_UserRoleLowerString[8:14]:  UserRoleEditor,
-		_UserRoleLowerString[14:22]: UserRoleReviewer,
-		_UserRoleLowerString[22:27]: UserRoleAdmin,
+	_AccountStateLowerStringToValueMap = map[string]AccountState{
+		_AccountStateLowerString[0:6]:   AccountStateStaged,
+		_AccountStateLowerString[6:17]:  AccountStateProvisioned,
+		_AccountStateLowerString[17:26]: AccountStateActivated,
+		_AccountStateLowerString[26:37]: AccountStateDeactivated,
+		_AccountStateLowerString[37:50]: AccountStateDeprovisioned,
 	}
 )
 
-// UserRoleFromString determines the enum value with an exact case match.
-func UserRoleFromString(raw string) (UserRole, bool) {
-	if len(raw) == 0 {
-		return UserRole(0), true
-	}
-	v, ok := _UserRoleStringToValueMap[raw]
+// AccountStateFromString determines the enum value with an exact case match.
+func AccountStateFromString(raw string) (AccountState, bool) {
+	v, ok := _AccountStateStringToValueMap[raw]
 	if !ok {
-		return UserRole(0), false
+		return AccountState(0), false
 	}
 	return v, true
 }
 
-// UserRoleFromStringIgnoreCase determines the enum value with a case-insensitive match.
-func UserRoleFromStringIgnoreCase(raw string) (UserRole, bool) {
-	v, ok := UserRoleFromString(raw)
+// AccountStateFromStringIgnoreCase determines the enum value with a case-insensitive match.
+func AccountStateFromStringIgnoreCase(raw string) (AccountState, bool) {
+	v, ok := AccountStateFromString(raw)
 	if ok {
 		return v, ok
 	}
-	v, ok = _UserRoleLowerStringToValueMap[raw]
+	v, ok = _AccountStateLowerStringToValueMap[raw]
 	if !ok {
-		return UserRole(0), false
+		return AccountState(0), false
 	}
 	return v, true
 }
 
-// MarshalBinary implements the encoding.BinaryMarshaler interface for UserRole.
-func (_u UserRole) MarshalBinary() ([]byte, error) {
-	if !_u.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
+// MarshalJSON implements the json.Marshaler interface for AccountState.
+func (_a AccountState) MarshalJSON() ([]byte, error) {
+	if !_a.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as AccountState", _a)
 	}
-	return []byte(_u.String()), nil
+	return json.Marshal(_a.String())
 }
 
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for UserRole.
-func (_u *UserRole) UnmarshalBinary(text []byte) error {
-	str := string(text)
-
-	var ok bool
-	*_u, ok = UserRoleFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a UserRole", str)
-	}
-	return nil
-}
-
-// MarshalGQL implements the graphql.Marshaler interface for UserRole.
-func (_u UserRole) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(_u.String()))
-}
-
-// UnmarshalGQL implements the graphql.Unmarshaler interface for UserRole.
-func (_u *UserRole) UnmarshalGQL(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of UserRole: %[1]T(%[1]v)", value)
-	}
-
-	var ok bool
-	*_u, ok = UserRoleFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a UserRole", str)
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaler interface for UserRole.
-func (_u UserRole) MarshalJSON() ([]byte, error) {
-	if !_u.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
-	}
-	return json.Marshal(_u.String())
-}
-
-// UnmarshalJSON implements the json.Unmarshaler interface for UserRole.
-func (_u *UserRole) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaler interface for AccountState.
+func (_a *AccountState) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("UserRole should be a string, got %q", data)
+		return fmt.Errorf("AccountState should be a string, got %q", data)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("AccountState cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_u, ok = UserRoleFromString(str)
+	*_a, ok = AccountStateFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a UserRole", str)
+		return fmt.Errorf("Value %q does not represent a AccountState", str)
 	}
 	return nil
 }
 
-func (_u UserRole) Value() (driver.Value, error) {
-	if !_u.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as UserRole", _u)
+func (_a AccountState) Value() (driver.Value, error) {
+	if !_a.IsValid() {
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as AccountState", _a)
 	}
-	return _u.String(), nil
+	return _a.String(), nil
 }
 
-func (_u *UserRole) Scan(value interface{}) error {
+func (_a *AccountState) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -191,56 +146,270 @@ func (_u *UserRole) Scan(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of UserRole: %[1]T(%[1]v)", value)
+		return fmt.Errorf("invalid value of AccountState: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("AccountState cannot be derived from empty string")
 	}
 
 	var ok bool
-	*_u, ok = UserRoleFromString(str)
+	*_a, ok = AccountStateFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a UserRole", str)
+		return fmt.Errorf("Value %q does not represent a AccountState", str)
 	}
 	return nil
 }
 
-// MarshalText implements the encoding.TextMarshaler interface for UserRole.
-func (_u UserRole) MarshalText() ([]byte, error) {
-	if !_u.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
-	}
-	return []byte(_u.String()), nil
+const (
+	_CurrencyString         = "USDEURYENGBPAUD"
+	_CurrencyLowerString    = "usdeuryengbpaud"
+	_CurrencyCanonicalValue = "US DollarEuroJapanese YenGreat British PoundAustralian Dollar"
+)
+
+var (
+	_CurrencyValueRange      = [2]Currency{1, 5}
+	_CurrencyValues          = []Currency{1, 2, 3, 4, 5}
+	_CurrencyStrings         = []string{_CurrencyString[0:3], _CurrencyString[3:6], _CurrencyString[6:9], _CurrencyString[9:12], _CurrencyString[12:15]}
+	_CurrencyCanonicalValues = []string{_CurrencyCanonicalValue[0:9], _CurrencyCanonicalValue[9:13], _CurrencyCanonicalValue[13:25], _CurrencyCanonicalValue[25:44], _CurrencyCanonicalValue[44:61]}
+)
+
+// CurrencyValues returns all values of the enum.
+func CurrencyValues() []Currency {
+	strs := make([]Currency, len(_CurrencyValues))
+	copy(strs, _CurrencyValues)
+	return _CurrencyValues
 }
 
-// UnmarshalText implements the encoding.TextUnmarshaler interface for UserRole.
-func (_u *UserRole) UnmarshalText(text []byte) error {
+// CurrencyStrings returns a slice of all String values of the enum.
+func CurrencyStrings() []string {
+	strs := make([]string, len(_CurrencyStrings))
+	copy(strs, _CurrencyStrings)
+	return strs
+}
+
+// IsValid inspects whether the value is valid enum value.
+func (_c Currency) IsValid() bool {
+	return _c >= _CurrencyValueRange[0] && _c <= _CurrencyValueRange[1]
+}
+
+// String returns the string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern Currency(%d) instead.
+func (_c Currency) String() string {
+	if !_c.IsValid() {
+		return fmt.Sprintf("Currency(%d)", _c)
+	}
+	idx := uint(_c) - 1
+	return _CurrencyStrings[idx]
+}
+
+// CanonicalValue returns the canonical string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern Currency(%d) instead.
+func (_c Currency) CanonicalValue() string {
+	if !_c.IsValid() {
+		return fmt.Sprintf("Currency(%d)", _c)
+	}
+	idx := uint(_c)
+	return _CurrencyCanonicalValues[idx]
+}
+
+var (
+	_CurrencyStringToValueMap = map[string]Currency{
+		_CurrencyString[0:3]:   1,
+		_CurrencyString[3:6]:   2,
+		_CurrencyString[6:9]:   3,
+		_CurrencyString[9:12]:  4,
+		_CurrencyString[12:15]: 5,
+	}
+	_CurrencyLowerStringToValueMap = map[string]Currency{
+		_CurrencyLowerString[0:3]:   1,
+		_CurrencyLowerString[3:6]:   2,
+		_CurrencyLowerString[6:9]:   3,
+		_CurrencyLowerString[9:12]:  4,
+		_CurrencyLowerString[12:15]: 5,
+	}
+)
+
+// CurrencyFromString determines the enum value with an exact case match.
+func CurrencyFromString(raw string) (Currency, bool) {
+	v, ok := _CurrencyStringToValueMap[raw]
+	if !ok {
+		return Currency(0), false
+	}
+	return v, true
+}
+
+// CurrencyFromStringIgnoreCase determines the enum value with a case-insensitive match.
+func CurrencyFromStringIgnoreCase(raw string) (Currency, bool) {
+	v, ok := CurrencyFromString(raw)
+	if ok {
+		return v, ok
+	}
+	v, ok = _CurrencyLowerStringToValueMap[raw]
+	if !ok {
+		return Currency(0), false
+	}
+	return v, true
+}
+
+// MarshalBinary implements the encoding.BinaryMarshaler interface for Currency.
+func (_c Currency) MarshalBinary() ([]byte, error) {
+	if !_c.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+	}
+	return []byte(_c.String()), nil
+}
+
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for Currency.
+func (_c *Currency) UnmarshalBinary(text []byte) error {
 	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("Currency cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_u, ok = UserRoleFromString(str)
+	*_c, ok = CurrencyFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a UserRole", str)
+		return fmt.Errorf("Value %q does not represent a Currency", str)
 	}
 	return nil
 }
 
-// MarshalYAML implements a YAML Marshaler for UserRole.
-func (_u UserRole) MarshalYAML() (interface{}, error) {
-	if !_u.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
-	}
-	return _u.String(), nil
+// MarshalGQL implements the graphql.Marshaler interface for Currency.
+func (_c Currency) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_c.String()))
 }
 
-// UnmarshalYAML implements a YAML Unmarshaler for UserRole.
-func (_u *UserRole) UnmarshalYAML(unmarshal func(interface{}) error) error {
+// UnmarshalGQL implements the graphql.Unmarshaler interface for Currency.
+func (_c *Currency) UnmarshalGQL(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of Currency: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("Currency cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_c, ok = CurrencyFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a Currency", str)
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaler interface for Currency.
+func (_c Currency) MarshalJSON() ([]byte, error) {
+	if !_c.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+	}
+	return json.Marshal(_c.String())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for Currency.
+func (_c *Currency) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		return fmt.Errorf("Currency should be a string, got %q", data)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("Currency cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_c, ok = CurrencyFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a Currency", str)
+	}
+	return nil
+}
+
+func (_c Currency) Value() (driver.Value, error) {
+	if !_c.IsValid() {
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as Currency", _c)
+	}
+	return _c.String(), nil
+}
+
+func (_c *Currency) Scan(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of Currency: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("Currency cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_c, ok = CurrencyFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a Currency", str)
+	}
+	return nil
+}
+
+// MarshalText implements the encoding.TextMarshaler interface for Currency.
+func (_c Currency) MarshalText() ([]byte, error) {
+	if !_c.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+	}
+	return []byte(_c.String()), nil
+}
+
+// UnmarshalText implements the encoding.TextUnmarshaler interface for Currency.
+func (_c *Currency) UnmarshalText(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("Currency cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_c, ok = CurrencyFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a Currency", str)
+	}
+	return nil
+}
+
+// MarshalYAML implements a YAML Marshaler for Currency.
+func (_c Currency) MarshalYAML() (interface{}, error) {
+	if !_c.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+	}
+	return _c.String(), nil
+}
+
+// UnmarshalYAML implements a YAML Unmarshaler for Currency.
+func (_c *Currency) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var str string
 	if err := unmarshal(&str); err != nil {
 		return err
 	}
+	if len(str) == 0 {
+		return fmt.Errorf("Currency cannot be derived from empty string")
+	}
 
 	var ok bool
-	*_u, ok = UserRoleFromString(str)
+	*_c, ok = CurrencyFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a UserRole", str)
+		return fmt.Errorf("Value %q does not represent a Currency", str)
 	}
 	return nil
 }
@@ -1325,128 +1494,124 @@ func (_t *Timezone) UnmarshalYAML(unmarshal func(interface{}) error) error {
 }
 
 const (
-	_CurrencyString         = "USDEURYENGBPAUD"
-	_CurrencyLowerString    = "usdeuryengbpaud"
-	_CurrencyCanonicalValue = "US DollarEuroJapanese YenGreat British PoundAustralian Dollar"
+	_UserRoleString      = "standardeditorrevieweradmin"
+	_UserRoleLowerString = "standardeditorrevieweradmin"
 )
 
 var (
-	_CurrencyValueRange      = [2]Currency{1, 5}
-	_CurrencyValues          = []Currency{1, 2, 3, 4, 5}
-	_CurrencyStrings         = []string{_CurrencyString[0:3], _CurrencyString[3:6], _CurrencyString[6:9], _CurrencyString[9:12], _CurrencyString[12:15]}
-	_CurrencyCanonicalValues = []string{_CurrencyCanonicalValue[0:9], _CurrencyCanonicalValue[9:13], _CurrencyCanonicalValue[13:25], _CurrencyCanonicalValue[25:44], _CurrencyCanonicalValue[44:61]}
+	_UserRoleValueRange = [2]UserRole{0, 3}
+	_UserRoleValues     = []UserRole{0, 1, 2, 3}
+	_UserRoleStrings    = []string{_UserRoleString[0:8], _UserRoleString[8:14], _UserRoleString[14:22], _UserRoleString[22:27]}
 )
 
-// CurrencyValues returns all values of the enum.
-func CurrencyValues() []Currency {
-	strs := make([]Currency, len(_CurrencyValues))
-	copy(strs, _CurrencyValues)
-	return _CurrencyValues
+// _UserRoleNoOp is a compile time assertion.
+// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
+// Re-run the enumer command to generate an updated version of UserRole.
+func _UserRoleNoOp() {
+	var x [1]struct{}
+	_ = x[UserRoleStandard-(0)]
+	_ = x[UserRoleEditor-(1)]
+	_ = x[UserRoleReviewer-(2)]
+	_ = x[UserRoleAdmin-(3)]
 }
 
-// CurrencyStrings returns a slice of all String values of the enum.
-func CurrencyStrings() []string {
-	strs := make([]string, len(_CurrencyStrings))
-	copy(strs, _CurrencyStrings)
+// UserRoleValues returns all values of the enum.
+func UserRoleValues() []UserRole {
+	strs := make([]UserRole, len(_UserRoleValues))
+	copy(strs, _UserRoleValues)
+	return _UserRoleValues
+}
+
+// UserRoleStrings returns a slice of all String values of the enum.
+func UserRoleStrings() []string {
+	strs := make([]string, len(_UserRoleStrings))
+	copy(strs, _UserRoleStrings)
 	return strs
 }
 
 // IsValid inspects whether the value is valid enum value.
-func (_c Currency) IsValid() bool {
-	return _c >= _CurrencyValueRange[0] && _c <= _CurrencyValueRange[1]
+func (_u UserRole) IsValid() bool {
+	return _u >= _UserRoleValueRange[0] && _u <= _UserRoleValueRange[1]
 }
 
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern Currency(%d) instead.
-func (_c Currency) String() string {
-	if !_c.IsValid() {
-		return fmt.Sprintf("Currency(%d)", _c)
+// of the following pattern UserRole(%d) instead.
+func (_u UserRole) String() string {
+	if !_u.IsValid() {
+		return fmt.Sprintf("UserRole(%d)", _u)
 	}
-	idx := uint(_c) - 1
-	return _CurrencyStrings[idx]
-}
-
-// CanonicalValue returns the canonical string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern Currency(%d) instead.
-func (_c Currency) CanonicalValue() string {
-	if !_c.IsValid() {
-		return fmt.Sprintf("Currency(%d)", _c)
-	}
-	idx := uint(_c)
-	return _CurrencyCanonicalValues[idx]
+	idx := uint(_u)
+	return _UserRoleStrings[idx]
 }
 
 var (
-	_CurrencyStringToValueMap = map[string]Currency{
-		_CurrencyString[0:3]:   1,
-		_CurrencyString[3:6]:   2,
-		_CurrencyString[6:9]:   3,
-		_CurrencyString[9:12]:  4,
-		_CurrencyString[12:15]: 5,
+	_UserRoleStringToValueMap = map[string]UserRole{
+		_UserRoleString[0:8]:   UserRoleStandard,
+		_UserRoleString[8:14]:  UserRoleEditor,
+		_UserRoleString[14:22]: UserRoleReviewer,
+		_UserRoleString[22:27]: UserRoleAdmin,
 	}
-	_CurrencyLowerStringToValueMap = map[string]Currency{
-		_CurrencyLowerString[0:3]:   1,
-		_CurrencyLowerString[3:6]:   2,
-		_CurrencyLowerString[6:9]:   3,
-		_CurrencyLowerString[9:12]:  4,
-		_CurrencyLowerString[12:15]: 5,
+	_UserRoleLowerStringToValueMap = map[string]UserRole{
+		_UserRoleLowerString[0:8]:   UserRoleStandard,
+		_UserRoleLowerString[8:14]:  UserRoleEditor,
+		_UserRoleLowerString[14:22]: UserRoleReviewer,
+		_UserRoleLowerString[22:27]: UserRoleAdmin,
 	}
 )
 
-// CurrencyFromString determines the enum value with an exact case match.
-func CurrencyFromString(raw string) (Currency, bool) {
-	v, ok := _CurrencyStringToValueMap[raw]
+// UserRoleFromString determines the enum value with an exact case match.
+func UserRoleFromString(raw string) (UserRole, bool) {
+	if len(raw) == 0 {
+		return UserRole(0), true
+	}
+	v, ok := _UserRoleStringToValueMap[raw]
 	if !ok {
-		return Currency(0), false
+		return UserRole(0), false
 	}
 	return v, true
 }
 
-// CurrencyFromStringIgnoreCase determines the enum value with a case-insensitive match.
-func CurrencyFromStringIgnoreCase(raw string) (Currency, bool) {
-	v, ok := CurrencyFromString(raw)
+// UserRoleFromStringIgnoreCase determines the enum value with a case-insensitive match.
+func UserRoleFromStringIgnoreCase(raw string) (UserRole, bool) {
+	v, ok := UserRoleFromString(raw)
 	if ok {
 		return v, ok
 	}
-	v, ok = _CurrencyLowerStringToValueMap[raw]
+	v, ok = _UserRoleLowerStringToValueMap[raw]
 	if !ok {
-		return Currency(0), false
+		return UserRole(0), false
 	}
 	return v, true
 }
 
-// MarshalBinary implements the encoding.BinaryMarshaler interface for Currency.
-func (_c Currency) MarshalBinary() ([]byte, error) {
-	if !_c.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+// MarshalBinary implements the encoding.BinaryMarshaler interface for UserRole.
+func (_u UserRole) MarshalBinary() ([]byte, error) {
+	if !_u.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
 	}
-	return []byte(_c.String()), nil
+	return []byte(_u.String()), nil
 }
 
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for Currency.
-func (_c *Currency) UnmarshalBinary(text []byte) error {
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for UserRole.
+func (_u *UserRole) UnmarshalBinary(text []byte) error {
 	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("Currency cannot be derived from empty string")
-	}
 
 	var ok bool
-	*_c, ok = CurrencyFromString(str)
+	*_u, ok = UserRoleFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a Currency", str)
+		return fmt.Errorf("Value %q does not represent a UserRole", str)
 	}
 	return nil
 }
 
-// MarshalGQL implements the graphql.Marshaler interface for Currency.
-func (_c Currency) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(_c.String()))
+// MarshalGQL implements the graphql.Marshaler interface for UserRole.
+func (_u UserRole) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_u.String()))
 }
 
-// UnmarshalGQL implements the graphql.Unmarshaler interface for Currency.
-func (_c *Currency) UnmarshalGQL(value interface{}) error {
+// UnmarshalGQL implements the graphql.Unmarshaler interface for UserRole.
+func (_u *UserRole) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -1457,54 +1622,48 @@ func (_c *Currency) UnmarshalGQL(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of Currency: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("Currency cannot be derived from empty string")
+		return fmt.Errorf("invalid value of UserRole: %[1]T(%[1]v)", value)
 	}
 
 	var ok bool
-	*_c, ok = CurrencyFromString(str)
+	*_u, ok = UserRoleFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a Currency", str)
+		return fmt.Errorf("Value %q does not represent a UserRole", str)
 	}
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaler interface for Currency.
-func (_c Currency) MarshalJSON() ([]byte, error) {
-	if !_c.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+// MarshalJSON implements the json.Marshaler interface for UserRole.
+func (_u UserRole) MarshalJSON() ([]byte, error) {
+	if !_u.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
 	}
-	return json.Marshal(_c.String())
+	return json.Marshal(_u.String())
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface for Currency.
-func (_c *Currency) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaler interface for UserRole.
+func (_u *UserRole) UnmarshalJSON(data []byte) error {
 	var str string
 	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("Currency should be a string, got %q", data)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("Currency cannot be derived from empty string")
+		return fmt.Errorf("UserRole should be a string, got %q", data)
 	}
 
 	var ok bool
-	*_c, ok = CurrencyFromString(str)
+	*_u, ok = UserRoleFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a Currency", str)
+		return fmt.Errorf("Value %q does not represent a UserRole", str)
 	}
 	return nil
 }
 
-func (_c Currency) Value() (driver.Value, error) {
-	if !_c.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as Currency", _c)
+func (_u UserRole) Value() (driver.Value, error) {
+	if !_u.IsValid() {
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as UserRole", _u)
 	}
-	return _c.String(), nil
+	return _u.String(), nil
 }
 
-func (_c *Currency) Scan(value interface{}) error {
+func (_u *UserRole) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
 	case nil:
@@ -1515,215 +1674,56 @@ func (_c *Currency) Scan(value interface{}) error {
 	case fmt.Stringer:
 		str = v.String()
 	default:
-		return fmt.Errorf("invalid value of Currency: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("Currency cannot be derived from empty string")
+		return fmt.Errorf("invalid value of UserRole: %[1]T(%[1]v)", value)
 	}
 
 	var ok bool
-	*_c, ok = CurrencyFromString(str)
+	*_u, ok = UserRoleFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a Currency", str)
+		return fmt.Errorf("Value %q does not represent a UserRole", str)
 	}
 	return nil
 }
 
-// MarshalText implements the encoding.TextMarshaler interface for Currency.
-func (_c Currency) MarshalText() ([]byte, error) {
-	if !_c.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+// MarshalText implements the encoding.TextMarshaler interface for UserRole.
+func (_u UserRole) MarshalText() ([]byte, error) {
+	if !_u.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
 	}
-	return []byte(_c.String()), nil
+	return []byte(_u.String()), nil
 }
 
-// UnmarshalText implements the encoding.TextUnmarshaler interface for Currency.
-func (_c *Currency) UnmarshalText(text []byte) error {
+// UnmarshalText implements the encoding.TextUnmarshaler interface for UserRole.
+func (_u *UserRole) UnmarshalText(text []byte) error {
 	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("Currency cannot be derived from empty string")
-	}
 
 	var ok bool
-	*_c, ok = CurrencyFromString(str)
+	*_u, ok = UserRoleFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a Currency", str)
+		return fmt.Errorf("Value %q does not represent a UserRole", str)
 	}
 	return nil
 }
 
-// MarshalYAML implements a YAML Marshaler for Currency.
-func (_c Currency) MarshalYAML() (interface{}, error) {
-	if !_c.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+// MarshalYAML implements a YAML Marshaler for UserRole.
+func (_u UserRole) MarshalYAML() (interface{}, error) {
+	if !_u.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
 	}
-	return _c.String(), nil
+	return _u.String(), nil
 }
 
-// UnmarshalYAML implements a YAML Unmarshaler for Currency.
-func (_c *Currency) UnmarshalYAML(unmarshal func(interface{}) error) error {
+// UnmarshalYAML implements a YAML Unmarshaler for UserRole.
+func (_u *UserRole) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var str string
 	if err := unmarshal(&str); err != nil {
 		return err
 	}
-	if len(str) == 0 {
-		return fmt.Errorf("Currency cannot be derived from empty string")
-	}
 
 	var ok bool
-	*_c, ok = CurrencyFromString(str)
+	*_u, ok = UserRoleFromString(str)
 	if !ok {
-		return fmt.Errorf("Value %q does not represent a Currency", str)
-	}
-	return nil
-}
-
-const (
-	_AccountStateString      = "STAGEDPROVISIONEDACTIVATEDDEACTIVATEDDEPROVISIONED"
-	_AccountStateLowerString = "stagedprovisionedactivateddeactivateddeprovisioned"
-)
-
-var (
-	_AccountStateValueRange = [2]AccountState{0, 4}
-	_AccountStateValues     = []AccountState{0, 1, 2, 3, 4}
-	_AccountStateStrings    = []string{_AccountStateString[0:6], _AccountStateString[6:17], _AccountStateString[17:26], _AccountStateString[26:37], _AccountStateString[37:50]}
-)
-
-// _AccountStateNoOp is a compile time assertion.
-// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of AccountState.
-func _AccountStateNoOp() {
-	var x [1]struct{}
-	_ = x[AccountStateStaged-(0)]
-	_ = x[AccountStateProvisioned-(1)]
-	_ = x[AccountStateActivated-(2)]
-	_ = x[AccountStateDeactivated-(3)]
-	_ = x[AccountStateDeprovisioned-(4)]
-}
-
-// AccountStateValues returns all values of the enum.
-func AccountStateValues() []AccountState {
-	strs := make([]AccountState, len(_AccountStateValues))
-	copy(strs, _AccountStateValues)
-	return _AccountStateValues
-}
-
-// AccountStateStrings returns a slice of all String values of the enum.
-func AccountStateStrings() []string {
-	strs := make([]string, len(_AccountStateStrings))
-	copy(strs, _AccountStateStrings)
-	return strs
-}
-
-// IsValid inspects whether the value is valid enum value.
-func (_a AccountState) IsValid() bool {
-	return _a >= _AccountStateValueRange[0] && _a <= _AccountStateValueRange[1]
-}
-
-// String returns the string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern AccountState(%d) instead.
-func (_a AccountState) String() string {
-	if !_a.IsValid() {
-		return fmt.Sprintf("AccountState(%d)", _a)
-	}
-	idx := uint(_a)
-	return _AccountStateStrings[idx]
-}
-
-var (
-	_AccountStateStringToValueMap = map[string]AccountState{
-		_AccountStateString[0:6]:   AccountStateStaged,
-		_AccountStateString[6:17]:  AccountStateProvisioned,
-		_AccountStateString[17:26]: AccountStateActivated,
-		_AccountStateString[26:37]: AccountStateDeactivated,
-		_AccountStateString[37:50]: AccountStateDeprovisioned,
-	}
-	_AccountStateLowerStringToValueMap = map[string]AccountState{
-		_AccountStateLowerString[0:6]:   AccountStateStaged,
-		_AccountStateLowerString[6:17]:  AccountStateProvisioned,
-		_AccountStateLowerString[17:26]: AccountStateActivated,
-		_AccountStateLowerString[26:37]: AccountStateDeactivated,
-		_AccountStateLowerString[37:50]: AccountStateDeprovisioned,
-	}
-)
-
-// AccountStateFromString determines the enum value with an exact case match.
-func AccountStateFromString(raw string) (AccountState, bool) {
-	v, ok := _AccountStateStringToValueMap[raw]
-	if !ok {
-		return AccountState(0), false
-	}
-	return v, true
-}
-
-// AccountStateFromStringIgnoreCase determines the enum value with a case-insensitive match.
-func AccountStateFromStringIgnoreCase(raw string) (AccountState, bool) {
-	v, ok := AccountStateFromString(raw)
-	if ok {
-		return v, ok
-	}
-	v, ok = _AccountStateLowerStringToValueMap[raw]
-	if !ok {
-		return AccountState(0), false
-	}
-	return v, true
-}
-
-// MarshalJSON implements the json.Marshaler interface for AccountState.
-func (_a AccountState) MarshalJSON() ([]byte, error) {
-	if !_a.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as AccountState", _a)
-	}
-	return json.Marshal(_a.String())
-}
-
-// UnmarshalJSON implements the json.Unmarshaler interface for AccountState.
-func (_a *AccountState) UnmarshalJSON(data []byte) error {
-	var str string
-	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("AccountState should be a string, got %q", data)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("AccountState cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_a, ok = AccountStateFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a AccountState", str)
-	}
-	return nil
-}
-
-func (_a AccountState) Value() (driver.Value, error) {
-	if !_a.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as AccountState", _a)
-	}
-	return _a.String(), nil
-}
-
-func (_a *AccountState) Scan(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of AccountState: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("AccountState cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_a, ok = AccountStateFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a AccountState", str)
+		return fmt.Errorf("Value %q does not represent a UserRole", str)
 	}
 	return nil
 }

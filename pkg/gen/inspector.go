@@ -57,7 +57,14 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 		return nil, err
 	}
 	i.inspectImports(out)
+	i.sortTypeSpecs(out)
 	return out, nil
+}
+
+func (i inspector) sortTypeSpecs(f *File) {
+	sort.SliceStable(f.TypeSpecs, func(i, j int) bool {
+		return strings.Compare(f.TypeSpecs[i].Name, f.TypeSpecs[j].Name) < 0
+	})
 }
 
 func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {

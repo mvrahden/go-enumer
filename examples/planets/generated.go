@@ -273,271 +273,6 @@ func (_p *Planet) UnmarshalYAML(unmarshal func(interface{}) error) error {
 }
 
 const (
-	_PlanetWithDefaultString      = "EarthMarsPlutoVenusMercuryJupiterSaturnUranusNeptune"
-	_PlanetWithDefaultLowerString = "earthmarsplutovenusmercuryjupitersaturnuranusneptune"
-)
-
-var (
-	_PlanetWithDefaultValueRange = [2]PlanetWithDefault{0, 8}
-	_PlanetWithDefaultValues     = []PlanetWithDefault{0, 1, 2, 3, 4, 5, 6, 7, 8}
-	_PlanetWithDefaultStrings    = []string{_PlanetWithDefaultString[0:5], _PlanetWithDefaultString[5:9], _PlanetWithDefaultString[9:14], _PlanetWithDefaultString[14:19], _PlanetWithDefaultString[19:26], _PlanetWithDefaultString[26:33], _PlanetWithDefaultString[33:39], _PlanetWithDefaultString[39:45], _PlanetWithDefaultString[45:52]}
-)
-
-// _PlanetWithDefaultNoOp is a compile time assertion.
-// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
-// Re-run the enumer command to generate an updated version of PlanetWithDefault.
-func _PlanetWithDefaultNoOp() {
-	var x [1]struct{}
-	_ = x[PlanetWithDefaultEarth-(0)]
-	_ = x[PlanetWithDefaultMars-(1)]
-	_ = x[PlanetWithDefaultPluto-(2)]
-	_ = x[PlanetWithDefaultVenus-(3)]
-	_ = x[PlanetWithDefaultMercury-(4)]
-	_ = x[PlanetWithDefaultJupiter-(5)]
-	_ = x[PlanetWithDefaultSaturn-(6)]
-	_ = x[PlanetWithDefaultUranus-(7)]
-	_ = x[PlanetWithDefaultNeptune-(8)]
-}
-
-// PlanetWithDefaultValues returns all values of the enum.
-func PlanetWithDefaultValues() []PlanetWithDefault {
-	strs := make([]PlanetWithDefault, len(_PlanetWithDefaultValues))
-	copy(strs, _PlanetWithDefaultValues)
-	return _PlanetWithDefaultValues
-}
-
-// PlanetWithDefaultStrings returns a slice of all String values of the enum.
-func PlanetWithDefaultStrings() []string {
-	strs := make([]string, len(_PlanetWithDefaultStrings))
-	copy(strs, _PlanetWithDefaultStrings)
-	return strs
-}
-
-// IsValid inspects whether the value is valid enum value.
-func (_p PlanetWithDefault) IsValid() bool {
-	return _p >= _PlanetWithDefaultValueRange[0] && _p <= _PlanetWithDefaultValueRange[1]
-}
-
-// String returns the string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern PlanetWithDefault(%d) instead.
-func (_p PlanetWithDefault) String() string {
-	if !_p.IsValid() {
-		return fmt.Sprintf("PlanetWithDefault(%d)", _p)
-	}
-	idx := uint(_p)
-	return _PlanetWithDefaultStrings[idx]
-}
-
-var (
-	_PlanetWithDefaultStringToValueMap = map[string]PlanetWithDefault{
-		_PlanetWithDefaultString[0:5]:   PlanetWithDefaultEarth,
-		_PlanetWithDefaultString[5:9]:   PlanetWithDefaultMars,
-		_PlanetWithDefaultString[9:14]:  PlanetWithDefaultPluto,
-		_PlanetWithDefaultString[14:19]: PlanetWithDefaultVenus,
-		_PlanetWithDefaultString[19:26]: PlanetWithDefaultMercury,
-		_PlanetWithDefaultString[26:33]: PlanetWithDefaultJupiter,
-		_PlanetWithDefaultString[33:39]: PlanetWithDefaultSaturn,
-		_PlanetWithDefaultString[39:45]: PlanetWithDefaultUranus,
-		_PlanetWithDefaultString[45:52]: PlanetWithDefaultNeptune,
-	}
-	_PlanetWithDefaultLowerStringToValueMap = map[string]PlanetWithDefault{
-		_PlanetWithDefaultLowerString[0:5]:   PlanetWithDefaultEarth,
-		_PlanetWithDefaultLowerString[5:9]:   PlanetWithDefaultMars,
-		_PlanetWithDefaultLowerString[9:14]:  PlanetWithDefaultPluto,
-		_PlanetWithDefaultLowerString[14:19]: PlanetWithDefaultVenus,
-		_PlanetWithDefaultLowerString[19:26]: PlanetWithDefaultMercury,
-		_PlanetWithDefaultLowerString[26:33]: PlanetWithDefaultJupiter,
-		_PlanetWithDefaultLowerString[33:39]: PlanetWithDefaultSaturn,
-		_PlanetWithDefaultLowerString[39:45]: PlanetWithDefaultUranus,
-		_PlanetWithDefaultLowerString[45:52]: PlanetWithDefaultNeptune,
-	}
-)
-
-// PlanetWithDefaultFromString determines the enum value with an exact case match.
-func PlanetWithDefaultFromString(raw string) (PlanetWithDefault, bool) {
-	v, ok := _PlanetWithDefaultStringToValueMap[raw]
-	if !ok {
-		return PlanetWithDefault(0), false
-	}
-	return v, true
-}
-
-// PlanetWithDefaultFromStringIgnoreCase determines the enum value with a case-insensitive match.
-func PlanetWithDefaultFromStringIgnoreCase(raw string) (PlanetWithDefault, bool) {
-	v, ok := PlanetWithDefaultFromString(raw)
-	if ok {
-		return v, ok
-	}
-	v, ok = _PlanetWithDefaultLowerStringToValueMap[raw]
-	if !ok {
-		return PlanetWithDefault(0), false
-	}
-	return v, true
-}
-
-// MarshalBinary implements the encoding.BinaryMarshaler interface for PlanetWithDefault.
-func (_p PlanetWithDefault) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PlanetWithDefault.
-func (_p *PlanetWithDefault) UnmarshalBinary(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PlanetWithDefaultFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
-	}
-	return nil
-}
-
-// MarshalGQL implements the graphql.Marshaler interface for PlanetWithDefault.
-func (_p PlanetWithDefault) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(_p.String()))
-}
-
-// UnmarshalGQL implements the graphql.Unmarshaler interface for PlanetWithDefault.
-func (_p *PlanetWithDefault) UnmarshalGQL(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PlanetWithDefault: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PlanetWithDefaultFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
-	}
-	return nil
-}
-
-// MarshalJSON implements the json.Marshaler interface for PlanetWithDefault.
-func (_p PlanetWithDefault) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
-	}
-	return json.Marshal(_p.String())
-}
-
-// UnmarshalJSON implements the json.Unmarshaler interface for PlanetWithDefault.
-func (_p *PlanetWithDefault) UnmarshalJSON(data []byte) error {
-	var str string
-	if err := json.Unmarshal(data, &str); err != nil {
-		return fmt.Errorf("PlanetWithDefault should be a string, got %q", data)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PlanetWithDefaultFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
-	}
-	return nil
-}
-
-func (_p PlanetWithDefault) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PlanetWithDefault", _p)
-	}
-	return _p.String(), nil
-}
-
-func (_p *PlanetWithDefault) Scan(value interface{}) error {
-	var str string
-	switch v := value.(type) {
-	case nil:
-	case []byte:
-		str = string(v)
-	case string:
-		str = v
-	case fmt.Stringer:
-		str = v.String()
-	default:
-		return fmt.Errorf("invalid value of PlanetWithDefault: %[1]T(%[1]v)", value)
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PlanetWithDefaultFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
-	}
-	return nil
-}
-
-// MarshalText implements the encoding.TextMarshaler interface for PlanetWithDefault.
-func (_p PlanetWithDefault) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
-	}
-	return []byte(_p.String()), nil
-}
-
-// UnmarshalText implements the encoding.TextUnmarshaler interface for PlanetWithDefault.
-func (_p *PlanetWithDefault) UnmarshalText(text []byte) error {
-	str := string(text)
-	if len(str) == 0 {
-		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PlanetWithDefaultFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
-	}
-	return nil
-}
-
-// MarshalYAML implements a YAML Marshaler for PlanetWithDefault.
-func (_p PlanetWithDefault) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
-	}
-	return _p.String(), nil
-}
-
-// UnmarshalYAML implements a YAML Unmarshaler for PlanetWithDefault.
-func (_p *PlanetWithDefault) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	var str string
-	if err := unmarshal(&str); err != nil {
-		return err
-	}
-	if len(str) == 0 {
-		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
-	}
-
-	var ok bool
-	*_p, ok = PlanetWithDefaultFromString(str)
-	if !ok {
-		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
-	}
-	return nil
-}
-
-const (
 	_PlanetSupportUndefinedString      = "MarsPlutoVenusMercuryJupiterSaturnUranusNeptune"
 	_PlanetSupportUndefinedLowerString = "marsplutovenusmercuryjupitersaturnuranusneptune"
 )
@@ -1039,6 +774,271 @@ func (_p *PlanetSupportUndefinedWithDefault) UnmarshalYAML(unmarshal func(interf
 	*_p, ok = PlanetSupportUndefinedWithDefaultFromString(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a PlanetSupportUndefinedWithDefault", str)
+	}
+	return nil
+}
+
+const (
+	_PlanetWithDefaultString      = "EarthMarsPlutoVenusMercuryJupiterSaturnUranusNeptune"
+	_PlanetWithDefaultLowerString = "earthmarsplutovenusmercuryjupitersaturnuranusneptune"
+)
+
+var (
+	_PlanetWithDefaultValueRange = [2]PlanetWithDefault{0, 8}
+	_PlanetWithDefaultValues     = []PlanetWithDefault{0, 1, 2, 3, 4, 5, 6, 7, 8}
+	_PlanetWithDefaultStrings    = []string{_PlanetWithDefaultString[0:5], _PlanetWithDefaultString[5:9], _PlanetWithDefaultString[9:14], _PlanetWithDefaultString[14:19], _PlanetWithDefaultString[19:26], _PlanetWithDefaultString[26:33], _PlanetWithDefaultString[33:39], _PlanetWithDefaultString[39:45], _PlanetWithDefaultString[45:52]}
+)
+
+// _PlanetWithDefaultNoOp is a compile time assertion.
+// An "invalid argument/out of bounds" compiler error signifies that the enum values have changed.
+// Re-run the enumer command to generate an updated version of PlanetWithDefault.
+func _PlanetWithDefaultNoOp() {
+	var x [1]struct{}
+	_ = x[PlanetWithDefaultEarth-(0)]
+	_ = x[PlanetWithDefaultMars-(1)]
+	_ = x[PlanetWithDefaultPluto-(2)]
+	_ = x[PlanetWithDefaultVenus-(3)]
+	_ = x[PlanetWithDefaultMercury-(4)]
+	_ = x[PlanetWithDefaultJupiter-(5)]
+	_ = x[PlanetWithDefaultSaturn-(6)]
+	_ = x[PlanetWithDefaultUranus-(7)]
+	_ = x[PlanetWithDefaultNeptune-(8)]
+}
+
+// PlanetWithDefaultValues returns all values of the enum.
+func PlanetWithDefaultValues() []PlanetWithDefault {
+	strs := make([]PlanetWithDefault, len(_PlanetWithDefaultValues))
+	copy(strs, _PlanetWithDefaultValues)
+	return _PlanetWithDefaultValues
+}
+
+// PlanetWithDefaultStrings returns a slice of all String values of the enum.
+func PlanetWithDefaultStrings() []string {
+	strs := make([]string, len(_PlanetWithDefaultStrings))
+	copy(strs, _PlanetWithDefaultStrings)
+	return strs
+}
+
+// IsValid inspects whether the value is valid enum value.
+func (_p PlanetWithDefault) IsValid() bool {
+	return _p >= _PlanetWithDefaultValueRange[0] && _p <= _PlanetWithDefaultValueRange[1]
+}
+
+// String returns the string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern PlanetWithDefault(%d) instead.
+func (_p PlanetWithDefault) String() string {
+	if !_p.IsValid() {
+		return fmt.Sprintf("PlanetWithDefault(%d)", _p)
+	}
+	idx := uint(_p)
+	return _PlanetWithDefaultStrings[idx]
+}
+
+var (
+	_PlanetWithDefaultStringToValueMap = map[string]PlanetWithDefault{
+		_PlanetWithDefaultString[0:5]:   PlanetWithDefaultEarth,
+		_PlanetWithDefaultString[5:9]:   PlanetWithDefaultMars,
+		_PlanetWithDefaultString[9:14]:  PlanetWithDefaultPluto,
+		_PlanetWithDefaultString[14:19]: PlanetWithDefaultVenus,
+		_PlanetWithDefaultString[19:26]: PlanetWithDefaultMercury,
+		_PlanetWithDefaultString[26:33]: PlanetWithDefaultJupiter,
+		_PlanetWithDefaultString[33:39]: PlanetWithDefaultSaturn,
+		_PlanetWithDefaultString[39:45]: PlanetWithDefaultUranus,
+		_PlanetWithDefaultString[45:52]: PlanetWithDefaultNeptune,
+	}
+	_PlanetWithDefaultLowerStringToValueMap = map[string]PlanetWithDefault{
+		_PlanetWithDefaultLowerString[0:5]:   PlanetWithDefaultEarth,
+		_PlanetWithDefaultLowerString[5:9]:   PlanetWithDefaultMars,
+		_PlanetWithDefaultLowerString[9:14]:  PlanetWithDefaultPluto,
+		_PlanetWithDefaultLowerString[14:19]: PlanetWithDefaultVenus,
+		_PlanetWithDefaultLowerString[19:26]: PlanetWithDefaultMercury,
+		_PlanetWithDefaultLowerString[26:33]: PlanetWithDefaultJupiter,
+		_PlanetWithDefaultLowerString[33:39]: PlanetWithDefaultSaturn,
+		_PlanetWithDefaultLowerString[39:45]: PlanetWithDefaultUranus,
+		_PlanetWithDefaultLowerString[45:52]: PlanetWithDefaultNeptune,
+	}
+)
+
+// PlanetWithDefaultFromString determines the enum value with an exact case match.
+func PlanetWithDefaultFromString(raw string) (PlanetWithDefault, bool) {
+	v, ok := _PlanetWithDefaultStringToValueMap[raw]
+	if !ok {
+		return PlanetWithDefault(0), false
+	}
+	return v, true
+}
+
+// PlanetWithDefaultFromStringIgnoreCase determines the enum value with a case-insensitive match.
+func PlanetWithDefaultFromStringIgnoreCase(raw string) (PlanetWithDefault, bool) {
+	v, ok := PlanetWithDefaultFromString(raw)
+	if ok {
+		return v, ok
+	}
+	v, ok = _PlanetWithDefaultLowerStringToValueMap[raw]
+	if !ok {
+		return PlanetWithDefault(0), false
+	}
+	return v, true
+}
+
+// MarshalBinary implements the encoding.BinaryMarshaler interface for PlanetWithDefault.
+func (_p PlanetWithDefault) MarshalBinary() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
+	}
+	return []byte(_p.String()), nil
+}
+
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for PlanetWithDefault.
+func (_p *PlanetWithDefault) UnmarshalBinary(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PlanetWithDefaultFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface for PlanetWithDefault.
+func (_p PlanetWithDefault) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_p.String()))
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface for PlanetWithDefault.
+func (_p *PlanetWithDefault) UnmarshalGQL(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of PlanetWithDefault: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PlanetWithDefaultFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaler interface for PlanetWithDefault.
+func (_p PlanetWithDefault) MarshalJSON() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
+	}
+	return json.Marshal(_p.String())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for PlanetWithDefault.
+func (_p *PlanetWithDefault) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		return fmt.Errorf("PlanetWithDefault should be a string, got %q", data)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PlanetWithDefaultFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
+	}
+	return nil
+}
+
+func (_p PlanetWithDefault) Value() (driver.Value, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot serialize invalid value %q as PlanetWithDefault", _p)
+	}
+	return _p.String(), nil
+}
+
+func (_p *PlanetWithDefault) Scan(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of PlanetWithDefault: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PlanetWithDefaultFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
+	}
+	return nil
+}
+
+// MarshalText implements the encoding.TextMarshaler interface for PlanetWithDefault.
+func (_p PlanetWithDefault) MarshalText() ([]byte, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
+	}
+	return []byte(_p.String()), nil
+}
+
+// UnmarshalText implements the encoding.TextUnmarshaler interface for PlanetWithDefault.
+func (_p *PlanetWithDefault) UnmarshalText(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PlanetWithDefaultFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
+	}
+	return nil
+}
+
+// MarshalYAML implements a YAML Marshaler for PlanetWithDefault.
+func (_p PlanetWithDefault) MarshalYAML() (interface{}, error) {
+	if !_p.IsValid() {
+		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
+	}
+	return _p.String(), nil
+}
+
+// UnmarshalYAML implements a YAML Unmarshaler for PlanetWithDefault.
+func (_p *PlanetWithDefault) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var str string
+	if err := unmarshal(&str); err != nil {
+		return err
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_p, ok = PlanetWithDefaultFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
 	}
 	return nil
 }
