@@ -80,7 +80,7 @@ func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 		fs.SetOutput(io.Discard) // silence flagset StdErr output
 
 		var fromSource string
-		fs.StringVar(&ts.Config.TransformStrategy, "transform", "noop", "")
+		fs.StringVar(&ts.Config.TransformStrategy, "transform", ts.Config.TransformStrategy, "")
 		fs.Var(&ts.Config.Serializers, "serializers", "")
 		fs.Var(&ts.Config.SupportedFeatures, "support", "")
 		fs.StringVar(&fromSource, "from", "", "")
