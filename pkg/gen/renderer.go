@@ -83,6 +83,10 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 }
 
 func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
+	if ts.IsFromCsvSource {
+		ts.Config.TransformStrategy = "noop"
+	}
+
 	util := newRenderUtil(ts.Config)
 
 	for _, v := range ts.ValueSpecs {
