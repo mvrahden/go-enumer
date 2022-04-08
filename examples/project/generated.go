@@ -1331,10 +1331,10 @@ const (
 )
 
 var (
-	_CurrencyValueRange      = [2]Currency{1, 4}
-	_CurrencyValues          = []Currency{1, 2, 3, 4}
-	_CurrencyStrings         = []string{_CurrencyString[0:3], _CurrencyString[3:6], _CurrencyString[6:9], _CurrencyString[9:12]}
-	_CurrencyCanonicalValues = []string{_CurrencyCanonicalValue[0:9], _CurrencyCanonicalValue[9:13], _CurrencyCanonicalValue[13:25], _CurrencyCanonicalValue[25:44]}
+	_CurrencyValueRange      = [2]Currency{1, 5}
+	_CurrencyValues          = []Currency{1, 2, 3, 4, 5}
+	_CurrencyStrings         = []string{_CurrencyString[0:3], _CurrencyString[3:6], _CurrencyString[6:9], _CurrencyString[9:12], _CurrencyString[12:15]}
+	_CurrencyCanonicalValues = []string{_CurrencyCanonicalValue[0:9], _CurrencyCanonicalValue[9:13], _CurrencyCanonicalValue[13:25], _CurrencyCanonicalValue[25:44], _CurrencyCanonicalValue[44:61]}
 )
 
 // CurrencyValues returns all values of the enum.
@@ -1384,14 +1384,14 @@ var (
 		_CurrencyString[3:6]:   2,
 		_CurrencyString[6:9]:   3,
 		_CurrencyString[9:12]:  4,
-		_CurrencyString[12:15]: 4,
+		_CurrencyString[12:15]: 5,
 	}
 	_CurrencyLowerStringToValueMap = map[string]Currency{
 		_CurrencyLowerString[0:3]:   1,
 		_CurrencyLowerString[3:6]:   2,
 		_CurrencyLowerString[6:9]:   3,
 		_CurrencyLowerString[9:12]:  4,
-		_CurrencyLowerString[12:15]: 4,
+		_CurrencyLowerString[12:15]: 5,
 	}
 )
 
