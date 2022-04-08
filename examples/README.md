@@ -5,13 +5,14 @@ Each example is self-contained and part of a wider testing setup to improve QA a
 
 ## Example Use Cases
 
-- `greetings`: Generate enums standard enum and enums with default value (zero value).
-- `pills`: Generate enums for all integer-like types.
-- `planets`: Generate various combinations of standard/default vs. undefined.
-- `booking`: Generate enums from CSV source.
-- `project`: A more realistic mix of enums.
-- `_invalid`: Contains various invalid edge cases which are expected to produce specific user-friendly errors.
-  You can happily **ignore this directory** as it is for testing puproses only.
+1. `greetings`: Generate standard enum and enums with default value (zero value).
+2. `pills`: Generate enums for all integer-like types.
+3. `planets`: Generate various combinations of standard/default vs. undefined.
+4. `booking`: Generate enums from CSV source.
+5. `project`: A more realistic mix of enums.
+
+> `_invalid`: Contains various invalid edge cases which are expected to produce specific user-friendly errors.
+> You can happily **ignore this directory** as it is for testing puproses only.
 
 ## Tests
 
