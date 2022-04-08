@@ -76,22 +76,8 @@ func TestEnums(t *testing.T) {
 				{From: "𝜋", Enum: toPtr(Greeting𝜋), Expected: utils.Expected{AsSerialized: "𝜋"}},
 			}
 			for idx, tC := range testCases {
-				t.Run(fmt.Sprintf("Serializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertSerializers[Greeting](t, tC, "binary")
-					utils.AssertSerializers[Greeting](t, tC, "gql")
-					utils.AssertSerializers[Greeting](t, tC, "json")
-					utils.AssertSerializers[Greeting](t, tC, "sql")
-					utils.AssertSerializers[Greeting](t, tC, "text")
-					utils.AssertSerializers[Greeting](t, tC, "yaml")
-				})
-				t.Run(fmt.Sprintf("Deserializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertDeserializers(t, tC, cfg, "binary", utils.ZeroValuer[Greeting])
-					utils.AssertDeserializers(t, tC, cfg, "gql", utils.ZeroValuer[Greeting])
-					utils.AssertDeserializers(t, tC, cfg, "json", utils.ZeroValuer[Greeting])
-					utils.AssertDeserializers(t, tC, cfg, "sql", utils.ZeroValuer[Greeting])
-					utils.AssertDeserializers(t, tC, cfg, "text", utils.ZeroValuer[Greeting])
-					utils.AssertDeserializers(t, tC, cfg, "yaml", utils.ZeroValuer[Greeting])
-				})
+				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				utils.AssertSerializationInterfacesFor[Greeting](t, idx, tC, cfg, serializers)
 			}
 		})
 	})
@@ -164,22 +150,8 @@ func TestEnums(t *testing.T) {
 				{From: "𝜋", Enum: toPtr(GreetingWithDefault𝜋), Expected: utils.Expected{AsSerialized: "𝜋"}},
 			}
 			for idx, tC := range testCases {
-				t.Run(fmt.Sprintf("Serializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertSerializers[GreetingWithDefault](t, tC, "binary")
-					utils.AssertSerializers[GreetingWithDefault](t, tC, "gql")
-					utils.AssertSerializers[GreetingWithDefault](t, tC, "json")
-					utils.AssertSerializers[GreetingWithDefault](t, tC, "sql")
-					utils.AssertSerializers[GreetingWithDefault](t, tC, "text")
-					utils.AssertSerializers[GreetingWithDefault](t, tC, "yaml")
-				})
-				t.Run(fmt.Sprintf("Deserializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertDeserializers(t, tC, cfg, "binary", utils.ZeroValuer[GreetingWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "gql", utils.ZeroValuer[GreetingWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "json", utils.ZeroValuer[GreetingWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "sql", utils.ZeroValuer[GreetingWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "text", utils.ZeroValuer[GreetingWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "yaml", utils.ZeroValuer[GreetingWithDefault])
-				})
+				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				utils.AssertSerializationInterfacesFor[GreetingWithDefault](t, idx, tC, cfg, serializers)
 			}
 		})
 	})

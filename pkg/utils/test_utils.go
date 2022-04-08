@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v3"
 )
 
 type stringer struct{ v string }
@@ -24,6 +25,7 @@ type TestCase struct {
 type Expected struct {
 	AsSerialized string
 	IsInvalid    bool
+	IsDefault    bool
 	// _IsNillable  bool
 }
 
@@ -31,15 +33,41 @@ type TestConfig struct {
 	SupportUndefined bool
 }
 
-func AssertSerializers[T any](t *testing.T, tC TestCase, assert string) {
-	switch assert {
+func AssertMissingSerializationInterfacesFor[T any](t *testing.T, missingSerializers []string) {
+	for _, serializer := range missingSerializers {
+		t.Run(fmt.Sprintf("Not Implemented Serializer Interface %q", serializer), func(t *testing.T) {
+			assertMissingSerializer[T](t, serializer)
+			assertMissingDeserializer[T](t, serializer)
+		})
+	}
+}
+
+func AssertSerializationInterfacesFor[T any](t *testing.T, idx int, tC TestCase, cfg TestConfig, serializers []string) {
+	t.Run(fmt.Sprintf("Serializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
+		assertSerializers[T](t, tC, serializers)
+	})
+	t.Run(fmt.Sprintf("Deserializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
+		assertDeserializers[T](t, tC, cfg, serializers)
+	})
+}
+
+func assertSerializers[T any](t *testing.T, tC TestCase, serializers []string) {
+	for _, serializer := range serializers {
+		t.Run(fmt.Sprintf("serialize %q", serializer), func(t *testing.T) {
+			assertSerializer[T](t, tC, serializer)
+		})
+	}
+}
+
+func assertSerializer[T any](t *testing.T, tC TestCase, serializer string) {
+	switch serializer {
 	case "binary":
 		t.Run("MarhsalBinary", func(t *testing.T) {
 			enum := tC.Enum.(interface {
 				MarshalBinary() (data []byte, err error)
 			})
 			j, err := enum.MarshalBinary()
-			if tC.Expected.IsInvalid {
+			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
 				require.Error(t, err)
 				return
 			}
@@ -65,7 +93,7 @@ func AssertSerializers[T any](t *testing.T, tC TestCase, assert string) {
 				MarshalJSON() ([]byte, error)
 			})
 			actual, err := enum.MarshalJSON()
-			if tC.Expected.IsInvalid {
+			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
 				require.Error(t, err)
 				return
 			}
@@ -79,7 +107,7 @@ func AssertSerializers[T any](t *testing.T, tC TestCase, assert string) {
 				Value() (driver.Value, error)
 			})
 			j, err := enum.Value()
-			if tC.Expected.IsInvalid {
+			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
 				require.Error(t, err)
 				return
 			}
@@ -93,7 +121,7 @@ func AssertSerializers[T any](t *testing.T, tC TestCase, assert string) {
 				MarshalText() (text []byte, err error)
 			})
 			j, err := enum.MarshalText()
-			if tC.Expected.IsInvalid {
+			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
 				require.Error(t, err)
 				return
 			}
@@ -101,21 +129,22 @@ func AssertSerializers[T any](t *testing.T, tC TestCase, assert string) {
 			require.Equal(t, tC.Expected.AsSerialized, string(j))
 		})
 
-	case "yaml":
+	case "yaml", "yaml.v3":
 		t.Run("MarhsalYAML", func(t *testing.T) {
 			enum := tC.Enum.(interface {
 				MarshalYAML() (any, error)
 			})
 			j, err := enum.MarshalYAML()
-			if tC.Expected.IsInvalid {
+			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
 				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
 			require.Equal(t, tC.Expected.AsSerialized, j)
 		})
+
 	default:
-		require.FailNow(t, "invalid input")
+		require.FailNow(t, "unsupported serializer %q", serializer)
 	}
 }
 
@@ -126,17 +155,25 @@ func ToPointer[T any](v T) *T {
 // `zeroValuer` helps to constructor non-"nil" instances of pointer type T.
 // It is a workaround for Limitations of Generics when it comes to mutable
 // interface functions with pointer receiver.
-func ZeroValuer[T any]() *T {
+func zeroValuer[T any]() *T {
 	var v T
 	return &v
 }
 
+func assertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, deserializers []string) {
+	for _, deserializer := range deserializers {
+		t.Run(fmt.Sprintf("deserialize %q", deserializer), func(t *testing.T) {
+			assertDeserializer[T](t, tC, cfg, deserializer)
+		})
+	}
+}
+
 // `zeroValuer` helps to constructor non-"nil" instances of pointer type T.
-func AssertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, assert string, zeroValuer func() T) {
-	switch assert {
+func assertDeserializer[T any](t *testing.T, tC TestCase, cfg TestConfig, deserializer string) {
+	switch deserializer {
 	case "binary":
 		t.Run("UnmarshalBinary", func(t *testing.T) {
-			enum := zeroValuer()
+			enum := zeroValuer[T]()
 			err := (any)(enum).(interface {
 				UnmarshalBinary(data []byte) error
 			}).UnmarshalBinary([]byte(tC.From))
@@ -152,7 +189,7 @@ func AssertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, asser
 		t.Run("UnmarshalGQL", func(t *testing.T) {
 			values := []any{tC.From, []byte(tC.From), stringer{tC.From}}
 			for _, v := range values {
-				enum := zeroValuer()
+				enum := zeroValuer[T]()
 				err := (any)(enum).(interface {
 					UnmarshalGQL(value any) error
 				}).UnmarshalGQL(v)
@@ -166,11 +203,11 @@ func AssertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, asser
 		})
 		t.Run("UnmarshalGQL from <nil>", func(t *testing.T) {
 			var v any = nil
-			enum := zeroValuer()
+			enum := zeroValuer[T]()
 			err := (any)(enum).(interface {
 				UnmarshalGQL(value any) error
 			}).UnmarshalGQL(v)
-			require.Equal(t, zeroValuer(), enum)
+			require.Equal(t, zeroValuer[T](), enum)
 			if !cfg.SupportUndefined {
 				require.Error(t, err)
 				return
@@ -180,7 +217,7 @@ func AssertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, asser
 
 	case "json":
 		t.Run("UnmarshalJSON", func(t *testing.T) {
-			enum := zeroValuer()
+			enum := zeroValuer[T]()
 			err := (any)(enum).(interface {
 				UnmarshalJSON([]byte) error
 			}).UnmarshalJSON([]byte("\"" + tC.From + "\""))
@@ -196,7 +233,7 @@ func AssertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, asser
 		t.Run("Scan (SQL)", func(t *testing.T) {
 			values := []any{tC.From, []byte(tC.From), stringer{tC.From}}
 			for _, v := range values {
-				enum := zeroValuer()
+				enum := zeroValuer[T]()
 				err := (any)(enum).(interface {
 					Scan(src any) error
 				}).Scan(v)
@@ -210,11 +247,11 @@ func AssertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, asser
 		})
 		t.Run("Scan from <nil> (SQL)", func(t *testing.T) {
 			var v any = nil
-			enum := zeroValuer()
+			enum := zeroValuer[T]()
 			err := (any)(enum).(interface {
 				Scan(src any) error
 			}).Scan(v)
-			require.Equal(t, zeroValuer(), enum)
+			require.Equal(t, zeroValuer[T](), enum)
 			if !cfg.SupportUndefined {
 				require.Error(t, err)
 				return
@@ -224,7 +261,7 @@ func AssertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, asser
 
 	case "text":
 		t.Run("UnmarshalText", func(t *testing.T) {
-			enum := zeroValuer()
+			enum := zeroValuer[T]()
 			err := (any)(enum).(interface {
 				UnmarshalText(text []byte) error
 			}).UnmarshalText([]byte(tC.From))
@@ -238,7 +275,7 @@ func AssertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, asser
 
 	case "yaml":
 		t.Run("UnmarshalYAML", func(t *testing.T) {
-			enum := zeroValuer()
+			enum := zeroValuer[T]()
 			err := (any)(enum).(interface {
 				UnmarshalYAML(unmarshal func(any) error) error
 			}).UnmarshalYAML(func(i any) error {
@@ -251,7 +288,140 @@ func AssertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, asser
 			require.NoError(t, err)
 			require.Equal(t, tC.Enum, enum)
 		})
+
+	case "yaml.v3":
+		t.Run("UnmarshalYAML", func(t *testing.T) {
+			enum := zeroValuer[T]()
+			err := (any)(enum).(interface {
+				UnmarshalYAML(n *yaml.Node) error
+			}).UnmarshalYAML(&yaml.Node{Tag: "!!str", Value: tC.From})
+			if tC.Expected.IsInvalid {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tC.Enum, enum)
+		})
 	default:
-		require.FailNow(t, "invalid deserializer %q")
+		require.FailNow(t, "unsupported deserializer %q", deserializer)
 	}
+}
+
+func assertMissingSerializer[T any](t *testing.T, serializer string) {
+	var ok bool
+	switch serializer {
+	case "binary":
+		t.Run("MarhsalBinary", func(t *testing.T) {
+			var enum T
+			_, ok = (any)(enum).(interface {
+				MarshalBinary() (data []byte, err error)
+			})
+		})
+
+	case "gql":
+		t.Run("MarhsalGQL", func(t *testing.T) {
+			var enum T
+			_, ok = (any)(enum).(interface {
+				MarshalGQL(w io.Writer)
+			})
+		})
+
+	case "json":
+		t.Run("MarhsalJSON", func(t *testing.T) {
+			var enum T
+			_, ok = (any)(enum).(interface {
+				MarshalJSON() ([]byte, error)
+			})
+		})
+
+	case "sql":
+		t.Run("Value (SQL)", func(t *testing.T) {
+			var enum T
+			_, ok = (any)(enum).(interface {
+				Value() (driver.Value, error)
+			})
+		})
+
+	case "text":
+		t.Run("MarhsalText", func(t *testing.T) {
+			var enum T
+			_, ok = (any)(enum).(interface {
+				MarshalText() (text []byte, err error)
+			})
+		})
+
+	case "yaml", "yaml.v3":
+		t.Run("MarhsalYAML", func(t *testing.T) {
+			var enum T
+			_, ok = (any)(enum).(interface {
+				MarshalYAML() (any, error)
+			})
+		})
+
+	default:
+		require.FailNow(t, "unsupported serializer %q", serializer)
+	}
+	require.Falsef(t, ok, "Expected to NOT implement interface for %q", serializer)
+}
+
+func assertMissingDeserializer[T any](t *testing.T, deserializer string) {
+	var ok bool
+	switch deserializer {
+	case "binary":
+		t.Run("UnmarshalBinary", func(t *testing.T) {
+			_, ok = (any)(zeroValuer[T]()).(interface {
+				UnmarshalBinary(data []byte) error
+			})
+		})
+
+	case "gql":
+		t.Run("UnmarshalGQL", func(t *testing.T) {
+			_, ok = (any)(zeroValuer[T]()).(interface {
+				UnmarshalGQL(value any) error
+			})
+		})
+		t.Run("UnmarshalGQL from <nil>", func(t *testing.T) {
+			_, ok = (any)(zeroValuer[T]()).(interface {
+				UnmarshalGQL(value any) error
+			})
+		})
+
+	case "json":
+		t.Run("UnmarshalJSON", func(t *testing.T) {
+			_, ok = (any)(zeroValuer[T]()).(interface {
+				UnmarshalJSON([]byte) error
+			})
+		})
+
+	case "sql":
+		t.Run("Scan (SQL)", func(t *testing.T) {
+			_, ok = (any)(zeroValuer[T]()).(interface {
+				Scan(src any) error
+			})
+		})
+
+	case "text":
+		t.Run("UnmarshalText", func(t *testing.T) {
+			_, ok = (any)(zeroValuer[T]()).(interface {
+				UnmarshalText(text []byte) error
+			})
+		})
+
+	case "yaml":
+		t.Run("UnmarshalYAML", func(t *testing.T) {
+			_, ok = (any)(zeroValuer[T]()).(interface {
+				UnmarshalYAML(unmarshal func(any) error) error
+			})
+		})
+
+	case "yaml.v3":
+		t.Run("UnmarshalYAML", func(t *testing.T) {
+			_, ok = (any)(zeroValuer[T]()).(interface {
+				UnmarshalYAML(n *yaml.Node) error
+			})
+		})
+	default:
+		require.FailNow(t, "unsupported deserializer %q", deserializer)
+	}
+	require.Falsef(t, ok, "Expected to NOT implement interface for %q", deserializer)
 }

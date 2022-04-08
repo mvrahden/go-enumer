@@ -1,7 +1,6 @@
 package planets
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/mvrahden/go-enumer/pkg/utils"
@@ -26,22 +25,8 @@ func TestEnums(t *testing.T) {
 				{From: "Neptune", Enum: toPtr(PlanetNeptune), Expected: utils.Expected{AsSerialized: "Neptune"}},
 			}
 			for idx, tC := range testCases {
-				t.Run(fmt.Sprintf("Serializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertSerializers[Planet](t, tC, "binary")
-					utils.AssertSerializers[Planet](t, tC, "gql")
-					utils.AssertSerializers[Planet](t, tC, "json")
-					utils.AssertSerializers[Planet](t, tC, "sql")
-					utils.AssertSerializers[Planet](t, tC, "text")
-					utils.AssertSerializers[Planet](t, tC, "yaml")
-				})
-				t.Run(fmt.Sprintf("Deserializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertDeserializers(t, tC, cfg, "binary", utils.ZeroValuer[Planet])
-					utils.AssertDeserializers(t, tC, cfg, "gql", utils.ZeroValuer[Planet])
-					utils.AssertDeserializers(t, tC, cfg, "json", utils.ZeroValuer[Planet])
-					utils.AssertDeserializers(t, tC, cfg, "sql", utils.ZeroValuer[Planet])
-					utils.AssertDeserializers(t, tC, cfg, "text", utils.ZeroValuer[Planet])
-					utils.AssertDeserializers(t, tC, cfg, "yaml", utils.ZeroValuer[Planet])
-				})
+				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				utils.AssertSerializationInterfacesFor[Planet](t, idx, tC, cfg, serializers)
 			}
 		})
 	})
@@ -50,9 +35,11 @@ func TestEnums(t *testing.T) {
 			cfg := utils.TestConfig{}
 			toPtr := utils.ToPointer[PlanetWithDefault]
 			testCases := []utils.TestCase{
+				// hint: this 1st case is invalid upon deserialization,
+				// but valid upon serialization (as it is the default value
+				// but does not support "undefined")
+				{From: "", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "Earth", IsInvalid: true, IsDefault: true}},
 				{From: "PlanetWithDefault(9)", Enum: toPtr(9), Expected: utils.Expected{AsSerialized: "PlanetWithDefault(9)", IsInvalid: true}},
-				// TODO: fix these tests
-				// {From: "", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "PlanetWithDefault(0)", invalid: true}},
 				{From: "Earth", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "Earth"}},
 				{From: "Mars", Enum: toPtr(PlanetWithDefaultMars), Expected: utils.Expected{AsSerialized: "Mars"}},
 				{From: "Pluto", Enum: toPtr(PlanetWithDefaultPluto), Expected: utils.Expected{AsSerialized: "Pluto"}},
@@ -64,22 +51,8 @@ func TestEnums(t *testing.T) {
 				{From: "Neptune", Enum: toPtr(PlanetWithDefaultNeptune), Expected: utils.Expected{AsSerialized: "Neptune"}},
 			}
 			for idx, tC := range testCases {
-				t.Run(fmt.Sprintf("Serializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertSerializers[PlanetWithDefault](t, tC, "binary")
-					utils.AssertSerializers[PlanetWithDefault](t, tC, "gql")
-					utils.AssertSerializers[PlanetWithDefault](t, tC, "json")
-					utils.AssertSerializers[PlanetWithDefault](t, tC, "sql")
-					utils.AssertSerializers[PlanetWithDefault](t, tC, "text")
-					utils.AssertSerializers[PlanetWithDefault](t, tC, "yaml")
-				})
-				t.Run(fmt.Sprintf("Deserializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertDeserializers(t, tC, cfg, "binary", utils.ZeroValuer[PlanetWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "gql", utils.ZeroValuer[PlanetWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "json", utils.ZeroValuer[PlanetWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "sql", utils.ZeroValuer[PlanetWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "text", utils.ZeroValuer[PlanetWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "yaml", utils.ZeroValuer[PlanetWithDefault])
-				})
+				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				utils.AssertSerializationInterfacesFor[PlanetWithDefault](t, idx, tC, cfg, serializers)
 			}
 		})
 	})
@@ -104,22 +77,8 @@ func TestEnums(t *testing.T) {
 				{From: "Neptune", Enum: toPtr(PlanetSupportUndefinedNeptune), Expected: utils.Expected{AsSerialized: "Neptune"}},
 			}
 			for idx, tC := range testCases {
-				t.Run(fmt.Sprintf("Serializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertSerializers[PlanetSupportUndefined](t, tC, "binary")
-					utils.AssertSerializers[PlanetSupportUndefined](t, tC, "gql")
-					utils.AssertSerializers[PlanetSupportUndefined](t, tC, "json")
-					utils.AssertSerializers[PlanetSupportUndefined](t, tC, "sql")
-					utils.AssertSerializers[PlanetSupportUndefined](t, tC, "text")
-					utils.AssertSerializers[PlanetSupportUndefined](t, tC, "yaml")
-				})
-				t.Run(fmt.Sprintf("Deserializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertDeserializers(t, tC, cfg, "binary", utils.ZeroValuer[PlanetSupportUndefined])
-					utils.AssertDeserializers(t, tC, cfg, "gql", utils.ZeroValuer[PlanetSupportUndefined])
-					utils.AssertDeserializers(t, tC, cfg, "json", utils.ZeroValuer[PlanetSupportUndefined])
-					utils.AssertDeserializers(t, tC, cfg, "sql", utils.ZeroValuer[PlanetSupportUndefined])
-					utils.AssertDeserializers(t, tC, cfg, "text", utils.ZeroValuer[PlanetSupportUndefined])
-					utils.AssertDeserializers(t, tC, cfg, "yaml", utils.ZeroValuer[PlanetSupportUndefined])
-				})
+				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				utils.AssertSerializationInterfacesFor[PlanetSupportUndefined](t, idx, tC, cfg, serializers)
 			}
 		})
 	})
@@ -141,22 +100,8 @@ func TestEnums(t *testing.T) {
 				{From: "Neptune", Enum: toPtr(PlanetSupportUndefinedWithDefaultNeptune), Expected: utils.Expected{AsSerialized: "Neptune"}},
 			}
 			for idx, tC := range testCases {
-				t.Run(fmt.Sprintf("Serializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertSerializers[PlanetSupportUndefinedWithDefault](t, tC, "binary")
-					utils.AssertSerializers[PlanetSupportUndefinedWithDefault](t, tC, "gql")
-					utils.AssertSerializers[PlanetSupportUndefinedWithDefault](t, tC, "json")
-					utils.AssertSerializers[PlanetSupportUndefinedWithDefault](t, tC, "sql")
-					utils.AssertSerializers[PlanetSupportUndefinedWithDefault](t, tC, "text")
-					utils.AssertSerializers[PlanetSupportUndefinedWithDefault](t, tC, "yaml")
-				})
-				t.Run(fmt.Sprintf("Deserializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-					utils.AssertDeserializers(t, tC, cfg, "binary", utils.ZeroValuer[PlanetSupportUndefinedWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "gql", utils.ZeroValuer[PlanetSupportUndefinedWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "json", utils.ZeroValuer[PlanetSupportUndefinedWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "sql", utils.ZeroValuer[PlanetSupportUndefinedWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "text", utils.ZeroValuer[PlanetSupportUndefinedWithDefault])
-					utils.AssertDeserializers(t, tC, cfg, "yaml", utils.ZeroValuer[PlanetSupportUndefinedWithDefault])
-				})
+				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				utils.AssertSerializationInterfacesFor[PlanetSupportUndefinedWithDefault](t, idx, tC, cfg, serializers)
 			}
 		})
 	})
