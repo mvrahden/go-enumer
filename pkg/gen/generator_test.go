@@ -24,10 +24,10 @@ func TestGenerator(t *testing.T) {
 		directory   string
 		description string
 	}{
-		{"booking", "CSV source"},
-		{"pills", "compatibility for various integer-like types"},
-		{"greetings", "standard enum and enum with default value"},
-		{"planets", "standard enum and enum with default value support `ignore-case` and `undefined`"},
+		// {"booking", "CSV source"},
+		// {"pills", "compatibility for various integer-like types"},
+		// {"greetings", "standard enum and enum with default value"},
+		// {"planets", "standard enum and enum with default value support `ignore-case` and `undefined`"},
 		{"project", "a set of more realistic use cases"},
 	} {
 		pkg := path.Join(packageBase, "examples", tC.directory)

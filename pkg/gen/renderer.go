@@ -76,6 +76,15 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		buf.WriteString(")\n\n")
 	}
 
+	{ // write enum errors
+		buf.WriteString(
+			`var (
+	ErrNoValidEnum = errors.New("not a valid enum")
+)
+
+`)
+	}
+
 	for _, ts := range f.TypeSpecs {
 		r.renderForTypeSpec(buf, ts)
 	}
@@ -226,6 +235,14 @@ func %[1]sStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_%[2]s %[1]s) IsValid() bool {
 	return _%[2]s >= _%[1]sValueRange[0] && _%[2]s <= _%[1]sValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_%[2]s %[1]s) Validate() error {
+	if !_%[2]s.IsValid() {
+		return fmt.Errorf("%[1]s(%%d) is %%w", _%[2]s, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.
@@ -433,8 +450,8 @@ func (r *renderUtil) renderBinarySerializers(buf *bytes.Buffer, ts *TypeSpec, ig
 	}
 	buf.WriteString(fmt.Sprintf(`// MarshalBinary implements the encoding.BinaryMarshaler interface for %[1]s.
 func (_%[2]s %[1]s) MarshalBinary() ([]byte, error) {
-	if !_%[2]s.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %%q as %[1]s", _%[2]s)
+	if err := _%[2]s.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %%q as %[1]s. %%w", _%[2]s, err)
 	}
 	return []byte(_%[2]s.String()), nil
 }
@@ -511,8 +528,8 @@ func (r *renderUtil) renderJsonSerializers(buf *bytes.Buffer, ts *TypeSpec, igno
 	}
 	buf.WriteString(fmt.Sprintf(`// MarshalJSON implements the json.Marshaler interface for %[1]s.
 func (_%[2]s %[1]s) MarshalJSON() ([]byte, error) {
-	if !_%[2]s.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %%q as %[1]s", _%[2]s)
+	if err := _%[2]s.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %%q as %[1]s. %%w", _%[2]s, err)
 	}
 	return json.Marshal(_%[2]s.String())
 }
@@ -549,8 +566,8 @@ func (r *renderUtil) renderTextSerializers(buf *bytes.Buffer, ts *TypeSpec, igno
 	}
 	buf.WriteString(fmt.Sprintf(`// MarshalText implements the encoding.TextMarshaler interface for %[1]s.
 func (_%[2]s %[1]s) MarshalText() ([]byte, error) {
-	if !_%[2]s.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %%q as %[1]s", _%[2]s)
+	if err := _%[2]s.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %%q as %[1]s. %%w", _%[2]s, err)
 	}
 	return []byte(_%[2]s.String()), nil
 }
@@ -583,8 +600,8 @@ func (r *renderUtil) renderSqlSerializers(buf *bytes.Buffer, ts *TypeSpec, ignor
 	}`, ts.Name)
 	}
 	buf.WriteString(fmt.Sprintf(`func (_%[2]s %[1]s) Value() (driver.Value, error) {
-	if !_%[2]s.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %%q as %[1]s", _%[2]s)
+	if err := _%[2]s.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %%q as %[1]s. %%w", _%[2]s, err)
 	}
 	return _%[2]s.String(), nil
 }
@@ -621,8 +638,8 @@ func (r *renderUtil) renderYamlSerializers(buf *bytes.Buffer, ts *TypeSpec, igno
 	}
 	buf.WriteString(fmt.Sprintf(`// MarshalYAML implements a YAML Marshaler for %[1]s.
 func (_%[2]s %[1]s) MarshalYAML() (interface{}, error) {
-	if !_%[2]s.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %%q as %[1]s", _%[2]s)
+	if err := _%[2]s.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %%q as %[1]s. %%w", _%[2]s, err)
 	}
 	return _%[2]s.String(), nil
 }

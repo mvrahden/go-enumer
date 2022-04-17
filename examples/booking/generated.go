@@ -4,7 +4,12 @@ package booking
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+)
+
+var (
+	ErrNoValidEnum = errors.New("not a valid enum")
 )
 
 const (
@@ -37,6 +42,14 @@ func BookingStateStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_b BookingState) IsValid() bool {
 	return _b >= _BookingStateValueRange[0] && _b <= _BookingStateValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_b BookingState) Validate() error {
+	if !_b.IsValid() {
+		return fmt.Errorf("BookingState(%d) is %w", _b, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.
@@ -104,8 +117,8 @@ func BookingStateFromStringIgnoreCase(raw string) (BookingState, bool) {
 
 // MarshalYAML implements a YAML Marshaler for BookingState.
 func (_b BookingState) MarshalYAML() (interface{}, error) {
-	if !_b.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as BookingState", _b)
+	if err := _b.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as BookingState. %w", _b, err)
 	}
 	return _b.String(), nil
 }
@@ -163,6 +176,14 @@ func BookingStateWithConfigStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_b BookingStateWithConfig) IsValid() bool {
 	return _b >= _BookingStateWithConfigValueRange[0] && _b <= _BookingStateWithConfigValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_b BookingStateWithConfig) Validate() error {
+	if !_b.IsValid() {
+		return fmt.Errorf("BookingStateWithConfig(%d) is %w", _b, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.
@@ -233,8 +254,8 @@ func BookingStateWithConfigFromStringIgnoreCase(raw string) (BookingStateWithCon
 
 // MarshalJSON implements the json.Marshaler interface for BookingStateWithConfig.
 func (_b BookingStateWithConfig) MarshalJSON() ([]byte, error) {
-	if !_b.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as BookingStateWithConfig", _b)
+	if err := _b.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as BookingStateWithConfig. %w", _b, err)
 	}
 	return json.Marshal(_b.String())
 }
@@ -256,8 +277,8 @@ func (_b *BookingStateWithConfig) UnmarshalJSON(data []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for BookingStateWithConfig.
 func (_b BookingStateWithConfig) MarshalYAML() (interface{}, error) {
-	if !_b.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as BookingStateWithConfig", _b)
+	if err := _b.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as BookingStateWithConfig. %w", _b, err)
 	}
 	return _b.String(), nil
 }
@@ -307,6 +328,14 @@ func BookingStateWithConstantsStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_b BookingStateWithConstants) IsValid() bool {
 	return _b >= _BookingStateWithConstantsValueRange[0] && _b <= _BookingStateWithConstantsValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_b BookingStateWithConstants) Validate() error {
+	if !_b.IsValid() {
+		return fmt.Errorf("BookingStateWithConstants(%d) is %w", _b, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.
@@ -374,8 +403,8 @@ func BookingStateWithConstantsFromStringIgnoreCase(raw string) (BookingStateWith
 
 // MarshalYAML implements a YAML Marshaler for BookingStateWithConstants.
 func (_b BookingStateWithConstants) MarshalYAML() (interface{}, error) {
-	if !_b.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as BookingStateWithConstants", _b)
+	if err := _b.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as BookingStateWithConstants. %w", _b, err)
 	}
 	return _b.String(), nil
 }

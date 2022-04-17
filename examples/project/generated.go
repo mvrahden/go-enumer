@@ -5,9 +5,14 @@ package project
 import (
 	"database/sql/driver"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"strconv"
+)
+
+var (
+	ErrNoValidEnum = errors.New("not a valid enum")
 )
 
 const (
@@ -50,6 +55,14 @@ func AccountStateStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_a AccountState) IsValid() bool {
 	return _a >= _AccountStateValueRange[0] && _a <= _AccountStateValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_a AccountState) Validate() error {
+	if !_a.IsValid() {
+		return fmt.Errorf("AccountState(%d) is %w", _a, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.
@@ -104,8 +117,8 @@ func AccountStateFromStringIgnoreCase(raw string) (AccountState, bool) {
 
 // MarshalJSON implements the json.Marshaler interface for AccountState.
 func (_a AccountState) MarshalJSON() ([]byte, error) {
-	if !_a.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as AccountState", _a)
+	if err := _a.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as AccountState. %w", _a, err)
 	}
 	return json.Marshal(_a.String())
 }
@@ -129,8 +142,8 @@ func (_a *AccountState) UnmarshalJSON(data []byte) error {
 }
 
 func (_a AccountState) Value() (driver.Value, error) {
-	if !_a.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as AccountState", _a)
+	if err := _a.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as AccountState. %w", _a, err)
 	}
 	return _a.String(), nil
 }
@@ -190,6 +203,14 @@ func CurrencyStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_c Currency) IsValid() bool {
 	return _c >= _CurrencyValueRange[0] && _c <= _CurrencyValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_c Currency) Validate() error {
+	if !_c.IsValid() {
+		return fmt.Errorf("Currency(%d) is %w", _c, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.
@@ -255,8 +276,8 @@ func CurrencyFromStringIgnoreCase(raw string) (Currency, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for Currency.
 func (_c Currency) MarshalBinary() ([]byte, error) {
-	if !_c.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+	if err := _c.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Currency. %w", _c, err)
 	}
 	return []byte(_c.String()), nil
 }
@@ -309,8 +330,8 @@ func (_c *Currency) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for Currency.
 func (_c Currency) MarshalJSON() ([]byte, error) {
-	if !_c.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+	if err := _c.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Currency. %w", _c, err)
 	}
 	return json.Marshal(_c.String())
 }
@@ -334,8 +355,8 @@ func (_c *Currency) UnmarshalJSON(data []byte) error {
 }
 
 func (_c Currency) Value() (driver.Value, error) {
-	if !_c.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as Currency", _c)
+	if err := _c.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as Currency. %w", _c, err)
 	}
 	return _c.String(), nil
 }
@@ -367,8 +388,8 @@ func (_c *Currency) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for Currency.
 func (_c Currency) MarshalText() ([]byte, error) {
-	if !_c.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+	if err := _c.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Currency. %w", _c, err)
 	}
 	return []byte(_c.String()), nil
 }
@@ -390,8 +411,8 @@ func (_c *Currency) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for Currency.
 func (_c Currency) MarshalYAML() (interface{}, error) {
-	if !_c.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Currency", _c)
+	if err := _c.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Currency. %w", _c, err)
 	}
 	return _c.String(), nil
 }
@@ -442,6 +463,14 @@ func TimezoneStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_t Timezone) IsValid() bool {
 	return _t >= _TimezoneValueRange[0] && _t <= _TimezoneValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_t Timezone) Validate() error {
+	if !_t.IsValid() {
+		return fmt.Errorf("Timezone(%d) is %w", _t, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.
@@ -1334,8 +1363,8 @@ func TimezoneFromStringIgnoreCase(raw string) (Timezone, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for Timezone.
 func (_t Timezone) MarshalBinary() ([]byte, error) {
-	if !_t.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Timezone", _t)
+	if err := _t.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Timezone. %w", _t, err)
 	}
 	return []byte(_t.String()), nil
 }
@@ -1388,8 +1417,8 @@ func (_t *Timezone) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for Timezone.
 func (_t Timezone) MarshalJSON() ([]byte, error) {
-	if !_t.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Timezone", _t)
+	if err := _t.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Timezone. %w", _t, err)
 	}
 	return json.Marshal(_t.String())
 }
@@ -1413,8 +1442,8 @@ func (_t *Timezone) UnmarshalJSON(data []byte) error {
 }
 
 func (_t Timezone) Value() (driver.Value, error) {
-	if !_t.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as Timezone", _t)
+	if err := _t.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as Timezone. %w", _t, err)
 	}
 	return _t.String(), nil
 }
@@ -1446,8 +1475,8 @@ func (_t *Timezone) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for Timezone.
 func (_t Timezone) MarshalText() ([]byte, error) {
-	if !_t.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Timezone", _t)
+	if err := _t.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Timezone. %w", _t, err)
 	}
 	return []byte(_t.String()), nil
 }
@@ -1469,8 +1498,8 @@ func (_t *Timezone) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for Timezone.
 func (_t Timezone) MarshalYAML() (interface{}, error) {
-	if !_t.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Timezone", _t)
+	if err := _t.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Timezone. %w", _t, err)
 	}
 	return _t.String(), nil
 }
@@ -1534,6 +1563,14 @@ func (_u UserRole) IsValid() bool {
 	return _u >= _UserRoleValueRange[0] && _u <= _UserRoleValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_u UserRole) Validate() error {
+	if !_u.IsValid() {
+		return fmt.Errorf("UserRole(%d) is %w", _u, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern UserRole(%d) instead.
@@ -1587,8 +1624,8 @@ func UserRoleFromStringIgnoreCase(raw string) (UserRole, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for UserRole.
 func (_u UserRole) MarshalBinary() ([]byte, error) {
-	if !_u.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
+	if err := _u.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as UserRole. %w", _u, err)
 	}
 	return []byte(_u.String()), nil
 }
@@ -1635,8 +1672,8 @@ func (_u *UserRole) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for UserRole.
 func (_u UserRole) MarshalJSON() ([]byte, error) {
-	if !_u.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
+	if err := _u.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as UserRole. %w", _u, err)
 	}
 	return json.Marshal(_u.String())
 }
@@ -1657,8 +1694,8 @@ func (_u *UserRole) UnmarshalJSON(data []byte) error {
 }
 
 func (_u UserRole) Value() (driver.Value, error) {
-	if !_u.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as UserRole", _u)
+	if err := _u.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as UserRole. %w", _u, err)
 	}
 	return _u.String(), nil
 }
@@ -1687,8 +1724,8 @@ func (_u *UserRole) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for UserRole.
 func (_u UserRole) MarshalText() ([]byte, error) {
-	if !_u.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
+	if err := _u.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as UserRole. %w", _u, err)
 	}
 	return []byte(_u.String()), nil
 }
@@ -1707,8 +1744,8 @@ func (_u *UserRole) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for UserRole.
 func (_u UserRole) MarshalYAML() (interface{}, error) {
-	if !_u.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as UserRole", _u)
+	if err := _u.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as UserRole. %w", _u, err)
 	}
 	return _u.String(), nil
 }

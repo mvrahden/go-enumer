@@ -5,9 +5,14 @@ package greetings
 import (
 	"database/sql/driver"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"strconv"
+)
+
+var (
+	ErrNoValidEnum = errors.New("not a valid enum")
 )
 
 const (
@@ -57,6 +62,14 @@ func GreetingStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_g Greeting) IsValid() bool {
 	return _g >= _GreetingValueRange[0] && _g <= _GreetingValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_g Greeting) Validate() error {
+	if !_g.IsValid() {
+		return fmt.Errorf("Greeting(%d) is %w", _g, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.
@@ -119,8 +132,8 @@ func GreetingFromStringIgnoreCase(raw string) (Greeting, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for Greeting.
 func (_g Greeting) MarshalBinary() ([]byte, error) {
-	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g)
+	if err := _g.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Greeting. %w", _g, err)
 	}
 	return []byte(_g.String()), nil
 }
@@ -167,8 +180,8 @@ func (_g *Greeting) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for Greeting.
 func (_g Greeting) MarshalJSON() ([]byte, error) {
-	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g)
+	if err := _g.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Greeting. %w", _g, err)
 	}
 	return json.Marshal(_g.String())
 }
@@ -189,8 +202,8 @@ func (_g *Greeting) UnmarshalJSON(data []byte) error {
 }
 
 func (_g Greeting) Value() (driver.Value, error) {
-	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as Greeting", _g)
+	if err := _g.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as Greeting. %w", _g, err)
 	}
 	return _g.String(), nil
 }
@@ -219,8 +232,8 @@ func (_g *Greeting) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for Greeting.
 func (_g Greeting) MarshalText() ([]byte, error) {
-	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g)
+	if err := _g.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Greeting. %w", _g, err)
 	}
 	return []byte(_g.String()), nil
 }
@@ -239,8 +252,8 @@ func (_g *Greeting) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for Greeting.
 func (_g Greeting) MarshalYAML() (interface{}, error) {
-	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Greeting", _g)
+	if err := _g.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Greeting. %w", _g, err)
 	}
 	return _g.String(), nil
 }
@@ -309,6 +322,14 @@ func (_g GreetingWithDefault) IsValid() bool {
 	return _g >= _GreetingWithDefaultValueRange[0] && _g <= _GreetingWithDefaultValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_g GreetingWithDefault) Validate() error {
+	if !_g.IsValid() {
+		return fmt.Errorf("GreetingWithDefault(%d) is %w", _g, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern GreetingWithDefault(%d) instead.
@@ -368,8 +389,8 @@ func GreetingWithDefaultFromStringIgnoreCase(raw string) (GreetingWithDefault, b
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for GreetingWithDefault.
 func (_g GreetingWithDefault) MarshalBinary() ([]byte, error) {
-	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as GreetingWithDefault", _g)
+	if err := _g.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as GreetingWithDefault. %w", _g, err)
 	}
 	return []byte(_g.String()), nil
 }
@@ -416,8 +437,8 @@ func (_g *GreetingWithDefault) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for GreetingWithDefault.
 func (_g GreetingWithDefault) MarshalJSON() ([]byte, error) {
-	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as GreetingWithDefault", _g)
+	if err := _g.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as GreetingWithDefault. %w", _g, err)
 	}
 	return json.Marshal(_g.String())
 }
@@ -438,8 +459,8 @@ func (_g *GreetingWithDefault) UnmarshalJSON(data []byte) error {
 }
 
 func (_g GreetingWithDefault) Value() (driver.Value, error) {
-	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as GreetingWithDefault", _g)
+	if err := _g.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as GreetingWithDefault. %w", _g, err)
 	}
 	return _g.String(), nil
 }
@@ -468,8 +489,8 @@ func (_g *GreetingWithDefault) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for GreetingWithDefault.
 func (_g GreetingWithDefault) MarshalText() ([]byte, error) {
-	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as GreetingWithDefault", _g)
+	if err := _g.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as GreetingWithDefault. %w", _g, err)
 	}
 	return []byte(_g.String()), nil
 }
@@ -488,8 +509,8 @@ func (_g *GreetingWithDefault) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for GreetingWithDefault.
 func (_g GreetingWithDefault) MarshalYAML() (interface{}, error) {
-	if !_g.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as GreetingWithDefault", _g)
+	if err := _g.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as GreetingWithDefault. %w", _g, err)
 	}
 	return _g.String(), nil
 }

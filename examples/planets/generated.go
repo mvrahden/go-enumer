@@ -5,9 +5,14 @@ package planets
 import (
 	"database/sql/driver"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"strconv"
+)
+
+var (
+	ErrNoValidEnum = errors.New("not a valid enum")
 )
 
 const (
@@ -53,6 +58,14 @@ func PlanetStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_p Planet) IsValid() bool {
 	return _p >= _PlanetValueRange[0] && _p <= _PlanetValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_p Planet) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("Planet(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.
@@ -113,8 +126,8 @@ func PlanetFromStringIgnoreCase(raw string) (Planet, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for Planet.
 func (_p Planet) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Planet", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Planet. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -167,8 +180,8 @@ func (_p *Planet) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for Planet.
 func (_p Planet) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Planet", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Planet. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -192,8 +205,8 @@ func (_p *Planet) UnmarshalJSON(data []byte) error {
 }
 
 func (_p Planet) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as Planet", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as Planet. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -225,8 +238,8 @@ func (_p *Planet) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for Planet.
 func (_p Planet) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Planet", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Planet. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -248,8 +261,8 @@ func (_p *Planet) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for Planet.
 func (_p Planet) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as Planet", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as Planet. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -323,6 +336,14 @@ func (_p PlanetSupportUndefined) IsValid() bool {
 	return _p >= _PlanetSupportUndefinedValueRange[0] && _p <= _PlanetSupportUndefinedValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PlanetSupportUndefined) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PlanetSupportUndefined(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PlanetSupportUndefined(%d) instead.
@@ -387,8 +408,8 @@ func PlanetSupportUndefinedFromStringIgnoreCase(raw string) (PlanetSupportUndefi
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PlanetSupportUndefined.
 func (_p PlanetSupportUndefined) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetSupportUndefined", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetSupportUndefined. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -435,8 +456,8 @@ func (_p *PlanetSupportUndefined) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PlanetSupportUndefined.
 func (_p PlanetSupportUndefined) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetSupportUndefined", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetSupportUndefined. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -457,8 +478,8 @@ func (_p *PlanetSupportUndefined) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PlanetSupportUndefined) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PlanetSupportUndefined", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PlanetSupportUndefined. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -487,8 +508,8 @@ func (_p *PlanetSupportUndefined) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PlanetSupportUndefined.
 func (_p PlanetSupportUndefined) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetSupportUndefined", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetSupportUndefined. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -507,8 +528,8 @@ func (_p *PlanetSupportUndefined) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PlanetSupportUndefined.
 func (_p PlanetSupportUndefined) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetSupportUndefined", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetSupportUndefined. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -574,6 +595,14 @@ func (_p PlanetSupportUndefinedWithDefault) IsValid() bool {
 	return _p >= _PlanetSupportUndefinedWithDefaultValueRange[0] && _p <= _PlanetSupportUndefinedWithDefaultValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PlanetSupportUndefinedWithDefault) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PlanetSupportUndefinedWithDefault(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PlanetSupportUndefinedWithDefault(%d) instead.
@@ -637,8 +666,8 @@ func PlanetSupportUndefinedWithDefaultFromStringIgnoreCase(raw string) (PlanetSu
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PlanetSupportUndefinedWithDefault.
 func (_p PlanetSupportUndefinedWithDefault) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetSupportUndefinedWithDefault", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetSupportUndefinedWithDefault. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -685,8 +714,8 @@ func (_p *PlanetSupportUndefinedWithDefault) UnmarshalGQL(value interface{}) err
 
 // MarshalJSON implements the json.Marshaler interface for PlanetSupportUndefinedWithDefault.
 func (_p PlanetSupportUndefinedWithDefault) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetSupportUndefinedWithDefault", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetSupportUndefinedWithDefault. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -707,8 +736,8 @@ func (_p *PlanetSupportUndefinedWithDefault) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PlanetSupportUndefinedWithDefault) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PlanetSupportUndefinedWithDefault", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PlanetSupportUndefinedWithDefault. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -737,8 +766,8 @@ func (_p *PlanetSupportUndefinedWithDefault) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PlanetSupportUndefinedWithDefault.
 func (_p PlanetSupportUndefinedWithDefault) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetSupportUndefinedWithDefault", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetSupportUndefinedWithDefault. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -757,8 +786,8 @@ func (_p *PlanetSupportUndefinedWithDefault) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PlanetSupportUndefinedWithDefault.
 func (_p PlanetSupportUndefinedWithDefault) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetSupportUndefinedWithDefault", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetSupportUndefinedWithDefault. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -824,6 +853,14 @@ func (_p PlanetWithDefault) IsValid() bool {
 	return _p >= _PlanetWithDefaultValueRange[0] && _p <= _PlanetWithDefaultValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PlanetWithDefault) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PlanetWithDefault(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PlanetWithDefault(%d) instead.
@@ -884,8 +921,8 @@ func PlanetWithDefaultFromStringIgnoreCase(raw string) (PlanetWithDefault, bool)
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PlanetWithDefault.
 func (_p PlanetWithDefault) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetWithDefault. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -938,8 +975,8 @@ func (_p *PlanetWithDefault) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PlanetWithDefault.
 func (_p PlanetWithDefault) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetWithDefault. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -963,8 +1000,8 @@ func (_p *PlanetWithDefault) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PlanetWithDefault) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PlanetWithDefault", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PlanetWithDefault. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -996,8 +1033,8 @@ func (_p *PlanetWithDefault) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PlanetWithDefault.
 func (_p PlanetWithDefault) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetWithDefault. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -1019,8 +1056,8 @@ func (_p *PlanetWithDefault) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PlanetWithDefault.
 func (_p PlanetWithDefault) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PlanetWithDefault", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PlanetWithDefault. %w", _p, err)
 	}
 	return _p.String(), nil
 }

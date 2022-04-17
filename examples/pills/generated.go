@@ -5,10 +5,15 @@ package pills
 import (
 	"database/sql/driver"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"io"
 	"strconv"
+)
+
+var (
+	ErrNoValidEnum = errors.New("not a valid enum")
 )
 
 const (
@@ -52,6 +57,14 @@ func PillAliasedStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_p PillAliased) IsValid() bool {
 	return _p >= _PillAliasedValueRange[0] && _p <= _PillAliasedValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_p PillAliased) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillAliased(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.
@@ -108,8 +121,8 @@ func PillAliasedFromStringIgnoreCase(raw string) (PillAliased, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillAliased.
 func (_p PillAliased) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillAliased. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -162,8 +175,8 @@ func (_p *PillAliased) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillAliased.
 func (_p PillAliased) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillAliased. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -187,8 +200,8 @@ func (_p *PillAliased) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillAliased) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillAliased", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillAliased. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -220,8 +233,8 @@ func (_p *PillAliased) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillAliased.
 func (_p PillAliased) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillAliased. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -243,8 +256,8 @@ func (_p *PillAliased) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillAliased.
 func (_p PillAliased) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillAliased", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillAliased. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -311,6 +324,14 @@ func (_p PillRowed) IsValid() bool {
 	return _p >= _PillRowedValueRange[0] && _p <= _PillRowedValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillRowed) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillRowed(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillRowed(%d) instead.
@@ -365,8 +386,8 @@ func PillRowedFromStringIgnoreCase(raw string) (PillRowed, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillRowed.
 func (_p PillRowed) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillRowed. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -419,8 +440,8 @@ func (_p *PillRowed) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillRowed.
 func (_p PillRowed) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillRowed. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -444,8 +465,8 @@ func (_p *PillRowed) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillRowed) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillRowed", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillRowed. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -477,8 +498,8 @@ func (_p *PillRowed) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillRowed.
 func (_p PillRowed) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillRowed. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -500,8 +521,8 @@ func (_p *PillRowed) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillRowed.
 func (_p PillRowed) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillRowed", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillRowed. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -568,6 +589,14 @@ func (_p PillSigned) IsValid() bool {
 	return _p >= _PillSignedValueRange[0] && _p <= _PillSignedValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillSigned) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillSigned(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillSigned(%d) instead.
@@ -622,8 +651,8 @@ func PillSignedFromStringIgnoreCase(raw string) (PillSigned, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillSigned.
 func (_p PillSigned) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -676,8 +705,8 @@ func (_p *PillSigned) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillSigned.
 func (_p PillSigned) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -701,8 +730,8 @@ func (_p *PillSigned) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillSigned) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillSigned", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillSigned. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -734,8 +763,8 @@ func (_p *PillSigned) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillSigned.
 func (_p PillSigned) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -757,8 +786,8 @@ func (_p *PillSigned) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillSigned.
 func (_p PillSigned) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -825,6 +854,14 @@ func (_p PillSigned16) IsValid() bool {
 	return _p >= _PillSigned16ValueRange[0] && _p <= _PillSigned16ValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillSigned16) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillSigned16(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillSigned16(%d) instead.
@@ -879,8 +916,8 @@ func PillSigned16FromStringIgnoreCase(raw string) (PillSigned16, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillSigned16.
 func (_p PillSigned16) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned16", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned16. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -933,8 +970,8 @@ func (_p *PillSigned16) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillSigned16.
 func (_p PillSigned16) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned16", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned16. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -958,8 +995,8 @@ func (_p *PillSigned16) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillSigned16) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillSigned16", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillSigned16. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -991,8 +1028,8 @@ func (_p *PillSigned16) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillSigned16.
 func (_p PillSigned16) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned16", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned16. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -1014,8 +1051,8 @@ func (_p *PillSigned16) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillSigned16.
 func (_p PillSigned16) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned16", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned16. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -1082,6 +1119,14 @@ func (_p PillSigned32) IsValid() bool {
 	return _p >= _PillSigned32ValueRange[0] && _p <= _PillSigned32ValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillSigned32) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillSigned32(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillSigned32(%d) instead.
@@ -1136,8 +1181,8 @@ func PillSigned32FromStringIgnoreCase(raw string) (PillSigned32, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillSigned32.
 func (_p PillSigned32) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned32", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned32. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -1190,8 +1235,8 @@ func (_p *PillSigned32) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillSigned32.
 func (_p PillSigned32) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned32", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned32. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -1215,8 +1260,8 @@ func (_p *PillSigned32) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillSigned32) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillSigned32", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillSigned32. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -1248,8 +1293,8 @@ func (_p *PillSigned32) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillSigned32.
 func (_p PillSigned32) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned32", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned32. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -1271,8 +1316,8 @@ func (_p *PillSigned32) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillSigned32.
 func (_p PillSigned32) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned32", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned32. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -1339,6 +1384,14 @@ func (_p PillSigned64) IsValid() bool {
 	return _p >= _PillSigned64ValueRange[0] && _p <= _PillSigned64ValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillSigned64) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillSigned64(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillSigned64(%d) instead.
@@ -1393,8 +1446,8 @@ func PillSigned64FromStringIgnoreCase(raw string) (PillSigned64, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillSigned64.
 func (_p PillSigned64) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned64", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned64. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -1447,8 +1500,8 @@ func (_p *PillSigned64) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillSigned64.
 func (_p PillSigned64) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned64", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned64. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -1472,8 +1525,8 @@ func (_p *PillSigned64) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillSigned64) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillSigned64", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillSigned64. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -1505,8 +1558,8 @@ func (_p *PillSigned64) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillSigned64.
 func (_p PillSigned64) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned64", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned64. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -1528,8 +1581,8 @@ func (_p *PillSigned64) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillSigned64.
 func (_p PillSigned64) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned64", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned64. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -1596,6 +1649,14 @@ func (_p PillSigned8) IsValid() bool {
 	return _p >= _PillSigned8ValueRange[0] && _p <= _PillSigned8ValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillSigned8) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillSigned8(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillSigned8(%d) instead.
@@ -1650,8 +1711,8 @@ func PillSigned8FromStringIgnoreCase(raw string) (PillSigned8, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillSigned8.
 func (_p PillSigned8) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned8. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -1704,8 +1765,8 @@ func (_p *PillSigned8) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillSigned8.
 func (_p PillSigned8) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned8. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -1729,8 +1790,8 @@ func (_p *PillSigned8) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillSigned8) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillSigned8", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillSigned8. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -1762,8 +1823,8 @@ func (_p *PillSigned8) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillSigned8.
 func (_p PillSigned8) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned8. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -1785,8 +1846,8 @@ func (_p *PillSigned8) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillSigned8.
 func (_p PillSigned8) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillSigned8", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillSigned8. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -1853,6 +1914,14 @@ func (_p PillUnsigned) IsValid() bool {
 	return _p >= _PillUnsignedValueRange[0] && _p <= _PillUnsignedValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillUnsigned) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillUnsigned(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillUnsigned(%d) instead.
@@ -1907,8 +1976,8 @@ func PillUnsignedFromStringIgnoreCase(raw string) (PillUnsigned, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned.
 func (_p PillUnsigned) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -1961,8 +2030,8 @@ func (_p *PillUnsigned) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillUnsigned.
 func (_p PillUnsigned) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -1986,8 +2055,8 @@ func (_p *PillUnsigned) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillUnsigned) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillUnsigned. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -2019,8 +2088,8 @@ func (_p *PillUnsigned) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillUnsigned.
 func (_p PillUnsigned) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -2042,8 +2111,8 @@ func (_p *PillUnsigned) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillUnsigned.
 func (_p PillUnsigned) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -2110,6 +2179,14 @@ func (_p PillUnsigned16) IsValid() bool {
 	return _p >= _PillUnsigned16ValueRange[0] && _p <= _PillUnsigned16ValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillUnsigned16) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillUnsigned16(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillUnsigned16(%d) instead.
@@ -2164,8 +2241,8 @@ func PillUnsigned16FromStringIgnoreCase(raw string) (PillUnsigned16, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned16.
 func (_p PillUnsigned16) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned16. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -2218,8 +2295,8 @@ func (_p *PillUnsigned16) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillUnsigned16.
 func (_p PillUnsigned16) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned16. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -2243,8 +2320,8 @@ func (_p *PillUnsigned16) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillUnsigned16) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned16", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillUnsigned16. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -2276,8 +2353,8 @@ func (_p *PillUnsigned16) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillUnsigned16.
 func (_p PillUnsigned16) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned16. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -2299,8 +2376,8 @@ func (_p *PillUnsigned16) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillUnsigned16.
 func (_p PillUnsigned16) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned16", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned16. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -2367,6 +2444,14 @@ func (_p PillUnsigned32) IsValid() bool {
 	return _p >= _PillUnsigned32ValueRange[0] && _p <= _PillUnsigned32ValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillUnsigned32) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillUnsigned32(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillUnsigned32(%d) instead.
@@ -2421,8 +2506,8 @@ func PillUnsigned32FromStringIgnoreCase(raw string) (PillUnsigned32, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned32.
 func (_p PillUnsigned32) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned32. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -2475,8 +2560,8 @@ func (_p *PillUnsigned32) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillUnsigned32.
 func (_p PillUnsigned32) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned32. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -2500,8 +2585,8 @@ func (_p *PillUnsigned32) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillUnsigned32) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned32", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillUnsigned32. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -2533,8 +2618,8 @@ func (_p *PillUnsigned32) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillUnsigned32.
 func (_p PillUnsigned32) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned32. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -2556,8 +2641,8 @@ func (_p *PillUnsigned32) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillUnsigned32.
 func (_p PillUnsigned32) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned32", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned32. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -2624,6 +2709,14 @@ func (_p PillUnsigned64) IsValid() bool {
 	return _p >= _PillUnsigned64ValueRange[0] && _p <= _PillUnsigned64ValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillUnsigned64) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillUnsigned64(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillUnsigned64(%d) instead.
@@ -2678,8 +2771,8 @@ func PillUnsigned64FromStringIgnoreCase(raw string) (PillUnsigned64, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned64.
 func (_p PillUnsigned64) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned64. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -2732,8 +2825,8 @@ func (_p *PillUnsigned64) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillUnsigned64.
 func (_p PillUnsigned64) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned64. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -2757,8 +2850,8 @@ func (_p *PillUnsigned64) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillUnsigned64) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned64", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillUnsigned64. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -2790,8 +2883,8 @@ func (_p *PillUnsigned64) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillUnsigned64.
 func (_p PillUnsigned64) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned64. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -2813,8 +2906,8 @@ func (_p *PillUnsigned64) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillUnsigned64.
 func (_p PillUnsigned64) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned64", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned64. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -2881,6 +2974,14 @@ func (_p PillUnsigned8) IsValid() bool {
 	return _p >= _PillUnsigned8ValueRange[0] && _p <= _PillUnsigned8ValueRange[1]
 }
 
+// Validate whether the value is within the range of enum values.
+func (_p PillUnsigned8) Validate() error {
+	if !_p.IsValid() {
+		return fmt.Errorf("PillUnsigned8(%d) is %w", _p, ErrNoValidEnum)
+	}
+	return nil
+}
+
 // String returns the string of the enum value.
 // If the enum value is invalid, it will produce a string
 // of the following pattern PillUnsigned8(%d) instead.
@@ -2935,8 +3036,8 @@ func PillUnsigned8FromStringIgnoreCase(raw string) (PillUnsigned8, bool) {
 
 // MarshalBinary implements the encoding.BinaryMarshaler interface for PillUnsigned8.
 func (_p PillUnsigned8) MarshalBinary() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned8. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -2989,8 +3090,8 @@ func (_p *PillUnsigned8) UnmarshalGQL(value interface{}) error {
 
 // MarshalJSON implements the json.Marshaler interface for PillUnsigned8.
 func (_p PillUnsigned8) MarshalJSON() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned8. %w", _p, err)
 	}
 	return json.Marshal(_p.String())
 }
@@ -3014,8 +3115,8 @@ func (_p *PillUnsigned8) UnmarshalJSON(data []byte) error {
 }
 
 func (_p PillUnsigned8) Value() (driver.Value, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot serialize invalid value %q as PillUnsigned8", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as PillUnsigned8. %w", _p, err)
 	}
 	return _p.String(), nil
 }
@@ -3047,8 +3148,8 @@ func (_p *PillUnsigned8) Scan(value interface{}) error {
 
 // MarshalText implements the encoding.TextMarshaler interface for PillUnsigned8.
 func (_p PillUnsigned8) MarshalText() ([]byte, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned8. %w", _p, err)
 	}
 	return []byte(_p.String()), nil
 }
@@ -3070,8 +3171,8 @@ func (_p *PillUnsigned8) UnmarshalText(text []byte) error {
 
 // MarshalYAML implements a YAML Marshaler for PillUnsigned8.
 func (_p PillUnsigned8) MarshalYAML() (interface{}, error) {
-	if !_p.IsValid() {
-		return nil, fmt.Errorf("Cannot marshal invalid value %q as PillUnsigned8", _p)
+	if err := _p.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as PillUnsigned8. %w", _p, err)
 	}
 	return _p.String(), nil
 }

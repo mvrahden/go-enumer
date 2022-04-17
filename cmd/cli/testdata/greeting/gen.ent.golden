@@ -3,7 +3,12 @@
 package greeting
 
 import (
+	"errors"
 	"fmt"
+)
+
+var (
+	ErrNoValidEnum = errors.New("not a valid enum")
 )
 
 const (
@@ -43,6 +48,14 @@ func GreetingStrings() []string {
 // IsValid inspects whether the value is valid enum value.
 func (_g Greeting) IsValid() bool {
 	return _g >= _GreetingValueRange[0] && _g <= _GreetingValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_g Greeting) Validate() error {
+	if !_g.IsValid() {
+		return fmt.Errorf("Greeting(%d) is %w", _g, ErrNoValidEnum)
+	}
+	return nil
 }
 
 // String returns the string of the enum value.

@@ -142,6 +142,7 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 }
 
 func (i inspector) inspectImports(f *File) {
+	f.Imports = append(f.Imports, &Import{Path: "errors"})
 	f.Imports = append(f.Imports, &Import{Path: "fmt"})
 	for _, ts := range f.TypeSpecs {
 		for _, v := range ts.Config.Serializers {
