@@ -148,6 +148,8 @@ When `go-enumer` is applied to a type, it will generate:
   - Function `<Type>Values()`: returns a slice with all the numeric values of the enum, ignoring any alternative values.
   - Function `<Type>Strings()`: returns a slice with all the string representations of the enum.
   - Method `IsValid()`: returns true if the current value is a value of the defined enum set.
+  - Method `Validate()`: returns a wrapped error `ErrNoValidEnum` if the current value is not a valid value of the defined enum set.   
+    It is being used upon serialization and deserialization, allowing for detecting enum errors via `errors.Is(err, ErrNoValidEnum)`.
 
 - The flag `serializers` in addition with any of the following values, additional methods for serialization are added.
   Valid values are:
@@ -180,7 +182,7 @@ const (
 )
 ```
 
-executing `//go:generate github.com/mvrahden/go-enumer -serializers=json` will generate a new file with four basic package functions and four methods (of which two are for JSON (de-)serialization):
+executing `//go:generate github.com/mvrahden/go-enumer -serializers=json` will generate a new file with four basic package functions and five methods (of which two are for JSON (de-)serialization):
 
 ```go
 func PillValues() []Pill {
@@ -204,6 +206,10 @@ func (i Pill) String() string {
 }
 
 func (i Pill) IsValid() bool {
+  //...
+}
+
+func (i Pill) Validate() error {
   //...
 }
 
@@ -238,8 +244,11 @@ fmt.Println(allPills) // Will print [Placebo Aspirin Ibuprofen Paracetamol]
 
 // Check if a value belongs to the Pill enum values
 var notAPill Pill = 42
-if (notAPill.IsAPill()) {
+if notAPill.IsValid() {
   fmt.Println(notAPill, "is not a value of the Pill enum")
+}
+if err := notAPill.Validate(); err != nil {
+  fmt.Printf("%s", err)
 }
 
 // Marshal/unmarshal to/from json strings, either directly or automatically when
@@ -247,9 +256,6 @@ if (notAPill.IsAPill()) {
 pillJSON := Aspirin.MarshalJSON()
 // Now pillJSON == `"Aspirin"`
 ```
-
-The generated code is exactly the same as the Stringer tool plus the mentioned additions, so you can use
-**Enumer** where you are already using **Stringer** without any code change.
 
 ## The string representation of the enum value
 
