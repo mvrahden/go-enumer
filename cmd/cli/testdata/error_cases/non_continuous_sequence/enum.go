@@ -1,6 +1,6 @@
 package noncontinuoussequence
 
-//go:enumer
+//go:enum
 type InvalidNonContinuousGreeting int
 
 const (

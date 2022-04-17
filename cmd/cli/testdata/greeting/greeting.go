@@ -1,6 +1,6 @@
 package greeting
 
-//go:enumer
+//go:enum
 type Greeting int
 
 const (

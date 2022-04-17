@@ -1,6 +1,6 @@
 package noninteger
 
-//go:enumer
+//go:enum
 type NonContinuous uint
 
 const (

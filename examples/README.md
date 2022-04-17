@@ -5,6 +5,12 @@ Each example is self-contained and part of a wider testing setup to improve QA a
 
 ## Example Use Cases
 
+<!--
+TODO:
+- add all transform cases
+- add ignore case example
+ -->
+
 1. `greetings`: Generate standard enum and enums with default value (zero value).
 2. `pills`: Generate enums for all integer-like types.
 3. `planets`: Generate various combinations of standard/default vs. undefined.

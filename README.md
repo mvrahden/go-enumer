@@ -26,7 +26,7 @@ By convention, enum sets must:
 Due to the nature of enums being distinct values, the majority of enum sequences will start at `1`, as you can see in the following snippet.
 
 ```go
-//go:enumer
+//go:enum
 type Greeting uint
 
 const (
@@ -44,7 +44,7 @@ All the other values should be `>= 1`.
 (You may have multiple defaults, see section for [equivalent values](#equivalent-values))
 
 ```go
-//go:enumer
+//go:enum
 type Greeting uint
 
 const (
@@ -69,15 +69,17 @@ const (
 
 Thanks to [magic comments](#magic-comment-goenumer) `go-enumer` we can now determine all enums of a package in a single pass, making the code generation much more efficient.
 
-### Magic comment `//go:enumer`
+### Magic comment `//go:enum`
 
-The magic comment `//go:enumer` allows for a finegrained configuration on an enum type level, giving the ability to overwrite the global configuration. The following example will generate `json` and `yaml` interfaces for the `Greeting` enum, while only generating `json` for all the other enums it can find.
+The magic comment `//go:enum` serves as a marker to detect all enums.
+It also allows for a finegrained configuration on an enum type level, giving the ability to overwrite the global `generate` configuration.
+The following example will generate `json` and `yaml` interfaces for the `Greeting` enum, while only generating `json` for all the other enums it can find.
 Currently the magic comment supports for all configuration options, which are availble on a global configuration level.
 
 ```go
 //go:generate github.com/mvrahden/go-enumer -serializers=json
 
-//go:enumer -serializers=json,yaml
+//go:enum -serializers=json,yaml
 type Greeting uint
 
 const (
@@ -166,7 +168,7 @@ For example, if we have an enum type called `Pill`,
 ```go
 //go:generate github.com/mvrahden/go-enumer -serializers=json
 
-//go:enumer
+//go:enum
 type Pill uint
 
 const (
@@ -258,7 +260,7 @@ To avoid naming collisions while maintaining the same enum string, `go-enumer` a
 Consider the following example, which will generate the same string values:
 
 ```go
-//go:enumer
+//go:enum
 type Greeting uint
 
 const (
@@ -269,7 +271,7 @@ const (
   ČeskáRepublika
 )
 
-//go:enumer
+//go:enum
 type GreetingWithPrefix uint
 
 const (
@@ -284,7 +286,7 @@ const (
 By default, `go-enumer` uses the same name of the enum value for generating the string representation (usually PascalCase in Go).
 
 ```go
-//go:enumer
+//go:enum
 type Greeting uint
 
  ...
@@ -308,7 +310,7 @@ fmt.Print(ČeskáRepublika) // name => "Česká Republika"
 Please take the example transformation from the following table for this example:
 
 ```go
-//go:enumer
+//go:enum
 type MyType uint
 
 const (

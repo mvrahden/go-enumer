@@ -1,16 +1,16 @@
 package booking
 
 // BookingState is an indicator for bookings.
-//go:enumer -from=booking.csv
+//go:enum -from=booking.csv
 type BookingState uint
 
 // BookingStateWithConfig will have its own configuration.
-//go:enumer -from=booking.csv -serializers=json,yaml -support=undefined
+//go:enum -from=booking.csv -serializers=json,yaml -support=undefined
 type BookingStateWithConfig uint
 
 // BookingStateWithConstants will have a subset (compared to CSV source)
 // of explicitly defined constants.
-//go:enumer -from=booking.csv
+//go:enum -from=booking.csv
 type BookingStateWithConstants uint
 
 // With CSV sources, you can add your very own subset of constants.

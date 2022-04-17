@@ -1,7 +1,7 @@
 package planets
 
 // Planet has NO default value here.
-//go:enumer
+//go:enum
 type Planet uint8
 
 const (
@@ -16,7 +16,7 @@ const (
 )
 
 // PlanetWithDefault has a default value Earth.
-//go:enumer
+//go:enum
 type PlanetWithDefault uint8
 
 const (
@@ -35,7 +35,7 @@ const (
 // But it supports deserialization from "undefined"/zero values
 // and serialization to an "" (empty string).
 // For this scenario a special const will be generated "<type>Undefined"
-//go:enumer -support=undefined
+//go:enum -support=undefined
 type PlanetSupportUndefined uint8
 
 const (
@@ -51,7 +51,7 @@ const (
 
 // PlanetSupportUndefinedWithDefault has a default value Earth
 // and it supports deserialization from "undefined"/zero values.
-//go:enumer -support=undefined
+//go:enum -support=undefined
 type PlanetSupportUndefinedWithDefault uint8
 
 const (

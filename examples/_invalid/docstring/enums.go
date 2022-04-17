@@ -1,6 +1,6 @@
 package noninteger
 
-//go:enumer -unsupported=value
+//go:enum -unsupported=value
 type InvalidDocstring uint
 
 const (

@@ -3,7 +3,7 @@ package project
 // Note: This file serves to ensure, that types from various files are identified.
 
 // AccountState represents various entity lifecycle states.
-//go:enumer -serializers=json,sql -transform=upper
+//go:enum -serializers=json,sql -transform=upper
 type AccountState uint
 
 const (

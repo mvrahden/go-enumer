@@ -23,6 +23,8 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+const MAGIC_MARKER = "//go:enum"
+
 func init() {
 	reg, err := regexp.Compile("^// Code generated .* DO NOT EDIT.$")
 	if err != nil {
@@ -84,7 +86,7 @@ func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 		fs.Var(&ts.Config.Serializers, "serializers", "")
 		fs.Var(&ts.Config.SupportedFeatures, "support", "")
 		fs.StringVar(&fromSource, "from", "", "")
-		err := fs.Parse(args[1:])
+		err := fs.Parse(args[1:]) // hint: parse w/o magic marker
 		if err != nil {
 			return fmt.Errorf("Failed parsing doc-string for %q. err: %w", ts.Name, err)
 		}
@@ -285,11 +287,18 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 				continue // missing doc-string
 			}
 			var magicComment string
-			if lastDoc := decl.Doc.List[len(decl.Doc.List)-1]; !strings.HasPrefix(lastDoc.Text, "//go:enumer") {
-				continue // no magic comment
-			} else {
-				magicComment = lastDoc.Text
+			{
+				lastDoc := decl.Doc.List[len(decl.Doc.List)-1]
+				docString := strings.TrimSpace(lastDoc.Text)
+				hasMagicComment := strings.Compare(docString, MAGIC_MARKER) == 0 ||
+					strings.HasPrefix(docString, MAGIC_MARKER+" ") // hint: w/o OR w/ subsequent config string
+
+				if !hasMagicComment {
+					continue // no magic comment
+				}
+				magicComment = docString
 			}
+
 			ts, ok := decl.Specs[0].(*ast.TypeSpec)
 			if !ok {
 				continue // not a type spec

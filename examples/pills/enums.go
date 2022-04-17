@@ -1,7 +1,7 @@
 package pills
 
 // Pill with a Doc string.
-//go:enumer
+//go:enum
 type PillUnsigned uint
 
 const (
@@ -13,7 +13,7 @@ const (
 	PillUnsignedVitaminC
 )
 
-//go:enumer
+//go:enum
 type PillUnsigned8 uint8
 
 const (
@@ -25,7 +25,7 @@ const (
 	PillUnsigned8VitaminC
 )
 
-//go:enumer
+//go:enum
 type PillUnsigned16 uint16
 
 const (
@@ -37,7 +37,7 @@ const (
 	PillUnsigned16VitaminC
 )
 
-//go:enumer
+//go:enum
 type PillUnsigned32 uint32
 
 const (
@@ -49,7 +49,7 @@ const (
 	PillUnsigned32VitaminC
 )
 
-//go:enumer
+//go:enum
 type PillUnsigned64 uint64
 
 const (
@@ -61,7 +61,7 @@ const (
 	PillUnsigned64VitaminC
 )
 
-//go:enumer
+//go:enum
 type PillSigned int
 
 const PillSignedPlacebo PillSigned = 0
@@ -71,7 +71,7 @@ const PillSignedParacetamol PillSigned = 3
 const PillSignedAcetaminophen PillSigned = 3
 const PillSignedVitaminC PillSigned = 4
 
-//go:enumer
+//go:enum
 type PillSigned8 int8
 
 const (
@@ -83,7 +83,7 @@ const (
 	PillSigned8VitaminC
 )
 
-//go:enumer
+//go:enum
 type PillSigned16 int16
 
 const (
@@ -95,7 +95,7 @@ const (
 	PillSigned16VitaminC
 )
 
-//go:enumer
+//go:enum
 type PillSigned32 int32
 
 const (
@@ -107,7 +107,7 @@ const (
 	PillSigned32VitaminC
 )
 
-//go:enumer
+//go:enum
 type PillSigned64 int64
 
 const (
@@ -119,12 +119,12 @@ const (
 	PillSigned64VitaminC
 )
 
-//go:enumer
+//go:enum
 type PillRowed uint
 
 const PillRowedPlacebo, PillRowedAspirin, PillRowedIbuprofen, PillRowedParacetamol, PillRowedAcetaminophen, PillRowedVitaminC PillRowed = 0, 1, 2, 3, 3, 4
 
-//go:enumer
+//go:enum
 type PillAliased PillUnsigned
 
 const (

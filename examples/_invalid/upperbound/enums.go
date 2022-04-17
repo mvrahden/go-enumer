@@ -1,6 +1,6 @@
 package noninteger
 
-//go:enumer
+//go:enum
 type UpperBound uint
 
 const (

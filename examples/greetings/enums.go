@@ -1,6 +1,6 @@
 package greetings
 
-//go:enumer
+//go:enum
 type Greeting uint8
 
 const (
@@ -12,7 +12,7 @@ const (
 	Greeting𝜋
 )
 
-//go:enumer
+//go:enum
 type GreetingWithDefault uint8
 
 const (

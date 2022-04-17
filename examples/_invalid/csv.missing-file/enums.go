@@ -1,6 +1,6 @@
 package noninteger
 
-//go:enumer -from=source.csv
+//go:enum -from=source.csv
 type MissingCSV uint
 
 const (
