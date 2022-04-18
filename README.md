@@ -1,4 +1,4 @@
-# go-enumer [![GoDoc](https://godoc.org/github.com/mvrahden/go-enumer?status.svg)](https://godoc.org/github.com/mvrahden/go-enumer) [![Go Report Card](https://goreportcard.com/badge/github.com/mvrahden/go-enumer)](https://goreportcard.com/report/github.com/mvrahden/go-enumer) [![GitHub Release](https://img.shields.io/github/release/mvrahden/go-enumer.svg)](https://github.com/mvrahden/go-enumer/releases)[![Build Status](https://travis-ci.com/mvrahden/go-enumer.svg?branch=master)](https://travis-ci.com/mvrahden/go-enumer)
+# go-enumer <!-- omit in toc --> [![GoDoc](https://godoc.org/github.com/mvrahden/go-enumer?status.svg)](https://godoc.org/github.com/mvrahden/go-enumer) [![Go Report Card](https://goreportcard.com/badge/github.com/mvrahden/go-enumer)](https://goreportcard.com/report/github.com/mvrahden/go-enumer) [![GitHub Release](https://img.shields.io/github/release/mvrahden/go-enumer.svg)](https://github.com/mvrahden/go-enumer/releases)[![Build Status](https://travis-ci.com/mvrahden/go-enumer.svg?branch=master)](https://travis-ci.com/mvrahden/go-enumer)
 
 `go-enumer` is a tool to generate Go code to upgrade Go constants (of unsigned integer types) to enums.
 It adds useful common methods to the types, such as validation and various (de-)serialization.
@@ -11,6 +11,36 @@ This remake of `go-enumer` is intended to be:
 
 > E.g. it prevents `undefined` values from being (de-)serialized by default,
 > but allows (de-)serialization from empty/undefined values if you configure it to do so.
+
+## Table of Contents <!-- omit in toc -->
+
+1. [Why `go-enumer`?](#why-go-enumer)
+2. [What's new?](#whats-new)
+   1. [Single pass screening](#single-pass-screening)
+   2. [Magic comment `//go:enum`](#magic-comment-goenum)
+   3. [Equivalent values](#equivalent-values)
+   4. [Handling of Name Prefixes](#handling-of-name-prefixes)
+   5. [Type Validation](#type-validation)
+   6. [Supported features](#supported-features)
+      1. [The "undefined" feature](#the-undefined-feature)
+      2. [Other supported features](#other-supported-features)
+3. [Generated functions and methods](#generated-functions-and-methods)
+4. [The string representation of the enum value](#the-string-representation-of-the-enum-value)
+   1. [Prefix auto-stripping](#prefix-auto-stripping)
+   2. [Transformers](#transformers)
+5. [Configuration Options](#configuration-options)
+6. [Inspiring projects](#inspiring-projects)
+
+## Why `go-enumer`?
+
+First and foremost enums are a common way of handling sets of distinct and customizable (and eventually human-readable) values.
+Many projects have use cases where enums might be useful, but Go has no built-in support for enums.
+Therefore this project aims to fill the gap, by making use of Go's features for type declaration and code generation.
+
+Regarding the aforementioned ancestor project [enumer](https://github.com/dmarkham/enumer), I found some unfortunate obstacles in regards to appliance configuration, strict case handling, validation and feature extensibility.
+Its scope, ambitions and constraints were clearly different, since it tried to be a "drop-in" replacement for the known "Stringer" utility.
+
+Starting from scratch, I decided it's best that `go-enumer` breaks with those restrictions while borrowing some of the great ideas.
 
 ## What's new?
 
@@ -349,17 +379,17 @@ const (
 ```
 
 | Transformer Name | Example (Stringer value) |
-|---|----|
-| noop (default) | FooBar |
-| camel  | fooBar |
-| pascal | FooBar |
-| kebab  | foo-bar |
-| snake  | foo_bar |
-| lower  | foobar |
-| upper  | FOOBAR |
-| upper-kebab | FOO-BAR |
-| upper-snake | FOO_BAR |
-| whitespace | Foo Bar |
+|------------------|--------------------------|
+| noop (default)   | FooBar                   |
+| camel            | fooBar                   |
+| pascal           | FooBar                   |
+| kebab            | foo-bar                  |
+| snake            | foo_bar                  |
+| lower            | foobar                   |
+| upper            | FOOBAR                   |
+| upper-kebab      | FOO-BAR                  |
+| upper-snake      | FOO_BAR                  |
+| whitespace       | Foo Bar                  |
 
 ## Configuration Options
 
