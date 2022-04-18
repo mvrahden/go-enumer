@@ -1,8 +1,8 @@
 # go-enumer [![GoDoc](https://godoc.org/github.com/mvrahden/go-enumer?status.svg)](https://godoc.org/github.com/mvrahden/go-enumer) [![Go Report Card](https://goreportcard.com/badge/github.com/mvrahden/go-enumer)](https://goreportcard.com/report/github.com/mvrahden/go-enumer) [![GitHub Release](https://img.shields.io/github/release/mvrahden/go-enumer.svg)](https://github.com/mvrahden/go-enumer/releases)[![Build Status](https://travis-ci.com/mvrahden/go-enumer.svg?branch=master)](https://travis-ci.com/mvrahden/go-enumer)
 
-`go-enumer` is a tool to generate Go code to upgrade Go constants to enums.
-It furthermore adds (of unsigned integer types) useful methods to the types, such as validation and (de-)serialization.
-It is an opinionated remake of the existing [enumer](https://github.com/dmarkham/enumer) package and therefore behaves different in practically all aspects.
+`go-enumer` is a tool to generate Go code to upgrade Go constants (of unsigned integer types) to enums.
+It adds useful common methods to the types, such as validation and various (de-)serialization.
+It is an opinionated remake of the long existing [enumer](https://github.com/dmarkham/enumer) package and therefore behaves different in practically all aspects.
 
 This remake of `go-enumer` is intended to be:
 
@@ -70,14 +70,18 @@ const (
 
 ### Single pass screening
 
-Thanks to [magic comments](#magic-comment-goenumer) `go-enumer` we can now determine all enums of a package in a single pass, making the code generation much more efficient.
+Thanks to [magic comments](#magic-comment-goenumer) `go-enumer` only needs one single `//go:generate` directive to screen an entire package.
+It can now determine all enums of a package in a single pass, reducing redundant scans and therefore making the code generation much more efficient.
 
 ### Magic comment `//go:enum`
 
 The magic comment `//go:enum` serves as a marker to detect all enums.
-It also allows for a finegrained configuration on an enum type level, giving the ability to overwrite the global `generate` configuration.
-The following example will generate `json` and `yaml` interfaces for the `Greeting` enum, while only generating `json` for all the other enums it can find.
-Currently the magic comment supports for all configuration options, which are availble on a global configuration level.
+It also enables config **mixins**.
+By supplying it with a finegrained configuration on an enum type level, we have the ability to overwrite the global `generate` configuration.
+
+The following example will generate `json` interfaces for practically all enums it will detect, except for this specific `Greeting` enum, where it will generate `json` and `yaml` interfaces.
+
+> The magic comment currently offers support for all configuration options, which are available on a global configuration level.
 
 ```go
 //go:generate github.com/mvrahden/go-enumer -serializers=json
