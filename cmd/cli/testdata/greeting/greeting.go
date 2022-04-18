@@ -1,7 +1,7 @@
 package greeting
 
 //go:enum
-type Greeting int
+type Greeting uint
 
 const (
 	GreetingWorld Greeting = iota

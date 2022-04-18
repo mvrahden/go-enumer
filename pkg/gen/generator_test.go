@@ -24,10 +24,10 @@ func TestGenerator(t *testing.T) {
 		directory   string
 		description string
 	}{
-		// {"booking", "CSV source"},
-		// {"pills", "compatibility for various integer-like types"},
-		// {"greetings", "standard enum and enum with default value"},
-		// {"planets", "standard enum and enum with default value support `ignore-case` and `undefined`"},
+		{"booking", "CSV source"},
+		{"pills", "compatibility for various unsigned integer types and forms of assignment"},
+		{"greetings", "standard enum and enum with default value"},
+		{"planets", "standard enum and enum with default value support `ignore-case` and `undefined`"},
 		{"project", "a set of more realistic use cases"},
 	} {
 		pkg := path.Join(packageBase, "examples", tC.directory)
@@ -52,9 +52,9 @@ func TestGeneratorEdgeCaseDetection(t *testing.T) {
 		cfg       config.Options
 	}{
 		{directory: "noninteger",
-			errMsg: "Enum type of \"NonInteger\" must be an integer-like type, found \"float32\"."},
+			errMsg: "Enum type of \"NonInteger\" must be of an unsigned integer type, found \"float32\"."},
 		{directory: "lowerbound",
-			errMsg: "Enum value of \"LowerBoundA\" cannot be in a negative range."},
+			errMsg: "Enum type of \"LowerBound\" must be of an unsigned integer type, found \"int\"."},
 		{directory: "upperbound",
 			errMsg: "Enum \"UpperBound\" must start with either 0 or 1."},
 		{directory: "noncontinuous",

@@ -5,12 +5,7 @@ type GoType int
 const (
 	GoTypeUnknown GoType = -1
 
-	GoTypeSignedInteger GoType = iota + 1
-	GoTypeSignedInteger8
-	GoTypeSignedInteger16
-	GoTypeSignedInteger32
-	GoTypeSignedInteger64
-	GoTypeUnsignedInteger
+	GoTypeUnsignedInteger GoType = iota + 1
 	GoTypeUnsignedInteger8
 	GoTypeUnsignedInteger16
 	GoTypeUnsignedInteger32
@@ -19,11 +14,6 @@ const (
 
 var (
 	typeMap = map[string]GoType{
-		"int":    GoTypeSignedInteger,
-		"int8":   GoTypeSignedInteger8,
-		"int16":  GoTypeSignedInteger16,
-		"int32":  GoTypeSignedInteger32,
-		"int64":  GoTypeSignedInteger64,
 		"uint":   GoTypeUnsignedInteger,
 		"uint8":  GoTypeUnsignedInteger8,
 		"uint16": GoTypeUnsignedInteger16,

@@ -414,7 +414,7 @@ func (i inspector) determineTypeOfExpr(e ast.Expr) (GoType, error) {
 			return i.determineTypeOfExpr(decl.Type)
 		}
 	}
-	return GoTypeUnknown, fmt.Errorf("must be an integer-like type, found %q.", e)
+	return GoTypeUnknown, fmt.Errorf("must be of an unsigned integer type, found %q.", e)
 }
 
 func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint64, string, error) {

@@ -1,7 +1,7 @@
 package noncontinuoussequence
 
 //go:enum
-type InvalidNonContinuousGreeting int
+type InvalidNonContinuousGreeting uint
 
 const (
 	InvalidNonContinuousGreetingWorld InvalidNonContinuousGreeting = iota
