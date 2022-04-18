@@ -1,4 +1,4 @@
-package noninteger
+package invalid
 
 //go:enum
 type LowerBound int

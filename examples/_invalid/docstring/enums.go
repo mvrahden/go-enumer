@@ -1,4 +1,4 @@
-package noninteger
+package invalid
 
 //go:enum -unsupported=value
 type InvalidDocstring uint
