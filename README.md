@@ -18,7 +18,7 @@ This remake of `go-enumer` is intended to be:
 Additionally the type derivation (lookup) was improved and was given more freedom to preferences of case sensitivity.
 It furthermore introduces a clear and unified usage pattern on how to implement enums, by bringing its own easy to understand and hard to misuse way of defining them.
 
-`go-enumer` defines an enum as a set custom-defined, distinct values which are implemented by defining a range of continuously incrementing constants of a any unsigned integer type or type alias.
+`go-enumer` defines an enum as a set custom-defined, distinct values which are implemented by defining a range of continuously incrementing constants of any unsigned integer type or any type alias deriving from those.
 By convention, enum sets must:
 
 - be marked with a [magic comment](#magic-comment-goenum).
@@ -170,6 +170,10 @@ When `go-enumer` is applied to a type, it will generate:
 
 For example, if we have an enum type called `Pill`,
 
+> CAUTION: The following example does not use a type prefix.
+> Generally it is recommended, to **always** prefix your constants for improved understandability throughout your code base
+> \- especially for exported enums.
+
 ```go
 //go:generate github.com/mvrahden/go-enumer -serializers=json
 
@@ -234,12 +238,20 @@ var aspirinString string = Aspirin.String()
 fmt.Println("I need ", Paracetamol) // Will print "I need Paracetamol"
 
 // Convert a string with the enum name to the corresponding enum value
-pill, err := PillString("Ibuprofen") // "ibuprofen" will also work.
+pill, err := PillFromString("Ibuprofen")
 if err != nil {
     fmt.Println("Unrecognized pill: ", err)
     return
 }
 // Now pill == Ibuprofen
+
+// Convert a string with the enum name, but degenerated string case
+// to the corresponding enum value
+pill, err := PillFromStringIgnoreCase("IbUpRoFeN")
+if err != nil {
+    fmt.Println("Unrecognized pill: ", err)
+    return
+}
 
 // Get all the values of the string
 allPills := PillValues()
@@ -247,16 +259,20 @@ fmt.Println(allPills) // Will print [Placebo Aspirin Ibuprofen Paracetamol]
 
 // Check if a value belongs to the Pill enum values
 var notAPill Pill = 42
-if notAPill.IsValid() {
+if ok := notAPill.IsValid(); !ok {
   fmt.Println(notAPill, "is not a value of the Pill enum")
 }
 if err := notAPill.Validate(); err != nil {
   fmt.Printf("%s", err)
 }
+// Infer whether the error is a validation error
+if _, err := json.Marshal(notAPill); errors.Is(err, ErrNoValidEnum) {
+  fmt.Printf("this is not a valid enum")
+}
 
 // Marshal/unmarshal to/from json strings, either directly or automatically when
 // the enum is a field of a struct
-pillJSON := Aspirin.MarshalJSON()
+pillJSON, _ := Aspirin.MarshalJSON()
 // Now pillJSON == `"Aspirin"`
 ```
 
