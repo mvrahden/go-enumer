@@ -47,16 +47,16 @@ func _GreetingNoOp() {
 
 // GreetingValues returns all values of the enum.
 func GreetingValues() []Greeting {
-	strs := make([]Greeting, len(_GreetingValues))
-	copy(strs, _GreetingValues)
-	return _GreetingValues
+	cp := make([]Greeting, len(_GreetingValues))
+	copy(cp, _GreetingValues)
+	return cp
 }
 
 // GreetingStrings returns a slice of all String values of the enum.
 func GreetingStrings() []string {
-	strs := make([]string, len(_GreetingStrings))
-	copy(strs, _GreetingStrings)
-	return strs
+	cp := make([]string, len(_GreetingStrings))
+	copy(cp, _GreetingStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -305,16 +305,16 @@ func _GreetingWithDefaultNoOp() {
 
 // GreetingWithDefaultValues returns all values of the enum.
 func GreetingWithDefaultValues() []GreetingWithDefault {
-	strs := make([]GreetingWithDefault, len(_GreetingWithDefaultValues))
-	copy(strs, _GreetingWithDefaultValues)
-	return _GreetingWithDefaultValues
+	cp := make([]GreetingWithDefault, len(_GreetingWithDefaultValues))
+	copy(cp, _GreetingWithDefaultValues)
+	return cp
 }
 
 // GreetingWithDefaultStrings returns a slice of all String values of the enum.
 func GreetingWithDefaultStrings() []string {
-	strs := make([]string, len(_GreetingWithDefaultStrings))
-	copy(strs, _GreetingWithDefaultStrings)
-	return strs
+	cp := make([]string, len(_GreetingWithDefaultStrings))
+	copy(cp, _GreetingWithDefaultStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.

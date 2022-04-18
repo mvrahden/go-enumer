@@ -12,6 +12,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+func AssertNotSamePointer(t *testing.T, expected, actual any) {
+	expPtr := fmt.Sprintf("%p", expected)
+	actPtr := fmt.Sprintf("%p", actual)
+	if expPtr == actPtr {
+		t.Fatalf("%T and %T point to the same address %[1]p", expected, actual)
+	}
+}
+
 type stringer struct{ v string }
 
 func (s stringer) String() string { return s.v }

@@ -42,16 +42,16 @@ func _PillAliasedNoOp() {
 
 // PillAliasedValues returns all values of the enum.
 func PillAliasedValues() []PillAliased {
-	strs := make([]PillAliased, len(_PillAliasedValues))
-	copy(strs, _PillAliasedValues)
-	return _PillAliasedValues
+	cp := make([]PillAliased, len(_PillAliasedValues))
+	copy(cp, _PillAliasedValues)
+	return cp
 }
 
 // PillAliasedStrings returns a slice of all String values of the enum.
 func PillAliasedStrings() []string {
-	strs := make([]string, len(_PillAliasedStrings))
-	copy(strs, _PillAliasedStrings)
-	return strs
+	cp := make([]string, len(_PillAliasedStrings))
+	copy(cp, _PillAliasedStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -307,16 +307,16 @@ func _PillRowedNoOp() {
 
 // PillRowedValues returns all values of the enum.
 func PillRowedValues() []PillRowed {
-	strs := make([]PillRowed, len(_PillRowedValues))
-	copy(strs, _PillRowedValues)
-	return _PillRowedValues
+	cp := make([]PillRowed, len(_PillRowedValues))
+	copy(cp, _PillRowedValues)
+	return cp
 }
 
 // PillRowedStrings returns a slice of all String values of the enum.
 func PillRowedStrings() []string {
-	strs := make([]string, len(_PillRowedStrings))
-	copy(strs, _PillRowedStrings)
-	return strs
+	cp := make([]string, len(_PillRowedStrings))
+	copy(cp, _PillRowedStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -572,16 +572,16 @@ func _PillUnsignedNoOp() {
 
 // PillUnsignedValues returns all values of the enum.
 func PillUnsignedValues() []PillUnsigned {
-	strs := make([]PillUnsigned, len(_PillUnsignedValues))
-	copy(strs, _PillUnsignedValues)
-	return _PillUnsignedValues
+	cp := make([]PillUnsigned, len(_PillUnsignedValues))
+	copy(cp, _PillUnsignedValues)
+	return cp
 }
 
 // PillUnsignedStrings returns a slice of all String values of the enum.
 func PillUnsignedStrings() []string {
-	strs := make([]string, len(_PillUnsignedStrings))
-	copy(strs, _PillUnsignedStrings)
-	return strs
+	cp := make([]string, len(_PillUnsignedStrings))
+	copy(cp, _PillUnsignedStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -837,16 +837,16 @@ func _PillUnsigned16NoOp() {
 
 // PillUnsigned16Values returns all values of the enum.
 func PillUnsigned16Values() []PillUnsigned16 {
-	strs := make([]PillUnsigned16, len(_PillUnsigned16Values))
-	copy(strs, _PillUnsigned16Values)
-	return _PillUnsigned16Values
+	cp := make([]PillUnsigned16, len(_PillUnsigned16Values))
+	copy(cp, _PillUnsigned16Values)
+	return cp
 }
 
 // PillUnsigned16Strings returns a slice of all String values of the enum.
 func PillUnsigned16Strings() []string {
-	strs := make([]string, len(_PillUnsigned16Strings))
-	copy(strs, _PillUnsigned16Strings)
-	return strs
+	cp := make([]string, len(_PillUnsigned16Strings))
+	copy(cp, _PillUnsigned16Strings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -1102,16 +1102,16 @@ func _PillUnsigned32NoOp() {
 
 // PillUnsigned32Values returns all values of the enum.
 func PillUnsigned32Values() []PillUnsigned32 {
-	strs := make([]PillUnsigned32, len(_PillUnsigned32Values))
-	copy(strs, _PillUnsigned32Values)
-	return _PillUnsigned32Values
+	cp := make([]PillUnsigned32, len(_PillUnsigned32Values))
+	copy(cp, _PillUnsigned32Values)
+	return cp
 }
 
 // PillUnsigned32Strings returns a slice of all String values of the enum.
 func PillUnsigned32Strings() []string {
-	strs := make([]string, len(_PillUnsigned32Strings))
-	copy(strs, _PillUnsigned32Strings)
-	return strs
+	cp := make([]string, len(_PillUnsigned32Strings))
+	copy(cp, _PillUnsigned32Strings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -1367,16 +1367,16 @@ func _PillUnsigned64NoOp() {
 
 // PillUnsigned64Values returns all values of the enum.
 func PillUnsigned64Values() []PillUnsigned64 {
-	strs := make([]PillUnsigned64, len(_PillUnsigned64Values))
-	copy(strs, _PillUnsigned64Values)
-	return _PillUnsigned64Values
+	cp := make([]PillUnsigned64, len(_PillUnsigned64Values))
+	copy(cp, _PillUnsigned64Values)
+	return cp
 }
 
 // PillUnsigned64Strings returns a slice of all String values of the enum.
 func PillUnsigned64Strings() []string {
-	strs := make([]string, len(_PillUnsigned64Strings))
-	copy(strs, _PillUnsigned64Strings)
-	return strs
+	cp := make([]string, len(_PillUnsigned64Strings))
+	copy(cp, _PillUnsigned64Strings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -1632,16 +1632,16 @@ func _PillUnsigned8NoOp() {
 
 // PillUnsigned8Values returns all values of the enum.
 func PillUnsigned8Values() []PillUnsigned8 {
-	strs := make([]PillUnsigned8, len(_PillUnsigned8Values))
-	copy(strs, _PillUnsigned8Values)
-	return _PillUnsigned8Values
+	cp := make([]PillUnsigned8, len(_PillUnsigned8Values))
+	copy(cp, _PillUnsigned8Values)
+	return cp
 }
 
 // PillUnsigned8Strings returns a slice of all String values of the enum.
 func PillUnsigned8Strings() []string {
-	strs := make([]string, len(_PillUnsigned8Strings))
-	copy(strs, _PillUnsigned8Strings)
-	return strs
+	cp := make([]string, len(_PillUnsigned8Strings))
+	copy(cp, _PillUnsigned8Strings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.

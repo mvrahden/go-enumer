@@ -27,16 +27,16 @@ var (
 
 // BookingStateValues returns all values of the enum.
 func BookingStateValues() []BookingState {
-	strs := make([]BookingState, len(_BookingStateValues))
-	copy(strs, _BookingStateValues)
-	return _BookingStateValues
+	cp := make([]BookingState, len(_BookingStateValues))
+	copy(cp, _BookingStateValues)
+	return cp
 }
 
 // BookingStateStrings returns a slice of all String values of the enum.
 func BookingStateStrings() []string {
-	strs := make([]string, len(_BookingStateStrings))
-	copy(strs, _BookingStateStrings)
-	return strs
+	cp := make([]string, len(_BookingStateStrings))
+	copy(cp, _BookingStateStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -161,16 +161,16 @@ var (
 
 // BookingStateWithConfigValues returns all values of the enum.
 func BookingStateWithConfigValues() []BookingStateWithConfig {
-	strs := make([]BookingStateWithConfig, len(_BookingStateWithConfigValues))
-	copy(strs, _BookingStateWithConfigValues)
-	return _BookingStateWithConfigValues
+	cp := make([]BookingStateWithConfig, len(_BookingStateWithConfigValues))
+	copy(cp, _BookingStateWithConfigValues)
+	return cp
 }
 
 // BookingStateWithConfigStrings returns a slice of all String values of the enum.
 func BookingStateWithConfigStrings() []string {
-	strs := make([]string, len(_BookingStateWithConfigStrings))
-	copy(strs, _BookingStateWithConfigStrings)
-	return strs
+	cp := make([]string, len(_BookingStateWithConfigStrings))
+	copy(cp, _BookingStateWithConfigStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -313,16 +313,16 @@ var (
 
 // BookingStateWithConstantsValues returns all values of the enum.
 func BookingStateWithConstantsValues() []BookingStateWithConstants {
-	strs := make([]BookingStateWithConstants, len(_BookingStateWithConstantsValues))
-	copy(strs, _BookingStateWithConstantsValues)
-	return _BookingStateWithConstantsValues
+	cp := make([]BookingStateWithConstants, len(_BookingStateWithConstantsValues))
+	copy(cp, _BookingStateWithConstantsValues)
+	return cp
 }
 
 // BookingStateWithConstantsStrings returns a slice of all String values of the enum.
 func BookingStateWithConstantsStrings() []string {
-	strs := make([]string, len(_BookingStateWithConstantsStrings))
-	copy(strs, _BookingStateWithConstantsStrings)
-	return strs
+	cp := make([]string, len(_BookingStateWithConstantsStrings))
+	copy(cp, _BookingStateWithConstantsStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.

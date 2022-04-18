@@ -220,16 +220,16 @@ func _%[1]sNoOp() {
 		}
 		buf.WriteString(fmt.Sprintf(`// %[1]sValues returns all values of the enum.
 func %[1]sValues() []%[1]s {
-	strs := make([]%[1]s, len(_%[1]sValues))
-	copy(strs, _%[1]sValues)
-	return _%[1]sValues
+	cp := make([]%[1]s, len(_%[1]sValues))
+	copy(cp, _%[1]sValues)
+	return cp
 }
 
 // %[1]sStrings returns a slice of all String values of the enum.
 func %[1]sStrings() []string {
-	strs := make([]string, len(_%[1]sStrings))
-	copy(strs, _%[1]sStrings)
-	return strs
+	cp := make([]string, len(_%[1]sStrings))
+	copy(cp, _%[1]sStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.

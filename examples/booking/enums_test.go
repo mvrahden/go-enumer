@@ -17,6 +17,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]BookingState{0, 1, 2, 3, 4, 5},
 				BookingStateValues())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _BookingStateStrings, BookingStateStrings())
+				utils.AssertNotSamePointer(t, _BookingStateValues, BookingStateValues())
+			})
 			t.Run("Ent Interface", func(t *testing.T) {
 				require.Equal(t,
 					[]string{"Created", "Unavailable", "Failed", "Canceled", "NotFound", "Deleted"},
@@ -94,6 +98,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]BookingStateWithConfig{0, 1, 2, 3, 4, 5},
 				BookingStateWithConfigValues())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _BookingStateWithConfigStrings, BookingStateWithConfigStrings())
+				utils.AssertNotSamePointer(t, _BookingStateWithConfigValues, BookingStateWithConfigValues())
+			})
 			t.Run("Misses Ent Interface", func(t *testing.T) {
 				_, ok := ((interface{})(BookingStateWithConfig(0))).(interface{ Values() []string })
 				require.False(t, ok)
@@ -169,6 +177,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]BookingStateWithConstants{0, 1, 2, 3, 4, 5},
 				BookingStateWithConstantsValues())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _BookingStateWithConstantsStrings, BookingStateWithConstantsStrings())
+				utils.AssertNotSamePointer(t, _BookingStateWithConstantsValues, BookingStateWithConstantsValues())
+			})
 			t.Run("Ent Interface", func(t *testing.T) {
 				require.Equal(t,
 					[]string{"Created", "Unavailable", "Failed", "Canceled", "NotFound", "Deleted"},

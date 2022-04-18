@@ -43,16 +43,16 @@ func _PlanetNoOp() {
 
 // PlanetValues returns all values of the enum.
 func PlanetValues() []Planet {
-	strs := make([]Planet, len(_PlanetValues))
-	copy(strs, _PlanetValues)
-	return _PlanetValues
+	cp := make([]Planet, len(_PlanetValues))
+	copy(cp, _PlanetValues)
+	return cp
 }
 
 // PlanetStrings returns a slice of all String values of the enum.
 func PlanetStrings() []string {
-	strs := make([]string, len(_PlanetStrings))
-	copy(strs, _PlanetStrings)
-	return strs
+	cp := make([]string, len(_PlanetStrings))
+	copy(cp, _PlanetStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -319,16 +319,16 @@ func _PlanetSupportUndefinedNoOp() {
 
 // PlanetSupportUndefinedValues returns all values of the enum.
 func PlanetSupportUndefinedValues() []PlanetSupportUndefined {
-	strs := make([]PlanetSupportUndefined, len(_PlanetSupportUndefinedValues))
-	copy(strs, _PlanetSupportUndefinedValues)
-	return _PlanetSupportUndefinedValues
+	cp := make([]PlanetSupportUndefined, len(_PlanetSupportUndefinedValues))
+	copy(cp, _PlanetSupportUndefinedValues)
+	return cp
 }
 
 // PlanetSupportUndefinedStrings returns a slice of all String values of the enum.
 func PlanetSupportUndefinedStrings() []string {
-	strs := make([]string, len(_PlanetSupportUndefinedStrings))
-	copy(strs, _PlanetSupportUndefinedStrings)
-	return strs
+	cp := make([]string, len(_PlanetSupportUndefinedStrings))
+	copy(cp, _PlanetSupportUndefinedStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -578,16 +578,16 @@ func _PlanetSupportUndefinedWithDefaultNoOp() {
 
 // PlanetSupportUndefinedWithDefaultValues returns all values of the enum.
 func PlanetSupportUndefinedWithDefaultValues() []PlanetSupportUndefinedWithDefault {
-	strs := make([]PlanetSupportUndefinedWithDefault, len(_PlanetSupportUndefinedWithDefaultValues))
-	copy(strs, _PlanetSupportUndefinedWithDefaultValues)
-	return _PlanetSupportUndefinedWithDefaultValues
+	cp := make([]PlanetSupportUndefinedWithDefault, len(_PlanetSupportUndefinedWithDefaultValues))
+	copy(cp, _PlanetSupportUndefinedWithDefaultValues)
+	return cp
 }
 
 // PlanetSupportUndefinedWithDefaultStrings returns a slice of all String values of the enum.
 func PlanetSupportUndefinedWithDefaultStrings() []string {
-	strs := make([]string, len(_PlanetSupportUndefinedWithDefaultStrings))
-	copy(strs, _PlanetSupportUndefinedWithDefaultStrings)
-	return strs
+	cp := make([]string, len(_PlanetSupportUndefinedWithDefaultStrings))
+	copy(cp, _PlanetSupportUndefinedWithDefaultStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -836,16 +836,16 @@ func _PlanetWithDefaultNoOp() {
 
 // PlanetWithDefaultValues returns all values of the enum.
 func PlanetWithDefaultValues() []PlanetWithDefault {
-	strs := make([]PlanetWithDefault, len(_PlanetWithDefaultValues))
-	copy(strs, _PlanetWithDefaultValues)
-	return _PlanetWithDefaultValues
+	cp := make([]PlanetWithDefault, len(_PlanetWithDefaultValues))
+	copy(cp, _PlanetWithDefaultValues)
+	return cp
 }
 
 // PlanetWithDefaultStrings returns a slice of all String values of the enum.
 func PlanetWithDefaultStrings() []string {
-	strs := make([]string, len(_PlanetWithDefaultStrings))
-	copy(strs, _PlanetWithDefaultStrings)
-	return strs
+	cp := make([]string, len(_PlanetWithDefaultStrings))
+	copy(cp, _PlanetWithDefaultStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.

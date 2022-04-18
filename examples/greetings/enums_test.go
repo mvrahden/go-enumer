@@ -17,6 +17,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]Greeting{GreetingРоссия, Greeting中國, Greeting日本, Greeting한국, GreetingČeskáRepublika, Greeting𝜋},
 				GreetingValues())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _GreetingStrings, GreetingStrings())
+				utils.AssertNotSamePointer(t, _GreetingValues, GreetingValues())
+			})
 			t.Run("Ent Interface", func(t *testing.T) {
 				require.Equal(t,
 					[]string{"Россия", "中國", "日本", "한국", "ČeskáRepublika", "𝜋"},
@@ -89,6 +93,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]GreetingWithDefault{GreetingWithDefaultWorld, GreetingWithDefaultРоссия, GreetingWithDefault中國, GreetingWithDefault日本, GreetingWithDefault한국, GreetingWithDefaultČeskáRepublika, GreetingWithDefault𝜋},
 				GreetingWithDefaultValues())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _GreetingWithDefaultStrings, GreetingWithDefaultStrings())
+				utils.AssertNotSamePointer(t, _GreetingWithDefaultValues, GreetingWithDefaultValues())
+			})
 			t.Run("Ent Interface", func(t *testing.T) {
 				require.Equal(t,
 					[]string{"World", "Россия", "中國", "日本", "한국", "ČeskáRepublika", "𝜋"},

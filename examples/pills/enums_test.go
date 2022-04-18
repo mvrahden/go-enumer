@@ -17,6 +17,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]PillUnsigned{PillUnsignedPlacebo, PillUnsignedAspirin, PillUnsignedIbuprofen, PillUnsignedParacetamol, PillUnsignedVitaminC},
 				PillUnsignedValues())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _PillUnsignedStrings, PillUnsignedStrings())
+				utils.AssertNotSamePointer(t, _PillUnsignedValues, PillUnsignedValues())
+			})
 		})
 		t.Run("Lookup", func(t *testing.T) {
 			type testCase struct {
@@ -76,6 +80,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]PillAliased{PillAliasedPlacebo, PillAliasedAspirin, PillAliasedIbuprofen, PillAliasedParacetamol, PillAliasedVitaminC},
 				PillAliasedValues())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _PillUnsignedStrings, PillUnsignedStrings())
+				utils.AssertNotSamePointer(t, _PillUnsignedValues, PillUnsignedValues())
+			})
 		})
 		t.Run("Lookup", func(t *testing.T) {
 			type testCase struct {
@@ -135,6 +143,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]PillRowed{PillRowedPlacebo, PillRowedAspirin, PillRowedIbuprofen, PillRowedParacetamol, PillRowedVitaminC},
 				PillRowedValues())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _PillRowedStrings, PillRowedStrings())
+				utils.AssertNotSamePointer(t, _PillRowedValues, PillRowedValues())
+			})
 		})
 		t.Run("Lookup", func(t *testing.T) {
 			type testCase struct {
@@ -194,6 +206,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]PillUnsigned8{PillUnsigned8Placebo, PillUnsigned8Aspirin, PillUnsigned8Ibuprofen, PillUnsigned8Paracetamol, PillUnsigned8VitaminC},
 				PillUnsigned8Values())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _PillUnsigned8Strings, PillUnsigned8Strings())
+				utils.AssertNotSamePointer(t, _PillUnsigned8Values, PillUnsigned8Values())
+			})
 		})
 		t.Run("Lookup", func(t *testing.T) {
 			type testCase struct {
@@ -253,6 +269,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]PillUnsigned16{PillUnsigned16Placebo, PillUnsigned16Aspirin, PillUnsigned16Ibuprofen, PillUnsigned16Paracetamol, PillUnsigned16VitaminC},
 				PillUnsigned16Values())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _PillUnsigned16Strings, PillUnsigned16Strings())
+				utils.AssertNotSamePointer(t, _PillUnsigned16Values, PillUnsigned16Values())
+			})
 		})
 		t.Run("Lookup", func(t *testing.T) {
 			type testCase struct {
@@ -312,6 +332,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]PillUnsigned32{PillUnsigned32Placebo, PillUnsigned32Aspirin, PillUnsigned32Ibuprofen, PillUnsigned32Paracetamol, PillUnsigned32VitaminC},
 				PillUnsigned32Values())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _PillUnsigned32Strings, PillUnsigned32Strings())
+				utils.AssertNotSamePointer(t, _PillUnsigned32Values, PillUnsigned32Values())
+			})
 		})
 		t.Run("Lookup", func(t *testing.T) {
 			type testCase struct {
@@ -371,6 +395,10 @@ func TestEnums(t *testing.T) {
 			require.Equal(t,
 				[]PillUnsigned64{PillUnsigned64Placebo, PillUnsigned64Aspirin, PillUnsigned64Ibuprofen, PillUnsigned64Paracetamol, PillUnsigned64VitaminC},
 				PillUnsigned64Values())
+			t.Run("return copies", func(t *testing.T) {
+				utils.AssertNotSamePointer(t, _PillUnsigned64Strings, PillUnsigned64Strings())
+				utils.AssertNotSamePointer(t, _PillUnsigned64Values, PillUnsigned64Values())
+			})
 		})
 		t.Run("Lookup", func(t *testing.T) {
 			type testCase struct {

@@ -40,16 +40,16 @@ func _AccountStateNoOp() {
 
 // AccountStateValues returns all values of the enum.
 func AccountStateValues() []AccountState {
-	strs := make([]AccountState, len(_AccountStateValues))
-	copy(strs, _AccountStateValues)
-	return _AccountStateValues
+	cp := make([]AccountState, len(_AccountStateValues))
+	copy(cp, _AccountStateValues)
+	return cp
 }
 
 // AccountStateStrings returns a slice of all String values of the enum.
 func AccountStateStrings() []string {
-	strs := make([]string, len(_AccountStateStrings))
-	copy(strs, _AccountStateStrings)
-	return strs
+	cp := make([]string, len(_AccountStateStrings))
+	copy(cp, _AccountStateStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -188,16 +188,16 @@ var (
 
 // CurrencyValues returns all values of the enum.
 func CurrencyValues() []Currency {
-	strs := make([]Currency, len(_CurrencyValues))
-	copy(strs, _CurrencyValues)
-	return _CurrencyValues
+	cp := make([]Currency, len(_CurrencyValues))
+	copy(cp, _CurrencyValues)
+	return cp
 }
 
 // CurrencyStrings returns a slice of all String values of the enum.
 func CurrencyStrings() []string {
-	strs := make([]string, len(_CurrencyStrings))
-	copy(strs, _CurrencyStrings)
-	return strs
+	cp := make([]string, len(_CurrencyStrings))
+	copy(cp, _CurrencyStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -448,16 +448,16 @@ var (
 
 // TimezoneValues returns all values of the enum.
 func TimezoneValues() []Timezone {
-	strs := make([]Timezone, len(_TimezoneValues))
-	copy(strs, _TimezoneValues)
-	return _TimezoneValues
+	cp := make([]Timezone, len(_TimezoneValues))
+	copy(cp, _TimezoneValues)
+	return cp
 }
 
 // TimezoneStrings returns a slice of all String values of the enum.
 func TimezoneStrings() []string {
-	strs := make([]string, len(_TimezoneStrings))
-	copy(strs, _TimezoneStrings)
-	return strs
+	cp := make([]string, len(_TimezoneStrings))
+	copy(cp, _TimezoneStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -1546,16 +1546,16 @@ func _UserRoleNoOp() {
 
 // UserRoleValues returns all values of the enum.
 func UserRoleValues() []UserRole {
-	strs := make([]UserRole, len(_UserRoleValues))
-	copy(strs, _UserRoleValues)
-	return _UserRoleValues
+	cp := make([]UserRole, len(_UserRoleValues))
+	copy(cp, _UserRoleValues)
+	return cp
 }
 
 // UserRoleStrings returns a slice of all String values of the enum.
 func UserRoleStrings() []string {
-	strs := make([]string, len(_UserRoleStrings))
-	copy(strs, _UserRoleStrings)
-	return strs
+	cp := make([]string, len(_UserRoleStrings))
+	copy(cp, _UserRoleStrings)
+	return cp
 }
 
 // IsValid inspects whether the value is valid enum value.
