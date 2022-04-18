@@ -1,7 +1,8 @@
 # go-enumer [![GoDoc](https://godoc.org/github.com/mvrahden/go-enumer?status.svg)](https://godoc.org/github.com/mvrahden/go-enumer) [![Go Report Card](https://goreportcard.com/badge/github.com/mvrahden/go-enumer)](https://goreportcard.com/report/github.com/mvrahden/go-enumer) [![GitHub Release](https://img.shields.io/github/release/mvrahden/go-enumer.svg)](https://github.com/mvrahden/go-enumer/releases)[![Build Status](https://travis-ci.com/mvrahden/go-enumer.svg?branch=master)](https://travis-ci.com/mvrahden/go-enumer)
 
-`go-enumer` is a tool to generate Go code to upgrade Go constants (of integer-like types) with useful methods, such as validation and (de-)serialization.
-It is an opinionated remake of the existing [enumer](https://github.com/dmarkham/enumer) package and therefore behaves different in many aspects.
+`go-enumer` is a tool to generate Go code to upgrade Go constants to enums.
+It furthermore adds (of unsigned integer types) useful methods to the types, such as validation and (de-)serialization.
+It is an opinionated remake of the existing [enumer](https://github.com/dmarkham/enumer) package and therefore behaves different in practically all aspects.
 
 This remake of `go-enumer` is intended to be:
 
@@ -14,12 +15,14 @@ This remake of `go-enumer` is intended to be:
 ## What's new?
 
 `go-enumer` is an implementation with improved handling of default values and empty values (Zero Values).
-Additionally the type derivation (lookups) was improved and was given more freedom to preferences of case sensitivity.
+Additionally the type derivation (lookup) was improved and was given more freedom to preferences of case sensitivity.
 It furthermore introduces a clear and unified usage pattern on how to implement enums, by bringing its own easy to understand and hard to misuse way of defining them.
 
-`go-enumer` defines an enum as a set custom-defined, distinct values which are implemented by defining a range of continuously incrementing constants of a specific integer-like type alias.
+`go-enumer` defines an enum as a set custom-defined, distinct values which are implemented by defining a range of continuously incrementing constants of a any unsigned integer type or type alias.
 By convention, enum sets must:
 
+- be marked with a [magic comment](#magic-comment-goenum).
+- be of an unsigned integer type.
 - start at `1` or in defined edge cases with `0`.
 - consist of continuous linear increments of `1`.
 
@@ -36,8 +39,8 @@ const (
 ```
 
 `go-enumer` gives a special semantic meaning to constants with the value `0`.
-The **[Zero Value](https://go.dev/tour/basics/12)** of native integer-like types in Go is `0`.
-For enums of an integer-like alias type it likewise means, that an enum of value `0` is by definition the zero value or the **default** of the enum set.
+The **[Zero Value](https://go.dev/tour/basics/12)** of native integer types in Go is `0`.
+For enums it likewise means, that an enum of value `0` is by definition the zero value or the **default** of the enum set.
 In some situations you may find yourself in the need of such a **default** value.
 Depending on whether your set of values needs a default value, you will chose your sequence to start at value `0` with the your default value being `0`.
 All the other values should be `>= 1`.
