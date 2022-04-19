@@ -174,16 +174,22 @@ func (_a *AccountState) Scan(value interface{}) error {
 }
 
 const (
-	_CurrencyString         = "USDEURYENGBPAUD"
-	_CurrencyLowerString    = "usdeuryengbpaud"
-	_CurrencyCanonicalValue = "US DollarEuroJapanese YenGreat British PoundAustralian Dollar"
+	_CurrencyString      = "USDEURJPYGBPAUD"
+	_CurrencyLowerString = "usdeurjpygbpaud"
+	_CurrencyDataColumn0 = "US DollarEuroYenPound SterlingAustralian Dollar"
+	_CurrencyDataColumn1 = "840978392826036"
+	_CurrencyDataColumn2 = "22022"
 )
 
 var (
-	_CurrencyValueRange      = [2]Currency{1, 5}
-	_CurrencyValues          = []Currency{1, 2, 3, 4, 5}
-	_CurrencyStrings         = []string{_CurrencyString[0:3], _CurrencyString[3:6], _CurrencyString[6:9], _CurrencyString[9:12], _CurrencyString[12:15]}
-	_CurrencyCanonicalValues = []string{_CurrencyCanonicalValue[0:9], _CurrencyCanonicalValue[9:13], _CurrencyCanonicalValue[13:25], _CurrencyCanonicalValue[25:44], _CurrencyCanonicalValue[44:61]}
+	_CurrencyValueRange     = [2]Currency{1, 5}
+	_CurrencyValues         = []Currency{1, 2, 3, 4, 5}
+	_CurrencyStrings        = []string{_CurrencyString[0:3], _CurrencyString[3:6], _CurrencyString[6:9], _CurrencyString[9:12], _CurrencyString[12:15]}
+	_CurrencyAdditionalData = map[uint8]map[Currency]string{
+		0: {1: _CurrencyDataColumn0[0:9], 2: _CurrencyDataColumn0[9:13], 3: _CurrencyDataColumn0[13:16], 4: _CurrencyDataColumn0[16:30], 5: _CurrencyDataColumn0[30:47]},
+		1: {1: _CurrencyDataColumn1[0:3], 2: _CurrencyDataColumn1[3:6], 3: _CurrencyDataColumn1[6:9], 4: _CurrencyDataColumn1[9:12], 5: _CurrencyDataColumn1[12:15]},
+		2: {1: _CurrencyDataColumn2[0:1], 2: _CurrencyDataColumn2[1:2], 3: _CurrencyDataColumn2[2:3], 4: _CurrencyDataColumn2[3:4], 5: _CurrencyDataColumn2[4:5]},
+	}
 )
 
 // CurrencyValues returns all values of the enum.
@@ -224,15 +230,50 @@ func (_c Currency) String() string {
 	return _CurrencyStrings[idx]
 }
 
-// CanonicalValue returns the canonical string of the enum value.
+// GetCurrencyName returns the "currency-name" string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern Currency(%d) instead.
-func (_c Currency) CanonicalValue() string {
+// of the following pattern Currency(%d).CurrencyName instead.
+func (_c Currency) GetCurrencyName() (string, bool) {
 	if !_c.IsValid() {
-		return fmt.Sprintf("Currency(%d)", _c)
+		return fmt.Sprintf("Currency(%d).CurrencyName", _c), false
 	}
-	idx := uint(_c)
-	return _CurrencyCanonicalValues[idx]
+	return _c._fromColumn(0)
+}
+
+// GetNumericCode returns the "numeric-code" string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern Currency(%d).NumericCode instead.
+func (_c Currency) GetNumericCode() (string, bool) {
+	if !_c.IsValid() {
+		return fmt.Sprintf("Currency(%d).NumericCode", _c), false
+	}
+	return _c._fromColumn(1)
+}
+
+// GetMinorUnit returns the "minor-unit" string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern Currency(%d).MinorUnit instead.
+func (_c Currency) GetMinorUnit() (string, bool) {
+	if !_c.IsValid() {
+		return fmt.Sprintf("Currency(%d).MinorUnit", _c), false
+	}
+	return _c._fromColumn(2)
+}
+
+// _fromColumn looks up additional data of the enum.
+func (_c Currency) _fromColumn(colId uint8) (cellValue string, ok bool) {
+	if ok := _c.IsValid(); !ok {
+		return "", false
+	}
+	col, ok := _CurrencyAdditionalData[colId]
+	if !ok {
+		return "", false
+	}
+	v, ok := col[_c]
+	if !ok {
+		return "", false
+	}
+	return v, ok
 }
 
 var (

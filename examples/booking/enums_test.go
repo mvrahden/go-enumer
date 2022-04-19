@@ -21,6 +21,17 @@ func TestEnums(t *testing.T) {
 				utils.AssertNotSamePointer(t, _BookingStateStrings, BookingStateStrings())
 				utils.AssertNotSamePointer(t, _BookingStateValues, BookingStateValues())
 			})
+			t.Run("additional data", func(t *testing.T) {
+				descriptions := []string{"The booking was created successfully", "The booking was not available", "The booking failed", "The booking was canceled", "The booking was not found", "The booking was deleted"}
+				for _, enum := range BookingStateValues() {
+					require.Equal(t, descriptions[enum], utils.Must(enum.GetDescription()))
+				}
+				t.Run("for invalid enum", func(t *testing.T) {
+					desc, ok := BookingState(999).GetDescription()
+					require.False(t, ok)
+					require.Equal(t, "BookingState(999).Description", desc)
+				})
+			})
 			t.Run("Ent Interface", func(t *testing.T) {
 				require.Equal(t,
 					[]string{"Created", "Unavailable", "Failed", "Canceled", "NotFound", "Deleted"},
@@ -44,27 +55,29 @@ func TestEnums(t *testing.T) {
 			}
 			for idx, tC := range testCases {
 				t.Run(fmt.Sprintf("Case-sensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
-					p, ok := BookingStateFromString(tC.upper)
+					enum, ok := BookingStateFromString(tC.upper)
 					require.True(t, ok)
-					require.Equal(t, tC.enum, p)
-					p, ok = BookingStateFromString(tC.lower)
+					require.Equal(t, tC.enum, enum)
+					require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
+					enum, ok = BookingStateFromString(tC.lower)
 					if tC.lower == tC.upper {
 						require.True(t, ok)
-						require.Equal(t, tC.enum, p)
-						require.Equal(t, tC.canonical, p.CanonicalValue())
+						require.Equal(t, tC.enum, enum)
+						require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
 					} else {
 						require.False(t, ok)
-						require.Equal(t, BookingState(0), p)
+						require.Equal(t, BookingState(0), enum)
 					}
 				})
 				t.Run(fmt.Sprintf("Case-insensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
-					p, ok := BookingStateFromStringIgnoreCase(tC.upper)
+					enum, ok := BookingStateFromStringIgnoreCase(tC.upper)
 					require.True(t, ok)
-					require.Equal(t, tC.enum, p)
-					p, ok = BookingStateFromStringIgnoreCase(tC.lower)
+					require.Equal(t, tC.enum, enum)
+					require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
+					enum, ok = BookingStateFromStringIgnoreCase(tC.lower)
 					require.True(t, ok)
-					require.Equal(t, tC.enum, p)
-					require.Equal(t, tC.canonical, p.CanonicalValue())
+					require.Equal(t, tC.enum, enum)
+					require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
 				})
 			}
 		})
@@ -124,27 +137,29 @@ func TestEnums(t *testing.T) {
 			}
 			for idx, tC := range testCases {
 				t.Run(fmt.Sprintf("Case-sensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
-					p, ok := BookingStateWithConfigFromString(tC.upper)
+					enum, ok := BookingStateWithConfigFromString(tC.upper)
 					require.True(t, ok)
-					require.Equal(t, tC.enum, p)
-					p, ok = BookingStateWithConfigFromString(tC.lower)
+					require.Equal(t, tC.enum, enum)
+					require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
+					enum, ok = BookingStateWithConfigFromString(tC.lower)
 					if tC.lower == tC.upper {
 						require.True(t, ok)
-						require.Equal(t, tC.enum, p)
-						require.Equal(t, tC.canonical, p.CanonicalValue())
+						require.Equal(t, tC.enum, enum)
+						require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
 					} else {
 						require.False(t, ok)
-						require.Equal(t, BookingStateWithConfig(0), p)
+						require.Equal(t, BookingStateWithConfig(0), enum)
 					}
 				})
 				t.Run(fmt.Sprintf("Case-insensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
-					p, ok := BookingStateWithConfigFromStringIgnoreCase(tC.upper)
+					enum, ok := BookingStateWithConfigFromStringIgnoreCase(tC.upper)
 					require.True(t, ok)
-					require.Equal(t, tC.enum, p)
-					p, ok = BookingStateWithConfigFromStringIgnoreCase(tC.lower)
+					require.Equal(t, tC.enum, enum)
+					require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
+					enum, ok = BookingStateWithConfigFromStringIgnoreCase(tC.lower)
 					require.True(t, ok)
-					require.Equal(t, tC.enum, p)
-					require.Equal(t, tC.canonical, p.CanonicalValue())
+					require.Equal(t, tC.enum, enum)
+					require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
 				})
 			}
 		})
@@ -204,27 +219,29 @@ func TestEnums(t *testing.T) {
 			}
 			for idx, tC := range testCases {
 				t.Run(fmt.Sprintf("Case-sensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
-					p, ok := BookingStateWithConstantsFromString(tC.upper)
+					enum, ok := BookingStateWithConstantsFromString(tC.upper)
 					require.True(t, ok)
-					require.Equal(t, tC.enum, p)
-					p, ok = BookingStateWithConstantsFromString(tC.lower)
+					require.Equal(t, tC.enum, enum)
+					require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
+					enum, ok = BookingStateWithConstantsFromString(tC.lower)
 					if tC.lower == tC.upper {
 						require.True(t, ok)
-						require.Equal(t, tC.enum, p)
-						require.Equal(t, tC.canonical, p.CanonicalValue())
+						require.Equal(t, tC.enum, enum)
+						require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
 					} else {
 						require.False(t, ok)
-						require.Equal(t, BookingStateWithConstants(0), p)
+						require.Equal(t, BookingStateWithConstants(0), enum)
 					}
 				})
 				t.Run(fmt.Sprintf("Case-insensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
-					p, ok := BookingStateWithConstantsFromStringIgnoreCase(tC.upper)
+					enum, ok := BookingStateWithConstantsFromStringIgnoreCase(tC.upper)
 					require.True(t, ok)
-					require.Equal(t, tC.enum, p)
-					p, ok = BookingStateWithConstantsFromStringIgnoreCase(tC.lower)
+					require.Equal(t, tC.enum, enum)
+					require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
+					enum, ok = BookingStateWithConstantsFromStringIgnoreCase(tC.lower)
 					require.True(t, ok)
-					require.Equal(t, tC.enum, p)
-					require.Equal(t, tC.canonical, p.CanonicalValue())
+					require.Equal(t, tC.enum, enum)
+					require.Equal(t, tC.canonical, utils.Must(enum.GetDescription()))
 				})
 			}
 		})

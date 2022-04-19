@@ -67,6 +67,8 @@ func TestGeneratorEdgeCaseDetection(t *testing.T) {
 			errMsg: "Failed reading from CSV for \"MissingCSV\". err: no such file \"source.csv\""},
 		{directory: "csv.empty",
 			errMsg: "Failed reading from CSV for \"EmptyCSV\". err: found empty csv source"},
+		{directory: "csv.invalid-header",
+			errMsg: "Failed reading from CSV for \"NumericFirstCellInCSV\". err: first row must be a header row but found numeric value in first cell"},
 		{directory: "csv.invalid-value",
 			errMsg: "Failed reading from CSV for \"NegativeValueInCSV\". err: failed converting \"-1\" to uint64"},
 		{directory: "csv.invalid-range",

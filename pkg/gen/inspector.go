@@ -11,7 +11,6 @@ import (
 	"go/token"
 	"go/types"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -25,15 +24,10 @@ import (
 
 const MAGIC_MARKER = "//go:enum"
 
-func init() {
-	reg, err := regexp.Compile("^// Code generated .* DO NOT EDIT.$")
-	if err != nil {
-		log.Fatalf("failed evaluating regexp. err: %s", err)
-	}
-	matchGeneratedFileRegex = reg
-}
-
-var matchGeneratedFileRegex *regexp.Regexp
+var (
+	matchGeneratedFileRegex = regexp.MustCompile(`^// Code generated .* DO NOT EDIT.$`)
+	matchNumericValueRegex  = regexp.MustCompile(`^\-?\d+`)
+)
 
 type inspector struct {
 	cfg *config.Options
@@ -120,22 +114,35 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 		return err
 	}
 	ts.IsFromCsvSource = true // hint: mark type as derived from CSV
-	csvValueSpecs := make([]*ValueSpec, len(records))
+	var csvValueSpecs []*ValueSpec
 	for idx, row := range records {
+		if idx == 0 {
+			ok := matchNumericValueRegex.MatchString(row[0])
+			if ok {
+				return fmt.Errorf("first row must be a header row but found numeric value in first cell")
+			}
+		}
 		u64, err := strconv.ParseUint(row[0], 10, 64)
+		if isHeaderRow := idx == 0 && err != nil; isHeaderRow {
+			if len(row) > 2 { // add additional header names
+				ts.DataColumns = append(ts.DataColumns, row[2:]...)
+			}
+			continue
+		}
 		if err != nil {
 			return fmt.Errorf("failed converting %q to uint64", row[0])
 		}
-		csvValueSpecs[idx] = &ValueSpec{
+		cvs := &ValueSpec{
 			Value:          u64,
 			IdentifierName: "", // hint: no identifier here
 			EnumValue:      row[1],
 			ValueString:    row[0],
 		}
-		if len(row) == 3 {
-			ts.HasCanonicalValues = true // hint: mark type for canocical value support
-			csvValueSpecs[idx].CanonicalValue = row[2]
+		if len(row) > 2 {
+			ts.HasAdditionalData = true // hint: mark type for additional column support
+			cvs.DataCells = row[2:]
 		}
+		csvValueSpecs = append(csvValueSpecs, cvs)
 	}
 	ts.ValueSpecs = csvValueSpecs
 	return nil
@@ -249,7 +256,7 @@ func (i inspector) isGeneratedFile(f *ast.File) bool {
 	if len(f.Comments) > 0 &&
 		len(f.Comments[0].List) > 0 {
 		firstComment := f.Comments[0].List[0]
-		if matchGeneratedFileRegex.Match([]byte(firstComment.Text)) {
+		if matchGeneratedFileRegex.MatchString(firstComment.Text) {
 			return true
 		}
 	}

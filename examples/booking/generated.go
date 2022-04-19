@@ -13,16 +13,18 @@ var (
 )
 
 const (
-	_BookingStateString         = "CreatedUnavailableFailedCanceledNotFoundDeleted"
-	_BookingStateLowerString    = "createdunavailablefailedcancelednotfounddeleted"
-	_BookingStateCanonicalValue = "The booking was created successfullyThe booking was not availableThe booking failedThe booking was canceledThe booking was not foundThe booking was deleted"
+	_BookingStateString      = "CreatedUnavailableFailedCanceledNotFoundDeleted"
+	_BookingStateLowerString = "createdunavailablefailedcancelednotfounddeleted"
+	_BookingStateDataColumn0 = "The booking was created successfullyThe booking was not availableThe booking failedThe booking was canceledThe booking was not foundThe booking was deleted"
 )
 
 var (
-	_BookingStateValueRange      = [2]BookingState{0, 5}
-	_BookingStateValues          = []BookingState{0, 1, 2, 3, 4, 5}
-	_BookingStateStrings         = []string{_BookingStateString[0:7], _BookingStateString[7:18], _BookingStateString[18:24], _BookingStateString[24:32], _BookingStateString[32:40], _BookingStateString[40:47]}
-	_BookingStateCanonicalValues = []string{_BookingStateCanonicalValue[0:36], _BookingStateCanonicalValue[36:65], _BookingStateCanonicalValue[65:83], _BookingStateCanonicalValue[83:107], _BookingStateCanonicalValue[107:132], _BookingStateCanonicalValue[132:155]}
+	_BookingStateValueRange     = [2]BookingState{0, 5}
+	_BookingStateValues         = []BookingState{0, 1, 2, 3, 4, 5}
+	_BookingStateStrings        = []string{_BookingStateString[0:7], _BookingStateString[7:18], _BookingStateString[18:24], _BookingStateString[24:32], _BookingStateString[32:40], _BookingStateString[40:47]}
+	_BookingStateAdditionalData = map[uint8]map[BookingState]string{
+		0: {0: _BookingStateDataColumn0[0:36], 1: _BookingStateDataColumn0[36:65], 2: _BookingStateDataColumn0[65:83], 3: _BookingStateDataColumn0[83:107], 4: _BookingStateDataColumn0[107:132], 5: _BookingStateDataColumn0[132:155]},
+	}
 )
 
 // BookingStateValues returns all values of the enum.
@@ -63,15 +65,30 @@ func (_b BookingState) String() string {
 	return _BookingStateStrings[idx]
 }
 
-// CanonicalValue returns the canonical string of the enum value.
+// GetDescription returns the "description" string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern BookingState(%d) instead.
-func (_b BookingState) CanonicalValue() string {
+// of the following pattern BookingState(%d).Description instead.
+func (_b BookingState) GetDescription() (string, bool) {
 	if !_b.IsValid() {
-		return fmt.Sprintf("BookingState(%d)", _b)
+		return fmt.Sprintf("BookingState(%d).Description", _b), false
 	}
-	idx := uint(_b)
-	return _BookingStateCanonicalValues[idx]
+	return _b._fromColumn(0)
+}
+
+// _fromColumn looks up additional data of the enum.
+func (_b BookingState) _fromColumn(colId uint8) (cellValue string, ok bool) {
+	if ok := _b.IsValid(); !ok {
+		return "", false
+	}
+	col, ok := _BookingStateAdditionalData[colId]
+	if !ok {
+		return "", false
+	}
+	v, ok := col[_b]
+	if !ok {
+		return "", false
+	}
+	return v, ok
 }
 
 var (
@@ -147,16 +164,18 @@ func (BookingState) Values() []string {
 }
 
 const (
-	_BookingStateWithConfigString         = "CreatedUnavailableFailedCanceledNotFoundDeleted"
-	_BookingStateWithConfigLowerString    = "createdunavailablefailedcancelednotfounddeleted"
-	_BookingStateWithConfigCanonicalValue = "The booking was created successfullyThe booking was not availableThe booking failedThe booking was canceledThe booking was not foundThe booking was deleted"
+	_BookingStateWithConfigString      = "CreatedUnavailableFailedCanceledNotFoundDeleted"
+	_BookingStateWithConfigLowerString = "createdunavailablefailedcancelednotfounddeleted"
+	_BookingStateWithConfigDataColumn0 = "The booking was created successfullyThe booking was not availableThe booking failedThe booking was canceledThe booking was not foundThe booking was deleted"
 )
 
 var (
-	_BookingStateWithConfigValueRange      = [2]BookingStateWithConfig{0, 5}
-	_BookingStateWithConfigValues          = []BookingStateWithConfig{0, 1, 2, 3, 4, 5}
-	_BookingStateWithConfigStrings         = []string{_BookingStateWithConfigString[0:7], _BookingStateWithConfigString[7:18], _BookingStateWithConfigString[18:24], _BookingStateWithConfigString[24:32], _BookingStateWithConfigString[32:40], _BookingStateWithConfigString[40:47]}
-	_BookingStateWithConfigCanonicalValues = []string{_BookingStateWithConfigCanonicalValue[0:36], _BookingStateWithConfigCanonicalValue[36:65], _BookingStateWithConfigCanonicalValue[65:83], _BookingStateWithConfigCanonicalValue[83:107], _BookingStateWithConfigCanonicalValue[107:132], _BookingStateWithConfigCanonicalValue[132:155]}
+	_BookingStateWithConfigValueRange     = [2]BookingStateWithConfig{0, 5}
+	_BookingStateWithConfigValues         = []BookingStateWithConfig{0, 1, 2, 3, 4, 5}
+	_BookingStateWithConfigStrings        = []string{_BookingStateWithConfigString[0:7], _BookingStateWithConfigString[7:18], _BookingStateWithConfigString[18:24], _BookingStateWithConfigString[24:32], _BookingStateWithConfigString[32:40], _BookingStateWithConfigString[40:47]}
+	_BookingStateWithConfigAdditionalData = map[uint8]map[BookingStateWithConfig]string{
+		0: {0: _BookingStateWithConfigDataColumn0[0:36], 1: _BookingStateWithConfigDataColumn0[36:65], 2: _BookingStateWithConfigDataColumn0[65:83], 3: _BookingStateWithConfigDataColumn0[83:107], 4: _BookingStateWithConfigDataColumn0[107:132], 5: _BookingStateWithConfigDataColumn0[132:155]},
+	}
 )
 
 // BookingStateWithConfigValues returns all values of the enum.
@@ -197,15 +216,30 @@ func (_b BookingStateWithConfig) String() string {
 	return _BookingStateWithConfigStrings[idx]
 }
 
-// CanonicalValue returns the canonical string of the enum value.
+// GetDescription returns the "description" string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern BookingStateWithConfig(%d) instead.
-func (_b BookingStateWithConfig) CanonicalValue() string {
+// of the following pattern BookingStateWithConfig(%d).Description instead.
+func (_b BookingStateWithConfig) GetDescription() (string, bool) {
 	if !_b.IsValid() {
-		return fmt.Sprintf("BookingStateWithConfig(%d)", _b)
+		return fmt.Sprintf("BookingStateWithConfig(%d).Description", _b), false
 	}
-	idx := uint(_b)
-	return _BookingStateWithConfigCanonicalValues[idx]
+	return _b._fromColumn(0)
+}
+
+// _fromColumn looks up additional data of the enum.
+func (_b BookingStateWithConfig) _fromColumn(colId uint8) (cellValue string, ok bool) {
+	if ok := _b.IsValid(); !ok {
+		return "", false
+	}
+	col, ok := _BookingStateWithConfigAdditionalData[colId]
+	if !ok {
+		return "", false
+	}
+	v, ok := col[_b]
+	if !ok {
+		return "", false
+	}
+	return v, ok
 }
 
 var (
@@ -299,16 +333,18 @@ func (_b *BookingStateWithConfig) UnmarshalYAML(unmarshal func(interface{}) erro
 }
 
 const (
-	_BookingStateWithConstantsString         = "CreatedUnavailableFailedCanceledNotFoundDeleted"
-	_BookingStateWithConstantsLowerString    = "createdunavailablefailedcancelednotfounddeleted"
-	_BookingStateWithConstantsCanonicalValue = "The booking was created successfullyThe booking was not availableThe booking failedThe booking was canceledThe booking was not foundThe booking was deleted"
+	_BookingStateWithConstantsString      = "CreatedUnavailableFailedCanceledNotFoundDeleted"
+	_BookingStateWithConstantsLowerString = "createdunavailablefailedcancelednotfounddeleted"
+	_BookingStateWithConstantsDataColumn0 = "The booking was created successfullyThe booking was not availableThe booking failedThe booking was canceledThe booking was not foundThe booking was deleted"
 )
 
 var (
-	_BookingStateWithConstantsValueRange      = [2]BookingStateWithConstants{0, 5}
-	_BookingStateWithConstantsValues          = []BookingStateWithConstants{0, 1, 2, 3, 4, 5}
-	_BookingStateWithConstantsStrings         = []string{_BookingStateWithConstantsString[0:7], _BookingStateWithConstantsString[7:18], _BookingStateWithConstantsString[18:24], _BookingStateWithConstantsString[24:32], _BookingStateWithConstantsString[32:40], _BookingStateWithConstantsString[40:47]}
-	_BookingStateWithConstantsCanonicalValues = []string{_BookingStateWithConstantsCanonicalValue[0:36], _BookingStateWithConstantsCanonicalValue[36:65], _BookingStateWithConstantsCanonicalValue[65:83], _BookingStateWithConstantsCanonicalValue[83:107], _BookingStateWithConstantsCanonicalValue[107:132], _BookingStateWithConstantsCanonicalValue[132:155]}
+	_BookingStateWithConstantsValueRange     = [2]BookingStateWithConstants{0, 5}
+	_BookingStateWithConstantsValues         = []BookingStateWithConstants{0, 1, 2, 3, 4, 5}
+	_BookingStateWithConstantsStrings        = []string{_BookingStateWithConstantsString[0:7], _BookingStateWithConstantsString[7:18], _BookingStateWithConstantsString[18:24], _BookingStateWithConstantsString[24:32], _BookingStateWithConstantsString[32:40], _BookingStateWithConstantsString[40:47]}
+	_BookingStateWithConstantsAdditionalData = map[uint8]map[BookingStateWithConstants]string{
+		0: {0: _BookingStateWithConstantsDataColumn0[0:36], 1: _BookingStateWithConstantsDataColumn0[36:65], 2: _BookingStateWithConstantsDataColumn0[65:83], 3: _BookingStateWithConstantsDataColumn0[83:107], 4: _BookingStateWithConstantsDataColumn0[107:132], 5: _BookingStateWithConstantsDataColumn0[132:155]},
+	}
 )
 
 // BookingStateWithConstantsValues returns all values of the enum.
@@ -349,15 +385,30 @@ func (_b BookingStateWithConstants) String() string {
 	return _BookingStateWithConstantsStrings[idx]
 }
 
-// CanonicalValue returns the canonical string of the enum value.
+// GetDescription returns the "description" string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern BookingStateWithConstants(%d) instead.
-func (_b BookingStateWithConstants) CanonicalValue() string {
+// of the following pattern BookingStateWithConstants(%d).Description instead.
+func (_b BookingStateWithConstants) GetDescription() (string, bool) {
 	if !_b.IsValid() {
-		return fmt.Sprintf("BookingStateWithConstants(%d)", _b)
+		return fmt.Sprintf("BookingStateWithConstants(%d).Description", _b), false
 	}
-	idx := uint(_b)
-	return _BookingStateWithConstantsCanonicalValues[idx]
+	return _b._fromColumn(0)
+}
+
+// _fromColumn looks up additional data of the enum.
+func (_b BookingStateWithConstants) _fromColumn(colId uint8) (cellValue string, ok bool) {
+	if ok := _b.IsValid(); !ok {
+		return "", false
+	}
+	col, ok := _BookingStateWithConstantsAdditionalData[colId]
+	if !ok {
+		return "", false
+	}
+	v, ok := col[_b]
+	if !ok {
+		return "", false
+	}
+	return v, ok
 }
 
 var (

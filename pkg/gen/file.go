@@ -32,15 +32,16 @@ type Import struct {
 }
 
 type TypeSpec struct {
-	Index              int
-	Name               string
-	Docstring          string
-	Type               GoType
-	ValueSpecs         []*ValueSpec
-	Filepath           string
-	Config             *config.Options
-	IsFromCsvSource    bool
-	HasCanonicalValues bool
+	Index             int
+	Name              string
+	Docstring         string
+	Type              GoType
+	ValueSpecs        []*ValueSpec
+	Filepath          string
+	Config            *config.Options
+	IsFromCsvSource   bool
+	HasAdditionalData bool
+	DataColumns       []string // contains additional column header
 }
 
 type ValueSpec struct {
@@ -48,5 +49,5 @@ type ValueSpec struct {
 	ValueString    string // String representation of Value
 	IdentifierName string
 	EnumValue      string
-	CanonicalValue string // A canonical representation of the enum
+	DataCells      []string // contains additional column values
 }

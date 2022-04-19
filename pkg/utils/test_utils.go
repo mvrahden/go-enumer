@@ -12,6 +12,22 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+func Must[T any](a T, v any) T {
+	switch t := v.(type) {
+	case bool:
+		if !t {
+			panic(fmt.Sprintf("invalid Must() call for %#v", a))
+		}
+	case error:
+		if t != nil {
+			panic(fmt.Sprintf("invalid Must() call for %#v. got err: %s", a, t))
+		}
+	default:
+		panic("invalid use of Must(). Second arg must be `bool` or `error`")
+	}
+	return a
+}
+
 func AssertNotSamePointer(t *testing.T, expected, actual any) {
 	expPtr := fmt.Sprintf("%p", expected)
 	actPtr := fmt.Sprintf("%p", actual)

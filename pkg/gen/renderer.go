@@ -104,21 +104,30 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 
 	var hasGeneratedUndefinedValue bool
 	{ // write consts
-		tempBuf := new(bytes.Buffer)
+		enumStrings := new(bytes.Buffer)
 		for _, v := range ts.ValueSpecs {
-			tempBuf.WriteString(v.EnumValue)
+			enumStrings.WriteString(v.EnumValue)
 		}
-		buf.WriteString("const (\n")
-		buf.WriteString(fmt.Sprintf("\t_%sString = \"%s\"\n", ts.Name, tempBuf))
-		buf.WriteString(fmt.Sprintf("\t_%sLowerString = \"%s\"\n", ts.Name, strings.ToLower(tempBuf.String())))
-		if ts.HasCanonicalValues {
-			tempBuf.Reset()
-			for _, v := range ts.ValueSpecs {
-				tempBuf.WriteString(v.CanonicalValue)
+
+		additionalData := new(bytes.Buffer)
+		if ts.HasAdditionalData {
+			additionalDataValues := new(bytes.Buffer)
+			for colIdx := range ts.DataColumns {
+				additionalDataValues.Reset()
+				for _, v := range ts.ValueSpecs {
+					additionalDataValues.WriteString(v.DataCells[colIdx])
+				}
+				additionalData.WriteString(fmt.Sprintf(`
+	_%[1]sDataColumn%[2]d = "%[3]s"`, ts.Name, colIdx, additionalDataValues))
 			}
-			buf.WriteString(fmt.Sprintf("\t_%sCanonicalValue = \"%s\"\n", ts.Name, tempBuf))
 		}
-		buf.WriteString(")\n\n")
+
+		buf.WriteString(fmt.Sprintf(`const(
+	_%[1]sString      = "%[2]s"
+	_%[1]sLowerString = "%[3]s"%[4]s
+)
+
+`, ts.Name, enumStrings, strings.ToLower(enumStrings.String()), additionalData))
 		if util.supportUndefined {
 			var foundZeroValue bool
 			for _, v := range ts.ValueSpecs {
@@ -129,7 +138,6 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 			}
 			if !foundZeroValue {
 				hasGeneratedUndefinedValue = true
-				buf.WriteString("")
 				buf.WriteString(fmt.Sprintf(`const (
 // %[1]sUndefined is the generated zero value of the %[1]s enum.
 %[1]sUndefined %[1]s = 0
@@ -172,17 +180,28 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 		buf.WriteString(fmt.Sprintf("\t_%sStrings = []string{%s}\n", ts.Name, tempBuf))
 		tempBuf.Reset()
 
-		if ts.HasCanonicalValues {
-			for idx, acc, prev := 0, 0, uint64(0); idx < len(ts.ValueSpecs); idx++ {
-				_prev := acc
-				acc += len(ts.ValueSpecs[idx].CanonicalValue)
-				if idx != 0 && prev == ts.ValueSpecs[idx].Value {
-					continue
+		if ts.HasAdditionalData {
+			additionalData := new(bytes.Buffer)
+			for colIdx := range ts.DataColumns {
+				additionalData.Reset()
+				for idx, upperBound, prev := 0, 0, uint64(0); idx < len(ts.ValueSpecs); idx++ {
+					lowerBound := upperBound
+					v := ts.ValueSpecs[idx]
+					upperBound += len(v.DataCells[colIdx])
+					if idx != 0 && prev == ts.ValueSpecs[idx].Value {
+						continue
+					}
+					additionalData.WriteString(fmt.Sprintf(`%[1]d: _%[2]sDataColumn%[3]d[%[4]d:%[5]d],`, v.Value, ts.Name, colIdx, lowerBound, upperBound))
+					prev = v.Value
 				}
-				prev = ts.ValueSpecs[idx].Value
-				tempBuf.WriteString(fmt.Sprintf("_%sCanonicalValue[%d:%d], ", ts.Name, _prev, acc))
+				tempBuf.WriteString(fmt.Sprintf(`
+%[1]d: {%s},`, colIdx, additionalData))
 			}
-			buf.WriteString(fmt.Sprintf("\t_%sCanonicalValues = []string{%s}\n", ts.Name, tempBuf))
+			if len(ts.DataColumns) > 0 {
+				tempBuf.WriteString("\n")
+			}
+			buf.WriteString(fmt.Sprintf(`	_%[1]sAdditionalData = map[uint8]map[%[1]s]string{%[2]s}
+`, ts.Name, tempBuf))
 		}
 		buf.WriteString(")\n\n")
 	}
@@ -258,16 +277,35 @@ func (_%[2]s %[1]s) String() string {
 
 `, ts.Name, determineReceiverName(ts.Name), offset, undefinedGuard))
 
-		if ts.HasCanonicalValues { // string method for canonical strings
-			buf.WriteString(fmt.Sprintf(`// CanonicalValue returns the canonical string of the enum value.
+		if ts.HasAdditionalData { // string method for additional data look up
+			for colIdx, colName := range ts.DataColumns {
+				buf.WriteString(fmt.Sprintf(`// Get%[4]s returns the %[5]q string of the enum value.
 // If the enum value is invalid, it will produce a string
-// of the following pattern %[1]s(%%d) instead.
-func (_%[2]s %[1]s) CanonicalValue() string {
+// of the following pattern %[1]s(%%d).%[4]s instead.
+func (_%[2]s %[1]s) Get%[4]s() (string, bool) {
 	if !_%[2]s.IsValid() {
-		return fmt.Sprintf("%[1]s(%%d)", _%[2]s)
+		return fmt.Sprintf("%[1]s(%%d).%[4]s", _%[2]s), false
 	}
-	idx := uint(_%[2]s)
-	return _%[1]sCanonicalValues[idx]
+	return _%[2]s._fromColumn(%[3]d)
+}
+
+`, ts.Name, determineReceiverName(ts.Name), colIdx, pascalCaseTransformer(colName), colName))
+			}
+
+			buf.WriteString(fmt.Sprintf(`// _fromColumn looks up additional data of the enum.
+func (_%[2]s %[1]s) _fromColumn(colId uint8) (cellValue string, ok bool) {
+	if ok := _%[2]s.IsValid(); !ok {
+		return "", false
+	}
+	col, ok := _%[1]sAdditionalData[colId]
+	if !ok {
+		return "", false
+	}
+	v, ok := col[_%[2]s]
+	if !ok {
+		return "", false
+	}
+	return v, ok
 }
 
 `, ts.Name, determineReceiverName(ts.Name)))

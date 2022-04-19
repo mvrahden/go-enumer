@@ -53,7 +53,7 @@ func TestEnums(t *testing.T) {
 				{From: "NOT_A_CURRENCY", Enum: toPtr(6), Expected: utils.Expected{AsSerialized: "Currency(6)", IsInvalid: true}},
 				{From: "USD", Enum: toPtr(1), Expected: utils.Expected{AsSerialized: "USD"}},
 				{From: "EUR", Enum: toPtr(2), Expected: utils.Expected{AsSerialized: "EUR"}},
-				{From: "YEN", Enum: toPtr(3), Expected: utils.Expected{AsSerialized: "YEN"}},
+				{From: "JPY", Enum: toPtr(3), Expected: utils.Expected{AsSerialized: "JPY"}},
 				{From: "GBP", Enum: toPtr(4), Expected: utils.Expected{AsSerialized: "GBP"}},
 				{From: "AUD", Enum: toPtr(5), Expected: utils.Expected{AsSerialized: "AUD"}},
 			}
