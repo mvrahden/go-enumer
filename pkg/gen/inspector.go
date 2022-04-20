@@ -122,6 +122,11 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 				return fmt.Errorf("first row must be a header row but found numeric value in first cell")
 			}
 		}
+
+		for idx := range row {
+			row[idx] = strings.TrimSpace(row[idx])
+		}
+
 		u64, err := strconv.ParseUint(row[0], 10, 64)
 		if isHeaderRow := idx == 0 && err != nil; isHeaderRow {
 			if len(row) > 2 { // add additional header names
