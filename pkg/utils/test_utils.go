@@ -22,6 +22,8 @@ func Must[T any](a T, v any) T {
 		if t != nil {
 			panic(fmt.Sprintf("invalid Must() call for %#v. got err: %s", a, t))
 		}
+	case nil:
+		return a
 	default:
 		panic("invalid use of Must(). Second arg must be `bool` or `error`")
 	}
