@@ -41,7 +41,7 @@ type TypeSpec struct {
 	Config            *config.Options
 	IsFromCsvSource   bool
 	HasAdditionalData bool
-	DataColumns       []string // contains additional column header
+	DataColumns       []DataHeader // contains additional column header
 }
 
 type ValueSpec struct {
@@ -49,5 +49,17 @@ type ValueSpec struct {
 	ValueString    string // String representation of Value
 	IdentifierName string
 	EnumValue      string
-	DataCells      []string // contains additional column values
+	DataCells      []DataCell // contains additional column values and types
+}
+
+type DataHeader struct {
+	Type      GoType
+	Name      string
+	ParseFunc func(string) (any, error)
+}
+
+type DataCell struct {
+	ValueString string
+	Value       any
+	raw         string
 }

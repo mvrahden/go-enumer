@@ -1,4 +1,4 @@
-id,enum,currency-name,numeric-code,minor-unit
+id, enum,currency-name,uint16(numeric-code),uint8(minor-unit)
 1,USD,US Dollar,840,2
 2,EUR,Euro,978,2
 3,JPY,Yen,392,0

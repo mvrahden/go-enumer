@@ -109,25 +109,12 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 			enumStrings.WriteString(v.EnumValue)
 		}
 
-		additionalData := new(bytes.Buffer)
-		if ts.HasAdditionalData {
-			additionalDataValues := new(bytes.Buffer)
-			for colIdx := range ts.DataColumns {
-				additionalDataValues.Reset()
-				for _, v := range ts.ValueSpecs {
-					additionalDataValues.WriteString(v.DataCells[colIdx])
-				}
-				additionalData.WriteString(fmt.Sprintf(`
-	_%[1]sDataColumn%[2]d = "%[3]s"`, ts.Name, colIdx, additionalDataValues))
-			}
-		}
-
 		buf.WriteString(fmt.Sprintf(`const(
 	_%[1]sString      = "%[2]s"
-	_%[1]sLowerString = "%[3]s"%[4]s
+	_%[1]sLowerString = "%[3]s"
 )
 
-`, ts.Name, enumStrings, strings.ToLower(enumStrings.String()), additionalData))
+`, ts.Name, enumStrings, strings.ToLower(enumStrings.String())))
 		if util.supportUndefined {
 			var foundZeroValue bool
 			for _, v := range ts.ValueSpecs {
@@ -181,27 +168,35 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 		tempBuf.Reset()
 
 		if ts.HasAdditionalData {
-			additionalData := new(bytes.Buffer)
-			for colIdx := range ts.DataColumns {
-				additionalData.Reset()
-				for idx, upperBound, prev := 0, 0, uint64(0); idx < len(ts.ValueSpecs); idx++ {
-					lowerBound := upperBound
-					v := ts.ValueSpecs[idx]
-					upperBound += len(v.DataCells[colIdx])
-					if idx != 0 && prev == ts.ValueSpecs[idx].Value {
-						continue
+			// determine struct fields
+			additionalDataStruct := new(bytes.Buffer)
+			additionalDataStruct.WriteString(`struct{`)
+			for idx, h := range ts.DataColumns {
+				additionalDataStruct.WriteString(fmt.Sprintf(`%[1]s %[2]s`, pascalCaseTransformer(h.Name), h.Type))
+				if idx < len(ts.DataColumns)-1 {
+					additionalDataStruct.WriteString(`;`)
+				}
+			}
+			additionalDataStruct.WriteString(`}`)
+
+			// determine enum data structs
+			enumData := new(bytes.Buffer)
+			for _, v := range ts.ValueSpecs {
+				enumData.Reset()
+				for colIdx, cell := range v.DataCells {
+					enumData.WriteString(ts.DataColumns[colIdx].Type.ToSource(cell.ValueString))
+					if colIdx < len(v.DataCells)-1 {
+						enumData.WriteString(", ")
 					}
-					additionalData.WriteString(fmt.Sprintf(`%[1]d: _%[2]sDataColumn%[3]d[%[4]d:%[5]d],`, v.Value, ts.Name, colIdx, lowerBound, upperBound))
-					prev = v.Value
 				}
 				tempBuf.WriteString(fmt.Sprintf(`
-%[1]d: {%s},`, colIdx, additionalData))
+		%[1]d: {%s},`, v.Value, enumData))
 			}
 			if len(ts.DataColumns) > 0 {
 				tempBuf.WriteString("\n")
 			}
-			buf.WriteString(fmt.Sprintf(`	_%[1]sAdditionalData = map[uint8]map[%[1]s]string{%[2]s}
-`, ts.Name, tempBuf))
+			buf.WriteString(fmt.Sprintf(`	_%[1]sAdditionalData = map[%[1]s]%[3]s{%[2]s}
+`, ts.Name, tempBuf, additionalDataStruct))
 		}
 		buf.WriteString(")\n\n")
 	}
@@ -279,36 +274,18 @@ func (_%[2]s %[1]s) String() string {
 
 		if ts.HasAdditionalData { // string method for additional data look up
 			for colIdx, colName := range ts.DataColumns {
-				buf.WriteString(fmt.Sprintf(`// Get%[4]s returns the %[5]q string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern %[1]s(%%d).%[4]s instead.
-func (_%[2]s %[1]s) Get%[4]s() (string, bool) {
+				buf.WriteString(fmt.Sprintf(`// Get%[4]s returns the %[5]q of the enum value as %[6]s
+// if the enum is valid.
+func (_%[2]s %[1]s) Get%[4]s() (%[6]s, bool) {
 	if !_%[2]s.IsValid() {
-		return fmt.Sprintf("%[1]s(%%d).%[4]s", _%[2]s), false
+		return %[7]s, false
 	}
-	return _%[2]s._fromColumn(%[3]d)
+	d, ok := _%[1]sAdditionalData[_%[2]s]
+	return d.%[4]s, ok
 }
 
-`, ts.Name, determineReceiverName(ts.Name), colIdx, pascalCaseTransformer(colName), colName))
+`, ts.Name, determineReceiverName(ts.Name), colIdx, pascalCaseTransformer(colName.Name), colName.Name, colName.Type, colName.Type.ZeroValueString()))
 			}
-
-			buf.WriteString(fmt.Sprintf(`// _fromColumn looks up additional data of the enum.
-func (_%[2]s %[1]s) _fromColumn(colId uint8) (cellValue string, ok bool) {
-	if ok := _%[2]s.IsValid(); !ok {
-		return "", false
-	}
-	col, ok := _%[1]sAdditionalData[colId]
-	if !ok {
-		return "", false
-	}
-	v, ok := col[_%[2]s]
-	if !ok {
-		return "", false
-	}
-	return v, ok
-}
-
-`, ts.Name, determineReceiverName(ts.Name)))
 		}
 
 		{ // string to numeric value mappings

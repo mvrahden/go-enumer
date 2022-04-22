@@ -23,7 +23,13 @@ const (
 )
 
 // Currency represents a set of 3-Letter codes of Currencies.
-// Each Currency comes with its canonical value.
-// Note: The CSV has a 3-column layout. The 3rd column will add the Canonical Values.
+// Each Currency comes with its additional data columns to augment the enum.
+// Note: The CSV has a 5-column layout. The columns 3-5 are added values.
 //go:enum -from=enums/currencies.csv
 type Currency uint
+
+// CountryCode represents a set of 3-Letter codes of Countries.
+// Each CountryCode comes with its additional data columns to augment the enum.
+// Note: The CSV has an 8-column layout. The columns 3-8 are added values.
+//go:enum -from=enums/countries.csv
+type CountryCode uint

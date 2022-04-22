@@ -29,7 +29,7 @@ func TestEnums(t *testing.T) {
 				t.Run("for invalid enum", func(t *testing.T) {
 					desc, ok := BookingState(999).GetDescription()
 					require.False(t, ok)
-					require.Equal(t, "BookingState(999).Description", desc)
+					require.Equal(t, "", desc)
 				})
 			})
 			t.Run("Ent Interface", func(t *testing.T) {

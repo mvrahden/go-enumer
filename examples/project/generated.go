@@ -174,21 +174,1052 @@ func (_a *AccountState) Scan(value interface{}) error {
 }
 
 const (
+	_CountryCodeString      = "AFGALBDZAASMANDAGOAIAATAATGARGARMABWAUSAUTAZEBHSBHRBGDBRBBLRBELBLZBENBMUBTNBOLBIHBWABRAIOTVGBBRNBGRBFABDIKHMCMRCANCPVCYMCAFTCDCHLCHNCXRCCKCOLCOMCOKCRIHRVCUBCUWCYPCZECODDNKDJIDMADOMTLSECUEGYSLVGNQERIESTETHFLKFROFJIFINFRAPYFGABGMBGEODEUGHAGIBGRCGRLGRDGUMGTMGGYGINGNBGUYHTIHNDHKGHUNISLINDIDNIRNIRQIRLIMNISRITACIVJAMJPNJEYJORKAZKENKIRXKXKWTKGZLAOLVALBNLSOLBRLBYLIELTULUXMACMKDMDGMWIMYSMDVMLIMLTMHLMRTMUSMYTMEXFSMMDAMCOMNGMNEMSRMARMOZMMRNAMNRUNPLNLDANTNCLNZLNICNERNGANIUPRKMNPNOROMNPAKPLWPSEPANPNGPRYPERPHLPCNPOLPRTPRIQATCOGREUROURUSRWABLMSHNKNALCAMAFSPMVCTWSMSMRSTPSAUSENSRBSYCSLESGPSXMSVKSVNSLBSOMZAFKORSSDESPLKASDNSURSJMSWZSWECHESYRTWNTJKTZATHATGOTKLTONTTOTUNTURTKMTCATUVVIRUGAUKRAREGBRUSAURYUZBVUTVATVENVNMWLFESHYEMZMBZWE"
+	_CountryCodeLowerString = "afgalbdzaasmandagoaiaataatgargarmabwausautazebhsbhrbgdbrbblrbelblzbenbmubtnbolbihbwabraiotvgbbrnbgrbfabdikhmcmrcancpvcymcaftcdchlchncxrcckcolcomcokcrihrvcubcuwcypczecoddnkdjidmadomtlsecuegyslvgnqeriestethflkfrofjifinfrapyfgabgmbgeodeughagibgrcgrlgrdgumgtmggygingnbguyhtihndhkghunislindidnirnirqirlimnisritacivjamjpnjeyjorkazkenkirxkxkwtkgzlaolvalbnlsolbrlbylieltuluxmacmkdmdgmwimysmdvmlimltmhlmrtmusmytmexfsmmdamcomngmnemsrmarmozmmrnamnrunplnldantnclnzlnicnernganiuprkmnpnoromnpakplwpsepanpngpryperphlpcnpolprtpriqatcogreurourusrwablmshnknalcamafspmvctwsmsmrstpsausensrbsycslesgpsxmsvksvnslbsomzafkorssdesplkasdnsursjmswzswechesyrtwntjktzathatgotkltonttotunturtkmtcatuvvirugaukraregbrusauryuzbvutvatvenvnmwlfeshyemzmbzwe"
+)
+
+var (
+	_CountryCodeValueRange     = [2]CountryCode{1, 240}
+	_CountryCodeValues         = []CountryCode{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240}
+	_CountryCodeStrings        = []string{_CountryCodeString[0:3], _CountryCodeString[3:6], _CountryCodeString[6:9], _CountryCodeString[9:12], _CountryCodeString[12:15], _CountryCodeString[15:18], _CountryCodeString[18:21], _CountryCodeString[21:24], _CountryCodeString[24:27], _CountryCodeString[27:30], _CountryCodeString[30:33], _CountryCodeString[33:36], _CountryCodeString[36:39], _CountryCodeString[39:42], _CountryCodeString[42:45], _CountryCodeString[45:48], _CountryCodeString[48:51], _CountryCodeString[51:54], _CountryCodeString[54:57], _CountryCodeString[57:60], _CountryCodeString[60:63], _CountryCodeString[63:66], _CountryCodeString[66:69], _CountryCodeString[69:72], _CountryCodeString[72:75], _CountryCodeString[75:78], _CountryCodeString[78:81], _CountryCodeString[81:84], _CountryCodeString[84:87], _CountryCodeString[87:90], _CountryCodeString[90:93], _CountryCodeString[93:96], _CountryCodeString[96:99], _CountryCodeString[99:102], _CountryCodeString[102:105], _CountryCodeString[105:108], _CountryCodeString[108:111], _CountryCodeString[111:114], _CountryCodeString[114:117], _CountryCodeString[117:120], _CountryCodeString[120:123], _CountryCodeString[123:126], _CountryCodeString[126:129], _CountryCodeString[129:132], _CountryCodeString[132:135], _CountryCodeString[135:138], _CountryCodeString[138:141], _CountryCodeString[141:144], _CountryCodeString[144:147], _CountryCodeString[147:150], _CountryCodeString[150:153], _CountryCodeString[153:156], _CountryCodeString[156:159], _CountryCodeString[159:162], _CountryCodeString[162:165], _CountryCodeString[165:168], _CountryCodeString[168:171], _CountryCodeString[171:174], _CountryCodeString[174:177], _CountryCodeString[177:180], _CountryCodeString[180:183], _CountryCodeString[183:186], _CountryCodeString[186:189], _CountryCodeString[189:192], _CountryCodeString[192:195], _CountryCodeString[195:198], _CountryCodeString[198:201], _CountryCodeString[201:204], _CountryCodeString[204:207], _CountryCodeString[207:210], _CountryCodeString[210:213], _CountryCodeString[213:216], _CountryCodeString[216:219], _CountryCodeString[219:222], _CountryCodeString[222:225], _CountryCodeString[225:228], _CountryCodeString[228:231], _CountryCodeString[231:234], _CountryCodeString[234:237], _CountryCodeString[237:240], _CountryCodeString[240:243], _CountryCodeString[243:246], _CountryCodeString[246:249], _CountryCodeString[249:252], _CountryCodeString[252:255], _CountryCodeString[255:258], _CountryCodeString[258:261], _CountryCodeString[261:264], _CountryCodeString[264:267], _CountryCodeString[267:270], _CountryCodeString[270:273], _CountryCodeString[273:276], _CountryCodeString[276:279], _CountryCodeString[279:282], _CountryCodeString[282:285], _CountryCodeString[285:288], _CountryCodeString[288:291], _CountryCodeString[291:294], _CountryCodeString[294:297], _CountryCodeString[297:300], _CountryCodeString[300:303], _CountryCodeString[303:306], _CountryCodeString[306:309], _CountryCodeString[309:312], _CountryCodeString[312:315], _CountryCodeString[315:318], _CountryCodeString[318:321], _CountryCodeString[321:324], _CountryCodeString[324:327], _CountryCodeString[327:330], _CountryCodeString[330:333], _CountryCodeString[333:336], _CountryCodeString[336:339], _CountryCodeString[339:342], _CountryCodeString[342:345], _CountryCodeString[345:348], _CountryCodeString[348:351], _CountryCodeString[351:354], _CountryCodeString[354:357], _CountryCodeString[357:360], _CountryCodeString[360:363], _CountryCodeString[363:366], _CountryCodeString[366:369], _CountryCodeString[369:372], _CountryCodeString[372:375], _CountryCodeString[375:378], _CountryCodeString[378:381], _CountryCodeString[381:384], _CountryCodeString[384:387], _CountryCodeString[387:390], _CountryCodeString[390:393], _CountryCodeString[393:396], _CountryCodeString[396:399], _CountryCodeString[399:402], _CountryCodeString[402:405], _CountryCodeString[405:408], _CountryCodeString[408:411], _CountryCodeString[411:414], _CountryCodeString[414:417], _CountryCodeString[417:420], _CountryCodeString[420:423], _CountryCodeString[423:426], _CountryCodeString[426:429], _CountryCodeString[429:432], _CountryCodeString[432:435], _CountryCodeString[435:438], _CountryCodeString[438:441], _CountryCodeString[441:444], _CountryCodeString[444:447], _CountryCodeString[447:450], _CountryCodeString[450:453], _CountryCodeString[453:456], _CountryCodeString[456:459], _CountryCodeString[459:462], _CountryCodeString[462:465], _CountryCodeString[465:468], _CountryCodeString[468:471], _CountryCodeString[471:474], _CountryCodeString[474:477], _CountryCodeString[477:480], _CountryCodeString[480:483], _CountryCodeString[483:486], _CountryCodeString[486:489], _CountryCodeString[489:492], _CountryCodeString[492:495], _CountryCodeString[495:498], _CountryCodeString[498:501], _CountryCodeString[501:504], _CountryCodeString[504:507], _CountryCodeString[507:510], _CountryCodeString[510:513], _CountryCodeString[513:516], _CountryCodeString[516:519], _CountryCodeString[519:522], _CountryCodeString[522:525], _CountryCodeString[525:528], _CountryCodeString[528:531], _CountryCodeString[531:534], _CountryCodeString[534:537], _CountryCodeString[537:540], _CountryCodeString[540:543], _CountryCodeString[543:546], _CountryCodeString[546:549], _CountryCodeString[549:552], _CountryCodeString[552:555], _CountryCodeString[555:558], _CountryCodeString[558:561], _CountryCodeString[561:564], _CountryCodeString[564:567], _CountryCodeString[567:570], _CountryCodeString[570:573], _CountryCodeString[573:576], _CountryCodeString[576:579], _CountryCodeString[579:582], _CountryCodeString[582:585], _CountryCodeString[585:588], _CountryCodeString[588:591], _CountryCodeString[591:594], _CountryCodeString[594:597], _CountryCodeString[597:600], _CountryCodeString[600:603], _CountryCodeString[603:606], _CountryCodeString[606:609], _CountryCodeString[609:612], _CountryCodeString[612:615], _CountryCodeString[615:618], _CountryCodeString[618:621], _CountryCodeString[621:624], _CountryCodeString[624:627], _CountryCodeString[627:630], _CountryCodeString[630:633], _CountryCodeString[633:636], _CountryCodeString[636:639], _CountryCodeString[639:642], _CountryCodeString[642:645], _CountryCodeString[645:648], _CountryCodeString[648:651], _CountryCodeString[651:654], _CountryCodeString[654:657], _CountryCodeString[657:660], _CountryCodeString[660:663], _CountryCodeString[663:666], _CountryCodeString[666:669], _CountryCodeString[669:672], _CountryCodeString[672:675], _CountryCodeString[675:678], _CountryCodeString[678:681], _CountryCodeString[681:684], _CountryCodeString[684:687], _CountryCodeString[687:690], _CountryCodeString[690:693], _CountryCodeString[693:696], _CountryCodeString[696:699], _CountryCodeString[699:702], _CountryCodeString[702:705], _CountryCodeString[705:708], _CountryCodeString[708:711], _CountryCodeString[711:714], _CountryCodeString[714:717], _CountryCodeString[717:720]}
+	_CountryCodeAdditionalData = map[CountryCode]struct {
+		CountryName           string
+		CountryCode           string
+		Iso2LetterCode        string
+		Population            uint32
+		AreaInSquareKilometer uint32
+		GdpInBillion          float64
+	}{
+		1:   {"Afghanistan", "93", "AF", 29121286, 647500, 20.65},
+		2:   {"Albania", "355", "AL", 2986952, 28748, 12.8},
+		3:   {"Algeria", "213", "DZ", 34586184, 2381740, 215.7},
+		4:   {"American Samoa", "1-684", "AS", 57881, 199, 0.4622},
+		5:   {"Andorra", "376", "AD", 84000, 468, 4.8},
+		6:   {"Angola", "244", "AO", 13068161, 1246700, 124},
+		7:   {"Anguilla", "1-264", "AI", 13254, 102, 0.1754},
+		8:   {"Antarctica", "672", "AQ", 0, 14000000, 0},
+		9:   {"Antigua and Barbuda", "1-268", "AG", 86754, 443, 1.22},
+		10:  {"Argentina", "54", "AR", 41343201, 2766890, 484.6},
+		11:  {"Armenia", "374", "AM", 2968000, 29800, 10.44},
+		12:  {"Aruba", "297", "AW", 71566, 193, 2.516},
+		13:  {"Australia", "61", "AU", 21515754, 7686850, 1488},
+		14:  {"Austria", "43", "AT", 8205000, 83858, 417.9},
+		15:  {"Azerbaijan", "994", "AZ", 8303512, 86600, 76.01},
+		16:  {"Bahamas", "1-242", "BS", 301790, 13940, 8.373},
+		17:  {"Bahrain", "973", "BH", 738004, 665, 28.36},
+		18:  {"Bangladesh", "880", "BD", 156118464, 144000, 140.2},
+		19:  {"Barbados", "1-246", "BB", 285653, 431, 4.262},
+		20:  {"Belarus", "375", "BY", 9685000, 207600, 69.24},
+		21:  {"Belgium", "32", "BE", 10403000, 30510, 507.4},
+		22:  {"Belize", "501", "BZ", 314522, 22966, 1.637},
+		23:  {"Benin", "229", "BJ", 9056010, 112620, 8.359},
+		24:  {"Bermuda", "1-441", "BM", 65365, 53, 5.6},
+		25:  {"Bhutan", "975", "BT", 699847, 47000, 2.133},
+		26:  {"Bolivia", "591", "BO", 9947418, 1098580, 30.79},
+		27:  {"Bosnia and Herzegovina", "387", "BA", 4590000, 51129, 18.87},
+		28:  {"Botswana", "267", "BW", 2029307, 600370, 15.53},
+		29:  {"Brazil", "55", "BR", 201103330, 8511965, 2190},
+		30:  {"British Indian Ocean Territory", "246", "IO", 4000, 60, 0},
+		31:  {"British Virgin Islands", "1-284", "VG", 21730, 153, 1.095},
+		32:  {"Brunei", "673", "BN", 395027, 5770, 16.56},
+		33:  {"Bulgaria", "359", "BG", 7148785, 110910, 53.7},
+		34:  {"Burkina Faso", "226", "BF", 16241811, 274200, 12.13},
+		35:  {"Burundi", "257", "BI", 9863117, 27830, 2.676},
+		36:  {"Cambodia", "855", "KH", 14453680, 181040, 15.64},
+		37:  {"Cameroon", "237", "CM", 19294149, 475440, 27.88},
+		38:  {"Canada", "1", "CA", 33679000, 9984670, 1825},
+		39:  {"Cape Verde", "238", "CV", 508659, 4033, 1.955},
+		40:  {"Cayman Islands", "1-345", "KY", 44270, 262, 2.25},
+		41:  {"Central African Republic", "236", "CF", 4844927, 622984, 2.05},
+		42:  {"Chad", "235", "TD", 10543464, 1284000, 13.59},
+		43:  {"Chile", "56", "CL", 16746491, 756950, 281.7},
+		44:  {"China", "86", "CN", 1330044000, 9596960, 9330},
+		45:  {"Christmas Island", "61", "CX", 1500, 135, 0},
+		46:  {"Cocos Islands", "61", "CC", 628, 14, 0},
+		47:  {"Colombia", "57", "CO", 47790000, 1138910, 369.2},
+		48:  {"Comoros", "269", "KM", 773407, 2170, 0.658},
+		49:  {"Cook Islands", "682", "CK", 21388, 240, 0.1832},
+		50:  {"Costa Rica", "506", "CR", 4516220, 51100, 48.51},
+		51:  {"Croatia", "385", "HR", 4491000, 56542, 59.14},
+		52:  {"Cuba", "53", "CU", 11423000, 110860, 72.3},
+		53:  {"Curacao", "599", "CW", 141766, 444, 5.6},
+		54:  {"Cyprus", "357", "CY", 1102677, 9250, 21.78},
+		55:  {"Czech Republic", "420", "CZ", 10476000, 78866, 194.8},
+		56:  {"Democratic Republic of the Congo", "243", "CD", 70916439, 2345410, 18.56},
+		57:  {"Denmark", "45", "DK", 5484000, 43094, 324.3},
+		58:  {"Djibouti", "253", "DJ", 740528, 23000, 1.459},
+		59:  {"Dominica", "1-767", "DM", 72813, 754, 0.495},
+		60:  {"Dominican Republic", "1-809 1-829 1-849", "DO", 9823821, 48730, 59.27},
+		61:  {"East Timor", "670", "TL", 1154625, 15007, 6.129},
+		62:  {"Ecuador", "593", "EC", 14790608, 283560, 91.41},
+		63:  {"Egypt", "20", "EG", 80471869, 1001450, 262},
+		64:  {"El Salvador", "503", "SV", 6052064, 21040, 24.67},
+		65:  {"Equatorial Guinea", "240", "GQ", 1014999, 28051, 17.08},
+		66:  {"Eritrea", "291", "ER", 5792984, 121320, 3.438},
+		67:  {"Estonia", "372", "EE", 1291170, 45226, 24.28},
+		68:  {"Ethiopia", "251", "ET", 88013491, 1127127, 47.34},
+		69:  {"Falkland Islands", "500", "FK", 2638, 12173, 0.1645},
+		70:  {"Faroe Islands", "298", "FO", 48228, 1399, 2.32},
+		71:  {"Fiji", "679", "FJ", 875983, 18270, 4.218},
+		72:  {"Finland", "358", "FI", 5244000, 337030, 259.6},
+		73:  {"France", "33", "FR", 64768389, 547030, 2739},
+		74:  {"French Polynesia", "689", "PF", 270485, 4167, 5.65},
+		75:  {"Gabon", "241", "GA", 1545255, 267667, 19.97},
+		76:  {"Gambia", "220", "GM", 1593256, 11300, 0.896},
+		77:  {"Georgia", "995", "GE", 4630000, 69700, 15.95},
+		78:  {"Germany", "49", "DE", 81802257, 357021, 3593},
+		79:  {"Ghana", "233", "GH", 24339838, 239460, 45.55},
+		80:  {"Gibraltar", "350", "GI", 27884, 7, 1.106},
+		81:  {"Greece", "30", "GR", 11000000, 131940, 243.3},
+		82:  {"Greenland", "299", "GL", 56375, 2166086, 2.16},
+		83:  {"Grenada", "1-473", "GD", 107818, 344, 0.811},
+		84:  {"Guam", "1-671", "GU", 159358, 549, 4.6},
+		85:  {"Guatemala", "502", "GT", 13550440, 108890, 53.9},
+		86:  {"Guernsey", "44-1481", "GG", 65228, 78, 2.742},
+		87:  {"Guinea", "224", "GN", 10324025, 245857, 6.544},
+		88:  {"Guinea-Bissau", "245", "GW", 1565126, 36120, 0.88},
+		89:  {"Guyana", "592", "GY", 748486, 214970, 3.02},
+		90:  {"Haiti", "509", "HT", 9648924, 27750, 8.287},
+		91:  {"Honduras", "504", "HN", 7989415, 112090, 18.88},
+		92:  {"Hong Kong", "852", "HK", 6898686, 1092, 272.1},
+		93:  {"Hungary", "36", "HU", 9982000, 93030, 130.6},
+		94:  {"Iceland", "354", "IS", 308910, 103000, 14.59},
+		95:  {"India", "91", "IN", 1173108018, 3287590, 1670},
+		96:  {"Indonesia", "62", "ID", 242968342, 1919440, 867.5},
+		97:  {"Iran", "98", "IR", 76923300, 1648000, 411.9},
+		98:  {"Iraq", "964", "IQ", 29671605, 437072, 221.8},
+		99:  {"Ireland", "353", "IE", 4622917, 70280, 220.9},
+		100: {"Isle of Man", "44-1624", "IM", 75049, 572, 4.076},
+		101: {"Israel", "972", "IL", 7353985, 20770, 272.7},
+		102: {"Italy", "39", "IT", 60340328, 301230, 2068},
+		103: {"Ivory Coast", "225", "CI", 21058798, 322460, 28.28},
+		104: {"Jamaica", "1-876", "JM", 2847232, 10991, 14.39},
+		105: {"Japan", "81", "JP", 127288000, 377835, 5007},
+		106: {"Jersey", "44-1534", "JE", 90812, 116, 5.1},
+		107: {"Jordan", "962", "JO", 6407085, 92300, 34.08},
+		108: {"Kazakhstan", "7", "KZ", 15340000, 2717300, 224.9},
+		109: {"Kenya", "254", "KE", 40046566, 582650, 45.31},
+		110: {"Kiribati", "686", "KI", 92533, 811, 0.173},
+		111: {"Kosovo", "383", "XK", 1800000, 10887, 7.15},
+		112: {"Kuwait", "965", "KW", 2789132, 17820, 179.5},
+		113: {"Kyrgyzstan", "996", "KG", 5508626, 198500, 7.234},
+		114: {"Laos", "856", "LA", 6368162, 236800, 10.1},
+		115: {"Latvia", "371", "LV", 2217969, 64589, 30.38},
+		116: {"Lebanon", "961", "LB", 4125247, 10400, 43.49},
+		117: {"Lesotho", "266", "LS", 1919552, 30355, 2.457},
+		118: {"Liberia", "231", "LR", 3685076, 111370, 1.977},
+		119: {"Libya", "218", "LY", 6461454, 1759540, 70.92},
+		120: {"Liechtenstein", "423", "LI", 35000, 160, 5.113},
+		121: {"Lithuania", "370", "LT", 2944459, 65200, 46.71},
+		122: {"Luxembourg", "352", "LU", 497538, 2586, 60.54},
+		123: {"Macau", "853", "MO", 449198, 254, 51.68},
+		124: {"Macedonia", "389", "MK", 2062294, 25333, 10.65},
+		125: {"Madagascar", "261", "MG", 21281844, 587040, 10.53},
+		126: {"Malawi", "265", "MW", 15447500, 118480, 3.683},
+		127: {"Malaysia", "60", "MY", 28274729, 329750, 312.4},
+		128: {"Maldives", "960", "MV", 395650, 300, 2.27},
+		129: {"Mali", "223", "ML", 13796354, 1240000, 11.37},
+		130: {"Malta", "356", "MT", 403000, 316, 9.541},
+		131: {"Marshall Islands", "692", "MH", 65859, 181, 0.193},
+		132: {"Mauritania", "222", "MR", 3205060, 1030700, 4.183},
+		133: {"Mauritius", "230", "MU", 1294104, 2040, 11.9},
+		134: {"Mayotte", "262", "YT", 159042, 374, 0},
+		135: {"Mexico", "52", "MX", 112468855, 1972550, 1327},
+		136: {"Micronesia", "691", "FM", 107708, 702, 0.339},
+		137: {"Moldova", "373", "MD", 4324000, 33843, 7.932},
+		138: {"Monaco", "377", "MC", 32965, 2, 5.748},
+		139: {"Mongolia", "976", "MN", 3086918, 1565000, 11.14},
+		140: {"Montenegro", "382", "ME", 666730, 14026, 4.518},
+		141: {"Montserrat", "1-664", "MS", 9341, 102, 0},
+		142: {"Morocco", "212", "MA", 31627428, 446550, 104.8},
+		143: {"Mozambique", "258", "MZ", 22061451, 801590, 14.67},
+		144: {"Myanmar", "95", "MM", 53414374, 678500, 59.43},
+		145: {"Namibia", "264", "NA", 2128471, 825418, 12.3},
+		146: {"Nauru", "674", "NR", 10065, 21, 0},
+		147: {"Nepal", "977", "NP", 28951852, 140800, 19.34},
+		148: {"Netherlands", "31", "NL", 16645000, 41526, 722.3},
+		149: {"Netherlands Antilles", "599", "AN", 136197, 960, 0},
+		150: {"New Caledonia", "687", "NC", 216494, 19060, 9.28},
+		151: {"New Zealand", "64", "NZ", 4252277, 268680, 181.1},
+		152: {"Nicaragua", "505", "NI", 5995928, 129494, 11.26},
+		153: {"Niger", "227", "NE", 15878271, 1267000, 7.304},
+		154: {"Nigeria", "234", "NG", 154000000, 923768, 502},
+		155: {"Niue", "683", "NU", 2166, 260, 0.01001},
+		156: {"North Korea", "850", "KP", 22912177, 120540, 28},
+		157: {"Northern Mariana Islands", "1-670", "MP", 53883, 477, 0.733},
+		158: {"Norway", "47", "NO", 5009150, 324220, 515.8},
+		159: {"Oman", "968", "OM", 2967717, 212460, 81.95},
+		160: {"Pakistan", "92", "PK", 184404791, 803940, 236.5},
+		161: {"Palau", "680", "PW", 19907, 458, 0.221},
+		162: {"Palestine", "970", "PS", 3800000, 5970, 6.641},
+		163: {"Panama", "507", "PA", 3410676, 78200, 40.62},
+		164: {"Papua New Guinea", "675", "PG", 6064515, 462840, 16.1},
+		165: {"Paraguay", "595", "PY", 6375830, 406750, 30.56},
+		166: {"Peru", "51", "PE", 29907003, 1285220, 210.3},
+		167: {"Philippines", "63", "PH", 99900177, 300000, 272.2},
+		168: {"Pitcairn", "64", "PN", 46, 47, 0},
+		169: {"Poland", "48", "PL", 38500000, 312685, 513.9},
+		170: {"Portugal", "351", "PT", 10676000, 92391, 219.3},
+		171: {"Puerto Rico", "1-787 1-939", "PR", 3916632, 9104, 93.52},
+		172: {"Qatar", "974", "QA", 840926, 11437, 213.1},
+		173: {"Republic of the Congo", "242", "CG", 3039126, 342000, 14.25},
+		174: {"Reunion", "262", "RE", 776948, 2517, 0},
+		175: {"Romania", "40", "RO", 21959278, 237500, 188.9},
+		176: {"Russia", "7", "RU", 140702000, 17100000, 2113},
+		177: {"Rwanda", "250", "RW", 11055976, 26338, 7.7},
+		178: {"Saint Barthelemy", "590", "BL", 8450, 21, 0},
+		179: {"Saint Helena", "290", "SH", 7460, 410, 0},
+		180: {"Saint Kitts and Nevis", "1-869", "KN", 51134, 261, 0.767},
+		181: {"Saint Lucia", "1-758", "LC", 160922, 616, 1.377},
+		182: {"Saint Martin", "590", "MF", 35925, 53, 0.5615},
+		183: {"Saint Pierre and Miquelon", "508", "PM", 7012, 242, 0.2153},
+		184: {"Saint Vincent and the Grenadines", "1-784", "VC", 104217, 389, 0.742},
+		185: {"Samoa", "685", "WS", 192001, 2944, 0.705},
+		186: {"San Marino", "378", "SM", 31477, 61, 1.866},
+		187: {"Sao Tome and Principe", "239", "ST", 175808, 1001, 0.311},
+		188: {"Saudi Arabia", "966", "SA", 25731776, 1960582, 718.5},
+		189: {"Senegal", "221", "SN", 12323252, 196190, 15.36},
+		190: {"Serbia", "381", "RS", 7344847, 88361, 43.68},
+		191: {"Seychelles", "248", "SC", 88340, 455, 1.271},
+		192: {"Sierra Leone", "232", "SL", 5245695, 71740, 4.607},
+		193: {"Singapore", "65", "SG", 4701069, 693, 295.7},
+		194: {"Sint Maarten", "1-721", "SX", 37429, 34, 0.7947},
+		195: {"Slovakia", "421", "SK", 5455000, 48845, 96.96},
+		196: {"Slovenia", "386", "SI", 2007000, 20273, 46.82},
+		197: {"Solomon Islands", "677", "SB", 559198, 28450, 1.099},
+		198: {"Somalia", "252", "SO", 10112453, 637657, 2.372},
+		199: {"South Africa", "27", "ZA", 49000000, 1219912, 353.9},
+		200: {"South Korea", "82", "KR", 48422644, 98480, 1198},
+		201: {"South Sudan", "211", "SS", 8260490, 644329, 11.77},
+		202: {"Spain", "34", "ES", 46505963, 504782, 1356},
+		203: {"Sri Lanka", "94", "LK", 21513990, 65610, 65.12},
+		204: {"Sudan", "249", "SD", 35000000, 1861484, 52.5},
+		205: {"Suriname", "597", "SR", 492829, 163270, 5.009},
+		206: {"Svalbard and Jan Mayen", "47", "SJ", 2550, 62049, 0},
+		207: {"Swaziland", "268", "SZ", 1354051, 17363, 3.807},
+		208: {"Sweden", "46", "SE", 9555893, 449964, 552},
+		209: {"Switzerland", "41", "CH", 7581000, 41290, 646.2},
+		210: {"Syria", "963", "SY", 22198110, 185180, 64.7},
+		211: {"Taiwan", "886", "TW", 22894384, 35980, 484.7},
+		212: {"Tajikistan", "992", "TJ", 7487489, 143100, 8.513},
+		213: {"Tanzania", "255", "TZ", 41892895, 945087, 31.94},
+		214: {"Thailand", "66", "TH", 67089500, 514000, 400.9},
+		215: {"Togo", "228", "TG", 6587239, 56785, 4.299},
+		216: {"Tokelau", "690", "TK", 1466, 10, 0},
+		217: {"Tonga", "676", "TO", 122580, 748, 0.477},
+		218: {"Trinidad and Tobago", "1-868", "TT", 1228691, 5128, 27.13},
+		219: {"Tunisia", "216", "TN", 10589025, 163610, 48.38},
+		220: {"Turkey", "90", "TR", 77804122, 780580, 821.8},
+		221: {"Turkmenistan", "993", "TM", 4940916, 488100, 40.56},
+		222: {"Turks and Caicos Islands", "1-649", "TC", 20556, 430, 0},
+		223: {"Tuvalu", "688", "TV", 10472, 26, 0.038},
+		224: {"U.S. Virgin Islands", "1-340", "VI", 108708, 352, 0},
+		225: {"Uganda", "256", "UG", 33398682, 236040, 22.6},
+		226: {"Ukraine", "380", "UA", 45415596, 603700, 175.5},
+		227: {"United Arab Emirates", "971", "AE", 4975593, 82880, 390},
+		228: {"United Kingdom", "44", "GB", 62348447, 244820, 2490},
+		229: {"United States", "1", "US", 310232863, 9629091, 1672},
+		230: {"Uruguay", "598", "UY", 3477000, 176220, 57.11},
+		231: {"Uzbekistan", "998", "UZ", 27865738, 447400, 55.18},
+		232: {"Vanuatu", "678", "VU", 221552, 12200, 0.828},
+		233: {"Vatican", "379", "VA", 921, 0, 0},
+		234: {"Venezuela", "58", "VE", 27223228, 912050, 367.5},
+		235: {"Vietnam", "84", "VN", 89571130, 329560, 170},
+		236: {"Wallis and Futuna", "681", "WF", 16025, 274, 0},
+		237: {"Western Sahara", "212", "EH", 273008, 266000, 0},
+		238: {"Yemen", "967", "YE", 23495361, 527970, 43.89},
+		239: {"Zambia", "260", "ZM", 13460305, 752614, 22.24},
+		240: {"Zimbabwe", "263", "ZW", 11651858, 390580, 10.48},
+	}
+)
+
+// CountryCodeValues returns all values of the enum.
+func CountryCodeValues() []CountryCode {
+	cp := make([]CountryCode, len(_CountryCodeValues))
+	copy(cp, _CountryCodeValues)
+	return cp
+}
+
+// CountryCodeStrings returns a slice of all String values of the enum.
+func CountryCodeStrings() []string {
+	cp := make([]string, len(_CountryCodeStrings))
+	copy(cp, _CountryCodeStrings)
+	return cp
+}
+
+// IsValid inspects whether the value is valid enum value.
+func (_c CountryCode) IsValid() bool {
+	return _c >= _CountryCodeValueRange[0] && _c <= _CountryCodeValueRange[1]
+}
+
+// Validate whether the value is within the range of enum values.
+func (_c CountryCode) Validate() error {
+	if !_c.IsValid() {
+		return fmt.Errorf("CountryCode(%d) is %w", _c, ErrNoValidEnum)
+	}
+	return nil
+}
+
+// String returns the string of the enum value.
+// If the enum value is invalid, it will produce a string
+// of the following pattern CountryCode(%d) instead.
+func (_c CountryCode) String() string {
+	if !_c.IsValid() {
+		return fmt.Sprintf("CountryCode(%d)", _c)
+	}
+	idx := uint(_c) - 1
+	return _CountryCodeStrings[idx]
+}
+
+// GetCountryName returns the "country-name" of the enum value as string
+// if the enum is valid.
+func (_c CountryCode) GetCountryName() (string, bool) {
+	if !_c.IsValid() {
+		return "", false
+	}
+	d, ok := _CountryCodeAdditionalData[_c]
+	return d.CountryName, ok
+}
+
+// GetCountryCode returns the "country-code" of the enum value as string
+// if the enum is valid.
+func (_c CountryCode) GetCountryCode() (string, bool) {
+	if !_c.IsValid() {
+		return "", false
+	}
+	d, ok := _CountryCodeAdditionalData[_c]
+	return d.CountryCode, ok
+}
+
+// GetIso2LetterCode returns the "iso-2-letter-code" of the enum value as string
+// if the enum is valid.
+func (_c CountryCode) GetIso2LetterCode() (string, bool) {
+	if !_c.IsValid() {
+		return "", false
+	}
+	d, ok := _CountryCodeAdditionalData[_c]
+	return d.Iso2LetterCode, ok
+}
+
+// GetPopulation returns the "population" of the enum value as uint32
+// if the enum is valid.
+func (_c CountryCode) GetPopulation() (uint32, bool) {
+	if !_c.IsValid() {
+		return 0, false
+	}
+	d, ok := _CountryCodeAdditionalData[_c]
+	return d.Population, ok
+}
+
+// GetAreaInSquareKilometer returns the "area-in-square-kilometer" of the enum value as uint32
+// if the enum is valid.
+func (_c CountryCode) GetAreaInSquareKilometer() (uint32, bool) {
+	if !_c.IsValid() {
+		return 0, false
+	}
+	d, ok := _CountryCodeAdditionalData[_c]
+	return d.AreaInSquareKilometer, ok
+}
+
+// GetGdpInBillion returns the "gdp-in-billion" of the enum value as float64
+// if the enum is valid.
+func (_c CountryCode) GetGdpInBillion() (float64, bool) {
+	if !_c.IsValid() {
+		return 0, false
+	}
+	d, ok := _CountryCodeAdditionalData[_c]
+	return d.GdpInBillion, ok
+}
+
+var (
+	_CountryCodeStringToValueMap = map[string]CountryCode{
+		_CountryCodeString[0:3]:     1,
+		_CountryCodeString[3:6]:     2,
+		_CountryCodeString[6:9]:     3,
+		_CountryCodeString[9:12]:    4,
+		_CountryCodeString[12:15]:   5,
+		_CountryCodeString[15:18]:   6,
+		_CountryCodeString[18:21]:   7,
+		_CountryCodeString[21:24]:   8,
+		_CountryCodeString[24:27]:   9,
+		_CountryCodeString[27:30]:   10,
+		_CountryCodeString[30:33]:   11,
+		_CountryCodeString[33:36]:   12,
+		_CountryCodeString[36:39]:   13,
+		_CountryCodeString[39:42]:   14,
+		_CountryCodeString[42:45]:   15,
+		_CountryCodeString[45:48]:   16,
+		_CountryCodeString[48:51]:   17,
+		_CountryCodeString[51:54]:   18,
+		_CountryCodeString[54:57]:   19,
+		_CountryCodeString[57:60]:   20,
+		_CountryCodeString[60:63]:   21,
+		_CountryCodeString[63:66]:   22,
+		_CountryCodeString[66:69]:   23,
+		_CountryCodeString[69:72]:   24,
+		_CountryCodeString[72:75]:   25,
+		_CountryCodeString[75:78]:   26,
+		_CountryCodeString[78:81]:   27,
+		_CountryCodeString[81:84]:   28,
+		_CountryCodeString[84:87]:   29,
+		_CountryCodeString[87:90]:   30,
+		_CountryCodeString[90:93]:   31,
+		_CountryCodeString[93:96]:   32,
+		_CountryCodeString[96:99]:   33,
+		_CountryCodeString[99:102]:  34,
+		_CountryCodeString[102:105]: 35,
+		_CountryCodeString[105:108]: 36,
+		_CountryCodeString[108:111]: 37,
+		_CountryCodeString[111:114]: 38,
+		_CountryCodeString[114:117]: 39,
+		_CountryCodeString[117:120]: 40,
+		_CountryCodeString[120:123]: 41,
+		_CountryCodeString[123:126]: 42,
+		_CountryCodeString[126:129]: 43,
+		_CountryCodeString[129:132]: 44,
+		_CountryCodeString[132:135]: 45,
+		_CountryCodeString[135:138]: 46,
+		_CountryCodeString[138:141]: 47,
+		_CountryCodeString[141:144]: 48,
+		_CountryCodeString[144:147]: 49,
+		_CountryCodeString[147:150]: 50,
+		_CountryCodeString[150:153]: 51,
+		_CountryCodeString[153:156]: 52,
+		_CountryCodeString[156:159]: 53,
+		_CountryCodeString[159:162]: 54,
+		_CountryCodeString[162:165]: 55,
+		_CountryCodeString[165:168]: 56,
+		_CountryCodeString[168:171]: 57,
+		_CountryCodeString[171:174]: 58,
+		_CountryCodeString[174:177]: 59,
+		_CountryCodeString[177:180]: 60,
+		_CountryCodeString[180:183]: 61,
+		_CountryCodeString[183:186]: 62,
+		_CountryCodeString[186:189]: 63,
+		_CountryCodeString[189:192]: 64,
+		_CountryCodeString[192:195]: 65,
+		_CountryCodeString[195:198]: 66,
+		_CountryCodeString[198:201]: 67,
+		_CountryCodeString[201:204]: 68,
+		_CountryCodeString[204:207]: 69,
+		_CountryCodeString[207:210]: 70,
+		_CountryCodeString[210:213]: 71,
+		_CountryCodeString[213:216]: 72,
+		_CountryCodeString[216:219]: 73,
+		_CountryCodeString[219:222]: 74,
+		_CountryCodeString[222:225]: 75,
+		_CountryCodeString[225:228]: 76,
+		_CountryCodeString[228:231]: 77,
+		_CountryCodeString[231:234]: 78,
+		_CountryCodeString[234:237]: 79,
+		_CountryCodeString[237:240]: 80,
+		_CountryCodeString[240:243]: 81,
+		_CountryCodeString[243:246]: 82,
+		_CountryCodeString[246:249]: 83,
+		_CountryCodeString[249:252]: 84,
+		_CountryCodeString[252:255]: 85,
+		_CountryCodeString[255:258]: 86,
+		_CountryCodeString[258:261]: 87,
+		_CountryCodeString[261:264]: 88,
+		_CountryCodeString[264:267]: 89,
+		_CountryCodeString[267:270]: 90,
+		_CountryCodeString[270:273]: 91,
+		_CountryCodeString[273:276]: 92,
+		_CountryCodeString[276:279]: 93,
+		_CountryCodeString[279:282]: 94,
+		_CountryCodeString[282:285]: 95,
+		_CountryCodeString[285:288]: 96,
+		_CountryCodeString[288:291]: 97,
+		_CountryCodeString[291:294]: 98,
+		_CountryCodeString[294:297]: 99,
+		_CountryCodeString[297:300]: 100,
+		_CountryCodeString[300:303]: 101,
+		_CountryCodeString[303:306]: 102,
+		_CountryCodeString[306:309]: 103,
+		_CountryCodeString[309:312]: 104,
+		_CountryCodeString[312:315]: 105,
+		_CountryCodeString[315:318]: 106,
+		_CountryCodeString[318:321]: 107,
+		_CountryCodeString[321:324]: 108,
+		_CountryCodeString[324:327]: 109,
+		_CountryCodeString[327:330]: 110,
+		_CountryCodeString[330:333]: 111,
+		_CountryCodeString[333:336]: 112,
+		_CountryCodeString[336:339]: 113,
+		_CountryCodeString[339:342]: 114,
+		_CountryCodeString[342:345]: 115,
+		_CountryCodeString[345:348]: 116,
+		_CountryCodeString[348:351]: 117,
+		_CountryCodeString[351:354]: 118,
+		_CountryCodeString[354:357]: 119,
+		_CountryCodeString[357:360]: 120,
+		_CountryCodeString[360:363]: 121,
+		_CountryCodeString[363:366]: 122,
+		_CountryCodeString[366:369]: 123,
+		_CountryCodeString[369:372]: 124,
+		_CountryCodeString[372:375]: 125,
+		_CountryCodeString[375:378]: 126,
+		_CountryCodeString[378:381]: 127,
+		_CountryCodeString[381:384]: 128,
+		_CountryCodeString[384:387]: 129,
+		_CountryCodeString[387:390]: 130,
+		_CountryCodeString[390:393]: 131,
+		_CountryCodeString[393:396]: 132,
+		_CountryCodeString[396:399]: 133,
+		_CountryCodeString[399:402]: 134,
+		_CountryCodeString[402:405]: 135,
+		_CountryCodeString[405:408]: 136,
+		_CountryCodeString[408:411]: 137,
+		_CountryCodeString[411:414]: 138,
+		_CountryCodeString[414:417]: 139,
+		_CountryCodeString[417:420]: 140,
+		_CountryCodeString[420:423]: 141,
+		_CountryCodeString[423:426]: 142,
+		_CountryCodeString[426:429]: 143,
+		_CountryCodeString[429:432]: 144,
+		_CountryCodeString[432:435]: 145,
+		_CountryCodeString[435:438]: 146,
+		_CountryCodeString[438:441]: 147,
+		_CountryCodeString[441:444]: 148,
+		_CountryCodeString[444:447]: 149,
+		_CountryCodeString[447:450]: 150,
+		_CountryCodeString[450:453]: 151,
+		_CountryCodeString[453:456]: 152,
+		_CountryCodeString[456:459]: 153,
+		_CountryCodeString[459:462]: 154,
+		_CountryCodeString[462:465]: 155,
+		_CountryCodeString[465:468]: 156,
+		_CountryCodeString[468:471]: 157,
+		_CountryCodeString[471:474]: 158,
+		_CountryCodeString[474:477]: 159,
+		_CountryCodeString[477:480]: 160,
+		_CountryCodeString[480:483]: 161,
+		_CountryCodeString[483:486]: 162,
+		_CountryCodeString[486:489]: 163,
+		_CountryCodeString[489:492]: 164,
+		_CountryCodeString[492:495]: 165,
+		_CountryCodeString[495:498]: 166,
+		_CountryCodeString[498:501]: 167,
+		_CountryCodeString[501:504]: 168,
+		_CountryCodeString[504:507]: 169,
+		_CountryCodeString[507:510]: 170,
+		_CountryCodeString[510:513]: 171,
+		_CountryCodeString[513:516]: 172,
+		_CountryCodeString[516:519]: 173,
+		_CountryCodeString[519:522]: 174,
+		_CountryCodeString[522:525]: 175,
+		_CountryCodeString[525:528]: 176,
+		_CountryCodeString[528:531]: 177,
+		_CountryCodeString[531:534]: 178,
+		_CountryCodeString[534:537]: 179,
+		_CountryCodeString[537:540]: 180,
+		_CountryCodeString[540:543]: 181,
+		_CountryCodeString[543:546]: 182,
+		_CountryCodeString[546:549]: 183,
+		_CountryCodeString[549:552]: 184,
+		_CountryCodeString[552:555]: 185,
+		_CountryCodeString[555:558]: 186,
+		_CountryCodeString[558:561]: 187,
+		_CountryCodeString[561:564]: 188,
+		_CountryCodeString[564:567]: 189,
+		_CountryCodeString[567:570]: 190,
+		_CountryCodeString[570:573]: 191,
+		_CountryCodeString[573:576]: 192,
+		_CountryCodeString[576:579]: 193,
+		_CountryCodeString[579:582]: 194,
+		_CountryCodeString[582:585]: 195,
+		_CountryCodeString[585:588]: 196,
+		_CountryCodeString[588:591]: 197,
+		_CountryCodeString[591:594]: 198,
+		_CountryCodeString[594:597]: 199,
+		_CountryCodeString[597:600]: 200,
+		_CountryCodeString[600:603]: 201,
+		_CountryCodeString[603:606]: 202,
+		_CountryCodeString[606:609]: 203,
+		_CountryCodeString[609:612]: 204,
+		_CountryCodeString[612:615]: 205,
+		_CountryCodeString[615:618]: 206,
+		_CountryCodeString[618:621]: 207,
+		_CountryCodeString[621:624]: 208,
+		_CountryCodeString[624:627]: 209,
+		_CountryCodeString[627:630]: 210,
+		_CountryCodeString[630:633]: 211,
+		_CountryCodeString[633:636]: 212,
+		_CountryCodeString[636:639]: 213,
+		_CountryCodeString[639:642]: 214,
+		_CountryCodeString[642:645]: 215,
+		_CountryCodeString[645:648]: 216,
+		_CountryCodeString[648:651]: 217,
+		_CountryCodeString[651:654]: 218,
+		_CountryCodeString[654:657]: 219,
+		_CountryCodeString[657:660]: 220,
+		_CountryCodeString[660:663]: 221,
+		_CountryCodeString[663:666]: 222,
+		_CountryCodeString[666:669]: 223,
+		_CountryCodeString[669:672]: 224,
+		_CountryCodeString[672:675]: 225,
+		_CountryCodeString[675:678]: 226,
+		_CountryCodeString[678:681]: 227,
+		_CountryCodeString[681:684]: 228,
+		_CountryCodeString[684:687]: 229,
+		_CountryCodeString[687:690]: 230,
+		_CountryCodeString[690:693]: 231,
+		_CountryCodeString[693:696]: 232,
+		_CountryCodeString[696:699]: 233,
+		_CountryCodeString[699:702]: 234,
+		_CountryCodeString[702:705]: 235,
+		_CountryCodeString[705:708]: 236,
+		_CountryCodeString[708:711]: 237,
+		_CountryCodeString[711:714]: 238,
+		_CountryCodeString[714:717]: 239,
+		_CountryCodeString[717:720]: 240,
+	}
+	_CountryCodeLowerStringToValueMap = map[string]CountryCode{
+		_CountryCodeLowerString[0:3]:     1,
+		_CountryCodeLowerString[3:6]:     2,
+		_CountryCodeLowerString[6:9]:     3,
+		_CountryCodeLowerString[9:12]:    4,
+		_CountryCodeLowerString[12:15]:   5,
+		_CountryCodeLowerString[15:18]:   6,
+		_CountryCodeLowerString[18:21]:   7,
+		_CountryCodeLowerString[21:24]:   8,
+		_CountryCodeLowerString[24:27]:   9,
+		_CountryCodeLowerString[27:30]:   10,
+		_CountryCodeLowerString[30:33]:   11,
+		_CountryCodeLowerString[33:36]:   12,
+		_CountryCodeLowerString[36:39]:   13,
+		_CountryCodeLowerString[39:42]:   14,
+		_CountryCodeLowerString[42:45]:   15,
+		_CountryCodeLowerString[45:48]:   16,
+		_CountryCodeLowerString[48:51]:   17,
+		_CountryCodeLowerString[51:54]:   18,
+		_CountryCodeLowerString[54:57]:   19,
+		_CountryCodeLowerString[57:60]:   20,
+		_CountryCodeLowerString[60:63]:   21,
+		_CountryCodeLowerString[63:66]:   22,
+		_CountryCodeLowerString[66:69]:   23,
+		_CountryCodeLowerString[69:72]:   24,
+		_CountryCodeLowerString[72:75]:   25,
+		_CountryCodeLowerString[75:78]:   26,
+		_CountryCodeLowerString[78:81]:   27,
+		_CountryCodeLowerString[81:84]:   28,
+		_CountryCodeLowerString[84:87]:   29,
+		_CountryCodeLowerString[87:90]:   30,
+		_CountryCodeLowerString[90:93]:   31,
+		_CountryCodeLowerString[93:96]:   32,
+		_CountryCodeLowerString[96:99]:   33,
+		_CountryCodeLowerString[99:102]:  34,
+		_CountryCodeLowerString[102:105]: 35,
+		_CountryCodeLowerString[105:108]: 36,
+		_CountryCodeLowerString[108:111]: 37,
+		_CountryCodeLowerString[111:114]: 38,
+		_CountryCodeLowerString[114:117]: 39,
+		_CountryCodeLowerString[117:120]: 40,
+		_CountryCodeLowerString[120:123]: 41,
+		_CountryCodeLowerString[123:126]: 42,
+		_CountryCodeLowerString[126:129]: 43,
+		_CountryCodeLowerString[129:132]: 44,
+		_CountryCodeLowerString[132:135]: 45,
+		_CountryCodeLowerString[135:138]: 46,
+		_CountryCodeLowerString[138:141]: 47,
+		_CountryCodeLowerString[141:144]: 48,
+		_CountryCodeLowerString[144:147]: 49,
+		_CountryCodeLowerString[147:150]: 50,
+		_CountryCodeLowerString[150:153]: 51,
+		_CountryCodeLowerString[153:156]: 52,
+		_CountryCodeLowerString[156:159]: 53,
+		_CountryCodeLowerString[159:162]: 54,
+		_CountryCodeLowerString[162:165]: 55,
+		_CountryCodeLowerString[165:168]: 56,
+		_CountryCodeLowerString[168:171]: 57,
+		_CountryCodeLowerString[171:174]: 58,
+		_CountryCodeLowerString[174:177]: 59,
+		_CountryCodeLowerString[177:180]: 60,
+		_CountryCodeLowerString[180:183]: 61,
+		_CountryCodeLowerString[183:186]: 62,
+		_CountryCodeLowerString[186:189]: 63,
+		_CountryCodeLowerString[189:192]: 64,
+		_CountryCodeLowerString[192:195]: 65,
+		_CountryCodeLowerString[195:198]: 66,
+		_CountryCodeLowerString[198:201]: 67,
+		_CountryCodeLowerString[201:204]: 68,
+		_CountryCodeLowerString[204:207]: 69,
+		_CountryCodeLowerString[207:210]: 70,
+		_CountryCodeLowerString[210:213]: 71,
+		_CountryCodeLowerString[213:216]: 72,
+		_CountryCodeLowerString[216:219]: 73,
+		_CountryCodeLowerString[219:222]: 74,
+		_CountryCodeLowerString[222:225]: 75,
+		_CountryCodeLowerString[225:228]: 76,
+		_CountryCodeLowerString[228:231]: 77,
+		_CountryCodeLowerString[231:234]: 78,
+		_CountryCodeLowerString[234:237]: 79,
+		_CountryCodeLowerString[237:240]: 80,
+		_CountryCodeLowerString[240:243]: 81,
+		_CountryCodeLowerString[243:246]: 82,
+		_CountryCodeLowerString[246:249]: 83,
+		_CountryCodeLowerString[249:252]: 84,
+		_CountryCodeLowerString[252:255]: 85,
+		_CountryCodeLowerString[255:258]: 86,
+		_CountryCodeLowerString[258:261]: 87,
+		_CountryCodeLowerString[261:264]: 88,
+		_CountryCodeLowerString[264:267]: 89,
+		_CountryCodeLowerString[267:270]: 90,
+		_CountryCodeLowerString[270:273]: 91,
+		_CountryCodeLowerString[273:276]: 92,
+		_CountryCodeLowerString[276:279]: 93,
+		_CountryCodeLowerString[279:282]: 94,
+		_CountryCodeLowerString[282:285]: 95,
+		_CountryCodeLowerString[285:288]: 96,
+		_CountryCodeLowerString[288:291]: 97,
+		_CountryCodeLowerString[291:294]: 98,
+		_CountryCodeLowerString[294:297]: 99,
+		_CountryCodeLowerString[297:300]: 100,
+		_CountryCodeLowerString[300:303]: 101,
+		_CountryCodeLowerString[303:306]: 102,
+		_CountryCodeLowerString[306:309]: 103,
+		_CountryCodeLowerString[309:312]: 104,
+		_CountryCodeLowerString[312:315]: 105,
+		_CountryCodeLowerString[315:318]: 106,
+		_CountryCodeLowerString[318:321]: 107,
+		_CountryCodeLowerString[321:324]: 108,
+		_CountryCodeLowerString[324:327]: 109,
+		_CountryCodeLowerString[327:330]: 110,
+		_CountryCodeLowerString[330:333]: 111,
+		_CountryCodeLowerString[333:336]: 112,
+		_CountryCodeLowerString[336:339]: 113,
+		_CountryCodeLowerString[339:342]: 114,
+		_CountryCodeLowerString[342:345]: 115,
+		_CountryCodeLowerString[345:348]: 116,
+		_CountryCodeLowerString[348:351]: 117,
+		_CountryCodeLowerString[351:354]: 118,
+		_CountryCodeLowerString[354:357]: 119,
+		_CountryCodeLowerString[357:360]: 120,
+		_CountryCodeLowerString[360:363]: 121,
+		_CountryCodeLowerString[363:366]: 122,
+		_CountryCodeLowerString[366:369]: 123,
+		_CountryCodeLowerString[369:372]: 124,
+		_CountryCodeLowerString[372:375]: 125,
+		_CountryCodeLowerString[375:378]: 126,
+		_CountryCodeLowerString[378:381]: 127,
+		_CountryCodeLowerString[381:384]: 128,
+		_CountryCodeLowerString[384:387]: 129,
+		_CountryCodeLowerString[387:390]: 130,
+		_CountryCodeLowerString[390:393]: 131,
+		_CountryCodeLowerString[393:396]: 132,
+		_CountryCodeLowerString[396:399]: 133,
+		_CountryCodeLowerString[399:402]: 134,
+		_CountryCodeLowerString[402:405]: 135,
+		_CountryCodeLowerString[405:408]: 136,
+		_CountryCodeLowerString[408:411]: 137,
+		_CountryCodeLowerString[411:414]: 138,
+		_CountryCodeLowerString[414:417]: 139,
+		_CountryCodeLowerString[417:420]: 140,
+		_CountryCodeLowerString[420:423]: 141,
+		_CountryCodeLowerString[423:426]: 142,
+		_CountryCodeLowerString[426:429]: 143,
+		_CountryCodeLowerString[429:432]: 144,
+		_CountryCodeLowerString[432:435]: 145,
+		_CountryCodeLowerString[435:438]: 146,
+		_CountryCodeLowerString[438:441]: 147,
+		_CountryCodeLowerString[441:444]: 148,
+		_CountryCodeLowerString[444:447]: 149,
+		_CountryCodeLowerString[447:450]: 150,
+		_CountryCodeLowerString[450:453]: 151,
+		_CountryCodeLowerString[453:456]: 152,
+		_CountryCodeLowerString[456:459]: 153,
+		_CountryCodeLowerString[459:462]: 154,
+		_CountryCodeLowerString[462:465]: 155,
+		_CountryCodeLowerString[465:468]: 156,
+		_CountryCodeLowerString[468:471]: 157,
+		_CountryCodeLowerString[471:474]: 158,
+		_CountryCodeLowerString[474:477]: 159,
+		_CountryCodeLowerString[477:480]: 160,
+		_CountryCodeLowerString[480:483]: 161,
+		_CountryCodeLowerString[483:486]: 162,
+		_CountryCodeLowerString[486:489]: 163,
+		_CountryCodeLowerString[489:492]: 164,
+		_CountryCodeLowerString[492:495]: 165,
+		_CountryCodeLowerString[495:498]: 166,
+		_CountryCodeLowerString[498:501]: 167,
+		_CountryCodeLowerString[501:504]: 168,
+		_CountryCodeLowerString[504:507]: 169,
+		_CountryCodeLowerString[507:510]: 170,
+		_CountryCodeLowerString[510:513]: 171,
+		_CountryCodeLowerString[513:516]: 172,
+		_CountryCodeLowerString[516:519]: 173,
+		_CountryCodeLowerString[519:522]: 174,
+		_CountryCodeLowerString[522:525]: 175,
+		_CountryCodeLowerString[525:528]: 176,
+		_CountryCodeLowerString[528:531]: 177,
+		_CountryCodeLowerString[531:534]: 178,
+		_CountryCodeLowerString[534:537]: 179,
+		_CountryCodeLowerString[537:540]: 180,
+		_CountryCodeLowerString[540:543]: 181,
+		_CountryCodeLowerString[543:546]: 182,
+		_CountryCodeLowerString[546:549]: 183,
+		_CountryCodeLowerString[549:552]: 184,
+		_CountryCodeLowerString[552:555]: 185,
+		_CountryCodeLowerString[555:558]: 186,
+		_CountryCodeLowerString[558:561]: 187,
+		_CountryCodeLowerString[561:564]: 188,
+		_CountryCodeLowerString[564:567]: 189,
+		_CountryCodeLowerString[567:570]: 190,
+		_CountryCodeLowerString[570:573]: 191,
+		_CountryCodeLowerString[573:576]: 192,
+		_CountryCodeLowerString[576:579]: 193,
+		_CountryCodeLowerString[579:582]: 194,
+		_CountryCodeLowerString[582:585]: 195,
+		_CountryCodeLowerString[585:588]: 196,
+		_CountryCodeLowerString[588:591]: 197,
+		_CountryCodeLowerString[591:594]: 198,
+		_CountryCodeLowerString[594:597]: 199,
+		_CountryCodeLowerString[597:600]: 200,
+		_CountryCodeLowerString[600:603]: 201,
+		_CountryCodeLowerString[603:606]: 202,
+		_CountryCodeLowerString[606:609]: 203,
+		_CountryCodeLowerString[609:612]: 204,
+		_CountryCodeLowerString[612:615]: 205,
+		_CountryCodeLowerString[615:618]: 206,
+		_CountryCodeLowerString[618:621]: 207,
+		_CountryCodeLowerString[621:624]: 208,
+		_CountryCodeLowerString[624:627]: 209,
+		_CountryCodeLowerString[627:630]: 210,
+		_CountryCodeLowerString[630:633]: 211,
+		_CountryCodeLowerString[633:636]: 212,
+		_CountryCodeLowerString[636:639]: 213,
+		_CountryCodeLowerString[639:642]: 214,
+		_CountryCodeLowerString[642:645]: 215,
+		_CountryCodeLowerString[645:648]: 216,
+		_CountryCodeLowerString[648:651]: 217,
+		_CountryCodeLowerString[651:654]: 218,
+		_CountryCodeLowerString[654:657]: 219,
+		_CountryCodeLowerString[657:660]: 220,
+		_CountryCodeLowerString[660:663]: 221,
+		_CountryCodeLowerString[663:666]: 222,
+		_CountryCodeLowerString[666:669]: 223,
+		_CountryCodeLowerString[669:672]: 224,
+		_CountryCodeLowerString[672:675]: 225,
+		_CountryCodeLowerString[675:678]: 226,
+		_CountryCodeLowerString[678:681]: 227,
+		_CountryCodeLowerString[681:684]: 228,
+		_CountryCodeLowerString[684:687]: 229,
+		_CountryCodeLowerString[687:690]: 230,
+		_CountryCodeLowerString[690:693]: 231,
+		_CountryCodeLowerString[693:696]: 232,
+		_CountryCodeLowerString[696:699]: 233,
+		_CountryCodeLowerString[699:702]: 234,
+		_CountryCodeLowerString[702:705]: 235,
+		_CountryCodeLowerString[705:708]: 236,
+		_CountryCodeLowerString[708:711]: 237,
+		_CountryCodeLowerString[711:714]: 238,
+		_CountryCodeLowerString[714:717]: 239,
+		_CountryCodeLowerString[717:720]: 240,
+	}
+)
+
+// CountryCodeFromString determines the enum value with an exact case match.
+func CountryCodeFromString(raw string) (CountryCode, bool) {
+	v, ok := _CountryCodeStringToValueMap[raw]
+	if !ok {
+		return CountryCode(0), false
+	}
+	return v, true
+}
+
+// CountryCodeFromStringIgnoreCase determines the enum value with a case-insensitive match.
+func CountryCodeFromStringIgnoreCase(raw string) (CountryCode, bool) {
+	v, ok := CountryCodeFromString(raw)
+	if ok {
+		return v, ok
+	}
+	v, ok = _CountryCodeLowerStringToValueMap[raw]
+	if !ok {
+		return CountryCode(0), false
+	}
+	return v, true
+}
+
+// MarshalBinary implements the encoding.BinaryMarshaler interface for CountryCode.
+func (_c CountryCode) MarshalBinary() ([]byte, error) {
+	if err := _c.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as CountryCode. %w", _c, err)
+	}
+	return []byte(_c.String()), nil
+}
+
+// UnmarshalBinary implements the encoding.BinaryUnmarshaler interface for CountryCode.
+func (_c *CountryCode) UnmarshalBinary(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("CountryCode cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_c, ok = CountryCodeFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a CountryCode", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements the graphql.Marshaler interface for CountryCode.
+func (_c CountryCode) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(_c.String()))
+}
+
+// UnmarshalGQL implements the graphql.Unmarshaler interface for CountryCode.
+func (_c *CountryCode) UnmarshalGQL(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of CountryCode: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("CountryCode cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_c, ok = CountryCodeFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a CountryCode", str)
+	}
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaler interface for CountryCode.
+func (_c CountryCode) MarshalJSON() ([]byte, error) {
+	if err := _c.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as CountryCode. %w", _c, err)
+	}
+	return json.Marshal(_c.String())
+}
+
+// UnmarshalJSON implements the json.Unmarshaler interface for CountryCode.
+func (_c *CountryCode) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		return fmt.Errorf("CountryCode should be a string, got %q", data)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("CountryCode cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_c, ok = CountryCodeFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a CountryCode", str)
+	}
+	return nil
+}
+
+func (_c CountryCode) Value() (driver.Value, error) {
+	if err := _c.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot serialize value %q as CountryCode. %w", _c, err)
+	}
+	return _c.String(), nil
+}
+
+func (_c *CountryCode) Scan(value interface{}) error {
+	var str string
+	switch v := value.(type) {
+	case nil:
+	case []byte:
+		str = string(v)
+	case string:
+		str = v
+	case fmt.Stringer:
+		str = v.String()
+	default:
+		return fmt.Errorf("invalid value of CountryCode: %[1]T(%[1]v)", value)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("CountryCode cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_c, ok = CountryCodeFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a CountryCode", str)
+	}
+	return nil
+}
+
+// MarshalText implements the encoding.TextMarshaler interface for CountryCode.
+func (_c CountryCode) MarshalText() ([]byte, error) {
+	if err := _c.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as CountryCode. %w", _c, err)
+	}
+	return []byte(_c.String()), nil
+}
+
+// UnmarshalText implements the encoding.TextUnmarshaler interface for CountryCode.
+func (_c *CountryCode) UnmarshalText(text []byte) error {
+	str := string(text)
+	if len(str) == 0 {
+		return fmt.Errorf("CountryCode cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_c, ok = CountryCodeFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a CountryCode", str)
+	}
+	return nil
+}
+
+// MarshalYAML implements a YAML Marshaler for CountryCode.
+func (_c CountryCode) MarshalYAML() (interface{}, error) {
+	if err := _c.Validate(); err != nil {
+		return nil, fmt.Errorf("Cannot marshal value %q as CountryCode. %w", _c, err)
+	}
+	return _c.String(), nil
+}
+
+// UnmarshalYAML implements a YAML Unmarshaler for CountryCode.
+func (_c *CountryCode) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var str string
+	if err := unmarshal(&str); err != nil {
+		return err
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("CountryCode cannot be derived from empty string")
+	}
+
+	var ok bool
+	*_c, ok = CountryCodeFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a CountryCode", str)
+	}
+	return nil
+}
+
+const (
 	_CurrencyString      = "USDEURJPYGBPAUD"
 	_CurrencyLowerString = "usdeurjpygbpaud"
-	_CurrencyDataColumn0 = "US DollarEuroYenPound SterlingAustralian Dollar"
-	_CurrencyDataColumn1 = "840978392826036"
-	_CurrencyDataColumn2 = "22022"
 )
 
 var (
 	_CurrencyValueRange     = [2]Currency{1, 5}
 	_CurrencyValues         = []Currency{1, 2, 3, 4, 5}
 	_CurrencyStrings        = []string{_CurrencyString[0:3], _CurrencyString[3:6], _CurrencyString[6:9], _CurrencyString[9:12], _CurrencyString[12:15]}
-	_CurrencyAdditionalData = map[uint8]map[Currency]string{
-		0: {1: _CurrencyDataColumn0[0:9], 2: _CurrencyDataColumn0[9:13], 3: _CurrencyDataColumn0[13:16], 4: _CurrencyDataColumn0[16:30], 5: _CurrencyDataColumn0[30:47]},
-		1: {1: _CurrencyDataColumn1[0:3], 2: _CurrencyDataColumn1[3:6], 3: _CurrencyDataColumn1[6:9], 4: _CurrencyDataColumn1[9:12], 5: _CurrencyDataColumn1[12:15]},
-		2: {1: _CurrencyDataColumn2[0:1], 2: _CurrencyDataColumn2[1:2], 3: _CurrencyDataColumn2[2:3], 4: _CurrencyDataColumn2[3:4], 5: _CurrencyDataColumn2[4:5]},
+	_CurrencyAdditionalData = map[Currency]struct {
+		CurrencyName string
+		NumericCode  uint16
+		MinorUnit    uint8
+	}{
+		1: {"US Dollar", 840, 2},
+		2: {"Euro", 978, 2},
+		3: {"Yen", 392, 0},
+		4: {"Pound Sterling", 826, 2},
+		5: {"Australian Dollar", 036, 2},
 	}
 )
 
@@ -230,50 +1261,34 @@ func (_c Currency) String() string {
 	return _CurrencyStrings[idx]
 }
 
-// GetCurrencyName returns the "currency-name" string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern Currency(%d).CurrencyName instead.
+// GetCurrencyName returns the "currency-name" of the enum value as string
+// if the enum is valid.
 func (_c Currency) GetCurrencyName() (string, bool) {
 	if !_c.IsValid() {
-		return fmt.Sprintf("Currency(%d).CurrencyName", _c), false
+		return "", false
 	}
-	return _c._fromColumn(0)
+	d, ok := _CurrencyAdditionalData[_c]
+	return d.CurrencyName, ok
 }
 
-// GetNumericCode returns the "numeric-code" string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern Currency(%d).NumericCode instead.
-func (_c Currency) GetNumericCode() (string, bool) {
+// GetNumericCode returns the "numeric-code" of the enum value as uint16
+// if the enum is valid.
+func (_c Currency) GetNumericCode() (uint16, bool) {
 	if !_c.IsValid() {
-		return fmt.Sprintf("Currency(%d).NumericCode", _c), false
+		return 0, false
 	}
-	return _c._fromColumn(1)
+	d, ok := _CurrencyAdditionalData[_c]
+	return d.NumericCode, ok
 }
 
-// GetMinorUnit returns the "minor-unit" string of the enum value.
-// If the enum value is invalid, it will produce a string
-// of the following pattern Currency(%d).MinorUnit instead.
-func (_c Currency) GetMinorUnit() (string, bool) {
+// GetMinorUnit returns the "minor-unit" of the enum value as uint8
+// if the enum is valid.
+func (_c Currency) GetMinorUnit() (uint8, bool) {
 	if !_c.IsValid() {
-		return fmt.Sprintf("Currency(%d).MinorUnit", _c), false
+		return 0, false
 	}
-	return _c._fromColumn(2)
-}
-
-// _fromColumn looks up additional data of the enum.
-func (_c Currency) _fromColumn(colId uint8) (cellValue string, ok bool) {
-	if ok := _c.IsValid(); !ok {
-		return "", false
-	}
-	col, ok := _CurrencyAdditionalData[colId]
-	if !ok {
-		return "", false
-	}
-	v, ok := col[_c]
-	if !ok {
-		return "", false
-	}
-	return v, ok
+	d, ok := _CurrencyAdditionalData[_c]
+	return d.MinorUnit, ok
 }
 
 var (

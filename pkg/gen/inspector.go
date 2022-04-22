@@ -27,6 +27,7 @@ const MAGIC_MARKER = "//go:enum"
 var (
 	matchGeneratedFileRegex = regexp.MustCompile(`^// Code generated .* DO NOT EDIT.$`)
 	matchNumericValueRegex  = regexp.MustCompile(`^\-?\d+`)
+	matchTypedHeaderRegex   = regexp.MustCompile(`^.+(\(.+\))$`)
 )
 
 type inspector struct {
@@ -127,10 +128,22 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 			row[idx] = strings.TrimSpace(row[idx])
 		}
 
-		u64, err := strconv.ParseUint(row[0], 10, 64)
+		rowId, err := strconv.ParseUint(row[0], 10, 64)
 		if isHeaderRow := idx == 0 && err != nil; isHeaderRow {
 			if len(row) > 2 { // add additional header names
-				ts.DataColumns = append(ts.DataColumns, row[2:]...)
+				var header []DataHeader
+				for _, cell := range row[2:] {
+					if isTyped := matchTypedHeaderRegex.MatchString(cell); isTyped {
+						openIdx := strings.Index(cell, "(")
+						typeValue := cell[:openIdx]
+						cellString := cell[openIdx+1 : len(cell)-1]
+						determinedType := getTypeFromString(typeValue)
+						header = append(header, DataHeader{determinedType, cellString, getParserFuncFor(determinedType)})
+						continue
+					}
+					header = append(header, DataHeader{GoTypeUnknown, cell, getParserFuncFor(GoTypeUnknown)})
+				}
+				ts.DataColumns = append(ts.DataColumns, header...)
 			}
 			continue
 		}
@@ -138,14 +151,36 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 			return fmt.Errorf("failed converting %q to uint64", row[0])
 		}
 		cvs := &ValueSpec{
-			Value:          u64,
+			Value:          rowId,
 			IdentifierName: "", // hint: no identifier here
 			EnumValue:      row[1],
 			ValueString:    row[0],
 		}
 		if len(row) > 2 {
 			ts.HasAdditionalData = true // hint: mark type for additional column support
-			cvs.DataCells = row[2:]
+			for idx, cell := range row[2:] {
+				parseFunc := ts.DataColumns[idx].ParseFunc
+
+				raw := cell
+				cellValue, err := parseFunc(cell)
+				// hint: float special types are set to "0" here
+				// a proper implementation would map to "math.Inf" and "math.NaN" funcs
+				// and add "math" package import to file
+				if errors.Is(err, ErrIsNaN) {
+					cell = "0"
+					err = nil
+				} else if errors.Is(err, ErrIsPosInf) {
+					cell = "0"
+					err = nil
+				} else if errors.Is(err, ErrIsNegInf) {
+					cell = "0"
+					err = nil
+				}
+				if err != nil {
+					return err
+				}
+				cvs.DataCells = append(cvs.DataCells, DataCell{cell, cellValue, raw})
+			}
 		}
 		csvValueSpecs = append(csvValueSpecs, cvs)
 	}
@@ -156,6 +191,8 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 func (i inspector) inspectImports(f *File) {
 	f.Imports = append(f.Imports, &Import{Path: "errors"})
 	f.Imports = append(f.Imports, &Import{Path: "fmt"})
+	// we add all imports (also duplicates)
+	// gofmt will help us clean that up later on
 	for _, ts := range f.TypeSpecs {
 		for _, v := range ts.Config.Serializers {
 			switch v {
@@ -413,7 +450,7 @@ func (i inspector) evaluateValueSpec(t typeSpec, s valueSpec, pkg *packages.Pack
 func (i inspector) determineTypeOfExpr(e ast.Expr) (GoType, error) {
 	switch t := e.(type) {
 	case *ast.Ident:
-		typ, ok := typeMap[t.Name]
+		typ, ok := validEnumTypesMap[t.Name]
 		if ok {
 			return typ, nil
 		}
