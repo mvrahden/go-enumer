@@ -21,7 +21,8 @@ This remake of `go-enumer` is intended to be:
    3. [Equivalent values](#equivalent-values)
    4. [Handling of Name Prefixes](#handling-of-name-prefixes)
    5. [Type Validation](#type-validation)
-   6. [Supported features](#supported-features)
+   6. [CSV-File sources](#csv-file-sources)
+   7. [Supported features](#supported-features)
       1. [The "undefined" feature](#the-undefined-feature)
       2. [Other supported features](#other-supported-features)
 3. [Generated functions and methods](#generated-functions-and-methods)
@@ -138,6 +139,16 @@ In short: You can prefix constant names with their corresponding type alias name
 
 By defining enums on a linear scale, the validation time is of constant complexity.
 Type validation will be performed on every (de-)serialization.
+
+### CSV-File sources
+
+`go-enumer` can extract your enum definitions from CSV file sources if you target `-from=path/to.csv` in your enum's magic comment.
+You can even augment your enums with additional data columns.
+
+By default all additional data will be handled as strings.
+But `go-enumer` can parse your data and add typed Getter-funcs based on a column annotation syntax.
+It supports Go's built-in data types with the following syntax `<datatype>(your-column-name)`, e.g. `uint(area-in-square-meter)` or `float64(tolerance)`.
+Have a look at [the examples](examples/README.md) for further info.
 
 ### Supported features
 
