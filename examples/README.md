@@ -28,4 +28,4 @@ Each example directory contains a specific set of files:
 - `enums.go`: contains the enum type definitions.
 - `generated.go`: contains the expected generated output.
 - `enums_test.go`: contains test files to assert that the `generated.go` file performs as expected.
-- `config.yml`: the base configuration for the code generation **run**.
+- `config.yml`: the base configuration for the code generation.
