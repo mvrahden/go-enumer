@@ -22,8 +22,8 @@ const (
 
 var (
 	_AccountStateValueRange = [2]AccountState{0, 4}
-	_AccountStateValues     = []AccountState{0, 1, 2, 3, 4}
-	_AccountStateStrings    = []string{_AccountStateString[0:6], _AccountStateString[6:17], _AccountStateString[17:26], _AccountStateString[26:37], _AccountStateString[37:50]}
+	_AccountStateValues     = [5]AccountState{0, 1, 2, 3, 4}
+	_AccountStateStrings    = [5]string{_AccountStateString[0:6], _AccountStateString[6:17], _AccountStateString[17:26], _AccountStateString[26:37], _AccountStateString[37:50]}
 )
 
 // _AccountStateNoOp is a compile time assertion.
@@ -40,16 +40,14 @@ func _AccountStateNoOp() {
 
 // AccountStateValues returns all values of the enum.
 func AccountStateValues() []AccountState {
-	cp := make([]AccountState, len(_AccountStateValues))
-	copy(cp, _AccountStateValues)
-	return cp
+	cp := _AccountStateValues
+	return cp[:]
 }
 
 // AccountStateStrings returns a slice of all String values of the enum.
 func AccountStateStrings() []string {
-	cp := make([]string, len(_AccountStateStrings))
-	copy(cp, _AccountStateStrings)
-	return cp
+	cp := _AccountStateStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -180,9 +178,9 @@ const (
 
 var (
 	_CountryCodeValueRange     = [2]CountryCode{1, 240}
-	_CountryCodeValues         = []CountryCode{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240}
-	_CountryCodeStrings        = []string{_CountryCodeString[0:3], _CountryCodeString[3:6], _CountryCodeString[6:9], _CountryCodeString[9:12], _CountryCodeString[12:15], _CountryCodeString[15:18], _CountryCodeString[18:21], _CountryCodeString[21:24], _CountryCodeString[24:27], _CountryCodeString[27:30], _CountryCodeString[30:33], _CountryCodeString[33:36], _CountryCodeString[36:39], _CountryCodeString[39:42], _CountryCodeString[42:45], _CountryCodeString[45:48], _CountryCodeString[48:51], _CountryCodeString[51:54], _CountryCodeString[54:57], _CountryCodeString[57:60], _CountryCodeString[60:63], _CountryCodeString[63:66], _CountryCodeString[66:69], _CountryCodeString[69:72], _CountryCodeString[72:75], _CountryCodeString[75:78], _CountryCodeString[78:81], _CountryCodeString[81:84], _CountryCodeString[84:87], _CountryCodeString[87:90], _CountryCodeString[90:93], _CountryCodeString[93:96], _CountryCodeString[96:99], _CountryCodeString[99:102], _CountryCodeString[102:105], _CountryCodeString[105:108], _CountryCodeString[108:111], _CountryCodeString[111:114], _CountryCodeString[114:117], _CountryCodeString[117:120], _CountryCodeString[120:123], _CountryCodeString[123:126], _CountryCodeString[126:129], _CountryCodeString[129:132], _CountryCodeString[132:135], _CountryCodeString[135:138], _CountryCodeString[138:141], _CountryCodeString[141:144], _CountryCodeString[144:147], _CountryCodeString[147:150], _CountryCodeString[150:153], _CountryCodeString[153:156], _CountryCodeString[156:159], _CountryCodeString[159:162], _CountryCodeString[162:165], _CountryCodeString[165:168], _CountryCodeString[168:171], _CountryCodeString[171:174], _CountryCodeString[174:177], _CountryCodeString[177:180], _CountryCodeString[180:183], _CountryCodeString[183:186], _CountryCodeString[186:189], _CountryCodeString[189:192], _CountryCodeString[192:195], _CountryCodeString[195:198], _CountryCodeString[198:201], _CountryCodeString[201:204], _CountryCodeString[204:207], _CountryCodeString[207:210], _CountryCodeString[210:213], _CountryCodeString[213:216], _CountryCodeString[216:219], _CountryCodeString[219:222], _CountryCodeString[222:225], _CountryCodeString[225:228], _CountryCodeString[228:231], _CountryCodeString[231:234], _CountryCodeString[234:237], _CountryCodeString[237:240], _CountryCodeString[240:243], _CountryCodeString[243:246], _CountryCodeString[246:249], _CountryCodeString[249:252], _CountryCodeString[252:255], _CountryCodeString[255:258], _CountryCodeString[258:261], _CountryCodeString[261:264], _CountryCodeString[264:267], _CountryCodeString[267:270], _CountryCodeString[270:273], _CountryCodeString[273:276], _CountryCodeString[276:279], _CountryCodeString[279:282], _CountryCodeString[282:285], _CountryCodeString[285:288], _CountryCodeString[288:291], _CountryCodeString[291:294], _CountryCodeString[294:297], _CountryCodeString[297:300], _CountryCodeString[300:303], _CountryCodeString[303:306], _CountryCodeString[306:309], _CountryCodeString[309:312], _CountryCodeString[312:315], _CountryCodeString[315:318], _CountryCodeString[318:321], _CountryCodeString[321:324], _CountryCodeString[324:327], _CountryCodeString[327:330], _CountryCodeString[330:333], _CountryCodeString[333:336], _CountryCodeString[336:339], _CountryCodeString[339:342], _CountryCodeString[342:345], _CountryCodeString[345:348], _CountryCodeString[348:351], _CountryCodeString[351:354], _CountryCodeString[354:357], _CountryCodeString[357:360], _CountryCodeString[360:363], _CountryCodeString[363:366], _CountryCodeString[366:369], _CountryCodeString[369:372], _CountryCodeString[372:375], _CountryCodeString[375:378], _CountryCodeString[378:381], _CountryCodeString[381:384], _CountryCodeString[384:387], _CountryCodeString[387:390], _CountryCodeString[390:393], _CountryCodeString[393:396], _CountryCodeString[396:399], _CountryCodeString[399:402], _CountryCodeString[402:405], _CountryCodeString[405:408], _CountryCodeString[408:411], _CountryCodeString[411:414], _CountryCodeString[414:417], _CountryCodeString[417:420], _CountryCodeString[420:423], _CountryCodeString[423:426], _CountryCodeString[426:429], _CountryCodeString[429:432], _CountryCodeString[432:435], _CountryCodeString[435:438], _CountryCodeString[438:441], _CountryCodeString[441:444], _CountryCodeString[444:447], _CountryCodeString[447:450], _CountryCodeString[450:453], _CountryCodeString[453:456], _CountryCodeString[456:459], _CountryCodeString[459:462], _CountryCodeString[462:465], _CountryCodeString[465:468], _CountryCodeString[468:471], _CountryCodeString[471:474], _CountryCodeString[474:477], _CountryCodeString[477:480], _CountryCodeString[480:483], _CountryCodeString[483:486], _CountryCodeString[486:489], _CountryCodeString[489:492], _CountryCodeString[492:495], _CountryCodeString[495:498], _CountryCodeString[498:501], _CountryCodeString[501:504], _CountryCodeString[504:507], _CountryCodeString[507:510], _CountryCodeString[510:513], _CountryCodeString[513:516], _CountryCodeString[516:519], _CountryCodeString[519:522], _CountryCodeString[522:525], _CountryCodeString[525:528], _CountryCodeString[528:531], _CountryCodeString[531:534], _CountryCodeString[534:537], _CountryCodeString[537:540], _CountryCodeString[540:543], _CountryCodeString[543:546], _CountryCodeString[546:549], _CountryCodeString[549:552], _CountryCodeString[552:555], _CountryCodeString[555:558], _CountryCodeString[558:561], _CountryCodeString[561:564], _CountryCodeString[564:567], _CountryCodeString[567:570], _CountryCodeString[570:573], _CountryCodeString[573:576], _CountryCodeString[576:579], _CountryCodeString[579:582], _CountryCodeString[582:585], _CountryCodeString[585:588], _CountryCodeString[588:591], _CountryCodeString[591:594], _CountryCodeString[594:597], _CountryCodeString[597:600], _CountryCodeString[600:603], _CountryCodeString[603:606], _CountryCodeString[606:609], _CountryCodeString[609:612], _CountryCodeString[612:615], _CountryCodeString[615:618], _CountryCodeString[618:621], _CountryCodeString[621:624], _CountryCodeString[624:627], _CountryCodeString[627:630], _CountryCodeString[630:633], _CountryCodeString[633:636], _CountryCodeString[636:639], _CountryCodeString[639:642], _CountryCodeString[642:645], _CountryCodeString[645:648], _CountryCodeString[648:651], _CountryCodeString[651:654], _CountryCodeString[654:657], _CountryCodeString[657:660], _CountryCodeString[660:663], _CountryCodeString[663:666], _CountryCodeString[666:669], _CountryCodeString[669:672], _CountryCodeString[672:675], _CountryCodeString[675:678], _CountryCodeString[678:681], _CountryCodeString[681:684], _CountryCodeString[684:687], _CountryCodeString[687:690], _CountryCodeString[690:693], _CountryCodeString[693:696], _CountryCodeString[696:699], _CountryCodeString[699:702], _CountryCodeString[702:705], _CountryCodeString[705:708], _CountryCodeString[708:711], _CountryCodeString[711:714], _CountryCodeString[714:717], _CountryCodeString[717:720]}
-	_CountryCodeAdditionalData = map[CountryCode]struct {
+	_CountryCodeValues         = [240]CountryCode{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240}
+	_CountryCodeStrings        = [240]string{_CountryCodeString[0:3], _CountryCodeString[3:6], _CountryCodeString[6:9], _CountryCodeString[9:12], _CountryCodeString[12:15], _CountryCodeString[15:18], _CountryCodeString[18:21], _CountryCodeString[21:24], _CountryCodeString[24:27], _CountryCodeString[27:30], _CountryCodeString[30:33], _CountryCodeString[33:36], _CountryCodeString[36:39], _CountryCodeString[39:42], _CountryCodeString[42:45], _CountryCodeString[45:48], _CountryCodeString[48:51], _CountryCodeString[51:54], _CountryCodeString[54:57], _CountryCodeString[57:60], _CountryCodeString[60:63], _CountryCodeString[63:66], _CountryCodeString[66:69], _CountryCodeString[69:72], _CountryCodeString[72:75], _CountryCodeString[75:78], _CountryCodeString[78:81], _CountryCodeString[81:84], _CountryCodeString[84:87], _CountryCodeString[87:90], _CountryCodeString[90:93], _CountryCodeString[93:96], _CountryCodeString[96:99], _CountryCodeString[99:102], _CountryCodeString[102:105], _CountryCodeString[105:108], _CountryCodeString[108:111], _CountryCodeString[111:114], _CountryCodeString[114:117], _CountryCodeString[117:120], _CountryCodeString[120:123], _CountryCodeString[123:126], _CountryCodeString[126:129], _CountryCodeString[129:132], _CountryCodeString[132:135], _CountryCodeString[135:138], _CountryCodeString[138:141], _CountryCodeString[141:144], _CountryCodeString[144:147], _CountryCodeString[147:150], _CountryCodeString[150:153], _CountryCodeString[153:156], _CountryCodeString[156:159], _CountryCodeString[159:162], _CountryCodeString[162:165], _CountryCodeString[165:168], _CountryCodeString[168:171], _CountryCodeString[171:174], _CountryCodeString[174:177], _CountryCodeString[177:180], _CountryCodeString[180:183], _CountryCodeString[183:186], _CountryCodeString[186:189], _CountryCodeString[189:192], _CountryCodeString[192:195], _CountryCodeString[195:198], _CountryCodeString[198:201], _CountryCodeString[201:204], _CountryCodeString[204:207], _CountryCodeString[207:210], _CountryCodeString[210:213], _CountryCodeString[213:216], _CountryCodeString[216:219], _CountryCodeString[219:222], _CountryCodeString[222:225], _CountryCodeString[225:228], _CountryCodeString[228:231], _CountryCodeString[231:234], _CountryCodeString[234:237], _CountryCodeString[237:240], _CountryCodeString[240:243], _CountryCodeString[243:246], _CountryCodeString[246:249], _CountryCodeString[249:252], _CountryCodeString[252:255], _CountryCodeString[255:258], _CountryCodeString[258:261], _CountryCodeString[261:264], _CountryCodeString[264:267], _CountryCodeString[267:270], _CountryCodeString[270:273], _CountryCodeString[273:276], _CountryCodeString[276:279], _CountryCodeString[279:282], _CountryCodeString[282:285], _CountryCodeString[285:288], _CountryCodeString[288:291], _CountryCodeString[291:294], _CountryCodeString[294:297], _CountryCodeString[297:300], _CountryCodeString[300:303], _CountryCodeString[303:306], _CountryCodeString[306:309], _CountryCodeString[309:312], _CountryCodeString[312:315], _CountryCodeString[315:318], _CountryCodeString[318:321], _CountryCodeString[321:324], _CountryCodeString[324:327], _CountryCodeString[327:330], _CountryCodeString[330:333], _CountryCodeString[333:336], _CountryCodeString[336:339], _CountryCodeString[339:342], _CountryCodeString[342:345], _CountryCodeString[345:348], _CountryCodeString[348:351], _CountryCodeString[351:354], _CountryCodeString[354:357], _CountryCodeString[357:360], _CountryCodeString[360:363], _CountryCodeString[363:366], _CountryCodeString[366:369], _CountryCodeString[369:372], _CountryCodeString[372:375], _CountryCodeString[375:378], _CountryCodeString[378:381], _CountryCodeString[381:384], _CountryCodeString[384:387], _CountryCodeString[387:390], _CountryCodeString[390:393], _CountryCodeString[393:396], _CountryCodeString[396:399], _CountryCodeString[399:402], _CountryCodeString[402:405], _CountryCodeString[405:408], _CountryCodeString[408:411], _CountryCodeString[411:414], _CountryCodeString[414:417], _CountryCodeString[417:420], _CountryCodeString[420:423], _CountryCodeString[423:426], _CountryCodeString[426:429], _CountryCodeString[429:432], _CountryCodeString[432:435], _CountryCodeString[435:438], _CountryCodeString[438:441], _CountryCodeString[441:444], _CountryCodeString[444:447], _CountryCodeString[447:450], _CountryCodeString[450:453], _CountryCodeString[453:456], _CountryCodeString[456:459], _CountryCodeString[459:462], _CountryCodeString[462:465], _CountryCodeString[465:468], _CountryCodeString[468:471], _CountryCodeString[471:474], _CountryCodeString[474:477], _CountryCodeString[477:480], _CountryCodeString[480:483], _CountryCodeString[483:486], _CountryCodeString[486:489], _CountryCodeString[489:492], _CountryCodeString[492:495], _CountryCodeString[495:498], _CountryCodeString[498:501], _CountryCodeString[501:504], _CountryCodeString[504:507], _CountryCodeString[507:510], _CountryCodeString[510:513], _CountryCodeString[513:516], _CountryCodeString[516:519], _CountryCodeString[519:522], _CountryCodeString[522:525], _CountryCodeString[525:528], _CountryCodeString[528:531], _CountryCodeString[531:534], _CountryCodeString[534:537], _CountryCodeString[537:540], _CountryCodeString[540:543], _CountryCodeString[543:546], _CountryCodeString[546:549], _CountryCodeString[549:552], _CountryCodeString[552:555], _CountryCodeString[555:558], _CountryCodeString[558:561], _CountryCodeString[561:564], _CountryCodeString[564:567], _CountryCodeString[567:570], _CountryCodeString[570:573], _CountryCodeString[573:576], _CountryCodeString[576:579], _CountryCodeString[579:582], _CountryCodeString[582:585], _CountryCodeString[585:588], _CountryCodeString[588:591], _CountryCodeString[591:594], _CountryCodeString[594:597], _CountryCodeString[597:600], _CountryCodeString[600:603], _CountryCodeString[603:606], _CountryCodeString[606:609], _CountryCodeString[609:612], _CountryCodeString[612:615], _CountryCodeString[615:618], _CountryCodeString[618:621], _CountryCodeString[621:624], _CountryCodeString[624:627], _CountryCodeString[627:630], _CountryCodeString[630:633], _CountryCodeString[633:636], _CountryCodeString[636:639], _CountryCodeString[639:642], _CountryCodeString[642:645], _CountryCodeString[645:648], _CountryCodeString[648:651], _CountryCodeString[651:654], _CountryCodeString[654:657], _CountryCodeString[657:660], _CountryCodeString[660:663], _CountryCodeString[663:666], _CountryCodeString[666:669], _CountryCodeString[669:672], _CountryCodeString[672:675], _CountryCodeString[675:678], _CountryCodeString[678:681], _CountryCodeString[681:684], _CountryCodeString[684:687], _CountryCodeString[687:690], _CountryCodeString[690:693], _CountryCodeString[693:696], _CountryCodeString[696:699], _CountryCodeString[699:702], _CountryCodeString[702:705], _CountryCodeString[705:708], _CountryCodeString[708:711], _CountryCodeString[711:714], _CountryCodeString[714:717], _CountryCodeString[717:720]}
+	_CountryCodeAdditionalData = [240]struct {
 		CountryName           string
 		CountryCode           string
 		Iso2LetterCode        string
@@ -190,261 +188,259 @@ var (
 		AreaInSquareKilometer uint32
 		GdpInBillion          float64
 	}{
-		1:   {"Afghanistan", "93", "AF", 29121286, 647500, 20.65},
-		2:   {"Albania", "355", "AL", 2986952, 28748, 12.8},
-		3:   {"Algeria", "213", "DZ", 34586184, 2381740, 215.7},
-		4:   {"American Samoa", "1-684", "AS", 57881, 199, 0.4622},
-		5:   {"Andorra", "376", "AD", 84000, 468, 4.8},
-		6:   {"Angola", "244", "AO", 13068161, 1246700, 124},
-		7:   {"Anguilla", "1-264", "AI", 13254, 102, 0.1754},
-		8:   {"Antarctica", "672", "AQ", 0, 14000000, 0},
-		9:   {"Antigua and Barbuda", "1-268", "AG", 86754, 443, 1.22},
-		10:  {"Argentina", "54", "AR", 41343201, 2766890, 484.6},
-		11:  {"Armenia", "374", "AM", 2968000, 29800, 10.44},
-		12:  {"Aruba", "297", "AW", 71566, 193, 2.516},
-		13:  {"Australia", "61", "AU", 21515754, 7686850, 1488},
-		14:  {"Austria", "43", "AT", 8205000, 83858, 417.9},
-		15:  {"Azerbaijan", "994", "AZ", 8303512, 86600, 76.01},
-		16:  {"Bahamas", "1-242", "BS", 301790, 13940, 8.373},
-		17:  {"Bahrain", "973", "BH", 738004, 665, 28.36},
-		18:  {"Bangladesh", "880", "BD", 156118464, 144000, 140.2},
-		19:  {"Barbados", "1-246", "BB", 285653, 431, 4.262},
-		20:  {"Belarus", "375", "BY", 9685000, 207600, 69.24},
-		21:  {"Belgium", "32", "BE", 10403000, 30510, 507.4},
-		22:  {"Belize", "501", "BZ", 314522, 22966, 1.637},
-		23:  {"Benin", "229", "BJ", 9056010, 112620, 8.359},
-		24:  {"Bermuda", "1-441", "BM", 65365, 53, 5.6},
-		25:  {"Bhutan", "975", "BT", 699847, 47000, 2.133},
-		26:  {"Bolivia", "591", "BO", 9947418, 1098580, 30.79},
-		27:  {"Bosnia and Herzegovina", "387", "BA", 4590000, 51129, 18.87},
-		28:  {"Botswana", "267", "BW", 2029307, 600370, 15.53},
-		29:  {"Brazil", "55", "BR", 201103330, 8511965, 2190},
-		30:  {"British Indian Ocean Territory", "246", "IO", 4000, 60, 0},
-		31:  {"British Virgin Islands", "1-284", "VG", 21730, 153, 1.095},
-		32:  {"Brunei", "673", "BN", 395027, 5770, 16.56},
-		33:  {"Bulgaria", "359", "BG", 7148785, 110910, 53.7},
-		34:  {"Burkina Faso", "226", "BF", 16241811, 274200, 12.13},
-		35:  {"Burundi", "257", "BI", 9863117, 27830, 2.676},
-		36:  {"Cambodia", "855", "KH", 14453680, 181040, 15.64},
-		37:  {"Cameroon", "237", "CM", 19294149, 475440, 27.88},
-		38:  {"Canada", "1", "CA", 33679000, 9984670, 1825},
-		39:  {"Cape Verde", "238", "CV", 508659, 4033, 1.955},
-		40:  {"Cayman Islands", "1-345", "KY", 44270, 262, 2.25},
-		41:  {"Central African Republic", "236", "CF", 4844927, 622984, 2.05},
-		42:  {"Chad", "235", "TD", 10543464, 1284000, 13.59},
-		43:  {"Chile", "56", "CL", 16746491, 756950, 281.7},
-		44:  {"China", "86", "CN", 1330044000, 9596960, 9330},
-		45:  {"Christmas Island", "61", "CX", 1500, 135, 0},
-		46:  {"Cocos Islands", "61", "CC", 628, 14, 0},
-		47:  {"Colombia", "57", "CO", 47790000, 1138910, 369.2},
-		48:  {"Comoros", "269", "KM", 773407, 2170, 0.658},
-		49:  {"Cook Islands", "682", "CK", 21388, 240, 0.1832},
-		50:  {"Costa Rica", "506", "CR", 4516220, 51100, 48.51},
-		51:  {"Croatia", "385", "HR", 4491000, 56542, 59.14},
-		52:  {"Cuba", "53", "CU", 11423000, 110860, 72.3},
-		53:  {"Curacao", "599", "CW", 141766, 444, 5.6},
-		54:  {"Cyprus", "357", "CY", 1102677, 9250, 21.78},
-		55:  {"Czech Republic", "420", "CZ", 10476000, 78866, 194.8},
-		56:  {"Democratic Republic of the Congo", "243", "CD", 70916439, 2345410, 18.56},
-		57:  {"Denmark", "45", "DK", 5484000, 43094, 324.3},
-		58:  {"Djibouti", "253", "DJ", 740528, 23000, 1.459},
-		59:  {"Dominica", "1-767", "DM", 72813, 754, 0.495},
-		60:  {"Dominican Republic", "1-809 1-829 1-849", "DO", 9823821, 48730, 59.27},
-		61:  {"East Timor", "670", "TL", 1154625, 15007, 6.129},
-		62:  {"Ecuador", "593", "EC", 14790608, 283560, 91.41},
-		63:  {"Egypt", "20", "EG", 80471869, 1001450, 262},
-		64:  {"El Salvador", "503", "SV", 6052064, 21040, 24.67},
-		65:  {"Equatorial Guinea", "240", "GQ", 1014999, 28051, 17.08},
-		66:  {"Eritrea", "291", "ER", 5792984, 121320, 3.438},
-		67:  {"Estonia", "372", "EE", 1291170, 45226, 24.28},
-		68:  {"Ethiopia", "251", "ET", 88013491, 1127127, 47.34},
-		69:  {"Falkland Islands", "500", "FK", 2638, 12173, 0.1645},
-		70:  {"Faroe Islands", "298", "FO", 48228, 1399, 2.32},
-		71:  {"Fiji", "679", "FJ", 875983, 18270, 4.218},
-		72:  {"Finland", "358", "FI", 5244000, 337030, 259.6},
-		73:  {"France", "33", "FR", 64768389, 547030, 2739},
-		74:  {"French Polynesia", "689", "PF", 270485, 4167, 5.65},
-		75:  {"Gabon", "241", "GA", 1545255, 267667, 19.97},
-		76:  {"Gambia", "220", "GM", 1593256, 11300, 0.896},
-		77:  {"Georgia", "995", "GE", 4630000, 69700, 15.95},
-		78:  {"Germany", "49", "DE", 81802257, 357021, 3593},
-		79:  {"Ghana", "233", "GH", 24339838, 239460, 45.55},
-		80:  {"Gibraltar", "350", "GI", 27884, 7, 1.106},
-		81:  {"Greece", "30", "GR", 11000000, 131940, 243.3},
-		82:  {"Greenland", "299", "GL", 56375, 2166086, 2.16},
-		83:  {"Grenada", "1-473", "GD", 107818, 344, 0.811},
-		84:  {"Guam", "1-671", "GU", 159358, 549, 4.6},
-		85:  {"Guatemala", "502", "GT", 13550440, 108890, 53.9},
-		86:  {"Guernsey", "44-1481", "GG", 65228, 78, 2.742},
-		87:  {"Guinea", "224", "GN", 10324025, 245857, 6.544},
-		88:  {"Guinea-Bissau", "245", "GW", 1565126, 36120, 0.88},
-		89:  {"Guyana", "592", "GY", 748486, 214970, 3.02},
-		90:  {"Haiti", "509", "HT", 9648924, 27750, 8.287},
-		91:  {"Honduras", "504", "HN", 7989415, 112090, 18.88},
-		92:  {"Hong Kong", "852", "HK", 6898686, 1092, 272.1},
-		93:  {"Hungary", "36", "HU", 9982000, 93030, 130.6},
-		94:  {"Iceland", "354", "IS", 308910, 103000, 14.59},
-		95:  {"India", "91", "IN", 1173108018, 3287590, 1670},
-		96:  {"Indonesia", "62", "ID", 242968342, 1919440, 867.5},
-		97:  {"Iran", "98", "IR", 76923300, 1648000, 411.9},
-		98:  {"Iraq", "964", "IQ", 29671605, 437072, 221.8},
-		99:  {"Ireland", "353", "IE", 4622917, 70280, 220.9},
-		100: {"Isle of Man", "44-1624", "IM", 75049, 572, 4.076},
-		101: {"Israel", "972", "IL", 7353985, 20770, 272.7},
-		102: {"Italy", "39", "IT", 60340328, 301230, 2068},
-		103: {"Ivory Coast", "225", "CI", 21058798, 322460, 28.28},
-		104: {"Jamaica", "1-876", "JM", 2847232, 10991, 14.39},
-		105: {"Japan", "81", "JP", 127288000, 377835, 5007},
-		106: {"Jersey", "44-1534", "JE", 90812, 116, 5.1},
-		107: {"Jordan", "962", "JO", 6407085, 92300, 34.08},
-		108: {"Kazakhstan", "7", "KZ", 15340000, 2717300, 224.9},
-		109: {"Kenya", "254", "KE", 40046566, 582650, 45.31},
-		110: {"Kiribati", "686", "KI", 92533, 811, 0.173},
-		111: {"Kosovo", "383", "XK", 1800000, 10887, 7.15},
-		112: {"Kuwait", "965", "KW", 2789132, 17820, 179.5},
-		113: {"Kyrgyzstan", "996", "KG", 5508626, 198500, 7.234},
-		114: {"Laos", "856", "LA", 6368162, 236800, 10.1},
-		115: {"Latvia", "371", "LV", 2217969, 64589, 30.38},
-		116: {"Lebanon", "961", "LB", 4125247, 10400, 43.49},
-		117: {"Lesotho", "266", "LS", 1919552, 30355, 2.457},
-		118: {"Liberia", "231", "LR", 3685076, 111370, 1.977},
-		119: {"Libya", "218", "LY", 6461454, 1759540, 70.92},
-		120: {"Liechtenstein", "423", "LI", 35000, 160, 5.113},
-		121: {"Lithuania", "370", "LT", 2944459, 65200, 46.71},
-		122: {"Luxembourg", "352", "LU", 497538, 2586, 60.54},
-		123: {"Macau", "853", "MO", 449198, 254, 51.68},
-		124: {"Macedonia", "389", "MK", 2062294, 25333, 10.65},
-		125: {"Madagascar", "261", "MG", 21281844, 587040, 10.53},
-		126: {"Malawi", "265", "MW", 15447500, 118480, 3.683},
-		127: {"Malaysia", "60", "MY", 28274729, 329750, 312.4},
-		128: {"Maldives", "960", "MV", 395650, 300, 2.27},
-		129: {"Mali", "223", "ML", 13796354, 1240000, 11.37},
-		130: {"Malta", "356", "MT", 403000, 316, 9.541},
-		131: {"Marshall Islands", "692", "MH", 65859, 181, 0.193},
-		132: {"Mauritania", "222", "MR", 3205060, 1030700, 4.183},
-		133: {"Mauritius", "230", "MU", 1294104, 2040, 11.9},
-		134: {"Mayotte", "262", "YT", 159042, 374, 0},
-		135: {"Mexico", "52", "MX", 112468855, 1972550, 1327},
-		136: {"Micronesia", "691", "FM", 107708, 702, 0.339},
-		137: {"Moldova", "373", "MD", 4324000, 33843, 7.932},
-		138: {"Monaco", "377", "MC", 32965, 2, 5.748},
-		139: {"Mongolia", "976", "MN", 3086918, 1565000, 11.14},
-		140: {"Montenegro", "382", "ME", 666730, 14026, 4.518},
-		141: {"Montserrat", "1-664", "MS", 9341, 102, 0},
-		142: {"Morocco", "212", "MA", 31627428, 446550, 104.8},
-		143: {"Mozambique", "258", "MZ", 22061451, 801590, 14.67},
-		144: {"Myanmar", "95", "MM", 53414374, 678500, 59.43},
-		145: {"Namibia", "264", "NA", 2128471, 825418, 12.3},
-		146: {"Nauru", "674", "NR", 10065, 21, 0},
-		147: {"Nepal", "977", "NP", 28951852, 140800, 19.34},
-		148: {"Netherlands", "31", "NL", 16645000, 41526, 722.3},
-		149: {"Netherlands Antilles", "599", "AN", 136197, 960, 0},
-		150: {"New Caledonia", "687", "NC", 216494, 19060, 9.28},
-		151: {"New Zealand", "64", "NZ", 4252277, 268680, 181.1},
-		152: {"Nicaragua", "505", "NI", 5995928, 129494, 11.26},
-		153: {"Niger", "227", "NE", 15878271, 1267000, 7.304},
-		154: {"Nigeria", "234", "NG", 154000000, 923768, 502},
-		155: {"Niue", "683", "NU", 2166, 260, 0.01001},
-		156: {"North Korea", "850", "KP", 22912177, 120540, 28},
-		157: {"Northern Mariana Islands", "1-670", "MP", 53883, 477, 0.733},
-		158: {"Norway", "47", "NO", 5009150, 324220, 515.8},
-		159: {"Oman", "968", "OM", 2967717, 212460, 81.95},
-		160: {"Pakistan", "92", "PK", 184404791, 803940, 236.5},
-		161: {"Palau", "680", "PW", 19907, 458, 0.221},
-		162: {"Palestine", "970", "PS", 3800000, 5970, 6.641},
-		163: {"Panama", "507", "PA", 3410676, 78200, 40.62},
-		164: {"Papua New Guinea", "675", "PG", 6064515, 462840, 16.1},
-		165: {"Paraguay", "595", "PY", 6375830, 406750, 30.56},
-		166: {"Peru", "51", "PE", 29907003, 1285220, 210.3},
-		167: {"Philippines", "63", "PH", 99900177, 300000, 272.2},
-		168: {"Pitcairn", "64", "PN", 46, 47, 0},
-		169: {"Poland", "48", "PL", 38500000, 312685, 513.9},
-		170: {"Portugal", "351", "PT", 10676000, 92391, 219.3},
-		171: {"Puerto Rico", "1-787 1-939", "PR", 3916632, 9104, 93.52},
-		172: {"Qatar", "974", "QA", 840926, 11437, 213.1},
-		173: {"Republic of the Congo", "242", "CG", 3039126, 342000, 14.25},
-		174: {"Reunion", "262", "RE", 776948, 2517, 0},
-		175: {"Romania", "40", "RO", 21959278, 237500, 188.9},
-		176: {"Russia", "7", "RU", 140702000, 17100000, 2113},
-		177: {"Rwanda", "250", "RW", 11055976, 26338, 7.7},
-		178: {"Saint Barthelemy", "590", "BL", 8450, 21, 0},
-		179: {"Saint Helena", "290", "SH", 7460, 410, 0},
-		180: {"Saint Kitts and Nevis", "1-869", "KN", 51134, 261, 0.767},
-		181: {"Saint Lucia", "1-758", "LC", 160922, 616, 1.377},
-		182: {"Saint Martin", "590", "MF", 35925, 53, 0.5615},
-		183: {"Saint Pierre and Miquelon", "508", "PM", 7012, 242, 0.2153},
-		184: {"Saint Vincent and the Grenadines", "1-784", "VC", 104217, 389, 0.742},
-		185: {"Samoa", "685", "WS", 192001, 2944, 0.705},
-		186: {"San Marino", "378", "SM", 31477, 61, 1.866},
-		187: {"Sao Tome and Principe", "239", "ST", 175808, 1001, 0.311},
-		188: {"Saudi Arabia", "966", "SA", 25731776, 1960582, 718.5},
-		189: {"Senegal", "221", "SN", 12323252, 196190, 15.36},
-		190: {"Serbia", "381", "RS", 7344847, 88361, 43.68},
-		191: {"Seychelles", "248", "SC", 88340, 455, 1.271},
-		192: {"Sierra Leone", "232", "SL", 5245695, 71740, 4.607},
-		193: {"Singapore", "65", "SG", 4701069, 693, 295.7},
-		194: {"Sint Maarten", "1-721", "SX", 37429, 34, 0.7947},
-		195: {"Slovakia", "421", "SK", 5455000, 48845, 96.96},
-		196: {"Slovenia", "386", "SI", 2007000, 20273, 46.82},
-		197: {"Solomon Islands", "677", "SB", 559198, 28450, 1.099},
-		198: {"Somalia", "252", "SO", 10112453, 637657, 2.372},
-		199: {"South Africa", "27", "ZA", 49000000, 1219912, 353.9},
-		200: {"South Korea", "82", "KR", 48422644, 98480, 1198},
-		201: {"South Sudan", "211", "SS", 8260490, 644329, 11.77},
-		202: {"Spain", "34", "ES", 46505963, 504782, 1356},
-		203: {"Sri Lanka", "94", "LK", 21513990, 65610, 65.12},
-		204: {"Sudan", "249", "SD", 35000000, 1861484, 52.5},
-		205: {"Suriname", "597", "SR", 492829, 163270, 5.009},
-		206: {"Svalbard and Jan Mayen", "47", "SJ", 2550, 62049, 0},
-		207: {"Swaziland", "268", "SZ", 1354051, 17363, 3.807},
-		208: {"Sweden", "46", "SE", 9555893, 449964, 552},
-		209: {"Switzerland", "41", "CH", 7581000, 41290, 646.2},
-		210: {"Syria", "963", "SY", 22198110, 185180, 64.7},
-		211: {"Taiwan", "886", "TW", 22894384, 35980, 484.7},
-		212: {"Tajikistan", "992", "TJ", 7487489, 143100, 8.513},
-		213: {"Tanzania", "255", "TZ", 41892895, 945087, 31.94},
-		214: {"Thailand", "66", "TH", 67089500, 514000, 400.9},
-		215: {"Togo", "228", "TG", 6587239, 56785, 4.299},
-		216: {"Tokelau", "690", "TK", 1466, 10, 0},
-		217: {"Tonga", "676", "TO", 122580, 748, 0.477},
-		218: {"Trinidad and Tobago", "1-868", "TT", 1228691, 5128, 27.13},
-		219: {"Tunisia", "216", "TN", 10589025, 163610, 48.38},
-		220: {"Turkey", "90", "TR", 77804122, 780580, 821.8},
-		221: {"Turkmenistan", "993", "TM", 4940916, 488100, 40.56},
-		222: {"Turks and Caicos Islands", "1-649", "TC", 20556, 430, 0},
-		223: {"Tuvalu", "688", "TV", 10472, 26, 0.038},
-		224: {"U.S. Virgin Islands", "1-340", "VI", 108708, 352, 0},
-		225: {"Uganda", "256", "UG", 33398682, 236040, 22.6},
-		226: {"Ukraine", "380", "UA", 45415596, 603700, 175.5},
-		227: {"United Arab Emirates", "971", "AE", 4975593, 82880, 390},
-		228: {"United Kingdom", "44", "GB", 62348447, 244820, 2490},
-		229: {"United States", "1", "US", 310232863, 9629091, 1672},
-		230: {"Uruguay", "598", "UY", 3477000, 176220, 57.11},
-		231: {"Uzbekistan", "998", "UZ", 27865738, 447400, 55.18},
-		232: {"Vanuatu", "678", "VU", 221552, 12200, 0.828},
-		233: {"Vatican", "379", "VA", 921, 0, 0},
-		234: {"Venezuela", "58", "VE", 27223228, 912050, 367.5},
-		235: {"Vietnam", "84", "VN", 89571130, 329560, 170},
-		236: {"Wallis and Futuna", "681", "WF", 16025, 274, 0},
-		237: {"Western Sahara", "212", "EH", 273008, 266000, 0},
-		238: {"Yemen", "967", "YE", 23495361, 527970, 43.89},
-		239: {"Zambia", "260", "ZM", 13460305, 752614, 22.24},
-		240: {"Zimbabwe", "263", "ZW", 11651858, 390580, 10.48},
+		{"Afghanistan", "93", "AF", 29121286, 647500, 20.65},
+		{"Albania", "355", "AL", 2986952, 28748, 12.8},
+		{"Algeria", "213", "DZ", 34586184, 2381740, 215.7},
+		{"American Samoa", "1-684", "AS", 57881, 199, 0.4622},
+		{"Andorra", "376", "AD", 84000, 468, 4.8},
+		{"Angola", "244", "AO", 13068161, 1246700, 124},
+		{"Anguilla", "1-264", "AI", 13254, 102, 0.1754},
+		{"Antarctica", "672", "AQ", 0, 14000000, 0},
+		{"Antigua and Barbuda", "1-268", "AG", 86754, 443, 1.22},
+		{"Argentina", "54", "AR", 41343201, 2766890, 484.6},
+		{"Armenia", "374", "AM", 2968000, 29800, 10.44},
+		{"Aruba", "297", "AW", 71566, 193, 2.516},
+		{"Australia", "61", "AU", 21515754, 7686850, 1488},
+		{"Austria", "43", "AT", 8205000, 83858, 417.9},
+		{"Azerbaijan", "994", "AZ", 8303512, 86600, 76.01},
+		{"Bahamas", "1-242", "BS", 301790, 13940, 8.373},
+		{"Bahrain", "973", "BH", 738004, 665, 28.36},
+		{"Bangladesh", "880", "BD", 156118464, 144000, 140.2},
+		{"Barbados", "1-246", "BB", 285653, 431, 4.262},
+		{"Belarus", "375", "BY", 9685000, 207600, 69.24},
+		{"Belgium", "32", "BE", 10403000, 30510, 507.4},
+		{"Belize", "501", "BZ", 314522, 22966, 1.637},
+		{"Benin", "229", "BJ", 9056010, 112620, 8.359},
+		{"Bermuda", "1-441", "BM", 65365, 53, 5.6},
+		{"Bhutan", "975", "BT", 699847, 47000, 2.133},
+		{"Bolivia", "591", "BO", 9947418, 1098580, 30.79},
+		{"Bosnia and Herzegovina", "387", "BA", 4590000, 51129, 18.87},
+		{"Botswana", "267", "BW", 2029307, 600370, 15.53},
+		{"Brazil", "55", "BR", 201103330, 8511965, 2190},
+		{"British Indian Ocean Territory", "246", "IO", 4000, 60, 0},
+		{"British Virgin Islands", "1-284", "VG", 21730, 153, 1.095},
+		{"Brunei", "673", "BN", 395027, 5770, 16.56},
+		{"Bulgaria", "359", "BG", 7148785, 110910, 53.7},
+		{"Burkina Faso", "226", "BF", 16241811, 274200, 12.13},
+		{"Burundi", "257", "BI", 9863117, 27830, 2.676},
+		{"Cambodia", "855", "KH", 14453680, 181040, 15.64},
+		{"Cameroon", "237", "CM", 19294149, 475440, 27.88},
+		{"Canada", "1", "CA", 33679000, 9984670, 1825},
+		{"Cape Verde", "238", "CV", 508659, 4033, 1.955},
+		{"Cayman Islands", "1-345", "KY", 44270, 262, 2.25},
+		{"Central African Republic", "236", "CF", 4844927, 622984, 2.05},
+		{"Chad", "235", "TD", 10543464, 1284000, 13.59},
+		{"Chile", "56", "CL", 16746491, 756950, 281.7},
+		{"China", "86", "CN", 1330044000, 9596960, 9330},
+		{"Christmas Island", "61", "CX", 1500, 135, 0},
+		{"Cocos Islands", "61", "CC", 628, 14, 0},
+		{"Colombia", "57", "CO", 47790000, 1138910, 369.2},
+		{"Comoros", "269", "KM", 773407, 2170, 0.658},
+		{"Cook Islands", "682", "CK", 21388, 240, 0.1832},
+		{"Costa Rica", "506", "CR", 4516220, 51100, 48.51},
+		{"Croatia", "385", "HR", 4491000, 56542, 59.14},
+		{"Cuba", "53", "CU", 11423000, 110860, 72.3},
+		{"Curacao", "599", "CW", 141766, 444, 5.6},
+		{"Cyprus", "357", "CY", 1102677, 9250, 21.78},
+		{"Czech Republic", "420", "CZ", 10476000, 78866, 194.8},
+		{"Democratic Republic of the Congo", "243", "CD", 70916439, 2345410, 18.56},
+		{"Denmark", "45", "DK", 5484000, 43094, 324.3},
+		{"Djibouti", "253", "DJ", 740528, 23000, 1.459},
+		{"Dominica", "1-767", "DM", 72813, 754, 0.495},
+		{"Dominican Republic", "1-809 1-829 1-849", "DO", 9823821, 48730, 59.27},
+		{"East Timor", "670", "TL", 1154625, 15007, 6.129},
+		{"Ecuador", "593", "EC", 14790608, 283560, 91.41},
+		{"Egypt", "20", "EG", 80471869, 1001450, 262},
+		{"El Salvador", "503", "SV", 6052064, 21040, 24.67},
+		{"Equatorial Guinea", "240", "GQ", 1014999, 28051, 17.08},
+		{"Eritrea", "291", "ER", 5792984, 121320, 3.438},
+		{"Estonia", "372", "EE", 1291170, 45226, 24.28},
+		{"Ethiopia", "251", "ET", 88013491, 1127127, 47.34},
+		{"Falkland Islands", "500", "FK", 2638, 12173, 0.1645},
+		{"Faroe Islands", "298", "FO", 48228, 1399, 2.32},
+		{"Fiji", "679", "FJ", 875983, 18270, 4.218},
+		{"Finland", "358", "FI", 5244000, 337030, 259.6},
+		{"France", "33", "FR", 64768389, 547030, 2739},
+		{"French Polynesia", "689", "PF", 270485, 4167, 5.65},
+		{"Gabon", "241", "GA", 1545255, 267667, 19.97},
+		{"Gambia", "220", "GM", 1593256, 11300, 0.896},
+		{"Georgia", "995", "GE", 4630000, 69700, 15.95},
+		{"Germany", "49", "DE", 81802257, 357021, 3593},
+		{"Ghana", "233", "GH", 24339838, 239460, 45.55},
+		{"Gibraltar", "350", "GI", 27884, 7, 1.106},
+		{"Greece", "30", "GR", 11000000, 131940, 243.3},
+		{"Greenland", "299", "GL", 56375, 2166086, 2.16},
+		{"Grenada", "1-473", "GD", 107818, 344, 0.811},
+		{"Guam", "1-671", "GU", 159358, 549, 4.6},
+		{"Guatemala", "502", "GT", 13550440, 108890, 53.9},
+		{"Guernsey", "44-1481", "GG", 65228, 78, 2.742},
+		{"Guinea", "224", "GN", 10324025, 245857, 6.544},
+		{"Guinea-Bissau", "245", "GW", 1565126, 36120, 0.88},
+		{"Guyana", "592", "GY", 748486, 214970, 3.02},
+		{"Haiti", "509", "HT", 9648924, 27750, 8.287},
+		{"Honduras", "504", "HN", 7989415, 112090, 18.88},
+		{"Hong Kong", "852", "HK", 6898686, 1092, 272.1},
+		{"Hungary", "36", "HU", 9982000, 93030, 130.6},
+		{"Iceland", "354", "IS", 308910, 103000, 14.59},
+		{"India", "91", "IN", 1173108018, 3287590, 1670},
+		{"Indonesia", "62", "ID", 242968342, 1919440, 867.5},
+		{"Iran", "98", "IR", 76923300, 1648000, 411.9},
+		{"Iraq", "964", "IQ", 29671605, 437072, 221.8},
+		{"Ireland", "353", "IE", 4622917, 70280, 220.9},
+		{"Isle of Man", "44-1624", "IM", 75049, 572, 4.076},
+		{"Israel", "972", "IL", 7353985, 20770, 272.7},
+		{"Italy", "39", "IT", 60340328, 301230, 2068},
+		{"Ivory Coast", "225", "CI", 21058798, 322460, 28.28},
+		{"Jamaica", "1-876", "JM", 2847232, 10991, 14.39},
+		{"Japan", "81", "JP", 127288000, 377835, 5007},
+		{"Jersey", "44-1534", "JE", 90812, 116, 5.1},
+		{"Jordan", "962", "JO", 6407085, 92300, 34.08},
+		{"Kazakhstan", "7", "KZ", 15340000, 2717300, 224.9},
+		{"Kenya", "254", "KE", 40046566, 582650, 45.31},
+		{"Kiribati", "686", "KI", 92533, 811, 0.173},
+		{"Kosovo", "383", "XK", 1800000, 10887, 7.15},
+		{"Kuwait", "965", "KW", 2789132, 17820, 179.5},
+		{"Kyrgyzstan", "996", "KG", 5508626, 198500, 7.234},
+		{"Laos", "856", "LA", 6368162, 236800, 10.1},
+		{"Latvia", "371", "LV", 2217969, 64589, 30.38},
+		{"Lebanon", "961", "LB", 4125247, 10400, 43.49},
+		{"Lesotho", "266", "LS", 1919552, 30355, 2.457},
+		{"Liberia", "231", "LR", 3685076, 111370, 1.977},
+		{"Libya", "218", "LY", 6461454, 1759540, 70.92},
+		{"Liechtenstein", "423", "LI", 35000, 160, 5.113},
+		{"Lithuania", "370", "LT", 2944459, 65200, 46.71},
+		{"Luxembourg", "352", "LU", 497538, 2586, 60.54},
+		{"Macau", "853", "MO", 449198, 254, 51.68},
+		{"Macedonia", "389", "MK", 2062294, 25333, 10.65},
+		{"Madagascar", "261", "MG", 21281844, 587040, 10.53},
+		{"Malawi", "265", "MW", 15447500, 118480, 3.683},
+		{"Malaysia", "60", "MY", 28274729, 329750, 312.4},
+		{"Maldives", "960", "MV", 395650, 300, 2.27},
+		{"Mali", "223", "ML", 13796354, 1240000, 11.37},
+		{"Malta", "356", "MT", 403000, 316, 9.541},
+		{"Marshall Islands", "692", "MH", 65859, 181, 0.193},
+		{"Mauritania", "222", "MR", 3205060, 1030700, 4.183},
+		{"Mauritius", "230", "MU", 1294104, 2040, 11.9},
+		{"Mayotte", "262", "YT", 159042, 374, 0},
+		{"Mexico", "52", "MX", 112468855, 1972550, 1327},
+		{"Micronesia", "691", "FM", 107708, 702, 0.339},
+		{"Moldova", "373", "MD", 4324000, 33843, 7.932},
+		{"Monaco", "377", "MC", 32965, 2, 5.748},
+		{"Mongolia", "976", "MN", 3086918, 1565000, 11.14},
+		{"Montenegro", "382", "ME", 666730, 14026, 4.518},
+		{"Montserrat", "1-664", "MS", 9341, 102, 0},
+		{"Morocco", "212", "MA", 31627428, 446550, 104.8},
+		{"Mozambique", "258", "MZ", 22061451, 801590, 14.67},
+		{"Myanmar", "95", "MM", 53414374, 678500, 59.43},
+		{"Namibia", "264", "NA", 2128471, 825418, 12.3},
+		{"Nauru", "674", "NR", 10065, 21, 0},
+		{"Nepal", "977", "NP", 28951852, 140800, 19.34},
+		{"Netherlands", "31", "NL", 16645000, 41526, 722.3},
+		{"Netherlands Antilles", "599", "AN", 136197, 960, 0},
+		{"New Caledonia", "687", "NC", 216494, 19060, 9.28},
+		{"New Zealand", "64", "NZ", 4252277, 268680, 181.1},
+		{"Nicaragua", "505", "NI", 5995928, 129494, 11.26},
+		{"Niger", "227", "NE", 15878271, 1267000, 7.304},
+		{"Nigeria", "234", "NG", 154000000, 923768, 502},
+		{"Niue", "683", "NU", 2166, 260, 0.01001},
+		{"North Korea", "850", "KP", 22912177, 120540, 28},
+		{"Northern Mariana Islands", "1-670", "MP", 53883, 477, 0.733},
+		{"Norway", "47", "NO", 5009150, 324220, 515.8},
+		{"Oman", "968", "OM", 2967717, 212460, 81.95},
+		{"Pakistan", "92", "PK", 184404791, 803940, 236.5},
+		{"Palau", "680", "PW", 19907, 458, 0.221},
+		{"Palestine", "970", "PS", 3800000, 5970, 6.641},
+		{"Panama", "507", "PA", 3410676, 78200, 40.62},
+		{"Papua New Guinea", "675", "PG", 6064515, 462840, 16.1},
+		{"Paraguay", "595", "PY", 6375830, 406750, 30.56},
+		{"Peru", "51", "PE", 29907003, 1285220, 210.3},
+		{"Philippines", "63", "PH", 99900177, 300000, 272.2},
+		{"Pitcairn", "64", "PN", 46, 47, 0},
+		{"Poland", "48", "PL", 38500000, 312685, 513.9},
+		{"Portugal", "351", "PT", 10676000, 92391, 219.3},
+		{"Puerto Rico", "1-787 1-939", "PR", 3916632, 9104, 93.52},
+		{"Qatar", "974", "QA", 840926, 11437, 213.1},
+		{"Republic of the Congo", "242", "CG", 3039126, 342000, 14.25},
+		{"Reunion", "262", "RE", 776948, 2517, 0},
+		{"Romania", "40", "RO", 21959278, 237500, 188.9},
+		{"Russia", "7", "RU", 140702000, 17100000, 2113},
+		{"Rwanda", "250", "RW", 11055976, 26338, 7.7},
+		{"Saint Barthelemy", "590", "BL", 8450, 21, 0},
+		{"Saint Helena", "290", "SH", 7460, 410, 0},
+		{"Saint Kitts and Nevis", "1-869", "KN", 51134, 261, 0.767},
+		{"Saint Lucia", "1-758", "LC", 160922, 616, 1.377},
+		{"Saint Martin", "590", "MF", 35925, 53, 0.5615},
+		{"Saint Pierre and Miquelon", "508", "PM", 7012, 242, 0.2153},
+		{"Saint Vincent and the Grenadines", "1-784", "VC", 104217, 389, 0.742},
+		{"Samoa", "685", "WS", 192001, 2944, 0.705},
+		{"San Marino", "378", "SM", 31477, 61, 1.866},
+		{"Sao Tome and Principe", "239", "ST", 175808, 1001, 0.311},
+		{"Saudi Arabia", "966", "SA", 25731776, 1960582, 718.5},
+		{"Senegal", "221", "SN", 12323252, 196190, 15.36},
+		{"Serbia", "381", "RS", 7344847, 88361, 43.68},
+		{"Seychelles", "248", "SC", 88340, 455, 1.271},
+		{"Sierra Leone", "232", "SL", 5245695, 71740, 4.607},
+		{"Singapore", "65", "SG", 4701069, 693, 295.7},
+		{"Sint Maarten", "1-721", "SX", 37429, 34, 0.7947},
+		{"Slovakia", "421", "SK", 5455000, 48845, 96.96},
+		{"Slovenia", "386", "SI", 2007000, 20273, 46.82},
+		{"Solomon Islands", "677", "SB", 559198, 28450, 1.099},
+		{"Somalia", "252", "SO", 10112453, 637657, 2.372},
+		{"South Africa", "27", "ZA", 49000000, 1219912, 353.9},
+		{"South Korea", "82", "KR", 48422644, 98480, 1198},
+		{"South Sudan", "211", "SS", 8260490, 644329, 11.77},
+		{"Spain", "34", "ES", 46505963, 504782, 1356},
+		{"Sri Lanka", "94", "LK", 21513990, 65610, 65.12},
+		{"Sudan", "249", "SD", 35000000, 1861484, 52.5},
+		{"Suriname", "597", "SR", 492829, 163270, 5.009},
+		{"Svalbard and Jan Mayen", "47", "SJ", 2550, 62049, 0},
+		{"Swaziland", "268", "SZ", 1354051, 17363, 3.807},
+		{"Sweden", "46", "SE", 9555893, 449964, 552},
+		{"Switzerland", "41", "CH", 7581000, 41290, 646.2},
+		{"Syria", "963", "SY", 22198110, 185180, 64.7},
+		{"Taiwan", "886", "TW", 22894384, 35980, 484.7},
+		{"Tajikistan", "992", "TJ", 7487489, 143100, 8.513},
+		{"Tanzania", "255", "TZ", 41892895, 945087, 31.94},
+		{"Thailand", "66", "TH", 67089500, 514000, 400.9},
+		{"Togo", "228", "TG", 6587239, 56785, 4.299},
+		{"Tokelau", "690", "TK", 1466, 10, 0},
+		{"Tonga", "676", "TO", 122580, 748, 0.477},
+		{"Trinidad and Tobago", "1-868", "TT", 1228691, 5128, 27.13},
+		{"Tunisia", "216", "TN", 10589025, 163610, 48.38},
+		{"Turkey", "90", "TR", 77804122, 780580, 821.8},
+		{"Turkmenistan", "993", "TM", 4940916, 488100, 40.56},
+		{"Turks and Caicos Islands", "1-649", "TC", 20556, 430, 0},
+		{"Tuvalu", "688", "TV", 10472, 26, 0.038},
+		{"U.S. Virgin Islands", "1-340", "VI", 108708, 352, 0},
+		{"Uganda", "256", "UG", 33398682, 236040, 22.6},
+		{"Ukraine", "380", "UA", 45415596, 603700, 175.5},
+		{"United Arab Emirates", "971", "AE", 4975593, 82880, 390},
+		{"United Kingdom", "44", "GB", 62348447, 244820, 2490},
+		{"United States", "1", "US", 310232863, 9629091, 1672},
+		{"Uruguay", "598", "UY", 3477000, 176220, 57.11},
+		{"Uzbekistan", "998", "UZ", 27865738, 447400, 55.18},
+		{"Vanuatu", "678", "VU", 221552, 12200, 0.828},
+		{"Vatican", "379", "VA", 921, 0, 0},
+		{"Venezuela", "58", "VE", 27223228, 912050, 367.5},
+		{"Vietnam", "84", "VN", 89571130, 329560, 170},
+		{"Wallis and Futuna", "681", "WF", 16025, 274, 0},
+		{"Western Sahara", "212", "EH", 273008, 266000, 0},
+		{"Yemen", "967", "YE", 23495361, 527970, 43.89},
+		{"Zambia", "260", "ZM", 13460305, 752614, 22.24},
+		{"Zimbabwe", "263", "ZW", 11651858, 390580, 10.48},
 	}
 )
 
 // CountryCodeValues returns all values of the enum.
 func CountryCodeValues() []CountryCode {
-	cp := make([]CountryCode, len(_CountryCodeValues))
-	copy(cp, _CountryCodeValues)
-	return cp
+	cp := _CountryCodeValues
+	return cp[:]
 }
 
 // CountryCodeStrings returns a slice of all String values of the enum.
 func CountryCodeStrings() []string {
-	cp := make([]string, len(_CountryCodeStrings))
-	copy(cp, _CountryCodeStrings)
-	return cp
+	cp := _CountryCodeStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -477,8 +473,9 @@ func (_c CountryCode) GetCountryName() (string, bool) {
 	if !_c.IsValid() {
 		return "", false
 	}
-	d, ok := _CountryCodeAdditionalData[_c]
-	return d.CountryName, ok
+	idx := uint(_c) - 1
+	d := _CountryCodeAdditionalData[idx]
+	return d.CountryName, true
 }
 
 // GetCountryCode returns the "country-code" of the enum value as string
@@ -487,8 +484,9 @@ func (_c CountryCode) GetCountryCode() (string, bool) {
 	if !_c.IsValid() {
 		return "", false
 	}
-	d, ok := _CountryCodeAdditionalData[_c]
-	return d.CountryCode, ok
+	idx := uint(_c) - 1
+	d := _CountryCodeAdditionalData[idx]
+	return d.CountryCode, true
 }
 
 // GetIso2LetterCode returns the "iso-2-letter-code" of the enum value as string
@@ -497,8 +495,9 @@ func (_c CountryCode) GetIso2LetterCode() (string, bool) {
 	if !_c.IsValid() {
 		return "", false
 	}
-	d, ok := _CountryCodeAdditionalData[_c]
-	return d.Iso2LetterCode, ok
+	idx := uint(_c) - 1
+	d := _CountryCodeAdditionalData[idx]
+	return d.Iso2LetterCode, true
 }
 
 // GetPopulation returns the "population" of the enum value as uint32
@@ -507,8 +506,9 @@ func (_c CountryCode) GetPopulation() (uint32, bool) {
 	if !_c.IsValid() {
 		return 0, false
 	}
-	d, ok := _CountryCodeAdditionalData[_c]
-	return d.Population, ok
+	idx := uint(_c) - 1
+	d := _CountryCodeAdditionalData[idx]
+	return d.Population, true
 }
 
 // GetAreaInSquareKilometer returns the "area-in-square-kilometer" of the enum value as uint32
@@ -517,8 +517,9 @@ func (_c CountryCode) GetAreaInSquareKilometer() (uint32, bool) {
 	if !_c.IsValid() {
 		return 0, false
 	}
-	d, ok := _CountryCodeAdditionalData[_c]
-	return d.AreaInSquareKilometer, ok
+	idx := uint(_c) - 1
+	d := _CountryCodeAdditionalData[idx]
+	return d.AreaInSquareKilometer, true
 }
 
 // GetGdpInBillion returns the "gdp-in-billion" of the enum value as float64
@@ -527,8 +528,9 @@ func (_c CountryCode) GetGdpInBillion() (float64, bool) {
 	if !_c.IsValid() {
 		return 0, false
 	}
-	d, ok := _CountryCodeAdditionalData[_c]
-	return d.GdpInBillion, ok
+	idx := uint(_c) - 1
+	d := _CountryCodeAdditionalData[idx]
+	return d.GdpInBillion, true
 }
 
 var (
@@ -1208,33 +1210,31 @@ const (
 
 var (
 	_CurrencyValueRange     = [2]Currency{1, 5}
-	_CurrencyValues         = []Currency{1, 2, 3, 4, 5}
-	_CurrencyStrings        = []string{_CurrencyString[0:3], _CurrencyString[3:6], _CurrencyString[6:9], _CurrencyString[9:12], _CurrencyString[12:15]}
-	_CurrencyAdditionalData = map[Currency]struct {
+	_CurrencyValues         = [5]Currency{1, 2, 3, 4, 5}
+	_CurrencyStrings        = [5]string{_CurrencyString[0:3], _CurrencyString[3:6], _CurrencyString[6:9], _CurrencyString[9:12], _CurrencyString[12:15]}
+	_CurrencyAdditionalData = [5]struct {
 		CurrencyName string
 		NumericCode  uint16
 		MinorUnit    uint8
 	}{
-		1: {"US Dollar", 840, 2},
-		2: {"Euro", 978, 2},
-		3: {"Yen", 392, 0},
-		4: {"Pound Sterling", 826, 2},
-		5: {"Australian Dollar", 036, 2},
+		{"US Dollar", 840, 2},
+		{"Euro", 978, 2},
+		{"Yen", 392, 0},
+		{"Pound Sterling", 826, 2},
+		{"Australian Dollar", 036, 2},
 	}
 )
 
 // CurrencyValues returns all values of the enum.
 func CurrencyValues() []Currency {
-	cp := make([]Currency, len(_CurrencyValues))
-	copy(cp, _CurrencyValues)
-	return cp
+	cp := _CurrencyValues
+	return cp[:]
 }
 
 // CurrencyStrings returns a slice of all String values of the enum.
 func CurrencyStrings() []string {
-	cp := make([]string, len(_CurrencyStrings))
-	copy(cp, _CurrencyStrings)
-	return cp
+	cp := _CurrencyStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -1267,8 +1267,9 @@ func (_c Currency) GetCurrencyName() (string, bool) {
 	if !_c.IsValid() {
 		return "", false
 	}
-	d, ok := _CurrencyAdditionalData[_c]
-	return d.CurrencyName, ok
+	idx := uint(_c) - 1
+	d := _CurrencyAdditionalData[idx]
+	return d.CurrencyName, true
 }
 
 // GetNumericCode returns the "numeric-code" of the enum value as uint16
@@ -1277,8 +1278,9 @@ func (_c Currency) GetNumericCode() (uint16, bool) {
 	if !_c.IsValid() {
 		return 0, false
 	}
-	d, ok := _CurrencyAdditionalData[_c]
-	return d.NumericCode, ok
+	idx := uint(_c) - 1
+	d := _CurrencyAdditionalData[idx]
+	return d.NumericCode, true
 }
 
 // GetMinorUnit returns the "minor-unit" of the enum value as uint8
@@ -1287,8 +1289,9 @@ func (_c Currency) GetMinorUnit() (uint8, bool) {
 	if !_c.IsValid() {
 		return 0, false
 	}
-	d, ok := _CurrencyAdditionalData[_c]
-	return d.MinorUnit, ok
+	idx := uint(_c) - 1
+	d := _CurrencyAdditionalData[idx]
+	return d.MinorUnit, true
 }
 
 var (
@@ -1498,22 +1501,20 @@ const (
 
 var (
 	_TimezoneValueRange = [2]Timezone{1, 424}
-	_TimezoneValues     = []Timezone{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424}
-	_TimezoneStrings    = []string{_TimezoneString[0:10], _TimezoneString[10:23], _TimezoneString[23:37], _TimezoneString[37:54], _TimezoneString[54:68], _TimezoneString[68:81], _TimezoneString[81:97], _TimezoneString[97:113], _TimezoneString[113:129], _TimezoneString[129:154], _TimezoneString[154:171], _TimezoneString[171:189], _TimezoneString[189:206], _TimezoneString[206:224], _TimezoneString[224:240], _TimezoneString[240:256], _TimezoneString[256:273], _TimezoneString[273:288], _TimezoneString[288:318], _TimezoneString[318:345], _TimezoneString[345:370], _TimezoneString[370:393], _TimezoneString[393:419], _TimezoneString[419:444], _TimezoneString[444:474], _TimezoneString[474:497], _TimezoneString[497:523], _TimezoneString[523:549], _TimezoneString[549:574], _TimezoneString[574:599], _TimezoneString[599:611], _TimezoneString[611:624], _TimezoneString[624:644], _TimezoneString[644:662], _TimezoneString[662:680], _TimezoneString[680:701], _TimezoneString[701:717], _TimezoneString[717:732], _TimezoneString[732:748], _TimezoneString[748:766], _TimezoneString[766:785], _TimezoneString[785:804], _TimezoneString[804:819], _TimezoneString[819:835], _TimezoneString[835:848], _TimezoneString[848:857], _TimezoneString[857:871], _TimezoneString[871:883], _TimezoneString[883:893], _TimezoneString[893:909], _TimezoneString[909:921], _TimezoneString[921:936], _TimezoneString[936:950], _TimezoneString[950:967], _TimezoneString[967:983], _TimezoneString[983:995], _TimezoneString[995:1009], _TimezoneString[1009:1027], _TimezoneString[1027:1042], _TimezoneString[1042:1057], _TimezoneString[1057:1074], _TimezoneString[1074:1087], _TimezoneString[1087:1100], _TimezoneString[1100:1117], _TimezoneString[1117:1137], _TimezoneString[1137:1151], _TimezoneString[1151:1167], _TimezoneString[1167:1184], _TimezoneString[1184:1198], _TimezoneString[1198:1212], _TimezoneString[1212:1227], _TimezoneString[1227:1246], _TimezoneString[1246:1260], _TimezoneString[1260:1278], _TimezoneString[1278:1294], _TimezoneString[1294:1311], _TimezoneString[1311:1324], _TimezoneString[1324:1335], _TimezoneString[1335:1347], _TimezoneString[1347:1365], _TimezoneString[1365:1381], _TimezoneString[1381:1396], _TimezoneString[1396:1409], _TimezoneString[1409:1425], _TimezoneString[1425:1445], _TimezoneString[1445:1466], _TimezoneString[1466:1481], _TimezoneString[1481:1495], _TimezoneString[1495:1515], _TimezoneString[1515:1531], _TimezoneString[1531:1550], _TimezoneString[1550:1567], _TimezoneString[1567:1584], _TimezoneString[1584:1599], _TimezoneString[1599:1613], _TimezoneString[1613:1628], _TimezoneString[1628:1643], _TimezoneString[1643:1658], _TimezoneString[1658:1677], _TimezoneString[1677:1696], _TimezoneString[1696:1716], _TimezoneString[1716:1730], _TimezoneString[1730:1746], _TimezoneString[1746:1762], _TimezoneString[1762:1783], _TimezoneString[1783:1802], _TimezoneString[1802:1817], _TimezoneString[1817:1834], _TimezoneString[1834:1852], _TimezoneString[1852:1868], _TimezoneString[1868:1887], _TimezoneString[1887:1906], _TimezoneString[1906:1920], _TimezoneString[1920:1933], _TimezoneString[1933:1948], _TimezoneString[1948:1968], _TimezoneString[1968:1984], _TimezoneString[1984:1998], _TimezoneString[1998:2011], _TimezoneString[2011:2022], _TimezoneString[2022:2038], _TimezoneString[2038:2050], _TimezoneString[2050:2064], _TimezoneString[2064:2077], _TimezoneString[2077:2095], _TimezoneString[2095:2110], _TimezoneString[2110:2127], _TimezoneString[2127:2144], _TimezoneString[2144:2162], _TimezoneString[2162:2175], _TimezoneString[2175:2189], _TimezoneString[2189:2204], _TimezoneString[2204:2218], _TimezoneString[2218:2230], _TimezoneString[2230:2243], _TimezoneString[2243:2257], _TimezoneString[2257:2274], _TimezoneString[2274:2289], _TimezoneString[2289:2305], _TimezoneString[2305:2326], _TimezoneString[2326:2343], _TimezoneString[2343:2360], _TimezoneString[2360:2372], _TimezoneString[2372:2391], _TimezoneString[2391:2404], _TimezoneString[2404:2417], _TimezoneString[2417:2431], _TimezoneString[2431:2449], _TimezoneString[2449:2465], _TimezoneString[2465:2479], _TimezoneString[2479:2491], _TimezoneString[2491:2506], _TimezoneString[2506:2518], _TimezoneString[2518:2533], _TimezoneString[2533:2548], _TimezoneString[2548:2565], _TimezoneString[2565:2579], _TimezoneString[2579:2595], _TimezoneString[2595:2612], _TimezoneString[2612:2625], _TimezoneString[2625:2637], _TimezoneString[2637:2650], _TimezoneString[2650:2665], _TimezoneString[2665:2677], _TimezoneString[2677:2693], _TimezoneString[2693:2706], _TimezoneString[2706:2726], _TimezoneString[2726:2738], _TimezoneString[2738:2758], _TimezoneString[2758:2771], _TimezoneString[2771:2786], _TimezoneString[2786:2804], _TimezoneString[2804:2816], _TimezoneString[2816:2833], _TimezoneString[2833:2848], _TimezoneString[2848:2862], _TimezoneString[2862:2875], _TimezoneString[2875:2889], _TimezoneString[2889:2911], _TimezoneString[2911:2925], _TimezoneString[2925:2944], _TimezoneString[2944:2958], _TimezoneString[2958:2973], _TimezoneString[2973:2991], _TimezoneString[2991:3003], _TimezoneString[3003:3015], _TimezoneString[3015:3028], _TimezoneString[3028:3041], _TimezoneString[3041:3055], _TimezoneString[3055:3066], _TimezoneString[3066:3078], _TimezoneString[3078:3091], _TimezoneString[3091:3109], _TimezoneString[3109:3123], _TimezoneString[3123:3134], _TimezoneString[3134:3149], _TimezoneString[3149:3159], _TimezoneString[3159:3172], _TimezoneString[3172:3182], _TimezoneString[3182:3193], _TimezoneString[3193:3203], _TimezoneString[3203:3214], _TimezoneString[3214:3225], _TimezoneString[3225:3234], _TimezoneString[3234:3247], _TimezoneString[3247:3261], _TimezoneString[3261:3275], _TimezoneString[3275:3289], _TimezoneString[3289:3307], _TimezoneString[3307:3321], _TimezoneString[3321:3335], _TimezoneString[3335:3345], _TimezoneString[3345:3356], _TimezoneString[3356:3368], _TimezoneString[3368:3382], _TimezoneString[3382:3393], _TimezoneString[3393:3404], _TimezoneString[3404:3417], _TimezoneString[3417:3432], _TimezoneString[3432:3446], _TimezoneString[3446:3458], _TimezoneString[3458:3472], _TimezoneString[3472:3489], _TimezoneString[3489:3499], _TimezoneString[3499:3512], _TimezoneString[3512:3531], _TimezoneString[3531:3546], _TimezoneString[3546:3563], _TimezoneString[3563:3575], _TimezoneString[3575:3590], _TimezoneString[3590:3603], _TimezoneString[3603:3615], _TimezoneString[3615:3632], _TimezoneString[3632:3646], _TimezoneString[3646:3664], _TimezoneString[3664:3681], _TimezoneString[3681:3697], _TimezoneString[3697:3711], _TimezoneString[3711:3733], _TimezoneString[3733:3747], _TimezoneString[3747:3764], _TimezoneString[3764:3782], _TimezoneString[3782:3799], _TimezoneString[3799:3815], _TimezoneString[3815:3829], _TimezoneString[3829:3848], _TimezoneString[3848:3865], _TimezoneString[3865:3880], _TimezoneString[3880:3895], _TimezoneString[3895:3908], _TimezoneString[3908:3922], _TimezoneString[3922:3937], _TimezoneString[3937:3952], _TimezoneString[3952:3965], _TimezoneString[3965:3980], _TimezoneString[3980:3989], _TimezoneString[3989:4005], _TimezoneString[4005:4021], _TimezoneString[4021:4039], _TimezoneString[4039:4056], _TimezoneString[4056:4069], _TimezoneString[4069:4080], _TimezoneString[4080:4095], _TimezoneString[4095:4108], _TimezoneString[4108:4122], _TimezoneString[4122:4138], _TimezoneString[4138:4152], _TimezoneString[4152:4168], _TimezoneString[4168:4183], _TimezoneString[4183:4198], _TimezoneString[4198:4211], _TimezoneString[4211:4223], _TimezoneString[4223:4235], _TimezoneString[4235:4250], _TimezoneString[4250:4264], _TimezoneString[4264:4275], _TimezoneString[4275:4286], _TimezoneString[4286:4298], _TimezoneString[4298:4311], _TimezoneString[4311:4320], _TimezoneString[4320:4331], _TimezoneString[4331:4345], _TimezoneString[4345:4365], _TimezoneString[4365:4385], _TimezoneString[4385:4401], _TimezoneString[4401:4413], _TimezoneString[4413:4424], _TimezoneString[4424:4440], _TimezoneString[4440:4453], _TimezoneString[4453:4468], _TimezoneString[4468:4484], _TimezoneString[4484:4497], _TimezoneString[4497:4516], _TimezoneString[4516:4526], _TimezoneString[4526:4542], _TimezoneString[4542:4553], _TimezoneString[4553:4565], _TimezoneString[4565:4575], _TimezoneString[4575:4587], _TimezoneString[4587:4601], _TimezoneString[4601:4614], _TimezoneString[4614:4630], _TimezoneString[4630:4642], _TimezoneString[4642:4659], _TimezoneString[4659:4675], _TimezoneString[4675:4684], _TimezoneString[4684:4697], _TimezoneString[4697:4715], _TimezoneString[4715:4725], _TimezoneString[4725:4738], _TimezoneString[4738:4754], _TimezoneString[4754:4766], _TimezoneString[4766:4784], _TimezoneString[4784:4800], _TimezoneString[4800:4818], _TimezoneString[4818:4830], _TimezoneString[4830:4843], _TimezoneString[4843:4856], _TimezoneString[4856:4870], _TimezoneString[4870:4886], _TimezoneString[4886:4902], _TimezoneString[4902:4915], _TimezoneString[4915:4929], _TimezoneString[4929:4950], _TimezoneString[4950:4968], _TimezoneString[4968:4984], _TimezoneString[4984:5000], _TimezoneString[5000:5015], _TimezoneString[5015:5031], _TimezoneString[5031:5049], _TimezoneString[5049:5061], _TimezoneString[5061:5078], _TimezoneString[5078:5093], _TimezoneString[5093:5104], _TimezoneString[5104:5116], _TimezoneString[5116:5131], _TimezoneString[5131:5142], _TimezoneString[5142:5157], _TimezoneString[5157:5171], _TimezoneString[5171:5192], _TimezoneString[5192:5209], _TimezoneString[5209:5225], _TimezoneString[5225:5244], _TimezoneString[5244:5260], _TimezoneString[5260:5279], _TimezoneString[5279:5301], _TimezoneString[5301:5312], _TimezoneString[5312:5324], _TimezoneString[5324:5339], _TimezoneString[5339:5352], _TimezoneString[5352:5364], _TimezoneString[5364:5379], _TimezoneString[5379:5397], _TimezoneString[5397:5416], _TimezoneString[5416:5430], _TimezoneString[5430:5446], _TimezoneString[5446:5459], _TimezoneString[5459:5472], _TimezoneString[5472:5483], _TimezoneString[5483:5496], _TimezoneString[5496:5516], _TimezoneString[5516:5528], _TimezoneString[5528:5537], _TimezoneString[5537:5548], _TimezoneString[5548:5563], _TimezoneString[5563:5580], _TimezoneString[5580:5601], _TimezoneString[5601:5613], _TimezoneString[5613:5628], _TimezoneString[5628:5641], _TimezoneString[5641:5659], _TimezoneString[5659:5675], _TimezoneString[5675:5689], _TimezoneString[5689:5700], _TimezoneString[5700:5717], _TimezoneString[5717:5732], _TimezoneString[5732:5749], _TimezoneString[5749:5759], _TimezoneString[5759:5772], _TimezoneString[5772:5784], _TimezoneString[5784:5801], _TimezoneString[5801:5814], _TimezoneString[5814:5829], _TimezoneString[5829:5843], _TimezoneString[5843:5858], _TimezoneString[5858:5886], _TimezoneString[5886:5906], _TimezoneString[5906:5929], _TimezoneString[5929:5955], _TimezoneString[5955:5980], _TimezoneString[5980:6001], _TimezoneString[6001:6026], _TimezoneString[6026:6049], _TimezoneString[6049:6063], _TimezoneString[6063:6090], _TimezoneString[6090:6117], _TimezoneString[6117:6136], _TimezoneString[6136:6153], _TimezoneString[6153:6171], _TimezoneString[6171:6187], _TimezoneString[6187:6199], _TimezoneString[6199:6226], _TimezoneString[6226:6253], _TimezoneString[6253:6283], _TimezoneString[6283:6298], _TimezoneString[6298:6311], _TimezoneString[6311:6326], _TimezoneString[6326:6342], _TimezoneString[6342:6356], _TimezoneString[6356:6368], _TimezoneString[6368:6386], _TimezoneString[6386:6400], _TimezoneString[6400:6413], _TimezoneString[6413:6426], _TimezoneString[6426:6441], _TimezoneString[6441:6457], _TimezoneString[6457:6472], _TimezoneString[6472:6489], _TimezoneString[6489:6503], _TimezoneString[6503:6518], _TimezoneString[6518:6527], _TimezoneString[6527:6540], _TimezoneString[6540:6553], _TimezoneString[6553:6569]}
+	_TimezoneValues     = [424]Timezone{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424}
+	_TimezoneStrings    = [424]string{_TimezoneString[0:10], _TimezoneString[10:23], _TimezoneString[23:37], _TimezoneString[37:54], _TimezoneString[54:68], _TimezoneString[68:81], _TimezoneString[81:97], _TimezoneString[97:113], _TimezoneString[113:129], _TimezoneString[129:154], _TimezoneString[154:171], _TimezoneString[171:189], _TimezoneString[189:206], _TimezoneString[206:224], _TimezoneString[224:240], _TimezoneString[240:256], _TimezoneString[256:273], _TimezoneString[273:288], _TimezoneString[288:318], _TimezoneString[318:345], _TimezoneString[345:370], _TimezoneString[370:393], _TimezoneString[393:419], _TimezoneString[419:444], _TimezoneString[444:474], _TimezoneString[474:497], _TimezoneString[497:523], _TimezoneString[523:549], _TimezoneString[549:574], _TimezoneString[574:599], _TimezoneString[599:611], _TimezoneString[611:624], _TimezoneString[624:644], _TimezoneString[644:662], _TimezoneString[662:680], _TimezoneString[680:701], _TimezoneString[701:717], _TimezoneString[717:732], _TimezoneString[732:748], _TimezoneString[748:766], _TimezoneString[766:785], _TimezoneString[785:804], _TimezoneString[804:819], _TimezoneString[819:835], _TimezoneString[835:848], _TimezoneString[848:857], _TimezoneString[857:871], _TimezoneString[871:883], _TimezoneString[883:893], _TimezoneString[893:909], _TimezoneString[909:921], _TimezoneString[921:936], _TimezoneString[936:950], _TimezoneString[950:967], _TimezoneString[967:983], _TimezoneString[983:995], _TimezoneString[995:1009], _TimezoneString[1009:1027], _TimezoneString[1027:1042], _TimezoneString[1042:1057], _TimezoneString[1057:1074], _TimezoneString[1074:1087], _TimezoneString[1087:1100], _TimezoneString[1100:1117], _TimezoneString[1117:1137], _TimezoneString[1137:1151], _TimezoneString[1151:1167], _TimezoneString[1167:1184], _TimezoneString[1184:1198], _TimezoneString[1198:1212], _TimezoneString[1212:1227], _TimezoneString[1227:1246], _TimezoneString[1246:1260], _TimezoneString[1260:1278], _TimezoneString[1278:1294], _TimezoneString[1294:1311], _TimezoneString[1311:1324], _TimezoneString[1324:1335], _TimezoneString[1335:1347], _TimezoneString[1347:1365], _TimezoneString[1365:1381], _TimezoneString[1381:1396], _TimezoneString[1396:1409], _TimezoneString[1409:1425], _TimezoneString[1425:1445], _TimezoneString[1445:1466], _TimezoneString[1466:1481], _TimezoneString[1481:1495], _TimezoneString[1495:1515], _TimezoneString[1515:1531], _TimezoneString[1531:1550], _TimezoneString[1550:1567], _TimezoneString[1567:1584], _TimezoneString[1584:1599], _TimezoneString[1599:1613], _TimezoneString[1613:1628], _TimezoneString[1628:1643], _TimezoneString[1643:1658], _TimezoneString[1658:1677], _TimezoneString[1677:1696], _TimezoneString[1696:1716], _TimezoneString[1716:1730], _TimezoneString[1730:1746], _TimezoneString[1746:1762], _TimezoneString[1762:1783], _TimezoneString[1783:1802], _TimezoneString[1802:1817], _TimezoneString[1817:1834], _TimezoneString[1834:1852], _TimezoneString[1852:1868], _TimezoneString[1868:1887], _TimezoneString[1887:1906], _TimezoneString[1906:1920], _TimezoneString[1920:1933], _TimezoneString[1933:1948], _TimezoneString[1948:1968], _TimezoneString[1968:1984], _TimezoneString[1984:1998], _TimezoneString[1998:2011], _TimezoneString[2011:2022], _TimezoneString[2022:2038], _TimezoneString[2038:2050], _TimezoneString[2050:2064], _TimezoneString[2064:2077], _TimezoneString[2077:2095], _TimezoneString[2095:2110], _TimezoneString[2110:2127], _TimezoneString[2127:2144], _TimezoneString[2144:2162], _TimezoneString[2162:2175], _TimezoneString[2175:2189], _TimezoneString[2189:2204], _TimezoneString[2204:2218], _TimezoneString[2218:2230], _TimezoneString[2230:2243], _TimezoneString[2243:2257], _TimezoneString[2257:2274], _TimezoneString[2274:2289], _TimezoneString[2289:2305], _TimezoneString[2305:2326], _TimezoneString[2326:2343], _TimezoneString[2343:2360], _TimezoneString[2360:2372], _TimezoneString[2372:2391], _TimezoneString[2391:2404], _TimezoneString[2404:2417], _TimezoneString[2417:2431], _TimezoneString[2431:2449], _TimezoneString[2449:2465], _TimezoneString[2465:2479], _TimezoneString[2479:2491], _TimezoneString[2491:2506], _TimezoneString[2506:2518], _TimezoneString[2518:2533], _TimezoneString[2533:2548], _TimezoneString[2548:2565], _TimezoneString[2565:2579], _TimezoneString[2579:2595], _TimezoneString[2595:2612], _TimezoneString[2612:2625], _TimezoneString[2625:2637], _TimezoneString[2637:2650], _TimezoneString[2650:2665], _TimezoneString[2665:2677], _TimezoneString[2677:2693], _TimezoneString[2693:2706], _TimezoneString[2706:2726], _TimezoneString[2726:2738], _TimezoneString[2738:2758], _TimezoneString[2758:2771], _TimezoneString[2771:2786], _TimezoneString[2786:2804], _TimezoneString[2804:2816], _TimezoneString[2816:2833], _TimezoneString[2833:2848], _TimezoneString[2848:2862], _TimezoneString[2862:2875], _TimezoneString[2875:2889], _TimezoneString[2889:2911], _TimezoneString[2911:2925], _TimezoneString[2925:2944], _TimezoneString[2944:2958], _TimezoneString[2958:2973], _TimezoneString[2973:2991], _TimezoneString[2991:3003], _TimezoneString[3003:3015], _TimezoneString[3015:3028], _TimezoneString[3028:3041], _TimezoneString[3041:3055], _TimezoneString[3055:3066], _TimezoneString[3066:3078], _TimezoneString[3078:3091], _TimezoneString[3091:3109], _TimezoneString[3109:3123], _TimezoneString[3123:3134], _TimezoneString[3134:3149], _TimezoneString[3149:3159], _TimezoneString[3159:3172], _TimezoneString[3172:3182], _TimezoneString[3182:3193], _TimezoneString[3193:3203], _TimezoneString[3203:3214], _TimezoneString[3214:3225], _TimezoneString[3225:3234], _TimezoneString[3234:3247], _TimezoneString[3247:3261], _TimezoneString[3261:3275], _TimezoneString[3275:3289], _TimezoneString[3289:3307], _TimezoneString[3307:3321], _TimezoneString[3321:3335], _TimezoneString[3335:3345], _TimezoneString[3345:3356], _TimezoneString[3356:3368], _TimezoneString[3368:3382], _TimezoneString[3382:3393], _TimezoneString[3393:3404], _TimezoneString[3404:3417], _TimezoneString[3417:3432], _TimezoneString[3432:3446], _TimezoneString[3446:3458], _TimezoneString[3458:3472], _TimezoneString[3472:3489], _TimezoneString[3489:3499], _TimezoneString[3499:3512], _TimezoneString[3512:3531], _TimezoneString[3531:3546], _TimezoneString[3546:3563], _TimezoneString[3563:3575], _TimezoneString[3575:3590], _TimezoneString[3590:3603], _TimezoneString[3603:3615], _TimezoneString[3615:3632], _TimezoneString[3632:3646], _TimezoneString[3646:3664], _TimezoneString[3664:3681], _TimezoneString[3681:3697], _TimezoneString[3697:3711], _TimezoneString[3711:3733], _TimezoneString[3733:3747], _TimezoneString[3747:3764], _TimezoneString[3764:3782], _TimezoneString[3782:3799], _TimezoneString[3799:3815], _TimezoneString[3815:3829], _TimezoneString[3829:3848], _TimezoneString[3848:3865], _TimezoneString[3865:3880], _TimezoneString[3880:3895], _TimezoneString[3895:3908], _TimezoneString[3908:3922], _TimezoneString[3922:3937], _TimezoneString[3937:3952], _TimezoneString[3952:3965], _TimezoneString[3965:3980], _TimezoneString[3980:3989], _TimezoneString[3989:4005], _TimezoneString[4005:4021], _TimezoneString[4021:4039], _TimezoneString[4039:4056], _TimezoneString[4056:4069], _TimezoneString[4069:4080], _TimezoneString[4080:4095], _TimezoneString[4095:4108], _TimezoneString[4108:4122], _TimezoneString[4122:4138], _TimezoneString[4138:4152], _TimezoneString[4152:4168], _TimezoneString[4168:4183], _TimezoneString[4183:4198], _TimezoneString[4198:4211], _TimezoneString[4211:4223], _TimezoneString[4223:4235], _TimezoneString[4235:4250], _TimezoneString[4250:4264], _TimezoneString[4264:4275], _TimezoneString[4275:4286], _TimezoneString[4286:4298], _TimezoneString[4298:4311], _TimezoneString[4311:4320], _TimezoneString[4320:4331], _TimezoneString[4331:4345], _TimezoneString[4345:4365], _TimezoneString[4365:4385], _TimezoneString[4385:4401], _TimezoneString[4401:4413], _TimezoneString[4413:4424], _TimezoneString[4424:4440], _TimezoneString[4440:4453], _TimezoneString[4453:4468], _TimezoneString[4468:4484], _TimezoneString[4484:4497], _TimezoneString[4497:4516], _TimezoneString[4516:4526], _TimezoneString[4526:4542], _TimezoneString[4542:4553], _TimezoneString[4553:4565], _TimezoneString[4565:4575], _TimezoneString[4575:4587], _TimezoneString[4587:4601], _TimezoneString[4601:4614], _TimezoneString[4614:4630], _TimezoneString[4630:4642], _TimezoneString[4642:4659], _TimezoneString[4659:4675], _TimezoneString[4675:4684], _TimezoneString[4684:4697], _TimezoneString[4697:4715], _TimezoneString[4715:4725], _TimezoneString[4725:4738], _TimezoneString[4738:4754], _TimezoneString[4754:4766], _TimezoneString[4766:4784], _TimezoneString[4784:4800], _TimezoneString[4800:4818], _TimezoneString[4818:4830], _TimezoneString[4830:4843], _TimezoneString[4843:4856], _TimezoneString[4856:4870], _TimezoneString[4870:4886], _TimezoneString[4886:4902], _TimezoneString[4902:4915], _TimezoneString[4915:4929], _TimezoneString[4929:4950], _TimezoneString[4950:4968], _TimezoneString[4968:4984], _TimezoneString[4984:5000], _TimezoneString[5000:5015], _TimezoneString[5015:5031], _TimezoneString[5031:5049], _TimezoneString[5049:5061], _TimezoneString[5061:5078], _TimezoneString[5078:5093], _TimezoneString[5093:5104], _TimezoneString[5104:5116], _TimezoneString[5116:5131], _TimezoneString[5131:5142], _TimezoneString[5142:5157], _TimezoneString[5157:5171], _TimezoneString[5171:5192], _TimezoneString[5192:5209], _TimezoneString[5209:5225], _TimezoneString[5225:5244], _TimezoneString[5244:5260], _TimezoneString[5260:5279], _TimezoneString[5279:5301], _TimezoneString[5301:5312], _TimezoneString[5312:5324], _TimezoneString[5324:5339], _TimezoneString[5339:5352], _TimezoneString[5352:5364], _TimezoneString[5364:5379], _TimezoneString[5379:5397], _TimezoneString[5397:5416], _TimezoneString[5416:5430], _TimezoneString[5430:5446], _TimezoneString[5446:5459], _TimezoneString[5459:5472], _TimezoneString[5472:5483], _TimezoneString[5483:5496], _TimezoneString[5496:5516], _TimezoneString[5516:5528], _TimezoneString[5528:5537], _TimezoneString[5537:5548], _TimezoneString[5548:5563], _TimezoneString[5563:5580], _TimezoneString[5580:5601], _TimezoneString[5601:5613], _TimezoneString[5613:5628], _TimezoneString[5628:5641], _TimezoneString[5641:5659], _TimezoneString[5659:5675], _TimezoneString[5675:5689], _TimezoneString[5689:5700], _TimezoneString[5700:5717], _TimezoneString[5717:5732], _TimezoneString[5732:5749], _TimezoneString[5749:5759], _TimezoneString[5759:5772], _TimezoneString[5772:5784], _TimezoneString[5784:5801], _TimezoneString[5801:5814], _TimezoneString[5814:5829], _TimezoneString[5829:5843], _TimezoneString[5843:5858], _TimezoneString[5858:5886], _TimezoneString[5886:5906], _TimezoneString[5906:5929], _TimezoneString[5929:5955], _TimezoneString[5955:5980], _TimezoneString[5980:6001], _TimezoneString[6001:6026], _TimezoneString[6026:6049], _TimezoneString[6049:6063], _TimezoneString[6063:6090], _TimezoneString[6090:6117], _TimezoneString[6117:6136], _TimezoneString[6136:6153], _TimezoneString[6153:6171], _TimezoneString[6171:6187], _TimezoneString[6187:6199], _TimezoneString[6199:6226], _TimezoneString[6226:6253], _TimezoneString[6253:6283], _TimezoneString[6283:6298], _TimezoneString[6298:6311], _TimezoneString[6311:6326], _TimezoneString[6326:6342], _TimezoneString[6342:6356], _TimezoneString[6356:6368], _TimezoneString[6368:6386], _TimezoneString[6386:6400], _TimezoneString[6400:6413], _TimezoneString[6413:6426], _TimezoneString[6426:6441], _TimezoneString[6441:6457], _TimezoneString[6457:6472], _TimezoneString[6472:6489], _TimezoneString[6489:6503], _TimezoneString[6503:6518], _TimezoneString[6518:6527], _TimezoneString[6527:6540], _TimezoneString[6540:6553], _TimezoneString[6553:6569]}
 )
 
 // TimezoneValues returns all values of the enum.
 func TimezoneValues() []Timezone {
-	cp := make([]Timezone, len(_TimezoneValues))
-	copy(cp, _TimezoneValues)
-	return cp
+	cp := _TimezoneValues
+	return cp[:]
 }
 
 // TimezoneStrings returns a slice of all String values of the enum.
 func TimezoneStrings() []string {
-	cp := make([]string, len(_TimezoneStrings))
-	copy(cp, _TimezoneStrings)
-	return cp
+	cp := _TimezoneStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -2585,8 +2586,8 @@ const (
 
 var (
 	_UserRoleValueRange = [2]UserRole{0, 3}
-	_UserRoleValues     = []UserRole{0, 1, 2, 3}
-	_UserRoleStrings    = []string{_UserRoleString[0:8], _UserRoleString[8:14], _UserRoleString[14:22], _UserRoleString[22:27]}
+	_UserRoleValues     = [4]UserRole{0, 1, 2, 3}
+	_UserRoleStrings    = [4]string{_UserRoleString[0:8], _UserRoleString[8:14], _UserRoleString[14:22], _UserRoleString[22:27]}
 )
 
 // _UserRoleNoOp is a compile time assertion.
@@ -2602,16 +2603,14 @@ func _UserRoleNoOp() {
 
 // UserRoleValues returns all values of the enum.
 func UserRoleValues() []UserRole {
-	cp := make([]UserRole, len(_UserRoleValues))
-	copy(cp, _UserRoleValues)
-	return cp
+	cp := _UserRoleValues
+	return cp[:]
 }
 
 // UserRoleStrings returns a slice of all String values of the enum.
 func UserRoleStrings() []string {
-	cp := make([]string, len(_UserRoleStrings))
-	copy(cp, _UserRoleStrings)
-	return cp
+	cp := _UserRoleStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.

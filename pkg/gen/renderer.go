@@ -145,6 +145,10 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 		}
 		buf.WriteString(fmt.Sprintf("\t_%[1]sValueRange = [2]%[1]s{%d, %d}\n", ts.Name, lowerBound, ts.ValueSpecs[len(ts.ValueSpecs)-1].Value))
 
+		numOfUniqueValues := ts.ValueSpecs[len(ts.ValueSpecs)-1].Value
+		if ts.ValueSpecs[0].Value == 0 {
+			numOfUniqueValues++
+		}
 		for idx, prev := 0, uint64(0); idx < len(ts.ValueSpecs); idx++ {
 			if idx != 0 && prev == ts.ValueSpecs[idx].Value {
 				continue
@@ -152,7 +156,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 			prev = ts.ValueSpecs[idx].Value
 			tempBuf.WriteString(fmt.Sprintf("%s, ", ts.ValueSpecs[idx].ValueString))
 		}
-		buf.WriteString(fmt.Sprintf("\t_%sValues = []%s{%s}\n", ts.Name, ts.Name, tempBuf))
+		buf.WriteString(fmt.Sprintf("\t_%[1]sValues = [%[3]d]%[1]s{%[2]s}\n", ts.Name, tempBuf, numOfUniqueValues))
 		tempBuf.Reset()
 
 		for idx, acc, prev := 0, 0, uint64(0); idx < len(ts.ValueSpecs); idx++ {
@@ -164,7 +168,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 			prev = ts.ValueSpecs[idx].Value
 			tempBuf.WriteString(fmt.Sprintf("_%sString[%d:%d], ", ts.Name, _prev, acc))
 		}
-		buf.WriteString(fmt.Sprintf("\t_%sStrings = []string{%s}\n", ts.Name, tempBuf))
+		buf.WriteString(fmt.Sprintf("\t_%[1]sStrings = [%[3]d]string{%[2]s}\n", ts.Name, tempBuf, numOfUniqueValues))
 		tempBuf.Reset()
 
 		if ts.HasAdditionalData {
@@ -190,13 +194,13 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) {
 					}
 				}
 				tempBuf.WriteString(fmt.Sprintf(`
-		%[1]d: {%s},`, v.Value, enumData))
+		{%s},`, enumData))
 			}
 			if len(ts.DataColumns) > 0 {
 				tempBuf.WriteString("\n")
 			}
-			buf.WriteString(fmt.Sprintf(`	_%[1]sAdditionalData = map[%[1]s]%[3]s{%[2]s}
-`, ts.Name, tempBuf, additionalDataStruct))
+			buf.WriteString(fmt.Sprintf(`	_%[1]sAdditionalData = [%[4]d]%[3]s{%[2]s}
+`, ts.Name, tempBuf, additionalDataStruct, numOfUniqueValues))
 		}
 		buf.WriteString(")\n\n")
 	}
@@ -234,16 +238,14 @@ func _%[1]sNoOp() {
 		}
 		buf.WriteString(fmt.Sprintf(`// %[1]sValues returns all values of the enum.
 func %[1]sValues() []%[1]s {
-	cp := make([]%[1]s, len(_%[1]sValues))
-	copy(cp, _%[1]sValues)
-	return cp
+	cp := _%[1]sValues
+	return cp[:]
 }
 
 // %[1]sStrings returns a slice of all String values of the enum.
 func %[1]sStrings() []string {
-	cp := make([]string, len(_%[1]sStrings))
-	copy(cp, _%[1]sStrings)
-	return cp
+	cp := _%[1]sStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -280,11 +282,12 @@ func (_%[2]s %[1]s) Get%[4]s() (%[6]s, bool) {
 	if !_%[2]s.IsValid() {
 		return %[7]s, false
 	}
-	d, ok := _%[1]sAdditionalData[_%[2]s]
-	return d.%[4]s, ok
+	idx := uint(_%[2]s)%[8]s
+	d := _%[1]sAdditionalData[idx]
+	return d.%[4]s, true
 }
 
-`, ts.Name, determineReceiverName(ts.Name), colIdx, pascalCaseTransformer(colName.Name), colName.Name, colName.Type, colName.Type.ZeroValueString()))
+`, ts.Name, determineReceiverName(ts.Name), colIdx, pascalCaseTransformer(colName.Name), colName.Name, colName.Type, colName.Type.ZeroValueString(), offset))
 			}
 		}
 

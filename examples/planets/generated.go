@@ -22,8 +22,8 @@ const (
 
 var (
 	_PlanetValueRange = [2]Planet{1, 8}
-	_PlanetValues     = []Planet{1, 2, 3, 4, 5, 6, 7, 8}
-	_PlanetStrings    = []string{_PlanetString[0:4], _PlanetString[4:9], _PlanetString[9:14], _PlanetString[14:21], _PlanetString[21:28], _PlanetString[28:34], _PlanetString[34:40], _PlanetString[40:47]}
+	_PlanetValues     = [8]Planet{1, 2, 3, 4, 5, 6, 7, 8}
+	_PlanetStrings    = [8]string{_PlanetString[0:4], _PlanetString[4:9], _PlanetString[9:14], _PlanetString[14:21], _PlanetString[21:28], _PlanetString[28:34], _PlanetString[34:40], _PlanetString[40:47]}
 )
 
 // _PlanetNoOp is a compile time assertion.
@@ -43,16 +43,14 @@ func _PlanetNoOp() {
 
 // PlanetValues returns all values of the enum.
 func PlanetValues() []Planet {
-	cp := make([]Planet, len(_PlanetValues))
-	copy(cp, _PlanetValues)
-	return cp
+	cp := _PlanetValues
+	return cp[:]
 }
 
 // PlanetStrings returns a slice of all String values of the enum.
 func PlanetStrings() []string {
-	cp := make([]string, len(_PlanetStrings))
-	copy(cp, _PlanetStrings)
-	return cp
+	cp := _PlanetStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -297,8 +295,8 @@ const (
 
 var (
 	_PlanetSupportUndefinedValueRange = [2]PlanetSupportUndefined{0, 8}
-	_PlanetSupportUndefinedValues     = []PlanetSupportUndefined{1, 2, 3, 4, 5, 6, 7, 8}
-	_PlanetSupportUndefinedStrings    = []string{_PlanetSupportUndefinedString[0:4], _PlanetSupportUndefinedString[4:9], _PlanetSupportUndefinedString[9:14], _PlanetSupportUndefinedString[14:21], _PlanetSupportUndefinedString[21:28], _PlanetSupportUndefinedString[28:34], _PlanetSupportUndefinedString[34:40], _PlanetSupportUndefinedString[40:47]}
+	_PlanetSupportUndefinedValues     = [8]PlanetSupportUndefined{1, 2, 3, 4, 5, 6, 7, 8}
+	_PlanetSupportUndefinedStrings    = [8]string{_PlanetSupportUndefinedString[0:4], _PlanetSupportUndefinedString[4:9], _PlanetSupportUndefinedString[9:14], _PlanetSupportUndefinedString[14:21], _PlanetSupportUndefinedString[21:28], _PlanetSupportUndefinedString[28:34], _PlanetSupportUndefinedString[34:40], _PlanetSupportUndefinedString[40:47]}
 )
 
 // _PlanetSupportUndefinedNoOp is a compile time assertion.
@@ -319,16 +317,14 @@ func _PlanetSupportUndefinedNoOp() {
 
 // PlanetSupportUndefinedValues returns all values of the enum.
 func PlanetSupportUndefinedValues() []PlanetSupportUndefined {
-	cp := make([]PlanetSupportUndefined, len(_PlanetSupportUndefinedValues))
-	copy(cp, _PlanetSupportUndefinedValues)
-	return cp
+	cp := _PlanetSupportUndefinedValues
+	return cp[:]
 }
 
 // PlanetSupportUndefinedStrings returns a slice of all String values of the enum.
 func PlanetSupportUndefinedStrings() []string {
-	cp := make([]string, len(_PlanetSupportUndefinedStrings))
-	copy(cp, _PlanetSupportUndefinedStrings)
-	return cp
+	cp := _PlanetSupportUndefinedStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -556,8 +552,8 @@ const (
 
 var (
 	_PlanetSupportUndefinedWithDefaultValueRange = [2]PlanetSupportUndefinedWithDefault{0, 8}
-	_PlanetSupportUndefinedWithDefaultValues     = []PlanetSupportUndefinedWithDefault{0, 1, 2, 3, 4, 5, 6, 7, 8}
-	_PlanetSupportUndefinedWithDefaultStrings    = []string{_PlanetSupportUndefinedWithDefaultString[0:5], _PlanetSupportUndefinedWithDefaultString[5:9], _PlanetSupportUndefinedWithDefaultString[9:14], _PlanetSupportUndefinedWithDefaultString[14:19], _PlanetSupportUndefinedWithDefaultString[19:26], _PlanetSupportUndefinedWithDefaultString[26:33], _PlanetSupportUndefinedWithDefaultString[33:39], _PlanetSupportUndefinedWithDefaultString[39:45], _PlanetSupportUndefinedWithDefaultString[45:52]}
+	_PlanetSupportUndefinedWithDefaultValues     = [9]PlanetSupportUndefinedWithDefault{0, 1, 2, 3, 4, 5, 6, 7, 8}
+	_PlanetSupportUndefinedWithDefaultStrings    = [9]string{_PlanetSupportUndefinedWithDefaultString[0:5], _PlanetSupportUndefinedWithDefaultString[5:9], _PlanetSupportUndefinedWithDefaultString[9:14], _PlanetSupportUndefinedWithDefaultString[14:19], _PlanetSupportUndefinedWithDefaultString[19:26], _PlanetSupportUndefinedWithDefaultString[26:33], _PlanetSupportUndefinedWithDefaultString[33:39], _PlanetSupportUndefinedWithDefaultString[39:45], _PlanetSupportUndefinedWithDefaultString[45:52]}
 )
 
 // _PlanetSupportUndefinedWithDefaultNoOp is a compile time assertion.
@@ -578,16 +574,14 @@ func _PlanetSupportUndefinedWithDefaultNoOp() {
 
 // PlanetSupportUndefinedWithDefaultValues returns all values of the enum.
 func PlanetSupportUndefinedWithDefaultValues() []PlanetSupportUndefinedWithDefault {
-	cp := make([]PlanetSupportUndefinedWithDefault, len(_PlanetSupportUndefinedWithDefaultValues))
-	copy(cp, _PlanetSupportUndefinedWithDefaultValues)
-	return cp
+	cp := _PlanetSupportUndefinedWithDefaultValues
+	return cp[:]
 }
 
 // PlanetSupportUndefinedWithDefaultStrings returns a slice of all String values of the enum.
 func PlanetSupportUndefinedWithDefaultStrings() []string {
-	cp := make([]string, len(_PlanetSupportUndefinedWithDefaultStrings))
-	copy(cp, _PlanetSupportUndefinedWithDefaultStrings)
-	return cp
+	cp := _PlanetSupportUndefinedWithDefaultStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -814,8 +808,8 @@ const (
 
 var (
 	_PlanetWithDefaultValueRange = [2]PlanetWithDefault{0, 8}
-	_PlanetWithDefaultValues     = []PlanetWithDefault{0, 1, 2, 3, 4, 5, 6, 7, 8}
-	_PlanetWithDefaultStrings    = []string{_PlanetWithDefaultString[0:5], _PlanetWithDefaultString[5:9], _PlanetWithDefaultString[9:14], _PlanetWithDefaultString[14:19], _PlanetWithDefaultString[19:26], _PlanetWithDefaultString[26:33], _PlanetWithDefaultString[33:39], _PlanetWithDefaultString[39:45], _PlanetWithDefaultString[45:52]}
+	_PlanetWithDefaultValues     = [9]PlanetWithDefault{0, 1, 2, 3, 4, 5, 6, 7, 8}
+	_PlanetWithDefaultStrings    = [9]string{_PlanetWithDefaultString[0:5], _PlanetWithDefaultString[5:9], _PlanetWithDefaultString[9:14], _PlanetWithDefaultString[14:19], _PlanetWithDefaultString[19:26], _PlanetWithDefaultString[26:33], _PlanetWithDefaultString[33:39], _PlanetWithDefaultString[39:45], _PlanetWithDefaultString[45:52]}
 )
 
 // _PlanetWithDefaultNoOp is a compile time assertion.
@@ -836,16 +830,14 @@ func _PlanetWithDefaultNoOp() {
 
 // PlanetWithDefaultValues returns all values of the enum.
 func PlanetWithDefaultValues() []PlanetWithDefault {
-	cp := make([]PlanetWithDefault, len(_PlanetWithDefaultValues))
-	copy(cp, _PlanetWithDefaultValues)
-	return cp
+	cp := _PlanetWithDefaultValues
+	return cp[:]
 }
 
 // PlanetWithDefaultStrings returns a slice of all String values of the enum.
 func PlanetWithDefaultStrings() []string {
-	cp := make([]string, len(_PlanetWithDefaultStrings))
-	copy(cp, _PlanetWithDefaultStrings)
-	return cp
+	cp := _PlanetWithDefaultStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.

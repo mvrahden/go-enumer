@@ -19,30 +19,28 @@ const (
 
 var (
 	_BookingStateValueRange     = [2]BookingState{0, 5}
-	_BookingStateValues         = []BookingState{0, 1, 2, 3, 4, 5}
-	_BookingStateStrings        = []string{_BookingStateString[0:7], _BookingStateString[7:18], _BookingStateString[18:24], _BookingStateString[24:32], _BookingStateString[32:40], _BookingStateString[40:47]}
-	_BookingStateAdditionalData = map[BookingState]struct{ Description string }{
-		0: {"The booking was created successfully"},
-		1: {"The booking was not available"},
-		2: {"The booking failed"},
-		3: {"The booking was canceled"},
-		4: {"The booking was not found"},
-		5: {"The booking was deleted"},
+	_BookingStateValues         = [6]BookingState{0, 1, 2, 3, 4, 5}
+	_BookingStateStrings        = [6]string{_BookingStateString[0:7], _BookingStateString[7:18], _BookingStateString[18:24], _BookingStateString[24:32], _BookingStateString[32:40], _BookingStateString[40:47]}
+	_BookingStateAdditionalData = [6]struct{ Description string }{
+		{"The booking was created successfully"},
+		{"The booking was not available"},
+		{"The booking failed"},
+		{"The booking was canceled"},
+		{"The booking was not found"},
+		{"The booking was deleted"},
 	}
 )
 
 // BookingStateValues returns all values of the enum.
 func BookingStateValues() []BookingState {
-	cp := make([]BookingState, len(_BookingStateValues))
-	copy(cp, _BookingStateValues)
-	return cp
+	cp := _BookingStateValues
+	return cp[:]
 }
 
 // BookingStateStrings returns a slice of all String values of the enum.
 func BookingStateStrings() []string {
-	cp := make([]string, len(_BookingStateStrings))
-	copy(cp, _BookingStateStrings)
-	return cp
+	cp := _BookingStateStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -75,8 +73,9 @@ func (_b BookingState) GetDescription() (string, bool) {
 	if !_b.IsValid() {
 		return "", false
 	}
-	d, ok := _BookingStateAdditionalData[_b]
-	return d.Description, ok
+	idx := uint(_b)
+	d := _BookingStateAdditionalData[idx]
+	return d.Description, true
 }
 
 var (
@@ -158,30 +157,28 @@ const (
 
 var (
 	_BookingStateWithConfigValueRange     = [2]BookingStateWithConfig{0, 5}
-	_BookingStateWithConfigValues         = []BookingStateWithConfig{0, 1, 2, 3, 4, 5}
-	_BookingStateWithConfigStrings        = []string{_BookingStateWithConfigString[0:7], _BookingStateWithConfigString[7:18], _BookingStateWithConfigString[18:24], _BookingStateWithConfigString[24:32], _BookingStateWithConfigString[32:40], _BookingStateWithConfigString[40:47]}
-	_BookingStateWithConfigAdditionalData = map[BookingStateWithConfig]struct{ Description string }{
-		0: {"The booking was created successfully"},
-		1: {"The booking was not available"},
-		2: {"The booking failed"},
-		3: {"The booking was canceled"},
-		4: {"The booking was not found"},
-		5: {"The booking was deleted"},
+	_BookingStateWithConfigValues         = [6]BookingStateWithConfig{0, 1, 2, 3, 4, 5}
+	_BookingStateWithConfigStrings        = [6]string{_BookingStateWithConfigString[0:7], _BookingStateWithConfigString[7:18], _BookingStateWithConfigString[18:24], _BookingStateWithConfigString[24:32], _BookingStateWithConfigString[32:40], _BookingStateWithConfigString[40:47]}
+	_BookingStateWithConfigAdditionalData = [6]struct{ Description string }{
+		{"The booking was created successfully"},
+		{"The booking was not available"},
+		{"The booking failed"},
+		{"The booking was canceled"},
+		{"The booking was not found"},
+		{"The booking was deleted"},
 	}
 )
 
 // BookingStateWithConfigValues returns all values of the enum.
 func BookingStateWithConfigValues() []BookingStateWithConfig {
-	cp := make([]BookingStateWithConfig, len(_BookingStateWithConfigValues))
-	copy(cp, _BookingStateWithConfigValues)
-	return cp
+	cp := _BookingStateWithConfigValues
+	return cp[:]
 }
 
 // BookingStateWithConfigStrings returns a slice of all String values of the enum.
 func BookingStateWithConfigStrings() []string {
-	cp := make([]string, len(_BookingStateWithConfigStrings))
-	copy(cp, _BookingStateWithConfigStrings)
-	return cp
+	cp := _BookingStateWithConfigStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -214,8 +211,9 @@ func (_b BookingStateWithConfig) GetDescription() (string, bool) {
 	if !_b.IsValid() {
 		return "", false
 	}
-	d, ok := _BookingStateWithConfigAdditionalData[_b]
-	return d.Description, ok
+	idx := uint(_b)
+	d := _BookingStateWithConfigAdditionalData[idx]
+	return d.Description, true
 }
 
 var (
@@ -315,30 +313,28 @@ const (
 
 var (
 	_BookingStateWithConstantsValueRange     = [2]BookingStateWithConstants{0, 5}
-	_BookingStateWithConstantsValues         = []BookingStateWithConstants{0, 1, 2, 3, 4, 5}
-	_BookingStateWithConstantsStrings        = []string{_BookingStateWithConstantsString[0:7], _BookingStateWithConstantsString[7:18], _BookingStateWithConstantsString[18:24], _BookingStateWithConstantsString[24:32], _BookingStateWithConstantsString[32:40], _BookingStateWithConstantsString[40:47]}
-	_BookingStateWithConstantsAdditionalData = map[BookingStateWithConstants]struct{ Description string }{
-		0: {"The booking was created successfully"},
-		1: {"The booking was not available"},
-		2: {"The booking failed"},
-		3: {"The booking was canceled"},
-		4: {"The booking was not found"},
-		5: {"The booking was deleted"},
+	_BookingStateWithConstantsValues         = [6]BookingStateWithConstants{0, 1, 2, 3, 4, 5}
+	_BookingStateWithConstantsStrings        = [6]string{_BookingStateWithConstantsString[0:7], _BookingStateWithConstantsString[7:18], _BookingStateWithConstantsString[18:24], _BookingStateWithConstantsString[24:32], _BookingStateWithConstantsString[32:40], _BookingStateWithConstantsString[40:47]}
+	_BookingStateWithConstantsAdditionalData = [6]struct{ Description string }{
+		{"The booking was created successfully"},
+		{"The booking was not available"},
+		{"The booking failed"},
+		{"The booking was canceled"},
+		{"The booking was not found"},
+		{"The booking was deleted"},
 	}
 )
 
 // BookingStateWithConstantsValues returns all values of the enum.
 func BookingStateWithConstantsValues() []BookingStateWithConstants {
-	cp := make([]BookingStateWithConstants, len(_BookingStateWithConstantsValues))
-	copy(cp, _BookingStateWithConstantsValues)
-	return cp
+	cp := _BookingStateWithConstantsValues
+	return cp[:]
 }
 
 // BookingStateWithConstantsStrings returns a slice of all String values of the enum.
 func BookingStateWithConstantsStrings() []string {
-	cp := make([]string, len(_BookingStateWithConstantsStrings))
-	copy(cp, _BookingStateWithConstantsStrings)
-	return cp
+	cp := _BookingStateWithConstantsStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
@@ -371,8 +367,9 @@ func (_b BookingStateWithConstants) GetDescription() (string, bool) {
 	if !_b.IsValid() {
 		return "", false
 	}
-	d, ok := _BookingStateWithConstantsAdditionalData[_b]
-	return d.Description, ok
+	idx := uint(_b)
+	d := _BookingStateWithConstantsAdditionalData[idx]
+	return d.Description, true
 }
 
 var (

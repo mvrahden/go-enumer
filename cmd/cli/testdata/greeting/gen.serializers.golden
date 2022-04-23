@@ -22,8 +22,8 @@ const (
 
 var (
 	_GreetingValueRange = [2]Greeting{0, 1}
-	_GreetingValues     = []Greeting{0, 1}
-	_GreetingStrings    = []string{_GreetingString[0:5], _GreetingString[5:9]}
+	_GreetingValues     = [2]Greeting{0, 1}
+	_GreetingStrings    = [2]string{_GreetingString[0:5], _GreetingString[5:9]}
 )
 
 // _GreetingNoOp is a compile time assertion.
@@ -37,16 +37,14 @@ func _GreetingNoOp() {
 
 // GreetingValues returns all values of the enum.
 func GreetingValues() []Greeting {
-	cp := make([]Greeting, len(_GreetingValues))
-	copy(cp, _GreetingValues)
-	return cp
+	cp := _GreetingValues
+	return cp[:]
 }
 
 // GreetingStrings returns a slice of all String values of the enum.
 func GreetingStrings() []string {
-	cp := make([]string, len(_GreetingStrings))
-	copy(cp, _GreetingStrings)
-	return cp
+	cp := _GreetingStrings
+	return cp[:]
 }
 
 // IsValid inspects whether the value is valid enum value.
