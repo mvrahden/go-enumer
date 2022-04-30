@@ -184,6 +184,7 @@ func (_g *Greeting) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for Greeting.
 func (_g Greeting) Value() (driver.Value, error) {
 	if err := _g.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as Greeting. %w", _g, err)
@@ -191,6 +192,7 @@ func (_g Greeting) Value() (driver.Value, error) {
 	return _g.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for Greeting.
 func (_g *Greeting) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {

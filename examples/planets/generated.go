@@ -202,6 +202,7 @@ func (_p *Planet) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for Planet.
 func (_p Planet) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as Planet. %w", _p, err)
@@ -209,6 +210,7 @@ func (_p Planet) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for Planet.
 func (_p *Planet) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -286,9 +288,7 @@ func (_p *Planet) UnmarshalYAML(unmarshal func(interface{}) error) error {
 const (
 	_PlanetSupportUndefinedString      = "MarsPlutoVenusMercuryJupiterSaturnUranusNeptune"
 	_PlanetSupportUndefinedLowerString = "marsplutovenusmercuryjupitersaturnuranusneptune"
-)
 
-const (
 	// PlanetSupportUndefinedUndefined is the generated zero value of the PlanetSupportUndefined enum.
 	PlanetSupportUndefinedUndefined PlanetSupportUndefined = 0
 )
@@ -391,6 +391,9 @@ func PlanetSupportUndefinedFromString(raw string) (PlanetSupportUndefined, bool)
 
 // PlanetSupportUndefinedFromStringIgnoreCase determines the enum value with a case-insensitive match.
 func PlanetSupportUndefinedFromStringIgnoreCase(raw string) (PlanetSupportUndefined, bool) {
+	if len(raw) == 0 {
+		return PlanetSupportUndefined(0), true
+	}
 	v, ok := PlanetSupportUndefinedFromString(raw)
 	if ok {
 		return v, ok
@@ -473,6 +476,7 @@ func (_p *PlanetSupportUndefined) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for PlanetSupportUndefined.
 func (_p PlanetSupportUndefined) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PlanetSupportUndefined. %w", _p, err)
@@ -480,6 +484,7 @@ func (_p PlanetSupportUndefined) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for PlanetSupportUndefined.
 func (_p *PlanetSupportUndefined) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -647,6 +652,9 @@ func PlanetSupportUndefinedWithDefaultFromString(raw string) (PlanetSupportUndef
 
 // PlanetSupportUndefinedWithDefaultFromStringIgnoreCase determines the enum value with a case-insensitive match.
 func PlanetSupportUndefinedWithDefaultFromStringIgnoreCase(raw string) (PlanetSupportUndefinedWithDefault, bool) {
+	if len(raw) == 0 {
+		return PlanetSupportUndefinedWithDefault(0), true
+	}
 	v, ok := PlanetSupportUndefinedWithDefaultFromString(raw)
 	if ok {
 		return v, ok
@@ -729,6 +737,7 @@ func (_p *PlanetSupportUndefinedWithDefault) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for PlanetSupportUndefinedWithDefault.
 func (_p PlanetSupportUndefinedWithDefault) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PlanetSupportUndefinedWithDefault. %w", _p, err)
@@ -736,6 +745,7 @@ func (_p PlanetSupportUndefinedWithDefault) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for PlanetSupportUndefinedWithDefault.
 func (_p *PlanetSupportUndefinedWithDefault) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -991,6 +1001,7 @@ func (_p *PlanetWithDefault) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for PlanetWithDefault.
 func (_p PlanetWithDefault) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PlanetWithDefault. %w", _p, err)
@@ -998,6 +1009,7 @@ func (_p PlanetWithDefault) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for PlanetWithDefault.
 func (_p *PlanetWithDefault) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {

@@ -18,9 +18,7 @@ var (
 const (
 	_GreetingString      = "Россия中國日本한국ČeskáRepublika𝜋"
 	_GreetingLowerString = "россия中國日本한국českárepublika𝜋"
-)
 
-const (
 	// GreetingUndefined is the generated zero value of the Greeting enum.
 	GreetingUndefined Greeting = 0
 )
@@ -117,6 +115,9 @@ func GreetingFromString(raw string) (Greeting, bool) {
 
 // GreetingFromStringIgnoreCase determines the enum value with a case-insensitive match.
 func GreetingFromStringIgnoreCase(raw string) (Greeting, bool) {
+	if len(raw) == 0 {
+		return Greeting(0), true
+	}
 	v, ok := GreetingFromString(raw)
 	if ok {
 		return v, ok
@@ -199,6 +200,7 @@ func (_g *Greeting) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for Greeting.
 func (_g Greeting) Value() (driver.Value, error) {
 	if err := _g.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as Greeting. %w", _g, err)
@@ -206,6 +208,7 @@ func (_g Greeting) Value() (driver.Value, error) {
 	return _g.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for Greeting.
 func (_g *Greeting) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -372,6 +375,9 @@ func GreetingWithDefaultFromString(raw string) (GreetingWithDefault, bool) {
 
 // GreetingWithDefaultFromStringIgnoreCase determines the enum value with a case-insensitive match.
 func GreetingWithDefaultFromStringIgnoreCase(raw string) (GreetingWithDefault, bool) {
+	if len(raw) == 0 {
+		return GreetingWithDefault(0), true
+	}
 	v, ok := GreetingWithDefaultFromString(raw)
 	if ok {
 		return v, ok
@@ -454,6 +460,7 @@ func (_g *GreetingWithDefault) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for GreetingWithDefault.
 func (_g GreetingWithDefault) Value() (driver.Value, error) {
 	if err := _g.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as GreetingWithDefault. %w", _g, err)
@@ -461,6 +468,7 @@ func (_g GreetingWithDefault) Value() (driver.Value, error) {
 	return _g.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for GreetingWithDefault.
 func (_g *GreetingWithDefault) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {

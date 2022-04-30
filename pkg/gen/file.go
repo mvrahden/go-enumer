@@ -46,9 +46,8 @@ type TypeSpec struct {
 
 type ValueSpec struct {
 	Value          uint64 // The numeric value of an enum constant
-	ValueString    string // String representation of Value
+	EnumValue      string // The enum's actual value string
 	IdentifierName string
-	EnumValue      string
 	DataCells      []DataCell // contains additional column values and types
 }
 

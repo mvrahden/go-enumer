@@ -197,6 +197,7 @@ func (_p *PillAliased) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for PillAliased.
 func (_p PillAliased) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PillAliased. %w", _p, err)
@@ -204,6 +205,7 @@ func (_p PillAliased) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for PillAliased.
 func (_p *PillAliased) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -460,6 +462,7 @@ func (_p *PillRowed) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for PillRowed.
 func (_p PillRowed) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PillRowed. %w", _p, err)
@@ -467,6 +470,7 @@ func (_p PillRowed) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for PillRowed.
 func (_p *PillRowed) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -723,6 +727,7 @@ func (_p *PillUnsigned) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for PillUnsigned.
 func (_p PillUnsigned) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PillUnsigned. %w", _p, err)
@@ -730,6 +735,7 @@ func (_p PillUnsigned) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for PillUnsigned.
 func (_p *PillUnsigned) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -986,6 +992,7 @@ func (_p *PillUnsigned16) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for PillUnsigned16.
 func (_p PillUnsigned16) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PillUnsigned16. %w", _p, err)
@@ -993,6 +1000,7 @@ func (_p PillUnsigned16) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for PillUnsigned16.
 func (_p *PillUnsigned16) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -1249,6 +1257,7 @@ func (_p *PillUnsigned32) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for PillUnsigned32.
 func (_p PillUnsigned32) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PillUnsigned32. %w", _p, err)
@@ -1256,6 +1265,7 @@ func (_p PillUnsigned32) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for PillUnsigned32.
 func (_p *PillUnsigned32) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -1512,6 +1522,7 @@ func (_p *PillUnsigned64) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for PillUnsigned64.
 func (_p PillUnsigned64) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PillUnsigned64. %w", _p, err)
@@ -1519,6 +1530,7 @@ func (_p PillUnsigned64) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for PillUnsigned64.
 func (_p *PillUnsigned64) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -1775,6 +1787,7 @@ func (_p *PillUnsigned8) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for PillUnsigned8.
 func (_p PillUnsigned8) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PillUnsigned8. %w", _p, err)
@@ -1782,6 +1795,7 @@ func (_p PillUnsigned8) Value() (driver.Value, error) {
 	return _p.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for PillUnsigned8.
 func (_p *PillUnsigned8) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {

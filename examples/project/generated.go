@@ -139,6 +139,7 @@ func (_a *AccountState) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for AccountState.
 func (_a AccountState) Value() (driver.Value, error) {
 	if err := _a.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as AccountState. %w", _a, err)
@@ -146,6 +147,7 @@ func (_a AccountState) Value() (driver.Value, error) {
 	return _a.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for AccountState.
 func (_a *AccountState) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -1122,6 +1124,7 @@ func (_c *CountryCode) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for CountryCode.
 func (_c CountryCode) Value() (driver.Value, error) {
 	if err := _c.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as CountryCode. %w", _c, err)
@@ -1129,6 +1132,7 @@ func (_c CountryCode) Value() (driver.Value, error) {
 	return _c.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for CountryCode.
 func (_c *CountryCode) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -1413,6 +1417,7 @@ func (_c *Currency) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for Currency.
 func (_c Currency) Value() (driver.Value, error) {
 	if err := _c.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as Currency. %w", _c, err)
@@ -1420,6 +1425,7 @@ func (_c Currency) Value() (driver.Value, error) {
 	return _c.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for Currency.
 func (_c *Currency) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -2498,6 +2504,7 @@ func (_t *Timezone) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for Timezone.
 func (_t Timezone) Value() (driver.Value, error) {
 	if err := _t.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as Timezone. %w", _t, err)
@@ -2505,6 +2512,7 @@ func (_t Timezone) Value() (driver.Value, error) {
 	return _t.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for Timezone.
 func (_t *Timezone) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
@@ -2666,6 +2674,9 @@ func UserRoleFromString(raw string) (UserRole, bool) {
 
 // UserRoleFromStringIgnoreCase determines the enum value with a case-insensitive match.
 func UserRoleFromStringIgnoreCase(raw string) (UserRole, bool) {
+	if len(raw) == 0 {
+		return UserRole(0), true
+	}
 	v, ok := UserRoleFromString(raw)
 	if ok {
 		return v, ok
@@ -2748,6 +2759,7 @@ func (_u *UserRole) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// Value implements the sql/driver.Valuer interface for UserRole.
 func (_u UserRole) Value() (driver.Value, error) {
 	if err := _u.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as UserRole. %w", _u, err)
@@ -2755,6 +2767,7 @@ func (_u UserRole) Value() (driver.Value, error) {
 	return _u.String(), nil
 }
 
+// Scan implements the sql/driver.Scanner interface for UserRole.
 func (_u *UserRole) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {

@@ -21,7 +21,9 @@ var (
 	_BookingStateValueRange     = [2]BookingState{0, 5}
 	_BookingStateValues         = [6]BookingState{0, 1, 2, 3, 4, 5}
 	_BookingStateStrings        = [6]string{_BookingStateString[0:7], _BookingStateString[7:18], _BookingStateString[18:24], _BookingStateString[24:32], _BookingStateString[32:40], _BookingStateString[40:47]}
-	_BookingStateAdditionalData = [6]struct{ Description string }{
+	_BookingStateAdditionalData = [6]struct {
+		Description string
+	}{
 		{"The booking was created successfully"},
 		{"The booking was not available"},
 		{"The booking failed"},
@@ -159,7 +161,9 @@ var (
 	_BookingStateWithConfigValueRange     = [2]BookingStateWithConfig{0, 5}
 	_BookingStateWithConfigValues         = [6]BookingStateWithConfig{0, 1, 2, 3, 4, 5}
 	_BookingStateWithConfigStrings        = [6]string{_BookingStateWithConfigString[0:7], _BookingStateWithConfigString[7:18], _BookingStateWithConfigString[18:24], _BookingStateWithConfigString[24:32], _BookingStateWithConfigString[32:40], _BookingStateWithConfigString[40:47]}
-	_BookingStateWithConfigAdditionalData = [6]struct{ Description string }{
+	_BookingStateWithConfigAdditionalData = [6]struct {
+		Description string
+	}{
 		{"The booking was created successfully"},
 		{"The booking was not available"},
 		{"The booking failed"},
@@ -249,6 +253,9 @@ func BookingStateWithConfigFromString(raw string) (BookingStateWithConfig, bool)
 
 // BookingStateWithConfigFromStringIgnoreCase determines the enum value with a case-insensitive match.
 func BookingStateWithConfigFromStringIgnoreCase(raw string) (BookingStateWithConfig, bool) {
+	if len(raw) == 0 {
+		return BookingStateWithConfig(0), true
+	}
 	v, ok := BookingStateWithConfigFromString(raw)
 	if ok {
 		return v, ok
@@ -315,7 +322,9 @@ var (
 	_BookingStateWithConstantsValueRange     = [2]BookingStateWithConstants{0, 5}
 	_BookingStateWithConstantsValues         = [6]BookingStateWithConstants{0, 1, 2, 3, 4, 5}
 	_BookingStateWithConstantsStrings        = [6]string{_BookingStateWithConstantsString[0:7], _BookingStateWithConstantsString[7:18], _BookingStateWithConstantsString[18:24], _BookingStateWithConstantsString[24:32], _BookingStateWithConstantsString[32:40], _BookingStateWithConstantsString[40:47]}
-	_BookingStateWithConstantsAdditionalData = [6]struct{ Description string }{
+	_BookingStateWithConstantsAdditionalData = [6]struct {
+		Description string
+	}{
 		{"The booking was created successfully"},
 		{"The booking was not available"},
 		{"The booking failed"},

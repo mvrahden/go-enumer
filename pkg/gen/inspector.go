@@ -19,6 +19,7 @@ import (
 	"strings"
 
 	"github.com/mvrahden/go-enumer/config"
+	"github.com/mvrahden/go-enumer/pkg/utils/slices"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -152,9 +153,8 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 		}
 		cvs := &ValueSpec{
 			Value:          rowId,
-			IdentifierName: "", // hint: no identifier here
 			EnumValue:      row[1],
-			ValueString:    row[0],
+			IdentifierName: "", // hint: no identifier here
 		}
 		if len(row) > 2 {
 			ts.HasAdditionalData = true // hint: mark type for additional column support
@@ -191,8 +191,8 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 func (i inspector) inspectImports(f *File) {
 	f.Imports = append(f.Imports, &Import{Path: "errors"})
 	f.Imports = append(f.Imports, &Import{Path: "fmt"})
+
 	// we add all imports (also duplicates)
-	// gofmt will help us clean that up later on
 	for _, ts := range f.TypeSpecs {
 		for _, v := range ts.Config.Serializers {
 			switch v {
@@ -208,6 +208,17 @@ func (i inspector) inspectImports(f *File) {
 			}
 		}
 	}
+	// sort alphabetically
+	f.Imports = slices.SortStable(f.Imports, func(s []*Import, i, j int) bool {
+		return strings.Compare(s[i].Path, s[j].Path) < 0 && strings.Compare(s[i].Name, s[j].Name) < 0
+	})
+	// filter unique import values
+	f.Imports = slices.Filter(f.Imports, func(v *Import, idx int) bool {
+		if idx == 0 {
+			return true
+		}
+		return v.Path != f.Imports[idx-1].Path || v.Name != f.Imports[idx-1].Name
+	})
 }
 
 func (i inspector) validateFile(f *File) error {
@@ -427,7 +438,7 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 }
 
 func (i inspector) evaluateValueSpec(t typeSpec, s valueSpec, pkg *packages.Package) (*ValueSpec, error) {
-	val, valStr, err := i.determineValueOfExpr(s.Value, pkg)
+	val, err := i.determineValueOfExpr(s.Value, pkg)
 	if err != nil {
 		return nil, err
 	}
@@ -443,7 +454,6 @@ func (i inspector) evaluateValueSpec(t typeSpec, s valueSpec, pkg *packages.Pack
 		IdentifierName: s.Value.Name,
 		EnumValue:      name,
 		Value:          val,
-		ValueString:    valStr,
 	}, nil
 }
 
@@ -466,49 +476,42 @@ func (i inspector) determineTypeOfExpr(e ast.Expr) (GoType, error) {
 	return GoTypeUnknown, fmt.Errorf("must be of an unsigned integer type, found %q.", e)
 }
 
-func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint64, string, error) {
+func (i inspector) determineValueOfExpr(e ast.Expr, pkg *packages.Package) (uint64, error) {
 	c, ok := e.(*ast.Ident)
 	if !ok {
-		return 0, "", fmt.Errorf("internal error: a value slipped our type evaluation (type: %+v)", e)
+		return 0, fmt.Errorf("internal error: a value slipped our type evaluation (type: %+v)", e)
 	}
 	obj := pkg.TypesInfo.ObjectOf(c)
 	if obj == nil {
-		return 0, "", fmt.Errorf("no type object for constant %q", c)
+		return 0, fmt.Errorf("no type object for constant %q", c)
 	}
 	objT := obj.Type()
 	if objT == nil {
-		return 0, "", fmt.Errorf("definition type for constant %q is <nil>", c)
+		return 0, fmt.Errorf("definition type for constant %q is <nil>", c)
 	}
 	ul := objT.Underlying()
 	if ul == nil {
-		return 0, "", fmt.Errorf("underlying was expected to be a basic type, but was <nil>")
+		return 0, fmt.Errorf("underlying was expected to be a basic type, but was <nil>")
 	}
 	bul, ok := ul.(*types.Basic)
 	if !ok {
-		return 0, "", fmt.Errorf("underlying type for constant %q is not a basic type", c)
+		return 0, fmt.Errorf("underlying type for constant %q is not a basic type", c)
 	}
 	info := bul.Info()
 	if info&types.IsInteger == 0 {
-		return 0, "", fmt.Errorf("%q is not a constant of type integer", c.Name)
+		return 0, fmt.Errorf("%q is not a constant of type integer", c.Name)
 	}
 	cobj, ok := obj.(*types.Const)
 	if !ok {
-		return 0, "", fmt.Errorf("internal error: a value slipped our type evaluation (type: %+v is not a const)", e)
+		return 0, fmt.Errorf("internal error: a value slipped our type evaluation (type: %+v is not a const)", e)
 	}
 	value := cobj.Val()
 	if value.Kind() != constant.Int {
-		return 0, "", fmt.Errorf("constant is not an integer %q", c)
+		return 0, fmt.Errorf("constant is not an integer %q", c)
 	}
-	i64, isInt := constant.Int64Val(value)
 	u64, isUint := constant.Uint64Val(value)
-	if !isInt && !isUint {
-		return 0, "", fmt.Errorf("internal error: value of %q is not an integer: %s", c, value.String())
+	if !isUint {
+		return 0, fmt.Errorf("internal error: value of %q is not an unsigned integer: %s", c, value)
 	}
-	if isInt && i64 < 0 {
-		return 0, "", fmt.Errorf("Enum value of %q cannot be in a negative range.", c)
-	}
-	if !isInt {
-		u64 = uint64(i64)
-	}
-	return u64, value.String(), nil
+	return u64, nil
 }
