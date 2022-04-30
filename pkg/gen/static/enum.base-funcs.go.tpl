@@ -45,15 +45,11 @@ func ({{ receiver $ts.Name }} {{ $ts.Name }}) String() string {
 {{ if $ts.HasAdditionalData }}
 {{- /* Generate typed getter for additional data */}}
 {{- range $col := $ts.AdditionalData.Headers -}}
-// Get{{ pascal $col.Name }} returns the "{{ $col.Name }}" of the enum value as {{ $col.Type }}
-// if the enum is valid.
-func ({{ receiver $ts.Name }} {{ $ts.Name }}) Get{{ pascal $col.Name }}() ({{ $col.Type }}, bool) {
-	if !{{ receiver $ts.Name }}.IsValid() {
-		return {{ zero $col.Type }}, false
-	}
+// Get{{ pascal $col.Name }} returns the "{{ $col.Name }}" of the enum value.
+func ({{ receiver $ts.Name }} {{ $ts.Name }}) Get{{ pascal $col.Name }}() {{ $col.Type }} {
 	idx := uint({{ receiver $ts.Name }}){{- if $ts.RequiresOffset }} - 1{{- end }}
 	d := _{{ $ts.Name }}AdditionalData[idx]
-	return d.{{ pascal $col.Name }}, true
+	return d.{{ pascal $col.Name }}
 }
 
 {{ end -}}

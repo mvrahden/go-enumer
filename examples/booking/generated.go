@@ -69,15 +69,11 @@ func (_b BookingState) String() string {
 	return _BookingStateStrings[idx]
 }
 
-// GetDescription returns the "description" of the enum value as string
-// if the enum is valid.
-func (_b BookingState) GetDescription() (string, bool) {
-	if !_b.IsValid() {
-		return "", false
-	}
+// GetDescription returns the "description" of the enum value.
+func (_b BookingState) GetDescription() string {
 	idx := uint(_b)
 	d := _BookingStateAdditionalData[idx]
-	return d.Description, true
+	return d.Description
 }
 
 var (
@@ -209,15 +205,11 @@ func (_b BookingStateWithConfig) String() string {
 	return _BookingStateWithConfigStrings[idx]
 }
 
-// GetDescription returns the "description" of the enum value as string
-// if the enum is valid.
-func (_b BookingStateWithConfig) GetDescription() (string, bool) {
-	if !_b.IsValid() {
-		return "", false
-	}
+// GetDescription returns the "description" of the enum value.
+func (_b BookingStateWithConfig) GetDescription() string {
 	idx := uint(_b)
 	d := _BookingStateWithConfigAdditionalData[idx]
-	return d.Description, true
+	return d.Description
 }
 
 var (
@@ -370,15 +362,11 @@ func (_b BookingStateWithConstants) String() string {
 	return _BookingStateWithConstantsStrings[idx]
 }
 
-// GetDescription returns the "description" of the enum value as string
-// if the enum is valid.
-func (_b BookingStateWithConstants) GetDescription() (string, bool) {
-	if !_b.IsValid() {
-		return "", false
-	}
+// GetDescription returns the "description" of the enum value.
+func (_b BookingStateWithConstants) GetDescription() string {
 	idx := uint(_b)
 	d := _BookingStateWithConstantsAdditionalData[idx]
-	return d.Description, true
+	return d.Description
 }
 
 var (

@@ -47,12 +47,12 @@ func TestEnums(t *testing.T) {
 			})
 		})
 		t.Run("Additional Data", func(t *testing.T) {
-			require.Equal(t, "United States", utils.Must(CountryCode(229).GetCountryName()))
-			require.Equal(t, "US", utils.Must(CountryCode(229).GetIso2LetterCode()))
-			require.Equal(t, "1", utils.Must(CountryCode(229).GetCountryCode()))
-			require.Equal(t, uint32(310232863), utils.Must(CountryCode(229).GetPopulation()))
-			require.Equal(t, uint32(9629091), utils.Must(CountryCode(229).GetAreaInSquareKilometer()))
-			require.Equal(t, float64(1672), utils.Must(CountryCode(229).GetGdpInBillion()))
+			require.Equal(t, "United States", CountryCode(229).GetCountryName())
+			require.Equal(t, "US", CountryCode(229).GetIso2LetterCode())
+			require.Equal(t, "1", CountryCode(229).GetCountryCode())
+			require.Equal(t, uint32(310232863), CountryCode(229).GetPopulation())
+			require.Equal(t, uint32(9629091), CountryCode(229).GetAreaInSquareKilometer())
+			require.Equal(t, float64(1672), CountryCode(229).GetGdpInBillion())
 		})
 		t.Run("Serialization", func(t *testing.T) {
 			cfg := utils.TestConfig{}

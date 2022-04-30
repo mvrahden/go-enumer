@@ -469,70 +469,46 @@ func (_c CountryCode) String() string {
 	return _CountryCodeStrings[idx]
 }
 
-// GetCountryName returns the "country-name" of the enum value as string
-// if the enum is valid.
-func (_c CountryCode) GetCountryName() (string, bool) {
-	if !_c.IsValid() {
-		return "", false
-	}
+// GetCountryName returns the "country-name" of the enum value.
+func (_c CountryCode) GetCountryName() string {
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
-	return d.CountryName, true
+	return d.CountryName
 }
 
-// GetCountryCode returns the "country-code" of the enum value as string
-// if the enum is valid.
-func (_c CountryCode) GetCountryCode() (string, bool) {
-	if !_c.IsValid() {
-		return "", false
-	}
+// GetCountryCode returns the "country-code" of the enum value.
+func (_c CountryCode) GetCountryCode() string {
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
-	return d.CountryCode, true
+	return d.CountryCode
 }
 
-// GetIso2LetterCode returns the "iso-2-letter-code" of the enum value as string
-// if the enum is valid.
-func (_c CountryCode) GetIso2LetterCode() (string, bool) {
-	if !_c.IsValid() {
-		return "", false
-	}
+// GetIso2LetterCode returns the "iso-2-letter-code" of the enum value.
+func (_c CountryCode) GetIso2LetterCode() string {
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
-	return d.Iso2LetterCode, true
+	return d.Iso2LetterCode
 }
 
-// GetPopulation returns the "population" of the enum value as uint32
-// if the enum is valid.
-func (_c CountryCode) GetPopulation() (uint32, bool) {
-	if !_c.IsValid() {
-		return 0, false
-	}
+// GetPopulation returns the "population" of the enum value.
+func (_c CountryCode) GetPopulation() uint32 {
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
-	return d.Population, true
+	return d.Population
 }
 
-// GetAreaInSquareKilometer returns the "area-in-square-kilometer" of the enum value as uint32
-// if the enum is valid.
-func (_c CountryCode) GetAreaInSquareKilometer() (uint32, bool) {
-	if !_c.IsValid() {
-		return 0, false
-	}
+// GetAreaInSquareKilometer returns the "area-in-square-kilometer" of the enum value.
+func (_c CountryCode) GetAreaInSquareKilometer() uint32 {
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
-	return d.AreaInSquareKilometer, true
+	return d.AreaInSquareKilometer
 }
 
-// GetGdpInBillion returns the "gdp-in-billion" of the enum value as float64
-// if the enum is valid.
-func (_c CountryCode) GetGdpInBillion() (float64, bool) {
-	if !_c.IsValid() {
-		return 0, false
-	}
+// GetGdpInBillion returns the "gdp-in-billion" of the enum value.
+func (_c CountryCode) GetGdpInBillion() float64 {
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
-	return d.GdpInBillion, true
+	return d.GdpInBillion
 }
 
 var (
@@ -1265,37 +1241,25 @@ func (_c Currency) String() string {
 	return _CurrencyStrings[idx]
 }
 
-// GetCurrencyName returns the "currency-name" of the enum value as string
-// if the enum is valid.
-func (_c Currency) GetCurrencyName() (string, bool) {
-	if !_c.IsValid() {
-		return "", false
-	}
+// GetCurrencyName returns the "currency-name" of the enum value.
+func (_c Currency) GetCurrencyName() string {
 	idx := uint(_c) - 1
 	d := _CurrencyAdditionalData[idx]
-	return d.CurrencyName, true
+	return d.CurrencyName
 }
 
-// GetNumericCode returns the "numeric-code" of the enum value as uint16
-// if the enum is valid.
-func (_c Currency) GetNumericCode() (uint16, bool) {
-	if !_c.IsValid() {
-		return 0, false
-	}
+// GetNumericCode returns the "numeric-code" of the enum value.
+func (_c Currency) GetNumericCode() uint16 {
 	idx := uint(_c) - 1
 	d := _CurrencyAdditionalData[idx]
-	return d.NumericCode, true
+	return d.NumericCode
 }
 
-// GetMinorUnit returns the "minor-unit" of the enum value as uint8
-// if the enum is valid.
-func (_c Currency) GetMinorUnit() (uint8, bool) {
-	if !_c.IsValid() {
-		return 0, false
-	}
+// GetMinorUnit returns the "minor-unit" of the enum value.
+func (_c Currency) GetMinorUnit() uint8 {
 	idx := uint(_c) - 1
 	d := _CurrencyAdditionalData[idx]
-	return d.MinorUnit, true
+	return d.MinorUnit
 }
 
 var (
