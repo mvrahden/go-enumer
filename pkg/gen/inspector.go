@@ -14,7 +14,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -50,18 +49,24 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 	if err := i.inspectDocstrings(pkg, out); err != nil {
 		return nil, err
 	}
+	i.inspectImports(out)
 
+	i.sortTypeSpecs(out)
 	if err := i.validateFile(out); err != nil {
 		return nil, err
 	}
-	i.inspectImports(out)
-	i.sortTypeSpecs(out)
 	return out, nil
 }
 
 func (i inspector) sortTypeSpecs(f *File) {
-	sort.SliceStable(f.TypeSpecs, func(i, j int) bool {
-		return strings.Compare(f.TypeSpecs[i].Name, f.TypeSpecs[j].Name) < 0
+	// sort all enums and all enum values
+	f.TypeSpecs = slices.SortStable(f.TypeSpecs, func(s []*TypeSpec, i, j int) bool {
+		return strings.Compare(s[i].Name, s[j].Name) < 0
+	})
+	slices.Range(f.TypeSpecs, func(v *TypeSpec, idx int) {
+		v.ValueSpecs = slices.SortStable(v.ValueSpecs, func(s []*ValueSpec, i, j int) bool {
+			return s[i].Value < s[j].Value
+		})
 	})
 }
 
@@ -223,9 +228,6 @@ func (i inspector) inspectImports(f *File) {
 
 func (i inspector) validateFile(f *File) error {
 	for _, ts := range f.TypeSpecs {
-		sort.SliceStable(ts.ValueSpecs, func(i, j int) bool {
-			return ts.ValueSpecs[i].Value < ts.ValueSpecs[j].Value
-		})
 		// validate start value of enum sequence
 		if len(ts.ValueSpecs) > 0 &&
 			!(ts.ValueSpecs[0].Value == 0 || ts.ValueSpecs[0].Value == 1) {
