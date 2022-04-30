@@ -15,6 +15,19 @@ func Filter[T any](in []T, fn func(v T, idx int) bool) []T {
 	return out
 }
 
+// Count will apply a count operation on the input.
+func Count[T any](in []T, fn func(v T, idx int) bool) int {
+	var out int
+	for idx, v := range in {
+		ok := fn(v, idx)
+		if !ok {
+			continue
+		}
+		out++
+	}
+	return out
+}
+
 // Map will apply a map operation on the input.
 func Map[T, R any](in []T, fn func(v T, idx int) R) []R {
 	out := make([]R, len(in))
