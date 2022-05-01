@@ -13,13 +13,6 @@ import (
 	"github.com/mvrahden/go-enumer/pkg/utils/slices"
 )
 
-type renderer struct{}
-
-func NewRenderer(cfg *config.Options) *renderer {
-	r := renderer{}
-	return &r
-}
-
 //go:embed static
 var templates embed.FS
 
@@ -27,6 +20,13 @@ var (
 	headerTpl = template.Must(template.New("header").ParseFS(templates, "static/header.*"))
 	enumTpl   = template.Must(template.New("enum").Funcs(tplFuncs).ParseFS(templates, "static/enum.*"))
 )
+
+type renderer struct{}
+
+func NewRenderer(cfg *config.Options) *renderer {
+	r := renderer{}
+	return &r
+}
 
 func (r *renderer) Render(f *File) ([]byte, error) {
 	buf := new(bytes.Buffer)
@@ -73,9 +73,6 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 		v.EnumValue = util.transform(v.EnumValue)
 	}
 
-	requiresGeneratedUndefinedValue := ts.Config.SupportedFeatures.Contains(config.SupportUndefined) &&
-		slices.None(ts.ValueSpecs, func(v *ValueSpec) bool { return v.Value == 0 })
-
 	type AdditionalDataHeader struct {
 		Name string // hint: the column name as-is (from CSV)
 		Type GoType // hint: the type infered by type syntax
@@ -121,9 +118,10 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 				IsAlternativeValue: isAlternativeValue,
 			}
 		}),
-		RequiresGeneratedUndefinedValue: requiresGeneratedUndefinedValue,
-		IsFromCsvSource:                 ts.IsFromCsvSource,
-		HasAdditionalData:               ts.HasAdditionalData,
+		RequiresGeneratedUndefinedValue: ts.Config.SupportedFeatures.Contains(config.SupportUndefined) &&
+			slices.None(ts.ValueSpecs, func(v *ValueSpec) bool { return v.Value == 0 }),
+		IsFromCsvSource:   ts.IsFromCsvSource,
+		HasAdditionalData: ts.HasAdditionalData,
 		AdditionalData: AdditionalData{
 			Headers: slices.Map(ts.DataColumns, func(v DataHeader, idx int) AdditionalDataHeader {
 				return AdditionalDataHeader{v.Name, v.Type}
@@ -155,20 +153,11 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 	}
 
 	{ // write vars
-		type Extent struct {
-			Min uint64 // hint: the lower numerical bound of the enum set
-			Max uint64 // hint: the upper numerical bound of the enum set
-		}
 		type TplData struct {
 			Enum
-			CountUniqueValues int    // hint: count of all enums, less the alternative values
-			Extent            Extent // hint: extent/range of the enum set [min,max]
+			CountUniqueValues int // hint: count of all enums, less the alternative values
 		}
 
-		lowerBound := ts.ValueSpecs[0].Value
-		if requiresGeneratedUndefinedValue {
-			lowerBound = 0
-		}
 		data := TplData{
 			Enum: enum,
 			CountUniqueValues: slices.Count(ts.ValueSpecs, func(v *ValueSpec, idx int) bool {
@@ -177,10 +166,6 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 				}
 				return v.Value != ts.ValueSpecs[idx-1].Value
 			}),
-			Extent: Extent{
-				Min: lowerBound,
-				Max: ts.ValueSpecs[len(ts.ValueSpecs)-1].Value,
-			},
 		}
 		if err := enumTpl.ExecuteTemplate(buf, "enum.vars.go.tpl", map[string]any{"Type": data}); err != nil {
 			return err
@@ -194,12 +179,27 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 	}
 
 	{ // standard functions
+		type Extent struct {
+			Min uint64 // hint: the lower numerical bound of the enum set
+			Max uint64 // hint: the upper numerical bound of the enum set
+		}
 		type TplData struct {
 			Enum
+			Extent         Extent // hint: extent/range of the enum set [min,max]
 			RequiresOffset bool
 		}
+
+		lowerBound := ts.ValueSpecs[0].Value
+		if enum.RequiresGeneratedUndefinedValue {
+			lowerBound = 0
+		}
+
 		data := TplData{
-			Enum:           enum,
+			Enum: enum,
+			Extent: Extent{
+				Min: lowerBound,
+				Max: ts.ValueSpecs[len(ts.ValueSpecs)-1].Value,
+			},
 			RequiresOffset: ts.ValueSpecs[0].Value > 0,
 		}
 

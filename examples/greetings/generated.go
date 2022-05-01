@@ -24,9 +24,8 @@ const (
 )
 
 var (
-	_GreetingValueRange = [2]Greeting{0, 6}
-	_GreetingValues     = [6]Greeting{1, 2, 3, 4, 5, 6}
-	_GreetingStrings    = [6]string{_GreetingString[0:12], _GreetingString[12:18], _GreetingString[18:24], _GreetingString[24:30], _GreetingString[30:46], _GreetingString[46:50]}
+	_GreetingValues  = [6]Greeting{1, 2, 3, 4, 5, 6}
+	_GreetingStrings = [6]string{_GreetingString[0:12], _GreetingString[12:18], _GreetingString[18:24], _GreetingString[24:30], _GreetingString[30:46], _GreetingString[46:50]}
 )
 
 // _GreetingNoOp is a compile time assertion.
@@ -55,9 +54,9 @@ func GreetingStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_g Greeting) IsValid() bool {
-	return _g >= _GreetingValueRange[0] && _g <= _GreetingValueRange[1]
+	return _g >= 0 && _g <= 6
 }
 
 // Validate whether the value is within the range of enum values.
@@ -285,9 +284,8 @@ const (
 )
 
 var (
-	_GreetingWithDefaultValueRange = [2]GreetingWithDefault{0, 6}
-	_GreetingWithDefaultValues     = [7]GreetingWithDefault{0, 1, 2, 3, 4, 5, 6}
-	_GreetingWithDefaultStrings    = [7]string{_GreetingWithDefaultString[0:5], _GreetingWithDefaultString[5:17], _GreetingWithDefaultString[17:23], _GreetingWithDefaultString[23:29], _GreetingWithDefaultString[29:35], _GreetingWithDefaultString[35:51], _GreetingWithDefaultString[51:55]}
+	_GreetingWithDefaultValues  = [7]GreetingWithDefault{0, 1, 2, 3, 4, 5, 6}
+	_GreetingWithDefaultStrings = [7]string{_GreetingWithDefaultString[0:5], _GreetingWithDefaultString[5:17], _GreetingWithDefaultString[17:23], _GreetingWithDefaultString[23:29], _GreetingWithDefaultString[29:35], _GreetingWithDefaultString[35:51], _GreetingWithDefaultString[51:55]}
 )
 
 // _GreetingWithDefaultNoOp is a compile time assertion.
@@ -316,9 +314,9 @@ func GreetingWithDefaultStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_g GreetingWithDefault) IsValid() bool {
-	return _g >= _GreetingWithDefaultValueRange[0] && _g <= _GreetingWithDefaultValueRange[1]
+	return _g >= 0 && _g <= 6
 }
 
 // Validate whether the value is within the range of enum values.

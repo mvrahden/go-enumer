@@ -22,9 +22,8 @@ const (
 )
 
 var (
-	_PillAliasedValueRange = [2]PillAliased{0, 4}
-	_PillAliasedValues     = [5]PillAliased{0, 1, 2, 3, 4}
-	_PillAliasedStrings    = [5]string{_PillAliasedString[0:7], _PillAliasedString[7:14], _PillAliasedString[14:23], _PillAliasedString[23:34], _PillAliasedString[47:56]}
+	_PillAliasedValues  = [5]PillAliased{0, 1, 2, 3, 4}
+	_PillAliasedStrings = [5]string{_PillAliasedString[0:7], _PillAliasedString[7:14], _PillAliasedString[14:23], _PillAliasedString[23:34], _PillAliasedString[47:56]}
 )
 
 // _PillAliasedNoOp is a compile time assertion.
@@ -52,9 +51,9 @@ func PillAliasedStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p PillAliased) IsValid() bool {
-	return _p >= _PillAliasedValueRange[0] && _p <= _PillAliasedValueRange[1]
+	return _p >= 0 && _p <= 4
 }
 
 // Validate whether the value is within the range of enum values.
@@ -287,9 +286,8 @@ const (
 )
 
 var (
-	_PillRowedValueRange = [2]PillRowed{0, 4}
-	_PillRowedValues     = [5]PillRowed{0, 1, 2, 3, 4}
-	_PillRowedStrings    = [5]string{_PillRowedString[0:7], _PillRowedString[7:14], _PillRowedString[14:23], _PillRowedString[23:34], _PillRowedString[47:56]}
+	_PillRowedValues  = [5]PillRowed{0, 1, 2, 3, 4}
+	_PillRowedStrings = [5]string{_PillRowedString[0:7], _PillRowedString[7:14], _PillRowedString[14:23], _PillRowedString[23:34], _PillRowedString[47:56]}
 )
 
 // _PillRowedNoOp is a compile time assertion.
@@ -317,9 +315,9 @@ func PillRowedStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p PillRowed) IsValid() bool {
-	return _p >= _PillRowedValueRange[0] && _p <= _PillRowedValueRange[1]
+	return _p >= 0 && _p <= 4
 }
 
 // Validate whether the value is within the range of enum values.
@@ -552,9 +550,8 @@ const (
 )
 
 var (
-	_PillUnsignedValueRange = [2]PillUnsigned{0, 4}
-	_PillUnsignedValues     = [5]PillUnsigned{0, 1, 2, 3, 4}
-	_PillUnsignedStrings    = [5]string{_PillUnsignedString[0:7], _PillUnsignedString[7:14], _PillUnsignedString[14:23], _PillUnsignedString[23:34], _PillUnsignedString[47:56]}
+	_PillUnsignedValues  = [5]PillUnsigned{0, 1, 2, 3, 4}
+	_PillUnsignedStrings = [5]string{_PillUnsignedString[0:7], _PillUnsignedString[7:14], _PillUnsignedString[14:23], _PillUnsignedString[23:34], _PillUnsignedString[47:56]}
 )
 
 // _PillUnsignedNoOp is a compile time assertion.
@@ -582,9 +579,9 @@ func PillUnsignedStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p PillUnsigned) IsValid() bool {
-	return _p >= _PillUnsignedValueRange[0] && _p <= _PillUnsignedValueRange[1]
+	return _p >= 0 && _p <= 4
 }
 
 // Validate whether the value is within the range of enum values.
@@ -817,9 +814,8 @@ const (
 )
 
 var (
-	_PillUnsigned16ValueRange = [2]PillUnsigned16{0, 4}
-	_PillUnsigned16Values     = [5]PillUnsigned16{0, 1, 2, 3, 4}
-	_PillUnsigned16Strings    = [5]string{_PillUnsigned16String[0:7], _PillUnsigned16String[7:14], _PillUnsigned16String[14:23], _PillUnsigned16String[23:34], _PillUnsigned16String[47:56]}
+	_PillUnsigned16Values  = [5]PillUnsigned16{0, 1, 2, 3, 4}
+	_PillUnsigned16Strings = [5]string{_PillUnsigned16String[0:7], _PillUnsigned16String[7:14], _PillUnsigned16String[14:23], _PillUnsigned16String[23:34], _PillUnsigned16String[47:56]}
 )
 
 // _PillUnsigned16NoOp is a compile time assertion.
@@ -847,9 +843,9 @@ func PillUnsigned16Strings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p PillUnsigned16) IsValid() bool {
-	return _p >= _PillUnsigned16ValueRange[0] && _p <= _PillUnsigned16ValueRange[1]
+	return _p >= 0 && _p <= 4
 }
 
 // Validate whether the value is within the range of enum values.
@@ -1082,9 +1078,8 @@ const (
 )
 
 var (
-	_PillUnsigned32ValueRange = [2]PillUnsigned32{0, 4}
-	_PillUnsigned32Values     = [5]PillUnsigned32{0, 1, 2, 3, 4}
-	_PillUnsigned32Strings    = [5]string{_PillUnsigned32String[0:7], _PillUnsigned32String[7:14], _PillUnsigned32String[14:23], _PillUnsigned32String[23:34], _PillUnsigned32String[47:56]}
+	_PillUnsigned32Values  = [5]PillUnsigned32{0, 1, 2, 3, 4}
+	_PillUnsigned32Strings = [5]string{_PillUnsigned32String[0:7], _PillUnsigned32String[7:14], _PillUnsigned32String[14:23], _PillUnsigned32String[23:34], _PillUnsigned32String[47:56]}
 )
 
 // _PillUnsigned32NoOp is a compile time assertion.
@@ -1112,9 +1107,9 @@ func PillUnsigned32Strings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p PillUnsigned32) IsValid() bool {
-	return _p >= _PillUnsigned32ValueRange[0] && _p <= _PillUnsigned32ValueRange[1]
+	return _p >= 0 && _p <= 4
 }
 
 // Validate whether the value is within the range of enum values.
@@ -1347,9 +1342,8 @@ const (
 )
 
 var (
-	_PillUnsigned64ValueRange = [2]PillUnsigned64{0, 4}
-	_PillUnsigned64Values     = [5]PillUnsigned64{0, 1, 2, 3, 4}
-	_PillUnsigned64Strings    = [5]string{_PillUnsigned64String[0:7], _PillUnsigned64String[7:14], _PillUnsigned64String[14:23], _PillUnsigned64String[23:34], _PillUnsigned64String[47:56]}
+	_PillUnsigned64Values  = [5]PillUnsigned64{0, 1, 2, 3, 4}
+	_PillUnsigned64Strings = [5]string{_PillUnsigned64String[0:7], _PillUnsigned64String[7:14], _PillUnsigned64String[14:23], _PillUnsigned64String[23:34], _PillUnsigned64String[47:56]}
 )
 
 // _PillUnsigned64NoOp is a compile time assertion.
@@ -1377,9 +1371,9 @@ func PillUnsigned64Strings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p PillUnsigned64) IsValid() bool {
-	return _p >= _PillUnsigned64ValueRange[0] && _p <= _PillUnsigned64ValueRange[1]
+	return _p >= 0 && _p <= 4
 }
 
 // Validate whether the value is within the range of enum values.
@@ -1612,9 +1606,8 @@ const (
 )
 
 var (
-	_PillUnsigned8ValueRange = [2]PillUnsigned8{0, 4}
-	_PillUnsigned8Values     = [5]PillUnsigned8{0, 1, 2, 3, 4}
-	_PillUnsigned8Strings    = [5]string{_PillUnsigned8String[0:7], _PillUnsigned8String[7:14], _PillUnsigned8String[14:23], _PillUnsigned8String[23:34], _PillUnsigned8String[47:56]}
+	_PillUnsigned8Values  = [5]PillUnsigned8{0, 1, 2, 3, 4}
+	_PillUnsigned8Strings = [5]string{_PillUnsigned8String[0:7], _PillUnsigned8String[7:14], _PillUnsigned8String[14:23], _PillUnsigned8String[23:34], _PillUnsigned8String[47:56]}
 )
 
 // _PillUnsigned8NoOp is a compile time assertion.
@@ -1642,9 +1635,9 @@ func PillUnsigned8Strings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p PillUnsigned8) IsValid() bool {
-	return _p >= _PillUnsigned8ValueRange[0] && _p <= _PillUnsigned8ValueRange[1]
+	return _p >= 0 && _p <= 4
 }
 
 // Validate whether the value is within the range of enum values.

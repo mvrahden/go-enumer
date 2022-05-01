@@ -17,9 +17,8 @@ const (
 )
 
 var (
-	_GreetingValueRange = [2]Greeting{0, 1}
-	_GreetingValues     = [2]Greeting{0, 1}
-	_GreetingStrings    = [2]string{_GreetingString[0:5], _GreetingString[5:9]}
+	_GreetingValues  = [2]Greeting{0, 1}
+	_GreetingStrings = [2]string{_GreetingString[0:5], _GreetingString[5:9]}
 )
 
 // _GreetingNoOp is a compile time assertion.
@@ -43,9 +42,9 @@ func GreetingStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_g Greeting) IsValid() bool {
-	return _g >= _GreetingValueRange[0] && _g <= _GreetingValueRange[1]
+	return _g >= 0 && _g <= 1
 }
 
 // Validate whether the value is within the range of enum values.

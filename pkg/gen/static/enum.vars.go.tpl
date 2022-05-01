@@ -1,7 +1,6 @@
 {{/* Declaration of enum's base variables */ -}}
 {{- with $ts := .Type -}}
 var (
-	_{{ $ts.Name }}ValueRange = [2]{{ $ts.Name }}{ {{- $ts.Extent.Min }}, {{ $ts.Extent.Max -}}}
 	_{{ $ts.Name }}Values     = [{{ $ts.CountUniqueValues }}]{{ $ts.Name }}{
 		{{- range $idx, $v := $ts.Values }}
 			{{- if $v.IsAlternativeValue }}{{continue}}{{ end -}}

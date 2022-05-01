@@ -21,9 +21,8 @@ const (
 )
 
 var (
-	_PlanetValueRange = [2]Planet{1, 8}
-	_PlanetValues     = [8]Planet{1, 2, 3, 4, 5, 6, 7, 8}
-	_PlanetStrings    = [8]string{_PlanetString[0:4], _PlanetString[4:9], _PlanetString[9:14], _PlanetString[14:21], _PlanetString[21:28], _PlanetString[28:34], _PlanetString[34:40], _PlanetString[40:47]}
+	_PlanetValues  = [8]Planet{1, 2, 3, 4, 5, 6, 7, 8}
+	_PlanetStrings = [8]string{_PlanetString[0:4], _PlanetString[4:9], _PlanetString[9:14], _PlanetString[14:21], _PlanetString[21:28], _PlanetString[28:34], _PlanetString[34:40], _PlanetString[40:47]}
 )
 
 // _PlanetNoOp is a compile time assertion.
@@ -53,9 +52,9 @@ func PlanetStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p Planet) IsValid() bool {
-	return _p >= _PlanetValueRange[0] && _p <= _PlanetValueRange[1]
+	return _p >= 1 && _p <= 8
 }
 
 // Validate whether the value is within the range of enum values.
@@ -294,9 +293,8 @@ const (
 )
 
 var (
-	_PlanetSupportUndefinedValueRange = [2]PlanetSupportUndefined{0, 8}
-	_PlanetSupportUndefinedValues     = [8]PlanetSupportUndefined{1, 2, 3, 4, 5, 6, 7, 8}
-	_PlanetSupportUndefinedStrings    = [8]string{_PlanetSupportUndefinedString[0:4], _PlanetSupportUndefinedString[4:9], _PlanetSupportUndefinedString[9:14], _PlanetSupportUndefinedString[14:21], _PlanetSupportUndefinedString[21:28], _PlanetSupportUndefinedString[28:34], _PlanetSupportUndefinedString[34:40], _PlanetSupportUndefinedString[40:47]}
+	_PlanetSupportUndefinedValues  = [8]PlanetSupportUndefined{1, 2, 3, 4, 5, 6, 7, 8}
+	_PlanetSupportUndefinedStrings = [8]string{_PlanetSupportUndefinedString[0:4], _PlanetSupportUndefinedString[4:9], _PlanetSupportUndefinedString[9:14], _PlanetSupportUndefinedString[14:21], _PlanetSupportUndefinedString[21:28], _PlanetSupportUndefinedString[28:34], _PlanetSupportUndefinedString[34:40], _PlanetSupportUndefinedString[40:47]}
 )
 
 // _PlanetSupportUndefinedNoOp is a compile time assertion.
@@ -327,9 +325,9 @@ func PlanetSupportUndefinedStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p PlanetSupportUndefined) IsValid() bool {
-	return _p >= _PlanetSupportUndefinedValueRange[0] && _p <= _PlanetSupportUndefinedValueRange[1]
+	return _p >= 0 && _p <= 8
 }
 
 // Validate whether the value is within the range of enum values.
@@ -556,9 +554,8 @@ const (
 )
 
 var (
-	_PlanetSupportUndefinedWithDefaultValueRange = [2]PlanetSupportUndefinedWithDefault{0, 8}
-	_PlanetSupportUndefinedWithDefaultValues     = [9]PlanetSupportUndefinedWithDefault{0, 1, 2, 3, 4, 5, 6, 7, 8}
-	_PlanetSupportUndefinedWithDefaultStrings    = [9]string{_PlanetSupportUndefinedWithDefaultString[0:5], _PlanetSupportUndefinedWithDefaultString[5:9], _PlanetSupportUndefinedWithDefaultString[9:14], _PlanetSupportUndefinedWithDefaultString[14:19], _PlanetSupportUndefinedWithDefaultString[19:26], _PlanetSupportUndefinedWithDefaultString[26:33], _PlanetSupportUndefinedWithDefaultString[33:39], _PlanetSupportUndefinedWithDefaultString[39:45], _PlanetSupportUndefinedWithDefaultString[45:52]}
+	_PlanetSupportUndefinedWithDefaultValues  = [9]PlanetSupportUndefinedWithDefault{0, 1, 2, 3, 4, 5, 6, 7, 8}
+	_PlanetSupportUndefinedWithDefaultStrings = [9]string{_PlanetSupportUndefinedWithDefaultString[0:5], _PlanetSupportUndefinedWithDefaultString[5:9], _PlanetSupportUndefinedWithDefaultString[9:14], _PlanetSupportUndefinedWithDefaultString[14:19], _PlanetSupportUndefinedWithDefaultString[19:26], _PlanetSupportUndefinedWithDefaultString[26:33], _PlanetSupportUndefinedWithDefaultString[33:39], _PlanetSupportUndefinedWithDefaultString[39:45], _PlanetSupportUndefinedWithDefaultString[45:52]}
 )
 
 // _PlanetSupportUndefinedWithDefaultNoOp is a compile time assertion.
@@ -589,9 +586,9 @@ func PlanetSupportUndefinedWithDefaultStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p PlanetSupportUndefinedWithDefault) IsValid() bool {
-	return _p >= _PlanetSupportUndefinedWithDefaultValueRange[0] && _p <= _PlanetSupportUndefinedWithDefaultValueRange[1]
+	return _p >= 0 && _p <= 8
 }
 
 // Validate whether the value is within the range of enum values.
@@ -817,9 +814,8 @@ const (
 )
 
 var (
-	_PlanetWithDefaultValueRange = [2]PlanetWithDefault{0, 8}
-	_PlanetWithDefaultValues     = [9]PlanetWithDefault{0, 1, 2, 3, 4, 5, 6, 7, 8}
-	_PlanetWithDefaultStrings    = [9]string{_PlanetWithDefaultString[0:5], _PlanetWithDefaultString[5:9], _PlanetWithDefaultString[9:14], _PlanetWithDefaultString[14:19], _PlanetWithDefaultString[19:26], _PlanetWithDefaultString[26:33], _PlanetWithDefaultString[33:39], _PlanetWithDefaultString[39:45], _PlanetWithDefaultString[45:52]}
+	_PlanetWithDefaultValues  = [9]PlanetWithDefault{0, 1, 2, 3, 4, 5, 6, 7, 8}
+	_PlanetWithDefaultStrings = [9]string{_PlanetWithDefaultString[0:5], _PlanetWithDefaultString[5:9], _PlanetWithDefaultString[9:14], _PlanetWithDefaultString[14:19], _PlanetWithDefaultString[19:26], _PlanetWithDefaultString[26:33], _PlanetWithDefaultString[33:39], _PlanetWithDefaultString[39:45], _PlanetWithDefaultString[45:52]}
 )
 
 // _PlanetWithDefaultNoOp is a compile time assertion.
@@ -850,9 +846,9 @@ func PlanetWithDefaultStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_p PlanetWithDefault) IsValid() bool {
-	return _p >= _PlanetWithDefaultValueRange[0] && _p <= _PlanetWithDefaultValueRange[1]
+	return _p >= 0 && _p <= 8
 }
 
 // Validate whether the value is within the range of enum values.

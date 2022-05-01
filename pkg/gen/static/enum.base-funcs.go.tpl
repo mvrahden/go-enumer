@@ -12,9 +12,9 @@ func {{ $ts.Name }}Strings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func ({{ receiver $ts.Name }} {{ $ts.Name }}) IsValid() bool {
-	return {{ receiver $ts.Name }} >= _{{ $ts.Name }}ValueRange[0] && {{ receiver $ts.Name }} <= _{{ $ts.Name }}ValueRange[1]
+	return {{ receiver $ts.Name }} >= {{ $ts.Extent.Min }} && {{ receiver $ts.Name }} <= {{ $ts.Extent.Max }}
 }
 
 // Validate whether the value is within the range of enum values.

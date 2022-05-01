@@ -18,7 +18,6 @@ const (
 )
 
 var (
-	_BookingStateValueRange     = [2]BookingState{0, 5}
 	_BookingStateValues         = [6]BookingState{0, 1, 2, 3, 4, 5}
 	_BookingStateStrings        = [6]string{_BookingStateString[0:7], _BookingStateString[7:18], _BookingStateString[18:24], _BookingStateString[24:32], _BookingStateString[32:40], _BookingStateString[40:47]}
 	_BookingStateAdditionalData = [6]struct {
@@ -45,9 +44,9 @@ func BookingStateStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_b BookingState) IsValid() bool {
-	return _b >= _BookingStateValueRange[0] && _b <= _BookingStateValueRange[1]
+	return _b >= 0 && _b <= 5
 }
 
 // Validate whether the value is within the range of enum values.
@@ -154,7 +153,6 @@ const (
 )
 
 var (
-	_BookingStateWithConfigValueRange     = [2]BookingStateWithConfig{0, 5}
 	_BookingStateWithConfigValues         = [6]BookingStateWithConfig{0, 1, 2, 3, 4, 5}
 	_BookingStateWithConfigStrings        = [6]string{_BookingStateWithConfigString[0:7], _BookingStateWithConfigString[7:18], _BookingStateWithConfigString[18:24], _BookingStateWithConfigString[24:32], _BookingStateWithConfigString[32:40], _BookingStateWithConfigString[40:47]}
 	_BookingStateWithConfigAdditionalData = [6]struct {
@@ -181,9 +179,9 @@ func BookingStateWithConfigStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_b BookingStateWithConfig) IsValid() bool {
-	return _b >= _BookingStateWithConfigValueRange[0] && _b <= _BookingStateWithConfigValueRange[1]
+	return _b >= 0 && _b <= 5
 }
 
 // Validate whether the value is within the range of enum values.
@@ -311,7 +309,6 @@ const (
 )
 
 var (
-	_BookingStateWithConstantsValueRange     = [2]BookingStateWithConstants{0, 5}
 	_BookingStateWithConstantsValues         = [6]BookingStateWithConstants{0, 1, 2, 3, 4, 5}
 	_BookingStateWithConstantsStrings        = [6]string{_BookingStateWithConstantsString[0:7], _BookingStateWithConstantsString[7:18], _BookingStateWithConstantsString[18:24], _BookingStateWithConstantsString[24:32], _BookingStateWithConstantsString[32:40], _BookingStateWithConstantsString[40:47]}
 	_BookingStateWithConstantsAdditionalData = [6]struct {
@@ -338,9 +335,9 @@ func BookingStateWithConstantsStrings() []string {
 	return cp[:]
 }
 
-// IsValid inspects whether the value is valid enum value.
+// IsValid tests whether the value is a valid enum value.
 func (_b BookingStateWithConstants) IsValid() bool {
-	return _b >= _BookingStateWithConstantsValueRange[0] && _b <= _BookingStateWithConstantsValueRange[1]
+	return _b >= 0 && _b <= 5
 }
 
 // Validate whether the value is within the range of enum values.
