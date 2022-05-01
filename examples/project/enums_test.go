@@ -53,6 +53,17 @@ func TestEnums(t *testing.T) {
 			require.Equal(t, uint32(310232863), CountryCode(229).GetPopulation())
 			require.Equal(t, uint32(9629091), CountryCode(229).GetAreaInSquareKilometer())
 			require.Equal(t, float64(1672), CountryCode(229).GetGdpInBillion())
+			t.Run("panics for invalid enum", func(t *testing.T) {
+				// hint: during runtime it is necessary for us to have valid enums.
+				// Panics can help to detect unhandled invalid enums early in your development process.
+				// Unhandled invalid enums can sneak their way in easily e.g. due to improper
+				// intialization of an enum variable or missing validation.
+				require.PanicsWithError(t,
+					"Forbidden access to additional enum data of \"CountryCode(0)\". err: not a valid enum",
+					func() {
+						CountryCode(0).GetCountryName()
+					})
+			})
 		})
 		t.Run("Serialization", func(t *testing.T) {
 			cfg := utils.TestConfig{}

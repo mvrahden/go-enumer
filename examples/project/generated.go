@@ -469,6 +469,9 @@ func (_c CountryCode) String() string {
 
 // GetCountryName returns the "country-name" of the enum value.
 func (_c CountryCode) GetCountryName() string {
+	if !_c.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _c, ErrNoValidEnum))
+	}
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
 	return d.CountryName
@@ -476,6 +479,9 @@ func (_c CountryCode) GetCountryName() string {
 
 // GetCountryCode returns the "country-code" of the enum value.
 func (_c CountryCode) GetCountryCode() string {
+	if !_c.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _c, ErrNoValidEnum))
+	}
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
 	return d.CountryCode
@@ -483,6 +489,9 @@ func (_c CountryCode) GetCountryCode() string {
 
 // GetIso2LetterCode returns the "iso-2-letter-code" of the enum value.
 func (_c CountryCode) GetIso2LetterCode() string {
+	if !_c.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _c, ErrNoValidEnum))
+	}
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
 	return d.Iso2LetterCode
@@ -490,6 +499,9 @@ func (_c CountryCode) GetIso2LetterCode() string {
 
 // GetPopulation returns the "population" of the enum value.
 func (_c CountryCode) GetPopulation() uint32 {
+	if !_c.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _c, ErrNoValidEnum))
+	}
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
 	return d.Population
@@ -497,6 +509,9 @@ func (_c CountryCode) GetPopulation() uint32 {
 
 // GetAreaInSquareKilometer returns the "area-in-square-kilometer" of the enum value.
 func (_c CountryCode) GetAreaInSquareKilometer() uint32 {
+	if !_c.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _c, ErrNoValidEnum))
+	}
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
 	return d.AreaInSquareKilometer
@@ -504,6 +519,9 @@ func (_c CountryCode) GetAreaInSquareKilometer() uint32 {
 
 // GetGdpInBillion returns the "gdp-in-billion" of the enum value.
 func (_c CountryCode) GetGdpInBillion() float64 {
+	if !_c.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _c, ErrNoValidEnum))
+	}
 	idx := uint(_c) - 1
 	d := _CountryCodeAdditionalData[idx]
 	return d.GdpInBillion
@@ -1240,6 +1258,9 @@ func (_c Currency) String() string {
 
 // GetCurrencyName returns the "currency-name" of the enum value.
 func (_c Currency) GetCurrencyName() string {
+	if !_c.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _c, ErrNoValidEnum))
+	}
 	idx := uint(_c) - 1
 	d := _CurrencyAdditionalData[idx]
 	return d.CurrencyName
@@ -1247,6 +1268,9 @@ func (_c Currency) GetCurrencyName() string {
 
 // GetNumericCode returns the "numeric-code" of the enum value.
 func (_c Currency) GetNumericCode() uint16 {
+	if !_c.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _c, ErrNoValidEnum))
+	}
 	idx := uint(_c) - 1
 	d := _CurrencyAdditionalData[idx]
 	return d.NumericCode
@@ -1254,6 +1278,9 @@ func (_c Currency) GetNumericCode() uint16 {
 
 // GetMinorUnit returns the "minor-unit" of the enum value.
 func (_c Currency) GetMinorUnit() uint8 {
+	if !_c.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _c, ErrNoValidEnum))
+	}
 	idx := uint(_c) - 1
 	d := _CurrencyAdditionalData[idx]
 	return d.MinorUnit

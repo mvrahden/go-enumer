@@ -28,9 +28,9 @@ func TestEnums(t *testing.T) {
 				}
 				t.Run("panics for invalid enum", func(t *testing.T) {
 					// hint: during runtime it is necessary for us to have valid enums.
-					// Panics can help to unveil unhandled invalid enums early.
+					// Panics can help to detect unhandled invalid enums early in your development process.
 					// Unhandled invalid enums can sneak their way in easily e.g. due to improper
-					// intialization of an enum variable.
+					// intialization of an enum variable or missing validation.
 					require.Panics(t, func() {
 						BookingState(999).GetDescription()
 					})

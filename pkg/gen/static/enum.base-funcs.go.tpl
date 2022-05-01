@@ -47,6 +47,9 @@ func ({{ receiver $ts.Name }} {{ $ts.Name }}) String() string {
 {{- range $col := $ts.AdditionalData.Headers -}}
 // Get{{ pascal $col.Name }} returns the "{{ $col.Name }}" of the enum value.
 func ({{ receiver $ts.Name }} {{ $ts.Name }}) Get{{ pascal $col.Name }}() {{ $col.Type }} {
+	if !{{ receiver $ts.Name }}.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", {{ receiver $ts.Name }}, ErrNoValidEnum))
+	}
 	idx := uint({{ receiver $ts.Name }}){{- if $ts.RequiresOffset }} - 1{{- end }}
 	d := _{{ $ts.Name }}AdditionalData[idx]
 	return d.{{ pascal $col.Name }}

@@ -70,6 +70,9 @@ func (_b BookingState) String() string {
 
 // GetDescription returns the "description" of the enum value.
 func (_b BookingState) GetDescription() string {
+	if !_b.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _b, ErrNoValidEnum))
+	}
 	idx := uint(_b)
 	d := _BookingStateAdditionalData[idx]
 	return d.Description
@@ -205,6 +208,9 @@ func (_b BookingStateWithConfig) String() string {
 
 // GetDescription returns the "description" of the enum value.
 func (_b BookingStateWithConfig) GetDescription() string {
+	if !_b.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _b, ErrNoValidEnum))
+	}
 	idx := uint(_b)
 	d := _BookingStateWithConfigAdditionalData[idx]
 	return d.Description
@@ -361,6 +367,9 @@ func (_b BookingStateWithConstants) String() string {
 
 // GetDescription returns the "description" of the enum value.
 func (_b BookingStateWithConstants) GetDescription() string {
+	if !_b.IsValid() {
+		panic(fmt.Errorf("Forbidden access to additional enum data of %q. err: %w", _b, ErrNoValidEnum))
+	}
 	idx := uint(_b)
 	d := _BookingStateWithConstantsAdditionalData[idx]
 	return d.Description
