@@ -15,7 +15,8 @@ TODO:
 2. `pills`: Generate enums for all unsigned integer types.
 3. `planets`: Generate various combinations of standard/default vs. undefined.
 4. `booking`: Generate enums from CSV source.
-5. `project`: A more realistic mix of enums.
+5. `color`: Generate enums from CSV source with typed additional data.
+6. `project`: A more realistic mix of enums.
 
 > `_invalid`: Contains various invalid edge cases which are expected to produce specific user-friendly errors.
 > You can happily **ignore this directory** as it is for testing puproses only.

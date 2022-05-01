@@ -7,12 +7,11 @@ import (
 	"strconv"
 )
 
-type GoType int
+type GoType uint
 
 const (
-	GoTypeUnknown GoType = -1
-
-	GoTypeUnsignedInteger GoType = iota + 1
+	GoTypeUnknown GoType = iota
+	GoTypeUnsignedInteger
 	GoTypeUnsignedInteger8
 	GoTypeUnsignedInteger16
 	GoTypeUnsignedInteger32
@@ -88,6 +87,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 	switch typ {
 	case GoTypeUnsignedInteger:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return uint(0), nil
+			}
 			v, err := strconv.ParseUint(raw, 10, 0)
 			if err != nil {
 				return uint(0), err
@@ -96,6 +98,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeUnsignedInteger8:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return uint8(0), nil
+			}
 			v, err := strconv.ParseUint(raw, 10, 8)
 			if err != nil {
 				return uint8(0), err
@@ -104,6 +109,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeUnsignedInteger16:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return uint16(0), nil
+			}
 			v, err := strconv.ParseUint(raw, 10, 16)
 			if err != nil {
 				return uint16(0), err
@@ -112,6 +120,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeUnsignedInteger32:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return uint32(0), nil
+			}
 			v, err := strconv.ParseUint(raw, 10, 32)
 			if err != nil {
 				return uint32(0), err
@@ -120,6 +131,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeUnsignedInteger64:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return uint64(0), nil
+			}
 			v, err := strconv.ParseUint(raw, 10, 64)
 			if err != nil {
 				return uint64(0), err
@@ -128,6 +142,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeSignedInteger:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return int(0), nil
+			}
 			v, err := strconv.ParseInt(raw, 10, 0)
 			if err != nil {
 				return int(0), err
@@ -136,6 +153,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeSignedInteger8:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return int8(0), nil
+			}
 			v, err := strconv.ParseInt(raw, 10, 8)
 			if err != nil {
 				return int8(0), err
@@ -144,6 +164,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeSignedInteger16:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return int16(0), nil
+			}
 			v, err := strconv.ParseInt(raw, 10, 16)
 			if err != nil {
 				return int16(0), err
@@ -152,6 +175,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeSignedInteger32:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return int32(0), nil
+			}
 			v, err := strconv.ParseInt(raw, 10, 32)
 			if err != nil {
 				return int32(0), err
@@ -160,6 +186,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeSignedInteger64:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return int64(0), nil
+			}
 			v, err := strconv.ParseInt(raw, 10, 64)
 			if err != nil {
 				return int64(0), err
@@ -168,6 +197,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeFloat32:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return float32(0), nil
+			}
 			v, err := strconv.ParseFloat(raw, 32)
 			if err != nil {
 				return float32(0), err
@@ -183,6 +215,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeFloat64:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return float64(0), nil
+			}
 			v, err := strconv.ParseFloat(raw, 64)
 			if err != nil {
 				return float64(0), err
@@ -198,6 +233,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeComplex64:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return complex64(0), nil
+			}
 			v, err := strconv.ParseComplex(raw, 64)
 			if err != nil {
 				return complex64(0), err
@@ -206,6 +244,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeComplex128:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return complex128(0), nil
+			}
 			v, err := strconv.ParseComplex(raw, 128)
 			if err != nil {
 				return complex128(0), err
@@ -214,6 +255,9 @@ func getParserFuncFor(typ GoType) func(raw string) (any, error) {
 		}
 	case GoTypeBool:
 		return func(raw string) (any, error) {
+			if len(raw) == 0 {
+				return false, nil
+			}
 			v, err := strconv.ParseBool(raw)
 			if err != nil {
 				return false, err
@@ -254,7 +298,7 @@ func (t GoType) ZeroValueString() (zeroValue string) {
 		return "0"
 	case GoTypeBool:
 		return "false"
-	case GoTypeString, GoTypeUnknown, 0:
+	case GoTypeString, GoTypeUnknown:
 		fallthrough
 	default:
 		return "\"\""
@@ -263,7 +307,7 @@ func (t GoType) ZeroValueString() (zeroValue string) {
 
 func (t GoType) ToSource(v any) (src string) {
 	switch t {
-	case GoTypeString, GoTypeUnknown, 0:
+	case GoTypeString, GoTypeUnknown:
 		return fmt.Sprintf("%q", v)
 	default:
 		return fmt.Sprintf("%s", v)

@@ -52,38 +52,25 @@ func (r *renderer) renderFileHeader(buf *bytes.Buffer, f *File) error {
 		ContainsErrorsPkg bool
 	}
 	data := TplData{
-		RepoName:    about.ShortInfo(),
-		PackageName: f.Header.Package.Name,
-		Imports:     f.Imports,
-		ContainsErrorsPkg: slices.Any(f.Imports, func(v *Import) bool {
-			return v.Path == "errors"
-		}),
+		RepoName:          about.ShortInfo(),
+		PackageName:       f.Header.Package.Name,
+		Imports:           f.Imports,
+		ContainsErrorsPkg: slices.Any(f.Imports, func(v *Import, idx int) bool { return v.Path == "errors" }),
 	}
 	return headerTpl.ExecuteTemplate(buf, "header.go.tpl", map[string]any{"Header": data})
 }
 
 func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
-	if ts.IsFromCsvSource {
-		ts.Config.TransformStrategy = "noop"
+	if ts.Meta.IsFromCsvSource {
+		ts.Meta.Config.TransformStrategy = "noop"
 	}
 
-	util := newRenderUtil(ts.Config)
+	util := newRenderUtil(ts.Meta.Config)
 
 	for _, v := range ts.ValueSpecs {
-		v.EnumValue = util.transform(v.EnumValue)
+		v.String = util.transform(v.String)
 	}
 
-	type AdditionalDataHeader struct {
-		Name string // hint: the column name as-is (from CSV)
-		Type GoType // hint: the type infered by type syntax
-	}
-	type AdditionalDataCell struct {
-		Value string // hint: source representation of the value, e.g. literal strings are quoted
-	}
-	type AdditionalData struct {
-		Headers []AdditionalDataHeader
-		Rows    [][]AdditionalDataCell
-	}
 	type EnumValue struct {
 		Value              uint64 // hint: the enum's numeric representation
 		String             string // hint: the enum's string representation
@@ -98,40 +85,27 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 		RequiresGeneratedUndefinedValue bool
 		IsFromCsvSource                 bool
 		HasAdditionalData               bool
-		AdditionalData                  AdditionalData
+		AdditionalData                  *AdditionalData
 	}
 	enum := Enum{
 		Name: ts.Name,
 		Values: slices.Map(ts.ValueSpecs, func(v *ValueSpec, idx int) EnumValue {
-			var isAlternativeValue bool
-			if idx > 0 {
-				isAlternativeValue = v.Value == ts.ValueSpecs[idx-1].Value
-			}
 			return EnumValue{
 				Value:     v.Value,
-				String:    v.EnumValue,
-				ConstName: v.IdentifierName,
+				String:    v.String,
+				ConstName: v.ConstName,
 				Position: slices.Reduce(ts.ValueSpecs[0:idx], func(v *ValueSpec, acc int) int {
-					return acc + len(v.EnumValue)
+					return acc + len(v.String)
 				}),
-				Length:             len(v.EnumValue),
-				IsAlternativeValue: isAlternativeValue,
+				Length:             len(v.String),
+				IsAlternativeValue: v.IsAlternativeValue,
 			}
 		}),
-		RequiresGeneratedUndefinedValue: ts.Config.SupportedFeatures.Contains(config.SupportUndefined) &&
-			slices.None(ts.ValueSpecs, func(v *ValueSpec) bool { return v.Value == 0 }),
-		IsFromCsvSource:   ts.IsFromCsvSource,
-		HasAdditionalData: ts.HasAdditionalData,
-		AdditionalData: AdditionalData{
-			Headers: slices.Map(ts.DataColumns, func(v DataHeader, idx int) AdditionalDataHeader {
-				return AdditionalDataHeader{v.Name, v.Type}
-			}),
-			Rows: slices.Map(ts.ValueSpecs, func(v *ValueSpec, rowIdx int) []AdditionalDataCell {
-				return slices.Map(v.DataCells, func(v DataCell, colIdx int) AdditionalDataCell {
-					return AdditionalDataCell{ts.DataColumns[colIdx].Type.ToSource(v.ValueString)}
-				})
-			}),
-		},
+		RequiresGeneratedUndefinedValue: ts.Meta.Config.SupportedFeatures.Contains(config.SupportUndefined) &&
+			slices.None(ts.ValueSpecs, func(v *ValueSpec, idx int) bool { return v.Value == 0 }),
+		IsFromCsvSource:   ts.Meta.IsFromCsvSource,
+		HasAdditionalData: ts.Meta.HasAdditionalData,
+		AdditionalData:    ts.AdditionalData,
 	}
 
 	{ // write consts
@@ -143,7 +117,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 		data := TplData{
 			Enum: enum,
 			AggregatedValueStrings: slices.ReduceSeed(ts.ValueSpecs, &bytes.Buffer{}, func(v *ValueSpec, acc *bytes.Buffer) *bytes.Buffer {
-				acc.WriteString(v.EnumValue)
+				acc.WriteString(v.String)
 				return acc
 			}).String(),
 		}
@@ -215,7 +189,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 		}
 		data := TplData{
 			Enum:             enum,
-			SupportUndefined: ts.Config.SupportedFeatures.Contains(config.SupportUndefined),
+			SupportUndefined: ts.Meta.Config.SupportedFeatures.Contains(config.SupportUndefined),
 		}
 
 		if err := enumTpl.ExecuteTemplate(buf, "enum.lookup-funcs.go.tpl", map[string]any{"Type": data}); err != nil {
@@ -348,9 +322,9 @@ func (renderUtil) renderSerializers(buf *bytes.Buffer, ts *TypeSpec) error {
 	}
 	data := TplData{
 		Name:              ts.Name,
-		Serializers:       ts.Config.Serializers,
-		SupportIgnoreCase: ts.Config.SupportedFeatures.Contains(config.SupportIgnoreCase),
-		SupportUndefined:  ts.Config.SupportedFeatures.Contains(config.SupportUndefined),
+		Serializers:       ts.Meta.Config.Serializers,
+		SupportIgnoreCase: ts.Meta.Config.SupportedFeatures.Contains(config.SupportIgnoreCase),
+		SupportUndefined:  ts.Meta.Config.SupportedFeatures.Contains(config.SupportUndefined),
 	}
 
 	if err := enumTpl.ExecuteTemplate(buf, "enum.serializers.go.tpl", map[string]any{"Type": data}); err != nil {
@@ -366,7 +340,7 @@ func (renderUtil) renderEntInterfaceSupport(buf *bytes.Buffer, ts *TypeSpec) err
 	}
 	data := TplData{
 		Name:                ts.Name,
-		SupportEntInterface: ts.Config.SupportedFeatures.Contains(config.SupportEntInterface),
+		SupportEntInterface: ts.Meta.Config.SupportedFeatures.Contains(config.SupportEntInterface),
 	}
 	if err := enumTpl.ExecuteTemplate(buf, "enum.misc.ent.go.tpl", map[string]any{"Type": data}); err != nil {
 		return err

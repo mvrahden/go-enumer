@@ -2,6 +2,18 @@ package slices
 
 import "sort"
 
+// FindIndex will search with given test func.
+// When the test is positive it will return its index and `-1` otherwise.
+func FindIndex[T any](in []T, fn func(v T, idx int) bool) int {
+	for idx, v := range in {
+		ok := fn(v, idx)
+		if ok {
+			return idx
+		}
+	}
+	return -1
+}
+
 // Filter will apply a filter operation on the input.
 func Filter[T any](in []T, fn func(v T, idx int) bool) []T {
 	var out []T
@@ -79,7 +91,7 @@ func RangeErr[T any](in []T, fn func(v T, idx int) error) (int, error) {
 // None will apply given test func on each input and assert
 // that none of the inputs passes the test.
 // It returns on first failed assertion.
-func None[T any](in []T, fn func(v T) bool) bool {
+func None[T any](in []T, fn func(v T, idx int) bool) bool {
 	ok := Any(in, fn)
 	return !ok
 }
@@ -87,9 +99,9 @@ func None[T any](in []T, fn func(v T) bool) bool {
 // Any will apply given test func on each input and assert
 // that any of the inputs passes the test.
 // It returns on first succeeded assertion.
-func Any[T any](in []T, fn func(v T) bool) bool {
-	for _, v := range in {
-		ok := fn(v)
+func Any[T any](in []T, fn func(v T, idx int) bool) bool {
+	for idx, v := range in {
+		ok := fn(v, idx)
 		if ok {
 			return true
 		}
@@ -100,9 +112,9 @@ func Any[T any](in []T, fn func(v T) bool) bool {
 // All will apply given test func on each input and assert
 // that all of the inputs pass the test.
 // It return on first failed assertion.
-func All[T any](in []T, fn func(v T) bool) bool {
-	for _, v := range in {
-		ok := fn(v)
+func All[T any](in []T, fn func(v T, idx int) bool) bool {
+	for idx, v := range in {
+		ok := fn(v, idx)
 		if !ok {
 			return false
 		}

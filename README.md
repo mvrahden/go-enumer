@@ -145,10 +145,11 @@ Type validation will be performed on every (de-)serialization.
 `go-enumer` can extract your enum definitions from CSV file sources if you target `-from=path/to.csv` in your enum's magic comment.
 You can even augment your enums with additional data columns.
 
-By default all additional data will be handled as strings.
-But `go-enumer` can parse your data and add typed Getter-funcs based on a column annotation syntax.
-It supports Go's built-in data types with the following syntax `<datatype>(your-column-name)`, e.g. `uint(area-in-square-meter)` or `float64(tolerance)`.
-Have a look at [the examples](examples/README.md) for further info.
+`go-enumer` can parse data and add typed Getter-funcs based on a column annotation syntax.
+It supports Go's built-in data types via the following syntax `<datatype>(your-column-name)`, e.g. `uint(area-in-square-meter)` or `float64(tolerance)`.
+If there's no explicit type annotated, `go-enumer` will assume a basic `string` type as a fallback.
+
+Have a look at [the Booking, Color or Project examples](examples/README.md) for further info.
 
 ### Supported features
 

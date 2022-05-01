@@ -26,7 +26,7 @@ var (
 		{
 		{{- range $cidx, $c := $r }}
 			{{- $isNotLastCell := sub (len $r) 1 | lt $cidx }}
-			{{- $c.Value }}{{ if $isNotLastCell }}, {{ end }}
+			{{- $c.LiteralValue }}{{ if $isNotLastCell }}, {{ end }}
 		{{- end -}}
 		},
 	{{- end }}

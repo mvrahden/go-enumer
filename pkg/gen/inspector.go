@@ -72,8 +72,8 @@ func (i inspector) sortTypeSpecs(f *File) {
 
 func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 	for _, ts := range f.TypeSpecs {
-		args := strings.Split(ts.Docstring, " ")
-		ts.Config = i.cfg.Clone()
+		args := strings.Split(ts.Meta.Docstring, " ")
+		ts.Meta.Config = i.cfg.Clone()
 
 		if len(args) <= 1 {
 			continue
@@ -83,9 +83,9 @@ func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 		fs.SetOutput(io.Discard) // silence flagset StdErr output
 
 		var fromSource string
-		fs.StringVar(&ts.Config.TransformStrategy, "transform", ts.Config.TransformStrategy, "")
-		fs.Var(&ts.Config.Serializers, "serializers", "")
-		fs.Var(&ts.Config.SupportedFeatures, "support", "")
+		fs.StringVar(&ts.Meta.Config.TransformStrategy, "transform", ts.Meta.Config.TransformStrategy, "")
+		fs.Var(&ts.Meta.Config.Serializers, "serializers", "")
+		fs.Var(&ts.Meta.Config.SupportedFeatures, "support", "")
 		fs.StringVar(&fromSource, "from", "", "")
 		err := fs.Parse(args[1:]) // hint: parse w/o magic marker
 		if err != nil {
@@ -104,7 +104,7 @@ func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 }
 
 func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
-	buf, err := os.ReadFile(filepath.Join(filepath.Dir(ts.Filepath), p))
+	buf, err := os.ReadFile(filepath.Join(filepath.Dir(ts.Meta.Filepath), p))
 	if errors.Is(err, os.ErrNotExist) {
 		return fmt.Errorf("no such file %q", p)
 	} else if errors.Is(err, os.ErrPermission) {
@@ -120,76 +120,147 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 	if err != nil {
 		return err
 	}
-	ts.IsFromCsvSource = true // hint: mark type as derived from CSV
-	var csvValueSpecs []*ValueSpec
-	for idx, row := range records {
-		if idx == 0 {
-			ok := matchNumericValueRegex.MatchString(row[0])
-			if ok {
-				return fmt.Errorf("first row must be a header row but found numeric value in first cell")
-			}
-		}
+	ts.Meta.IsFromCsvSource = true // hint: mark type as derived from CSV
 
+	// trim whitespace on all cells
+	for _, row := range records {
 		for idx := range row {
 			row[idx] = strings.TrimSpace(row[idx])
 		}
+	}
 
-		rowId, err := strconv.ParseUint(row[0], 10, 64)
-		if isHeaderRow := idx == 0 && err != nil; isHeaderRow {
-			if len(row) > 2 { // add additional header names
-				var header []DataHeader
-				for _, cell := range row[2:] {
-					if isTyped := matchTypedHeaderRegex.MatchString(cell); isTyped {
-						openIdx := strings.Index(cell, "(")
-						typeValue := cell[:openIdx]
-						cellString := cell[openIdx+1 : len(cell)-1]
-						determinedType := getTypeFromString(typeValue)
-						header = append(header, DataHeader{determinedType, cellString, getParserFuncFor(determinedType)})
-						continue
-					}
-					header = append(header, DataHeader{GoTypeUnknown, cell, getParserFuncFor(GoTypeUnknown)})
-				}
-				ts.DataColumns = append(ts.DataColumns, header...)
-			}
-			continue
+	// evaluate header row
+	for _, row := range records[0:1] {
+		ok := matchNumericValueRegex.MatchString(row[0])
+		if ok {
+			return fmt.Errorf("first row must be a header row but found numeric value in first cell")
 		}
+
+		if len(row) > 2 { // add additional header names
+			ts.Meta.HasAdditionalData = true
+		}
+	}
+
+	// evaluate additional data of header row
+	for _, row := range records[0:1] {
+		if !ts.Meta.HasAdditionalData {
+			break
+		}
+
+		ts.AdditionalData = &AdditionalData{
+			Headers: make([]AdditionalDataHeader, len(row[2:])),
+		}
+
+		for idx, cell := range row[2:] {
+			if isUntyped := !matchTypedHeaderRegex.MatchString(cell); isUntyped {
+				ts.AdditionalData.Headers[idx] = AdditionalDataHeader{cell, GoTypeUnknown}
+				continue
+			}
+			// determine header type
+			openIdx := strings.Index(cell, "(")
+			typeValue := cell[:openIdx]
+			cellString := cell[openIdx+1 : len(cell)-1]
+			determinedType := getTypeFromString(typeValue)
+			ts.AdditionalData.Headers[idx] = AdditionalDataHeader{cellString, determinedType}
+		}
+	}
+
+	// evaluate data rows (base data)
+	ts.ValueSpecs = make([]*ValueSpec, len(records[1:]))
+	for idx, row := range records[1:] {
+		rowId, err := strconv.ParseUint(row[0], 10, 64)
 		if err != nil {
 			return fmt.Errorf("failed converting %q to uint64", row[0])
 		}
-		cvs := &ValueSpec{
-			Value:          rowId,
-			EnumValue:      row[1],
-			IdentifierName: "", // hint: no identifier here
+		if idx > 0 && rowId < ts.ValueSpecs[idx-1].Value {
+			return fmt.Errorf("found decreasing value at line %d.", idx+1)
 		}
-		if len(row) > 2 {
-			ts.HasAdditionalData = true // hint: mark type for additional column support
-			for idx, cell := range row[2:] {
-				parseFunc := ts.DataColumns[idx].ParseFunc
 
-				raw := cell
-				cellValue, err := parseFunc(cell)
-				// hint: float special types are set to "0" here
-				// a proper implementation would map to "math.Inf" and "math.NaN" funcs
-				// and add "math" package import to file
-				if errors.Is(err, ErrIsNaN) {
-					cell = "0"
-					err = nil
-				} else if errors.Is(err, ErrIsPosInf) {
-					cell = "0"
-					err = nil
-				} else if errors.Is(err, ErrIsNegInf) {
-					cell = "0"
-					err = nil
-				}
-				if err != nil {
-					return err
-				}
-				cvs.DataCells = append(cvs.DataCells, DataCell{cell, cellValue, raw})
+		ts.ValueSpecs[idx] = &ValueSpec{
+			Value:              rowId,
+			String:             row[1],
+			ConstName:          "", // hint: no identifier here
+			IsAlternativeValue: idx != 0 && ts.ValueSpecs[idx-1].Value == rowId,
+		}
+	}
+
+	// evaluate data rows (additional data)
+	if !ts.Meta.HasAdditionalData {
+		return nil
+	}
+	// reduce dataset to additional data only
+	records = records[1:] // drop header row
+	records = slices.Map(records, func(row []string, idx int) []string {
+		return row[2:] // drop first two columns
+	})
+
+	// assert that alternative data is either zero all identical to master value
+	if idx := slices.FindIndex(records, func(row []string, rowIdx int) bool {
+		if !ts.ValueSpecs[rowIdx].IsAlternativeValue {
+			return false // hint: we only care for alternative values
+		}
+		if ok := slices.All(row, func(v string, colIdx int) bool {
+			return len(v) == 0
+		}); ok {
+			return false // hint: all fields are empty, that's ok
+		}
+		if rowIdx == 0 {
+			return false
+		}
+		return slices.Any(row, func(v string, colIdx int) bool {
+			// hint: all fields must be identical to master value
+			return records[rowIdx-1][colIdx] != v
+		})
+	}); idx != -1 {
+		return fmt.Errorf("found invalid additional data of an alternative enum value %q at line %d.", ts.ValueSpecs[idx].String, idx+2)
+	}
+
+	// filter relevant records
+	records = slices.Filter(records, func(v []string, idx int) bool {
+		// hint: alternative values can not have deviating additional data
+		// therefore we must filter them
+		return !ts.ValueSpecs[idx].IsAlternativeValue
+	})
+
+	// prepare parsers and type formatters
+	columnParseFuncs := make([]func(raw string) (any, error), len(ts.AdditionalData.Headers))
+	columnTypeFormatter := make([]func(raw any) string, len(ts.AdditionalData.Headers))
+	for idx, col := range ts.AdditionalData.Headers {
+		columnParseFuncs[idx] = getParserFuncFor(col.Type)
+		columnTypeFormatter[idx] = col.Type.ToSource
+	}
+
+	ts.AdditionalData.Rows = make([][]AdditionalDataCell, len(records))
+	for rowIdx, row := range records {
+		ts.AdditionalData.Rows[rowIdx] = make([]AdditionalDataCell, len(ts.AdditionalData.Headers))
+		for colIdx, raw := range row {
+			literalValue := raw
+			parseByColumnType := columnParseFuncs[colIdx]
+			formatByColumnType := columnTypeFormatter[colIdx]
+			cellValue, err := parseByColumnType(raw)
+			// hint: float special types are set to "0" here
+			// a proper implementation would map to "math.Inf" and "math.NaN" funcs
+			// and add "math" package import to file
+			if errors.Is(err, ErrIsNaN) {
+				literalValue = "0"
+				err = nil
+			} else if errors.Is(err, ErrIsPosInf) {
+				literalValue = "0"
+				err = nil
+			} else if errors.Is(err, ErrIsNegInf) {
+				literalValue = "0"
+				err = nil
+			}
+			if err != nil {
+				return err
+			}
+			ts.AdditionalData.Rows[rowIdx][colIdx] = AdditionalDataCell{
+				LiteralValue: formatByColumnType(literalValue),
+				RawValue:     cellValue,
 			}
 		}
-		csvValueSpecs = append(csvValueSpecs, cvs)
 	}
-	ts.ValueSpecs = csvValueSpecs
+
 	return nil
 }
 
@@ -199,7 +270,7 @@ func (i inspector) inspectImports(f *File) {
 
 	// we add all imports (also duplicates)
 	for _, ts := range f.TypeSpecs {
-		for _, v := range ts.Config.Serializers {
+		for _, v := range ts.Meta.Config.Serializers {
 			switch v {
 			case "gql":
 				f.Imports = append(f.Imports, &Import{Path: "io"})
@@ -288,19 +359,18 @@ func (i inspector) inspectTypeSpecs(pkg *packages.Package, out *File) error {
 			return fmt.Errorf("Enum type of %q %w", s.TypeSpec.Name, err)
 		}
 		out.TypeSpecs = append(out.TypeSpecs, &TypeSpec{
-			Index:     idx,
-			Name:      s.TypeSpec.Name.Name,
-			Type:      typ,
-			Docstring: s.EnumMarker,
-			Filepath:  s.File.Name(),
+			Name: s.TypeSpec.Name.Name,
+			Type: typ,
+			Meta: &MetaTypeSpec{
+				Docstring: s.EnumMarker,
+				Filepath:  s.File.Name(),
+			},
 		})
-		for _, v := range s.values {
-			vspec, err := i.evaluateValueSpec(s, v, pkg)
-			if err != nil {
-				return err
-			}
-			out.TypeSpecs[idx].ValueSpecs = append(out.TypeSpecs[idx].ValueSpecs, vspec)
+		vspecs, err := i.evaluateValueSpecs(s, pkg)
+		if err != nil {
+			return err
 		}
+		out.TypeSpecs[idx].ValueSpecs = vspecs
 	}
 	return nil
 }
@@ -324,11 +394,7 @@ type typeSpec struct {
 	Type       *types.Basic
 	File       *token.File
 	EnumMarker string
-	values     []valueSpec
-}
-
-type valueSpec struct {
-	Value *ast.Ident
+	Values     []*ast.Ident
 }
 
 func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, out *File) ([]typeSpec, error) {
@@ -429,7 +495,7 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 								// blank identifier, not what we're interested in
 								continue
 							}
-							typeSpecs[idx].values = append(typeSpecs[idx].values, valueSpec{v})
+							typeSpecs[idx].Values = append(typeSpecs[idx].Values, v)
 						}
 					}
 				}
@@ -439,24 +505,29 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 	return typeSpecs, nil
 }
 
-func (i inspector) evaluateValueSpec(t typeSpec, s valueSpec, pkg *packages.Package) (*ValueSpec, error) {
-	val, err := i.determineValueOfExpr(s.Value, pkg)
-	if err != nil {
-		return nil, err
-	}
-	name := s.Value.Name
-	// auto-strip prefix
-	if strings.HasPrefix(s.Value.Name, t.TypeSpec.Name.Name) {
-		if len(t.TypeSpec.Name.Name) == len(s.Value.Name) {
-			return nil, fmt.Errorf("failed to auto-strip prefix (enum value equals type name). make sure to give a meaningful names to your enum values.")
+func (i inspector) evaluateValueSpecs(t typeSpec, pkg *packages.Package) ([]*ValueSpec, error) {
+	vspecs := make([]*ValueSpec, len(t.Values))
+	for idx, value := range t.Values {
+		val, err := i.determineValueOfExpr(value, pkg)
+		if err != nil {
+			return nil, err
 		}
-		name = s.Value.Name[len(t.TypeSpec.Name.Name):]
+		name := value.Name
+		// auto-strip prefix
+		if strings.HasPrefix(value.Name, t.TypeSpec.Name.Name) {
+			if len(t.TypeSpec.Name.Name) == len(value.Name) {
+				return nil, fmt.Errorf("failed to auto-strip prefix (enum value equals type name). make sure to give a meaningful names to your enum values.")
+			}
+			name = value.Name[len(t.TypeSpec.Name.Name):]
+		}
+		vspecs[idx] = &ValueSpec{
+			ConstName:          value.Name,
+			String:             name,
+			Value:              val,
+			IsAlternativeValue: idx != 0 && val == vspecs[idx-1].Value,
+		}
 	}
-	return &ValueSpec{
-		IdentifierName: s.Value.Name,
-		EnumValue:      name,
-		Value:          val,
-	}, nil
+	return vspecs, nil
 }
 
 func (i inspector) determineTypeOfExpr(e ast.Expr) (GoType, error) {

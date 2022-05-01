@@ -32,33 +32,38 @@ type Import struct {
 }
 
 type TypeSpec struct {
-	Index             int
-	Name              string
+	Name           string
+	Type           GoType
+	Meta           *MetaTypeSpec
+	ValueSpecs     []*ValueSpec
+	AdditionalData *AdditionalData
+}
+
+type MetaTypeSpec struct {
 	Docstring         string
-	Type              GoType
-	ValueSpecs        []*ValueSpec
-	Filepath          string
 	Config            *config.Options
+	Filepath          string
 	IsFromCsvSource   bool
 	HasAdditionalData bool
-	DataColumns       []DataHeader // contains additional column header
 }
 
 type ValueSpec struct {
-	Value          uint64 // The numeric value of an enum constant
-	EnumValue      string // The enum's actual value string
-	IdentifierName string
-	DataCells      []DataCell // contains additional column values and types
+	ConstName          string
+	Value              uint64 // hint: numeric value of an enum value/constant
+	String             string // hint: the enum's actual value string
+	IsAlternativeValue bool   // hint: is the enum an alternative value
 }
 
-type DataHeader struct {
-	Type      GoType
-	Name      string
-	ParseFunc func(string) (any, error)
+type AdditionalData struct {
+	Headers []AdditionalDataHeader
+	Rows    [][]AdditionalDataCell
 }
 
-type DataCell struct {
-	ValueString string
-	Value       any
-	raw         string
+type AdditionalDataHeader struct {
+	Name string // hint: the column name as-is (from CSV)
+	Type GoType // hint: the type infered by type syntax
+}
+type AdditionalDataCell struct {
+	LiteralValue string // hint: source representation of the value, e.g. literal strings are quoted
+	RawValue     any    // hint: parsed value; actual type depends on header type
 }
