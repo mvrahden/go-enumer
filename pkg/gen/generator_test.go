@@ -19,7 +19,7 @@ const (
 	packageBase = about.Repo
 )
 
-func TestGenerator(t *testing.T) {
+func TestGeneratorExamples(t *testing.T) {
 	for _, tC := range []struct {
 		directory   string
 		description string
@@ -64,16 +64,32 @@ func TestGeneratorEdgeCaseDetection(t *testing.T) {
 			errMsg: "Enum \"NonContinuous2\" must be a continuous sequence with linear increments of 1."},
 		{directory: "docstring",
 			errMsg: "Failed parsing doc-string for \"InvalidDocstring\". err: flag provided but not defined: -unsupported"},
-		{directory: "csv.missing-file",
-			errMsg: "Failed reading from CSV for \"MissingCSV\". err: no such file \"source.csv\""},
+		{directory: "csv.const-out-of-range",
+			errMsg: "Failed reading from CSV for \"ConstOutOfRangeCSV\". err: enum constant \"NoSuchValue\" is out of csv source range [1,1]"},
+		{directory: "csv.const-out-of-range-2",
+			errMsg: "Failed reading from CSV for \"ConstOutOfRangeCSV\". err: enum constant \"NoSuchValue\" is out of csv source range [0,1]"},
+		{directory: "csv.no-path-traversal",
+			errMsg: "Invalid source file path in doc-string for \"ForbiddenPathTraversalCSV\". err: forbidden path traversal detected"},
+		{directory: "csv.no-path-traversal-2",
+			errMsg: "Invalid source file path in doc-string for \"ForbiddenPathTraversalCSV\". err: forbidden path traversal detected"},
+		{directory: "csv.no-relative-path-prefix",
+			errMsg: "Invalid source file path in doc-string for \"NoRelativePathPrefixCSV\". err: cannot start with \"./\""},
 		{directory: "csv.empty",
 			errMsg: "Failed reading from CSV for \"EmptyCSV\". err: found empty csv source"},
 		{directory: "csv.invalid-header",
 			errMsg: "Failed reading from CSV for \"NumericFirstCellInCSV\". err: first row must be a header row but found numeric value in first cell"},
 		{directory: "csv.invalid-value",
 			errMsg: "Failed reading from CSV for \"NegativeValueInCSV\". err: failed converting \"-1\" to uint64"},
-		{directory: "csv.invalid-range",
+		{directory: "csv.missing-file",
+			errMsg: "Failed reading from CSV for \"MissingCSV\". err: no such file \"source.csv\""},
+		{directory: "csv.missing-value-row",
+			errMsg: "Failed reading from CSV for \"NumericFirstCellInCSV\". err: csv source must contain at least one value row"},
+		{directory: "csv.range-noncontinuous",
 			errMsg: "Enum \"InvalidRangeCSV\" must be a continuous sequence with linear increments of 1."},
+		{directory: "csv.range-noncontinuous-2",
+			errMsg: "Enum \"InvalidRangeCSV\" must be a continuous sequence with linear increments of 1."},
+		{directory: "csv.range-start",
+			errMsg: "Failed reading from CSV for \"InvalidRangeCSV\". err: found invalid start of enum sequence at line 2."},
 	} {
 		t.Run(fmt.Sprintf("Generate for package %q", tC.directory), func(t *testing.T) {
 			pkg := path.Join(packageBase, "examples", "_invalid", tC.directory)

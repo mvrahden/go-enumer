@@ -46,7 +46,11 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 	if err := i.inspectTypeSpecs(pkg, out); err != nil {
 		return nil, err
 	}
-	if err := i.inspectDocstrings(pkg, out); err != nil {
+	sources, err := i.inspectDocstrings(pkg, out)
+	if err != nil {
+		return nil, err
+	}
+	if err := i.inspectSources(out, sources); err != nil {
 		return nil, err
 	}
 	i.inspectImports(out)
@@ -70,8 +74,9 @@ func (i inspector) sortTypeSpecs(f *File) {
 	})
 }
 
-func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
-	for _, ts := range f.TypeSpecs {
+func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) (sources []string, err error) {
+	sources = make([]string, len(f.TypeSpecs))
+	for idx, ts := range f.TypeSpecs {
 		args := strings.Split(ts.Meta.Docstring, " ")
 		ts.Meta.Config = i.cfg.Clone()
 
@@ -82,20 +87,36 @@ func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) error {
 		var fs flag.FlagSet
 		fs.SetOutput(io.Discard) // silence flagset StdErr output
 
-		var fromSource string
 		fs.StringVar(&ts.Meta.Config.TransformStrategy, "transform", ts.Meta.Config.TransformStrategy, "")
 		fs.Var(&ts.Meta.Config.Serializers, "serializers", "")
 		fs.Var(&ts.Meta.Config.SupportedFeatures, "support", "")
-		fs.StringVar(&fromSource, "from", "", "")
+		fs.StringVar(&sources[idx], "from", "", "")
 		err := fs.Parse(args[1:]) // hint: parse w/o magic marker
 		if err != nil {
-			return fmt.Errorf("Failed parsing doc-string for %q. err: %w", ts.Name, err)
+			return nil, fmt.Errorf("Failed parsing doc-string for %q. err: %w", ts.Name, err)
 		}
 
+		if len(sources[idx]) == 0 {
+			continue
+		}
+		if strings.Contains(sources[idx], "../") {
+			return nil, fmt.Errorf("Invalid source file path in doc-string for %q. err: forbidden path traversal detected", ts.Name)
+		}
+		if strings.HasPrefix(sources[idx], "./") {
+			return nil, fmt.Errorf("Invalid source file path in doc-string for %q. err: cannot start with \"./\"", ts.Name)
+		}
+	}
+	return sources, nil
+}
+
+func (i inspector) inspectSources(f *File, sources []string) error {
+	for idx, ts := range f.TypeSpecs {
+		fromSource := sources[idx]
 		if len(fromSource) == 0 {
 			continue
 		}
-		err = i.readFromCSV(ts, fromSource)
+
+		err := i.readFromCSV(ts, fromSource)
 		if err != nil {
 			return fmt.Errorf("Failed reading from CSV for %q. err: %w", ts.Name, err)
 		}
@@ -121,6 +142,10 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 		return err
 	}
 	ts.Meta.IsFromCsvSource = true // hint: mark type as derived from CSV
+
+	if len(records) == 0 {
+		return fmt.Errorf("csv source must contain a header row")
+	}
 
 	// trim whitespace on all cells
 	for _, row := range records {
@@ -165,38 +190,61 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 		}
 	}
 
+	// drop header row after evaluation
+	records = records[1:]
+
+	if len(records) == 0 {
+		return fmt.Errorf("csv source must contain at least one value row")
+	}
+
 	// evaluate data rows (base data)
-	ts.ValueSpecs = make([]*ValueSpec, len(records[1:]))
-	for idx, row := range records[1:] {
+	csvValuespecs := make([]*ValueSpec, len(records))
+	for idx, row := range records {
 		rowId, err := strconv.ParseUint(row[0], 10, 64)
 		if err != nil {
-			return fmt.Errorf("failed converting %q to uint64", row[0])
+			return fmt.Errorf("failed converting %q to uint64 at line %d", row[0], idx+2)
 		}
-		if idx > 0 && rowId < ts.ValueSpecs[idx-1].Value {
-			return fmt.Errorf("found decreasing value at line %d.", idx+1)
+		if idx == 0 && rowId > 1 {
+			return fmt.Errorf("found invalid start of enum sequence at line %d.", idx+2)
+		}
+		if idx > 0 && rowId < csvValuespecs[idx-1].Value {
+			return fmt.Errorf("found decreasing value at line %d.", idx+2)
 		}
 
-		ts.ValueSpecs[idx] = &ValueSpec{
+		csvValuespecs[idx] = &ValueSpec{
 			Value:              rowId,
 			String:             row[1],
 			ConstName:          "", // hint: no identifier here
-			IsAlternativeValue: idx != 0 && ts.ValueSpecs[idx-1].Value == rowId,
+			IsAlternativeValue: idx != 0 && csvValuespecs[idx-1].Value == rowId,
 		}
 	}
+
+	{
+		// cross-validate value specs
+		// enum constants must be within extent of csv values
+		min, max := csvValuespecs[0].Value, csvValuespecs[len(csvValuespecs)-1].Value
+		if idx := slices.FindIndex(ts.ValueSpecs, func(v *ValueSpec, idx int) bool {
+			return v.Value < min || v.Value > max
+		}); idx > -1 {
+			return fmt.Errorf("enum constant %q is out of csv source range [%d,%d]", ts.ValueSpecs[idx].ConstName, min, max)
+		}
+	}
+
+	// swap enum constants with csv value specs
+	ts.ValueSpecs = csvValuespecs
 
 	// evaluate data rows (additional data)
 	if !ts.Meta.HasAdditionalData {
 		return nil
 	}
 	// reduce dataset to additional data only
-	records = records[1:] // drop header row
 	records = slices.Map(records, func(row []string, idx int) []string {
 		return row[2:] // drop first two columns
 	})
 
 	// assert that alternative data is either zero all identical to master value
 	if idx := slices.FindIndex(records, func(row []string, rowIdx int) bool {
-		if !ts.ValueSpecs[rowIdx].IsAlternativeValue {
+		if !csvValuespecs[rowIdx].IsAlternativeValue {
 			return false // hint: we only care for alternative values
 		}
 		if ok := slices.All(row, func(v string, colIdx int) bool {
@@ -212,14 +260,14 @@ func (i inspector) readFromCSV(ts *TypeSpec, p string) error {
 			return records[rowIdx-1][colIdx] != v
 		})
 	}); idx != -1 {
-		return fmt.Errorf("found invalid additional data of an alternative enum value %q at line %d.", ts.ValueSpecs[idx].String, idx+2)
+		return fmt.Errorf("found invalid additional data of an alternative enum value %q at line %d.", csvValuespecs[idx].String, idx+2)
 	}
 
 	// filter relevant records
 	records = slices.Filter(records, func(v []string, idx int) bool {
 		// hint: alternative values can not have deviating additional data
 		// therefore we must filter them
-		return !ts.ValueSpecs[idx].IsAlternativeValue
+		return !csvValuespecs[idx].IsAlternativeValue
 	})
 
 	// prepare parsers and type formatters
