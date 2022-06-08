@@ -88,6 +88,20 @@ func RangeErr[T any](in []T, fn func(v T, idx int) error) (int, error) {
 	return -1, nil
 }
 
+// SplitBy will range over given input and apply the given test func on each element.
+// It will collect all positive results to the first bucket and all negative results in the second.
+func SplitBy[T any](in []T, fn func(v T, idx int) bool) (t []T, f []T) {
+	for idx, v := range in {
+		ok := fn(v, idx)
+		if ok {
+			t = append(t, v)
+			continue
+		}
+		f = append(f, v)
+	}
+	return t, f
+}
+
 // None will apply given test func on each input and assert
 // that none of the inputs passes the test.
 // It returns on first failed assertion.
