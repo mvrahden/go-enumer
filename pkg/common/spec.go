@@ -21,7 +21,7 @@ const (
 
 type EnumTypeSpec struct {
 	Type           SpecType
-	Values         []EnumTypeSpecValue
+	Values         []*EnumTypeSpecValue
 	AdditionalData *AdditionalData
 }
 

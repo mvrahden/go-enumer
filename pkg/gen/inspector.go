@@ -72,11 +72,6 @@ func (i inspector) loadEnumTypes(pkg *packages.Package) ([]*common.EnumType, err
 		return nil, err
 	}
 
-	err = i.detectConstBlocks(insp, pkg.TypesInfo, genFile, enumTypes)
-	if err != nil {
-		return nil, err
-	}
-
 	idx, err := slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
 		mc, err := v.DetectMagicComment()
 		if err != nil {
@@ -91,14 +86,33 @@ func (i inspector) loadEnumTypes(pkg *packages.Package) ([]*common.EnumType, err
 	if err != nil {
 		goto SPEC_IS_INVALID
 	}
+
+	err = i.detectConstBlocks(insp, pkg.TypesInfo, genFile, enumTypes)
+	if err != nil {
+		return nil, err
+	}
+
 	idx, err = slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
-		return v.LoadFileSpec(pkg.Fset)
+		return v.ValidateConstBlock(pkg.Fset, pkg.TypesInfo)
+	})
+	if err != nil {
+		goto SPEC_IS_INVALID
+	}
+
+	idx, err = slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
+		return v.LoadSpec(pkg.Fset)
 	})
 	if err != nil {
 		goto SPEC_IS_INVALID
 	}
 	idx, err = slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
-		return v.ValidateEnumConstBlock(pkg.Fset, pkg.TypesInfo)
+		return v.ValidateSpec(pkg.Fset, pkg.TypesInfo)
+	})
+	if err != nil {
+		goto SPEC_IS_INVALID
+	}
+	idx, err = slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
+		return v.CrossValidateConstBlockWithSpec(pkg.Fset, pkg.TypesInfo)
 	})
 SPEC_IS_INVALID:
 	if err != nil {

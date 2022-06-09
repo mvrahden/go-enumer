@@ -34,6 +34,7 @@ func DefaultConfig(cfg *config.Options) *EnumTypeConfig {
 type EnumType struct {
 	Node       *ast.GenDecl
 	Config     *EnumTypeConfig
+	Spec       *EnumTypeSpec // hint: the specification derived either from const block notation or from a file
 	ConstBlock *EnumConstBlock
 }
 
@@ -48,7 +49,7 @@ func (e *EnumType) HasFileSpec() bool {
 	return len(e.Config.FromSource) > 0
 }
 
-func (e *EnumType) HasSimpleSpec() bool {
+func (e *EnumType) HasSimpleBlockSpec() bool {
 	return !e.HasFileSpec()
 }
 
@@ -137,7 +138,7 @@ func (e *EnumType) ParseMagicComment(mc *ast.Comment, opts *config.Options) erro
 }
 
 func (e *EnumType) GetPkgFS(fset *token.FileSet) (fs.FS, bool) {
-	if e.HasSimpleSpec() {
+	if e.HasSimpleBlockSpec() {
 		return nil, false
 	}
 	dirPath := filepath.Dir(fset.Position(e.Node.Pos()).Filename)
@@ -164,6 +165,22 @@ func (e *EnumType) ValidateEnumTypeConfig(fset *token.FileSet) error {
 	return nil
 }
 
+func (e *EnumType) LoadSpec(fset *token.FileSet) error {
+	if e.HasSimpleBlockSpec() {
+		return e.LoadSimpleBlockSpec()
+	}
+	return e.LoadFileSpec(fset)
+}
+
+func (e *EnumType) LoadSimpleBlockSpec() error {
+	e.Spec = &EnumTypeSpec{Type: SimpleBlockSpec, Values: make([]*EnumTypeSpecValue, len(e.ConstBlock.Specs))}
+
+	slices.Range(e.ConstBlock.Specs, func(v *EnumValueSpec, idx int) {
+		e.Spec.Values[idx] = &EnumTypeSpecValue{ID: v.Value, EnumValue: v.Node.Names[0].Name}
+	})
+	return nil
+}
+
 func (e *EnumType) LoadFileSpec(fset *token.FileSet) error {
 	pkgFS, ok := e.GetPkgFS(fset)
 	if !ok {
@@ -173,13 +190,13 @@ func (e *EnumType) LoadFileSpec(fset *token.FileSet) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(spec)
+	e.Spec = spec
 	return nil
 }
 
 const maxSize int64 = 5e6 // 5MB
 
-func (e *EnumType) loadSpecFromFS(pkgFS fs.FS) (any, error) {
+func (e *EnumType) loadSpecFromFS(pkgFS fs.FS) (*EnumTypeSpec, error) {
 	f, err := pkgFS.Open(e.Config.FromSource)
 	if err != nil {
 		return nil, err
@@ -281,7 +298,7 @@ func (e *EnumType) loadSpecFromFS(pkgFS fs.FS) (any, error) {
 					return nil, errors.New("enum sequences must start with either 0 or 1")
 				}
 				val := row[1]
-				spec.Values = append(spec.Values, EnumTypeSpecValue{ID: id, EnumValue: val})
+				spec.Values = append(spec.Values, &EnumTypeSpecValue{ID: id, EnumValue: val})
 
 				if spec.AdditionalData == nil {
 					continue // no additional data, let's move to next row
@@ -315,12 +332,12 @@ func (e *EnumType) loadSpecFromFS(pkgFS fs.FS) (any, error) {
 			}
 		}
 	}
-	return spec, nil
+	return &spec, nil
 }
 
-func (e *EnumType) ValidateEnumConstBlock(fset *token.FileSet, typesInfo *types.Info) error {
+func (e *EnumType) ValidateConstBlock(fset *token.FileSet, typesInfo *types.Info) error {
 	if e.ConstBlock == nil {
-		if e.HasSimpleSpec() {
+		if e.HasSimpleBlockSpec() {
 			return errors.New("enum types require a const block or a file source")
 		}
 		return nil
@@ -328,18 +345,18 @@ func (e *EnumType) ValidateEnumConstBlock(fset *token.FileSet, typesInfo *types.
 
 	// assert const block is in same file
 	if fset.File(e.ConstBlock.Node.Pos()) != fset.File(e.Node.Pos()) {
-		return errors.New("enum blocks must be in same file as their type definition")
+		return errors.New("enum const block must be in same file as their type definition")
 	}
 	// assert const block is after relevant type
 	if e.ConstBlock.Node.Pos() < e.Node.Pos() {
-		return errors.New("enum blocks must be defined after their type definition")
+		return errors.New("enum const block must be defined after its type definition")
 	}
 	// assert const block has no rowed declarations
 	ok := slices.None(e.ConstBlock.Specs, func(v *EnumValueSpec, idx int) bool {
 		return len(v.Node.Names) > 1 || len(v.Node.Values) > 1
 	})
 	if !ok {
-		return errors.New("enum blocks must not contain rowed declarations")
+		return errors.New("enum const block must not contain rowed declarations")
 	}
 	// assert only enum values of relevant enum type within block
 	ok = slices.None(e.ConstBlock.Specs, func(curr *EnumValueSpec, idx int) bool {
@@ -358,11 +375,21 @@ func (e *EnumType) ValidateEnumConstBlock(fset *token.FileSet, typesInfo *types.
 		return !isSameAsBlockType
 	})
 	if !ok {
-		return errors.New("enum blocks must not contain unrelated type declarations")
+		return errors.New("enum const block must not contain unrelated type declarations")
 	}
+
+	// assert no skipped rows in blocks
+	ok = slices.None(e.ConstBlock.Specs, func(vs *EnumValueSpec, idx int) bool {
+		// Special Case: "skipped rows" provoke an increment of more than one.
+		return vs.Node.Names[0].Name == "_"
+	})
+	if !ok {
+		return errors.New("enum const block must not contain skipped rows")
+	}
+
 	// assert numerical correctness
-	ok = slices.All(e.ConstBlock.Specs, func(v *EnumValueSpec, idx int) bool {
-		val := v.GetObjectVia(typesInfo).(*types.Const).Val()
+	ok = slices.All(e.ConstBlock.Specs, func(vs *EnumValueSpec, idx int) bool {
+		val := vs.GetObjectVia(typesInfo).(*types.Const).Val()
 		{
 			val, ok := constant.Int64Val(val)
 			if !ok {
@@ -370,47 +397,103 @@ func (e *EnumType) ValidateEnumConstBlock(fset *token.FileSet, typesInfo *types.
 			}
 			// hint: reflow otherwise overflown values.
 			// that's ok as we're dealing with uint types exclusively
-			v.Value = uint64(val)
+			vs.Value = uint64(val)
 		}
 		return true
 	})
 	if !ok {
 		return errors.New("invalid numerical format")
 	}
-	// assert order of values in block and increments
-	if e.HasSimpleSpec() {
-		if e.ConstBlock.Specs[0].Value > 1 {
-			// hint: file based enums can start with arbitrary numbers in const blocks
-			// as they do not represent the SPEC in this case but merely refer to individual values.
-			return errors.New("enum block sequences must start with either 0 or 1")
-		}
+	return nil
+}
 
-		ok = slices.None(e.ConstBlock.Specs, func(vs *EnumValueSpec, idx int) bool {
-			if idx == 0 {
-				return false
-			}
-			prev := e.ConstBlock.Specs[idx-1].Value
-			return prev > vs.Value
-		})
-		if !ok {
-			return errors.New("enum block sequences must be ordered")
-		}
+func (e *EnumType) ValidateSpec(fset *token.FileSet, typesInfo *types.Info) error {
+	if len(e.Spec.Values) == 0 {
+		return errors.New("enum spec must contain at least one value")
+	}
 
-		ok = slices.None(e.ConstBlock.Specs, func(vs *EnumValueSpec, idx int) bool {
-			if idx == 0 {
-				return false
-			}
-			prev := e.ConstBlock.Specs[idx-1].Value
-			bad := prev+1 < vs.Value
-			if bad {
-				return true
-			}
-			// hint: Special Case: "skipped rows" provoke an increment of more than one.
-			return vs.Node.Names[0].Name == "_"
-		})
-		if !ok {
-			return errors.New("enum block sequences must increment at most by one")
+	// assert spec sequence start
+	if e.Spec.Values[0].ID > 1 {
+		// hint: file based enums can start with arbitrary numbers in const blocks
+		// as they do not represent the SPEC in this case but merely refer to individual values.
+		return errors.New("enum spec sequences must start with either 0 or 1")
+	}
+
+	// assert order of values
+	ok := slices.None(e.Spec.Values, func(v *EnumTypeSpecValue, idx int) bool {
+		if idx == 0 {
+			return false
 		}
+		prev := e.Spec.Values[idx-1].ID
+		return prev > v.ID
+	})
+	if !ok {
+		return errors.New("enum spec sequences must be ordered")
+	}
+
+	// assert increments of values
+	ok = slices.None(e.Spec.Values, func(v *EnumTypeSpecValue, idx int) bool {
+		if idx == 0 {
+			return false
+		}
+		prev := e.Spec.Values[idx-1].ID
+		return prev+1 < v.ID
+	})
+	if !ok {
+		return errors.New("enum spec sequences must increment at most by one")
+	}
+	return nil
+}
+
+func (e *EnumType) CrossValidateConstBlockWithSpec(fset *token.FileSet, typesInfo *types.Info) error {
+	if e.ConstBlock == nil {
+		return nil
+	}
+	if e.HasSimpleBlockSpec() {
+		// block specs are derived from blocks and have gone through
+		// extensive assertions
+		return nil
+	}
+	// Enums based on file specs can have additional const blocks
+	// to reference individual often used values for convenience.
+	// Here we need to ensure that these const block values are in sync with their spec.
+
+	// assert const block values do not exceed spec range
+	specMin := e.Spec.Values[0].ID
+	specMax := e.Spec.Values[len(e.Spec.Values)-1].ID
+	badIdx := slices.FindIndex(e.ConstBlock.Specs, func(vs *EnumValueSpec, idx int) bool {
+		return vs.Value < specMin || vs.Value > specMax
+	})
+	if badIdx > -1 {
+		constValue := e.ConstBlock.Node.Specs[badIdx].(*ast.ValueSpec)
+		return fmt.Errorf("%q exceeds spec range [%d,%d]", constValue.Names[0].Name, specMin, specMax)
+	}
+
+	// assert const block assertions
+	badIdx, err := slices.RangeErr(e.ConstBlock.Specs, func(vs *EnumValueSpec, _ int) error {
+		if vs.Node.Comment != nil {
+			assertToken := "// assert \""
+			lineComment := vs.Node.Comment.List[0].Text
+			if strings.HasPrefix(lineComment, assertToken) {
+				endIdx := strings.Index(lineComment[len(assertToken):], "\"")
+				if endIdx == -1 {
+					return errors.New("missing terminating quote in assertion")
+				}
+				assertVal := lineComment[len(assertToken) : len(assertToken)+endIdx]
+
+				specIdx := slices.FindIndex(e.Spec.Values, func(v *EnumTypeSpecValue, idx int) bool {
+					return v.ID == vs.Value
+				})
+				if e.Spec.Values[specIdx].EnumValue != assertVal {
+					return errors.New("assertion failed")
+				}
+			}
+		}
+		return nil
+	})
+	if badIdx > -1 {
+		constValue := e.ConstBlock.Node.Specs[badIdx].(*ast.ValueSpec)
+		return fmt.Errorf("%q fails on assertion (reason: %s)", constValue.Names[0].Name, err)
 	}
 	return nil
 }
