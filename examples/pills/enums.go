@@ -62,11 +62,6 @@ const (
 )
 
 //go:enum
-type PillRowed uint
-
-const PillRowedPlacebo, PillRowedAspirin, PillRowedIbuprofen, PillRowedParacetamol, PillRowedAcetaminophen, PillRowedVitaminC PillRowed = 0, 1, 2, 3, 3, 4
-
-//go:enum
 type PillAliased PillUnsigned
 
 const (

@@ -17,12 +17,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mvrahden/go-enumer/config"
-	"github.com/mvrahden/go-enumer/pkg/utils/slices"
+	goinspect "golang.org/x/tools/go/ast/inspector"
 	"golang.org/x/tools/go/packages"
-)
 
-const MAGIC_MARKER = "//go:enum"
+	"github.com/mvrahden/go-enumer/config"
+	"github.com/mvrahden/go-enumer/pkg/common"
+	"github.com/mvrahden/go-enumer/pkg/utils/slices"
+)
 
 var (
 	matchGeneratedFileRegex = regexp.MustCompile(`^// Code generated .* DO NOT EDIT.$`)
@@ -60,6 +61,85 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 		return nil, err
 	}
 	return out, nil
+}
+
+func (i inspector) loadEnumTypes(pkg *packages.Package) ([]*common.EnumType, error) {
+	insp := goinspect.New(pkg.Syntax)
+	genFile := common.DetermineGeneratedFile(pkg.Syntax) // hint: get the generated enumer file
+
+	enumTypes, err := i.detectTypeSpecs(insp, pkg.TypesInfo, genFile)
+	if err != nil {
+		return nil, err
+	}
+
+	err = i.detectConstBlocks(insp, pkg.TypesInfo, genFile, enumTypes)
+	if err != nil {
+		return nil, err
+	}
+
+	idx, err := slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
+		mc, err := v.DetectMagicComment()
+		if err != nil {
+			return err
+		}
+		err = v.ParseMagicComment(mc, i.cfg)
+		if err != nil {
+			return err
+		}
+		return v.ValidateEnumTypeConfig(pkg.Fset)
+	})
+	if err != nil {
+		goto SPEC_IS_INVALID
+	}
+	idx, err = slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
+		return v.LoadFileSpec(pkg.Fset)
+	})
+	if err != nil {
+		goto SPEC_IS_INVALID
+	}
+	idx, err = slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
+		return v.ValidateEnumConstBlock(pkg.Fset, pkg.TypesInfo)
+	})
+SPEC_IS_INVALID:
+	if err != nil {
+		return nil, fmt.Errorf("%q type specification is invalid. err: %w", enumTypes[idx].Name(), err)
+	}
+
+	return enumTypes, nil
+}
+
+func (inspector) detectTypeSpecs(insp *goinspect.Inspector, typesInfo *types.Info, genFile *ast.File) ([]*common.EnumType, error) {
+	var errs []error
+	var enumTypes []*common.EnumType
+	insp.Preorder([]ast.Node{(*ast.GenDecl)(nil)}, func(n ast.Node) {
+		et, _, err := common.DetermineEnumType(n, typesInfo, genFile)
+		if err != nil {
+			typ := n.(*ast.GenDecl).Specs[0].(*ast.TypeSpec)
+			errs = append(errs, fmt.Errorf("%q type specification is invalid. err: %s", typ.Name, err))
+			return
+		}
+		if et != nil {
+			enumTypes = append(enumTypes, et)
+		}
+	})
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	return enumTypes, nil
+}
+
+func (inspector) detectConstBlocks(insp *goinspect.Inspector, typesInfo *types.Info, genFile *ast.File, enumTypes []*common.EnumType) error {
+	var errs []error
+	insp.Preorder([]ast.Node{(*ast.GenDecl)(nil)}, func(n ast.Node) {
+		_, err := common.AssignEnumConstBlockToType(n, typesInfo, genFile, enumTypes)
+		if err != nil {
+			errs = append(errs, err)
+		}
+	})
+	if len(errs) > 0 {
+		return errs[0]
+	}
+	return nil
 }
 
 func (i inspector) sortTypeSpecs(f *File) {
@@ -102,8 +182,8 @@ func (i inspector) inspectDocstrings(pkg *packages.Package, f *File) (sources []
 		if strings.Contains(sources[idx], "../") {
 			return nil, fmt.Errorf("Invalid source file path in doc-string for %q. err: forbidden path traversal detected", ts.Name)
 		}
-		if strings.HasPrefix(sources[idx], "./") {
-			return nil, fmt.Errorf("Invalid source file path in doc-string for %q. err: cannot start with \"./\"", ts.Name)
+		if strings.HasPrefix(sources[idx], "./") || strings.HasPrefix(sources[idx], "/") {
+			return nil, fmt.Errorf("Invalid source file path in doc-string for %q. err: cannot start with \"./\" or \"/\"", ts.Name)
 		}
 	}
 	return sources, nil
@@ -467,8 +547,7 @@ func (i *inspector) determinePackageScopedEnumTypeSpecs(pkg *packages.Package, o
 			{
 				lastDoc := decl.Doc.List[len(decl.Doc.List)-1]
 				docString := strings.TrimSpace(lastDoc.Text)
-				hasMagicComment := strings.Compare(docString, MAGIC_MARKER) == 0 ||
-					strings.HasPrefix(docString, MAGIC_MARKER+" ") // hint: w/o OR w/ subsequent config string
+				hasMagicComment := common.MAGIC_MARKER.MatchString(docString)
 
 				if !hasMagicComment {
 					continue // no magic comment

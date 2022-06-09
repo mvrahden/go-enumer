@@ -19,7 +19,7 @@ type BookingStateWithConstants uint
 // Just add them here as constants.
 const (
 	BookingStateWithConstantsCreated     BookingStateWithConstants = 0
-	BookingStateWithConstantsUnavailable                           = 1
-	BookingStateWithConstantsCanceled                              = 3
-	BookingStateWithConstantsDeleted                               = 5
+	BookingStateWithConstantsUnavailable BookingStateWithConstants = 1
+	BookingStateWithConstantsCanceled    BookingStateWithConstants = 3
+	BookingStateWithConstantsDeleted     BookingStateWithConstants = 5
 )

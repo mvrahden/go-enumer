@@ -13,6 +13,7 @@ import (
 
 	"github.com/mvrahden/go-enumer/about"
 	"github.com/mvrahden/go-enumer/config"
+	"github.com/mvrahden/go-enumer/pkg/common"
 )
 
 const (
@@ -53,43 +54,49 @@ func TestGeneratorEdgeCaseDetection(t *testing.T) {
 		cfg       config.Options
 	}{
 		{directory: "noninteger",
-			errMsg: "Enum type of \"NonInteger\" must be of an unsigned integer type, found \"float32\"."},
+			errMsg: "\"NonInteger\" type specification is invalid. err: enum types must be of any unsigned integer type"},
 		{directory: "lowerbound",
-			errMsg: "Enum type of \"LowerBound\" must be of an unsigned integer type, found \"int\"."},
+			errMsg: "\"LowerBound\" type specification is invalid. err: enum types must be of any unsigned integer type"},
 		{directory: "upperbound",
-			errMsg: "Enum \"UpperBound\" must start with either 0 or 1."},
+			errMsg: "\"UpperBound\" type specification is invalid. err: enum block sequences must start with either 0 or 1"},
 		{directory: "noncontinuous",
-			errMsg: "Enum \"NonContinuous\" must be a continuous sequence with linear increments of 1."},
+			errMsg: "\"NonContinuous\" type specification is invalid. err: enum block sequences must increment at most by one"},
 		{directory: "noncontinuous2",
-			errMsg: "Enum \"NonContinuous2\" must be a continuous sequence with linear increments of 1."},
+			errMsg: "\"NonContinuous2\" type specification is invalid. err: enum block sequences must increment at most by one"},
+		{directory: "noncontinuous3",
+			errMsg: "\"NonContinuous3\" type specification is invalid. err: enum block sequences must increment at most by one"},
+		{directory: "rowed",
+			errMsg: "\"Rowed\" type specification is invalid. err: enum blocks must not contain rowed declarations"},
+		{directory: "block-unrelated-types",
+			errMsg: "\"Unrelated\" type specification is invalid. err: enum blocks must not contain unrelated type declarations"},
 		{directory: "docstring",
-			errMsg: "Failed parsing doc-string for \"InvalidDocstring\". err: flag provided but not defined: -unsupported"},
-		{directory: "csv.const-out-of-range",
-			errMsg: "Failed reading from CSV for \"ConstOutOfRangeCSV\". err: enum constant \"NoSuchValue\" is out of csv source range [1,1]"},
-		{directory: "csv.const-out-of-range-2",
-			errMsg: "Failed reading from CSV for \"ConstOutOfRangeCSV\". err: enum constant \"NoSuchValue\" is out of csv source range [0,1]"},
+			errMsg: "\"InvalidDocstring\" type specification is invalid. err: unknown option \"unsupported\""},
 		{directory: "csv.no-path-traversal",
-			errMsg: "Invalid source file path in doc-string for \"ForbiddenPathTraversalCSV\". err: forbidden path traversal detected"},
+			errMsg: "\"ForbiddenPathTraversalCSV\" type specification is invalid. err: source path cannot contain path traversals"},
 		{directory: "csv.no-path-traversal-2",
-			errMsg: "Invalid source file path in doc-string for \"ForbiddenPathTraversalCSV\". err: forbidden path traversal detected"},
+			errMsg: "\"ForbiddenPathTraversalCSV\" type specification is invalid. err: source path cannot contain path traversals"},
 		{directory: "csv.no-relative-path-prefix",
-			errMsg: "Invalid source file path in doc-string for \"NoRelativePathPrefixCSV\". err: cannot start with \"./\""},
+			errMsg: "\"NoRelativePathPrefixCSV\" type specification is invalid. err: source path cannot start with \"./\" or \"/\""},
 		{directory: "csv.empty",
-			errMsg: "Failed reading from CSV for \"EmptyCSV\". err: found empty csv source"},
+			errMsg: "\"EmptyCSV\" type specification is invalid. err: found empty csv source"},
 		{directory: "csv.invalid-header",
-			errMsg: "Failed reading from CSV for \"NumericFirstCellInCSV\". err: first row must be a header row but found numeric value in first cell"},
+			errMsg: "\"NumericFirstCellInCSV\" type specification is invalid. err: header cannot contain numeric values"},
 		{directory: "csv.invalid-value",
-			errMsg: "Failed reading from CSV for \"NegativeValueInCSV\". err: failed converting \"-1\" to uint64"},
+			errMsg: "\"NegativeValueInCSV\" type specification is invalid. err: failed converting \"-1\" to uint64"},
 		{directory: "csv.missing-file",
-			errMsg: "Failed reading from CSV for \"MissingCSV\". err: no such file \"source.csv\""},
+			errMsg: "\"MissingCSV\" type specification is invalid. err: no such file"},
 		{directory: "csv.missing-value-row",
-			errMsg: "Failed reading from CSV for \"NumericFirstCellInCSV\". err: csv source must contain at least one value row"},
+			errMsg: "\"NumericFirstCellInCSV\" type specification is invalid. err: csv source must contain at least one value row"},
+		{directory: "csv.range-start",
+			errMsg: "\"InvalidRangeCSV\" type specification is invalid. err: enum sequences must start with either 0 or 1"},
 		{directory: "csv.range-noncontinuous",
 			errMsg: "Enum \"InvalidRangeCSV\" must be a continuous sequence with linear increments of 1."},
 		{directory: "csv.range-noncontinuous-2",
 			errMsg: "Enum \"InvalidRangeCSV\" must be a continuous sequence with linear increments of 1."},
-		{directory: "csv.range-start",
-			errMsg: "Failed reading from CSV for \"InvalidRangeCSV\". err: found invalid start of enum sequence at line 2."},
+		{directory: "csv.const-out-of-range",
+			errMsg: "Failed reading from CSV for \"ConstOutOfRangeCSV\". err: enum constant \"NoSuchValue\" is out of csv source range [1,1]"},
+		{directory: "csv.const-out-of-range-2",
+			errMsg: "Failed reading from CSV for \"ConstOutOfRangeCSV\". err: enum constant \"NoSuchValue\" is out of csv source range [0,1]"},
 	} {
 		t.Run(fmt.Sprintf("Generate for package %q", tC.directory), func(t *testing.T) {
 			pkg := path.Join(packageBase, "examples", "_invalid", tC.directory)
@@ -119,7 +126,6 @@ func getExpectedOutputFile(t *testing.T, testdatadir string) string {
 	els := bytes.SplitN(buf, []byte("\n"), 2)
 	require.Len(t, els, 2)
 	firstLine := els[0]
-	require.True(t, matchGeneratedFileRegex.Match(firstLine), "Must be a generated file!")
-	firstLine = []byte(fmt.Sprintf(string(firstLine), about.ShortInfo()))
-	return string(firstLine) + "\n" + string(els[1])
+	require.True(t, common.GEN_ENUMER_FILE.Match(firstLine), "Must be a generated file!")
+	return string(buf)
 }

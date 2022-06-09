@@ -135,69 +135,6 @@ func TestEnums(t *testing.T) {
 			}
 		})
 	})
-	t.Run("PillRowed", func(t *testing.T) {
-		t.Run("Value Sets", func(t *testing.T) {
-			require.Equal(t,
-				[]string{"PLACEBO", "ASPIRIN", "IBUPROFEN", "PARACETAMOL", "VITAMIN-C"},
-				PillRowedStrings())
-			require.Equal(t,
-				[]PillRowed{PillRowedPlacebo, PillRowedAspirin, PillRowedIbuprofen, PillRowedParacetamol, PillRowedVitaminC},
-				PillRowedValues())
-			t.Run("return copies", func(t *testing.T) {
-				utils.AssertNotSamePointer(t, _PillRowedStrings, PillRowedStrings())
-				utils.AssertNotSamePointer(t, _PillRowedValues, PillRowedValues())
-			})
-		})
-		t.Run("Lookup", func(t *testing.T) {
-			type testCase struct {
-				enum  PillRowed
-				upper string
-				lower string
-			}
-			testCases := []testCase{
-				{PillRowedPlacebo, "PLACEBO", "placebo"},
-				{PillRowedAspirin, "ASPIRIN", "aspirin"},
-				{PillRowedIbuprofen, "IBUPROFEN", "ibuprofen"},
-				{PillRowedParacetamol, "PARACETAMOL", "paracetamol"},
-				{PillRowedVitaminC, "VITAMIN-C", "vitamin-c"},
-			}
-			for idx, tC := range testCases {
-				t.Run(fmt.Sprintf("Case-sensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
-					actual, ok := PillRowedFromString(tC.upper)
-					require.True(t, ok)
-					require.Equal(t, tC.enum, actual)
-					actual, ok = PillRowedFromString(tC.lower)
-					require.False(t, ok)
-					require.Equal(t, PillRowed(0), actual)
-				})
-				t.Run(fmt.Sprintf("Case-insensitive lookup (idx: %d %s)", idx, tC.enum), func(t *testing.T) {
-					enum, ok := PillRowedFromStringIgnoreCase(tC.upper)
-					require.True(t, ok)
-					require.Equal(t, tC.enum, enum)
-					enum, ok = PillRowedFromStringIgnoreCase(tC.lower)
-					require.True(t, ok)
-					require.Equal(t, tC.enum, enum)
-				})
-			}
-		})
-		t.Run("Serialization", func(t *testing.T) {
-			cfg := utils.TestConfig{}
-			toPtr := utils.ToPointer[PillRowed]
-			testCases := []utils.TestCase{
-				{From: "", Enum: toPtr(5), Expected: utils.Expected{AsSerialized: "PillRowed(5)", IsInvalid: true}},
-				{From: "PLACEBO", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "PLACEBO"}},
-				{From: "ASPIRIN", Enum: toPtr(PillRowedAspirin), Expected: utils.Expected{AsSerialized: "ASPIRIN"}},
-				{From: "IBUPROFEN", Enum: toPtr(PillRowedIbuprofen), Expected: utils.Expected{AsSerialized: "IBUPROFEN"}},
-				{From: "PARACETAMOL", Enum: toPtr(PillRowedParacetamol), Expected: utils.Expected{AsSerialized: "PARACETAMOL"}},
-				{From: "ACETAMINOPHEN", Enum: toPtr(PillRowedAcetaminophen), Expected: utils.Expected{AsSerialized: "PARACETAMOL"}},
-				{From: "VITAMIN-C", Enum: toPtr(PillRowedVitaminC), Expected: utils.Expected{AsSerialized: "VITAMIN-C"}},
-			}
-			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml.v3"}
-				utils.AssertSerializationInterfacesFor[PillRowed](t, idx, tC, cfg, serializers)
-			}
-		})
-	})
 	t.Run("PillUnsigned8", func(t *testing.T) {
 		t.Run("Value Sets", func(t *testing.T) {
 			require.Equal(t,

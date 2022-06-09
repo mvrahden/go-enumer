@@ -65,7 +65,7 @@ func TestE2E_Errors(t *testing.T) {
 			"on no enums in given directory (wrong path)", []string{"-dir=testdata/nothing-here"}, "no enums detected.",
 		},
 		{
-			"on invalid enum sequence", []string{"-dir=testdata/error_cases/non_continuous_sequence"}, "Enum \"InvalidNonContinuousGreeting\" must be a continuous sequence with linear increments of 1.",
+			"on invalid enum sequence", []string{"-dir=testdata/error_cases/non_continuous_sequence"}, "\"InvalidNonContinuousGreeting\" type specification is invalid. err: enum block sequences must increment at most by one",
 		},
 	}
 	for _, tC := range testcases {
