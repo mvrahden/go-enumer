@@ -10,6 +10,7 @@ import (
 	"github.com/ettle/strcase"
 	"github.com/mvrahden/go-enumer/about"
 	"github.com/mvrahden/go-enumer/config"
+	"github.com/mvrahden/go-enumer/pkg/common"
 	"github.com/mvrahden/go-enumer/pkg/utils/slices"
 )
 
@@ -35,11 +36,11 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		return nil, fmt.Errorf("failed rendering file header. err: %w", err)
 	}
 
-	idx, err := slices.RangeErr(f.TypeSpecs, func(ts *TypeSpec, _ int) error {
+	idx, err := slices.RangeErr(f.TypeSpecs, func(ts *common.EnumType, _ int) error {
 		return r.renderForTypeSpec(buf, ts)
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed rendering sources for %q. err: %w", f.TypeSpecs[idx].Name, err)
+		return nil, fmt.Errorf("failed rendering sources for %q. err: %w", f.TypeSpecs[idx].Name().Name, err)
 	}
 	return buf.Bytes(), nil
 }
@@ -60,15 +61,15 @@ func (r *renderer) renderFileHeader(buf *bytes.Buffer, f *File) error {
 	return headerTpl.ExecuteTemplate(buf, "header.go.tpl", map[string]any{"Header": data})
 }
 
-func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
-	if ts.Meta.IsFromCsvSource {
-		ts.Meta.Config.TransformStrategy = "noop"
+func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *common.EnumType) error {
+	if ts.HasFileSpec() {
+		ts.Config.TransformStrategy = "noop"
 	}
 
-	util := newRenderUtil(ts.Meta.Config)
+	util := newRenderUtil(ts.Config.Options)
 
-	for _, v := range ts.ValueSpecs {
-		v.String = util.transform(v.String)
+	for _, v := range ts.Spec.Values {
+		v.EnumValue = util.transform(v.EnumValue)
 	}
 
 	type EnumValue struct {
@@ -85,27 +86,31 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 		RequiresGeneratedUndefinedValue bool
 		IsFromCsvSource                 bool
 		HasAdditionalData               bool
-		AdditionalData                  *AdditionalData
+		AdditionalData                  *common.AdditionalData
 	}
 	enum := Enum{
-		Name: ts.Name,
-		Values: slices.Map(ts.ValueSpecs, func(v *ValueSpec, idx int) EnumValue {
+		Name: ts.Name().Name,
+		Values: slices.Map(ts.Spec.Values, func(v *common.EnumTypeSpecValue, idx int) EnumValue {
+			var constName string
+			if ts.HasSimpleBlockSpec() {
+				constName = v.ConstSpec.Node.Names[0].Name
+			}
 			return EnumValue{
-				Value:     v.Value,
-				String:    v.String,
-				ConstName: v.ConstName,
-				Position: slices.Reduce(ts.ValueSpecs[0:idx], func(v *ValueSpec, acc int) int {
-					return acc + len(v.String)
+				Value:     v.ID,
+				String:    v.EnumValue,
+				ConstName: constName,
+				Position: slices.Reduce(ts.Spec.Values[0:idx], func(v *common.EnumTypeSpecValue, acc int) int {
+					return acc + len(v.EnumValue)
 				}),
-				Length:             len(v.String),
-				IsAlternativeValue: v.IsAlternativeValue,
+				Length:             len(v.EnumValue),
+				IsAlternativeValue: v.IsAlternative,
 			}
 		}),
-		RequiresGeneratedUndefinedValue: ts.Meta.Config.SupportedFeatures.Contains(config.SupportUndefined) &&
-			slices.None(ts.ValueSpecs, func(v *ValueSpec, idx int) bool { return v.Value == 0 }),
-		IsFromCsvSource:   ts.Meta.IsFromCsvSource,
-		HasAdditionalData: ts.Meta.HasAdditionalData,
-		AdditionalData:    ts.AdditionalData,
+		RequiresGeneratedUndefinedValue: ts.Config.SupportedFeatures.Contains(config.SupportUndefined) &&
+			slices.None(ts.Spec.Values, func(v *common.EnumTypeSpecValue, idx int) bool { return v.ID == 0 }),
+		IsFromCsvSource:   ts.HasFileSpec(),
+		HasAdditionalData: ts.Spec.AdditionalData != nil,
+		AdditionalData:    ts.Spec.AdditionalData,
 	}
 
 	{ // write consts
@@ -116,8 +121,8 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 
 		data := TplData{
 			Enum: enum,
-			AggregatedValueStrings: slices.ReduceSeed(ts.ValueSpecs, &bytes.Buffer{}, func(v *ValueSpec, acc *bytes.Buffer) *bytes.Buffer {
-				acc.WriteString(v.String)
+			AggregatedValueStrings: slices.ReduceSeed(ts.Spec.Values, &bytes.Buffer{}, func(v *common.EnumTypeSpecValue, acc *bytes.Buffer) *bytes.Buffer {
+				acc.WriteString(v.EnumValue)
 				return acc
 			}).String(),
 		}
@@ -134,11 +139,11 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 
 		data := TplData{
 			Enum: enum,
-			CountUniqueValues: slices.Count(ts.ValueSpecs, func(v *ValueSpec, idx int) bool {
+			CountUniqueValues: slices.Count(ts.Spec.Values, func(v *common.EnumTypeSpecValue, idx int) bool {
 				if idx == 0 {
 					return true
 				}
-				return v.Value != ts.ValueSpecs[idx-1].Value
+				return v.ID != ts.Spec.Values[idx-1].ID
 			}),
 		}
 		if err := enumTpl.ExecuteTemplate(buf, "enum.vars.go.tpl", map[string]any{"Type": data}); err != nil {
@@ -163,7 +168,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 			RequiresOffset bool
 		}
 
-		lowerBound := ts.ValueSpecs[0].Value
+		lowerBound := ts.Spec.Values[0].ID
 		if enum.RequiresGeneratedUndefinedValue {
 			lowerBound = 0
 		}
@@ -172,9 +177,9 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 			Enum: enum,
 			Extent: Extent{
 				Min: lowerBound,
-				Max: ts.ValueSpecs[len(ts.ValueSpecs)-1].Value,
+				Max: ts.Spec.Values[len(ts.Spec.Values)-1].ID,
 			},
-			RequiresOffset: ts.ValueSpecs[0].Value > 0,
+			RequiresOffset: ts.Spec.Values[0].ID > 0,
 		}
 
 		if err := enumTpl.ExecuteTemplate(buf, "enum.base-funcs.go.tpl", map[string]any{"Type": data}); err != nil {
@@ -189,7 +194,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *TypeSpec) error {
 		}
 		data := TplData{
 			Enum:             enum,
-			SupportUndefined: ts.Meta.Config.SupportedFeatures.Contains(config.SupportUndefined),
+			SupportUndefined: ts.Config.SupportedFeatures.Contains(config.SupportUndefined),
 		}
 
 		if err := enumTpl.ExecuteTemplate(buf, "enum.lookup-funcs.go.tpl", map[string]any{"Type": data}); err != nil {
@@ -207,6 +212,7 @@ var tplFuncs = template.FuncMap{
 	"add": func(a, b int) int {
 		return a + b
 	},
+	"type": common.TypeToString,
 	"sub": func(a, b int) int {
 		return a - b
 	},
@@ -217,9 +223,6 @@ var tplFuncs = template.FuncMap{
 			return "_" + strings.ToLower(string(v)) // take first rune
 		}
 		return "_x" // fallback
-	},
-	"zero": func(t GoType) string {
-		return t.ZeroValueString()
 	},
 	"contains": func(s []string, t string) bool {
 		for _, v := range s {
@@ -313,7 +316,7 @@ func getTransformStrategy(c *config.Options) func(string) string {
 	}
 }
 
-func (renderUtil) renderSerializers(buf *bytes.Buffer, ts *TypeSpec) error {
+func (renderUtil) renderSerializers(buf *bytes.Buffer, ts *common.EnumType) error {
 	type TplData struct {
 		Name              string
 		Serializers       []string
@@ -321,10 +324,10 @@ func (renderUtil) renderSerializers(buf *bytes.Buffer, ts *TypeSpec) error {
 		SupportUndefined  bool
 	}
 	data := TplData{
-		Name:              ts.Name,
-		Serializers:       ts.Meta.Config.Serializers,
-		SupportIgnoreCase: ts.Meta.Config.SupportedFeatures.Contains(config.SupportIgnoreCase),
-		SupportUndefined:  ts.Meta.Config.SupportedFeatures.Contains(config.SupportUndefined),
+		Name:              ts.Name().Name,
+		Serializers:       ts.Config.Serializers,
+		SupportIgnoreCase: ts.Config.SupportedFeatures.Contains(config.SupportIgnoreCase),
+		SupportUndefined:  ts.Config.SupportedFeatures.Contains(config.SupportUndefined),
 	}
 
 	if err := enumTpl.ExecuteTemplate(buf, "enum.serializers.go.tpl", map[string]any{"Type": data}); err != nil {
@@ -333,14 +336,14 @@ func (renderUtil) renderSerializers(buf *bytes.Buffer, ts *TypeSpec) error {
 	return nil
 }
 
-func (renderUtil) renderEntInterfaceSupport(buf *bytes.Buffer, ts *TypeSpec) error {
+func (renderUtil) renderEntInterfaceSupport(buf *bytes.Buffer, ts *common.EnumType) error {
 	type TplData struct {
 		Name                string
 		SupportEntInterface bool
 	}
 	data := TplData{
-		Name:                ts.Name,
-		SupportEntInterface: ts.Meta.Config.SupportedFeatures.Contains(config.SupportEntInterface),
+		Name:                ts.Name().Name,
+		SupportEntInterface: ts.Config.SupportedFeatures.Contains(config.SupportEntInterface),
 	}
 	if err := enumTpl.ExecuteTemplate(buf, "enum.misc.ent.go.tpl", map[string]any{"Type": data}); err != nil {
 		return err

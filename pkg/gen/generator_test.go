@@ -26,6 +26,7 @@ func TestGeneratorExamples(t *testing.T) {
 		description string
 	}{
 		{"greetings", "standard enum and enum with default value"},
+		{"animals", "standard enums with some transformations"},
 		{"pills", "compatibility for various unsigned integer types and forms of assignment"},
 		{"planets", "standard enum and enum with default value support `ignore-case` and `undefined`"},
 		{"booking", "CSV source"},

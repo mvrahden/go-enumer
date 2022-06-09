@@ -173,11 +173,15 @@ func (e *EnumType) LoadSpec(fset *token.FileSet) error {
 }
 
 func (e *EnumType) LoadSimpleBlockSpec() error {
-	e.Spec = &EnumTypeSpec{Type: SimpleBlockSpec, Values: make([]*EnumTypeSpecValue, len(e.ConstBlock.Specs))}
+	spec := &EnumTypeSpec{Type: SimpleBlockSpec, Values: make([]*EnumTypeSpecValue, len(e.ConstBlock.Specs))}
 
 	slices.Range(e.ConstBlock.Specs, func(v *EnumValueSpec, idx int) {
-		e.Spec.Values[idx] = &EnumTypeSpecValue{ID: v.Value, EnumValue: v.Node.Names[0].Name}
+		enumValue := v.Node.Names[0].Name
+		enumValue = strings.TrimPrefix(enumValue, e.Name().Name)
+		spec.Values[idx] = &EnumTypeSpecValue{ID: v.Value, EnumValue: enumValue, ConstSpec: v}
 	})
+
+	e.Spec = e.detectAlternativeValues(spec)
 	return nil
 }
 
@@ -190,8 +194,19 @@ func (e *EnumType) LoadFileSpec(fset *token.FileSet) error {
 	if err != nil {
 		return err
 	}
-	e.Spec = spec
+	e.Spec = e.detectAlternativeValues(spec)
 	return nil
+}
+
+func (e *EnumType) detectAlternativeValues(spec *EnumTypeSpec) *EnumTypeSpec {
+	slices.Range(spec.Values, func(v *EnumTypeSpecValue, idx int) {
+		if idx == 0 {
+			return
+		}
+		prev := spec.Values[idx-1]
+		v.IsAlternative = prev.ID == v.ID
+	})
+	return spec
 }
 
 const maxSize int64 = 5e6 // 5MB

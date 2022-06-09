@@ -13,10 +13,11 @@ TODO:
 
 1. `greetings`: Generate standard enum and enums with default value (zero value).
 2. `pills`: Generate enums for all unsigned integer types.
-3. `planets`: Generate various combinations of standard/default vs. undefined.
-4. `booking`: Generate enums from CSV source.
-5. `color`: Generate enums from CSV source with typed additional data.
-6. `project`: A more realistic mix of enums.
+3. `animals`: Generate enums with various case transformations.
+4. `planets`: Generate various combinations of standard/default vs. undefined.
+5. `booking`: Generate enums from CSV source.
+6. `color`: Generate enums from CSV source with typed additional data.
+7. `project`: A more realistic mix of enums.
 
 > `_invalid`: Contains various invalid edge cases which are expected to produce specific user-friendly errors.
 > You can happily **ignore this directory** as it is for testing puproses only.

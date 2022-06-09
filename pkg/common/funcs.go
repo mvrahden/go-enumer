@@ -166,6 +166,25 @@ var (
 		"bool":       types.Bool,
 		"string":     types.String,
 	}
+	primitiveTypesReverse = map[types.BasicKind]string{
+		types.Uint:       "uint",
+		types.Uint8:      "uint8",
+		types.Uint16:     "uint16",
+		types.Uint32:     "uint32",
+		types.Uint64:     "uint64",
+		types.Int:        "int",
+		types.Int8:       "int8",
+		types.Int16:      "int16",
+		types.Int32:      "int32",
+		types.Int64:      "int64",
+		types.Float32:    "float32",
+		types.Float64:    "float64",
+		types.Complex64:  "complex64",
+		types.Complex128: "complex128",
+		types.Bool:       "bool",
+		types.String:     "string",
+	}
+
 	typedParserFuncs = map[types.BasicKind]func(raw string) (any, error){
 		types.Uint: func(raw string) (any, error) {
 			if len(raw) == 0 {
@@ -334,6 +353,10 @@ var (
 		types.String: func(raw string) (any, error) { return raw, nil },
 	}
 )
+
+func TypeToString(t types.BasicKind) string {
+	return primitiveTypesReverse[t]
+}
 
 var (
 	ErrIsNaN    = errors.New("typed value is NaN")

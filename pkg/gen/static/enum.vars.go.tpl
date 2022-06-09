@@ -19,10 +19,11 @@ var (
 {{- if $ts.HasAdditionalData }}
 	_{{ $ts.Name }}AdditionalData  = [{{ $ts.CountUniqueValues }}]struct{
 	{{- range $h := $ts.AdditionalData.Headers }}
-		{{ pascal $h.Name }} {{ $h.Type }}
+		{{ pascal $h.Name }} {{ type $h.Type }}
 	{{- end }}
 	}{
 	{{- range $ridx, $r := $ts.AdditionalData.Rows }}
+		{{- if (index $ts.Values $ridx).IsAlternativeValue }}{{continue}}{{end}}
 		{
 		{{- range $cidx, $c := $r }}
 			{{- $isNotLastCell := sub (len $r) 1 | lt $cidx }}
