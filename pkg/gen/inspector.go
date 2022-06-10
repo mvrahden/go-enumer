@@ -1,6 +1,7 @@
 package gen
 
 import (
+	"errors"
 	"fmt"
 	"go/ast"
 	"go/types"
@@ -48,7 +49,7 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 
 func (i inspector) loadEnumTypes(pkg *packages.Package, out *File) error {
 	insp := goinspect.New(pkg.Syntax)
-	genFile := common.DetermineGeneratedFile(pkg.Syntax) // hint: get the generated enumer file
+	genFile := common.DetectGeneratedFile(pkg.Syntax) // hint: get the generated enumer file
 
 	enumTypes, err := i.detectTypeSpecs(insp, pkg.TypesInfo, genFile)
 	if err != nil {
@@ -56,9 +57,9 @@ func (i inspector) loadEnumTypes(pkg *packages.Package, out *File) error {
 	}
 
 	idx, err := slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
-		mc, err := v.DetectMagicComment()
-		if err != nil {
-			return err
+		mc := v.DetectMagicComment()
+		if mc == nil {
+			return errors.New("no magic comment") // hint: this should never happen
 		}
 		err = v.ParseMagicComment(mc, i.cfg)
 		if err != nil {

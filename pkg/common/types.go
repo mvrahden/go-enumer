@@ -75,14 +75,13 @@ func (e *EnumValueSpec) GetObjectVia(ti *types.Info) types.Object {
 	return ti.ObjectOf(e.Node.Names[0])
 }
 
-func (e *EnumType) DetectMagicComment() (c *ast.Comment, err error) {
+// DetectMagicComment retrieves the magic comment from the list of comments.
+// It assumes that a magic comment exists.
+func (e *EnumType) DetectMagicComment() (c *ast.Comment) {
 	mcIdx := slices.FindIndex(e.Node.Doc.List, func(c *ast.Comment, idx int) bool {
 		return MAGIC_MARKER.MatchString(c.Text)
 	})
-	if mcIdx == -1 {
-		return nil, errors.New("no magic comment")
-	}
-	return e.Node.Doc.List[mcIdx], nil
+	return e.Node.Doc.List[mcIdx]
 }
 
 // ExtractCommentString is a Noop func, but allows to be intercepted during tests
@@ -471,12 +470,28 @@ func (e *EnumType) CrossValidateConstBlockWithSpec(fset *token.FileSet, typesInf
 	}
 	// Enums based on file specs can have additional const blocks
 	// to reference individual often used values for convenience.
-	// Here we need to ensure that these const block values are in sync with their spec.
+	// Here we need to ensure that these const block values are:
+	// - complying to good usage practices
+	// - in sync with their spec
+
+	// assert one value reference per enum type only
+	badIdx := slices.FindIndex(e.ConstBlock.Specs, func(s1 *EnumValueSpec, idx int) bool {
+		if idx == len(e.ConstBlock.Specs)-1 {
+			return false
+		}
+		return slices.Any(e.ConstBlock.Specs[idx+1:], func(s2 *EnumValueSpec, idx int) bool {
+			return s1.Value == s2.Value
+		})
+	})
+	if badIdx > -1 {
+		constValue := e.ConstBlock.Node.Specs[badIdx].(*ast.ValueSpec)
+		return fmt.Errorf("%q is a redundant constant", constValue.Names[0].Name)
+	}
 
 	// assert const block values do not exceed spec range
 	specMin := e.Spec.Values[0].ID
 	specMax := e.Spec.Values[len(e.Spec.Values)-1].ID
-	badIdx := slices.FindIndex(e.ConstBlock.Specs, func(vs *EnumValueSpec, idx int) bool {
+	badIdx = slices.FindIndex(e.ConstBlock.Specs, func(vs *EnumValueSpec, idx int) bool {
 		return vs.Value < specMin || vs.Value > specMax
 	})
 	if badIdx > -1 {

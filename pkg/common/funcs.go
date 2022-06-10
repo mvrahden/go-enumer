@@ -11,7 +11,9 @@ import (
 	"github.com/mvrahden/go-enumer/pkg/utils/slices"
 )
 
-func DetermineGeneratedFile(files []*ast.File) (genFile *ast.File) {
+// DetectGeneratedFile determines the generated enumer file.
+// If no such file exists, it will return `nil`.
+func DetectGeneratedFile(files []*ast.File) (genFile *ast.File) {
 	genFileIdx := slices.FindIndex(files, func(f *ast.File, _ int) bool {
 		if len(f.Comments) == 0 {
 			return false

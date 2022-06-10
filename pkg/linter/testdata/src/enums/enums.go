@@ -20,9 +20,9 @@ const (
 
 // InvalidD
 //go:enum
-type InvalidD uint
+type InvalidD uint // want `enum const block must not contain rowed declarations`
 
-const ( // want `enum blocks must not contain rowed declarations`
+const (
 	InvalidDHello              InvalidD = iota
 	InvalidDWorld, InvalidDFoo InvalidD = 0, 1
 	InvalidDBar, InvalidDBaz            = 0, 1
@@ -30,31 +30,31 @@ const ( // want `enum blocks must not contain rowed declarations`
 
 // InvalidE
 //go:enum
-type InvalidE uint
+type InvalidE uint // want `enum const block must not contain rowed declarations`
 
-const ( // want `enum blocks must not contain rowed declarations`
+const (
 	InvalidEWorld, InvalidEFoo InvalidE = 0, 1
 	InvalidEBar, InvalidEBaz            = 0, 1
 )
 
 // InvalidF
 //go:enum
-type InvalidF uint
+type InvalidF uint // want `enum const block must not contain unrelated type declarations`
 
-const ( // want `enum blocks must not contain unrelated type declaration`
+const (
 	InvalidFHello InvalidF = iota
 	InvalidFWorld
 	InvalidFFoo = 2
 	InvalidFBar = 3
 )
 
-const ( // want `enum blocks must be defined after their type definition`
+const (
 	InvalidG0Hello InvalidG0 = 0
 )
 
 // InvalidG0
 //go:enum
-type InvalidG0 uint
+type InvalidG0 uint // want `enum const block must be defined after its type definition`
 
 // InvalidG1
 //go:enum
@@ -70,21 +70,21 @@ const ( // want `enum constants must be defined in a common block`
 
 // InvalidG2 has const in other file
 //go:enum
-type InvalidG2 uint
+type InvalidG2 uint // want `enum const block must be in same file as their type definition`
 
 // InvalidH
 //go:enum
-type InvalidH uint
+type InvalidH uint // want `enum spec sequences must start with either 0 or 1`
 
-const ( // want `enum block sequences must start with either 0 or 1`
+const (
 	InvalidHHello InvalidH = iota + 2
 )
 
 // InvalidI
 //go:enum
-type InvalidI uint
+type InvalidI uint // want `enum spec sequences must be ordered`
 
-const ( // want `enum block sequences must be ordered`
+const (
 	InvalidIWorld InvalidI = 0
 	InvalidIHello InvalidI = 2
 	InvalidIFoo   InvalidI = 1
@@ -92,18 +92,18 @@ const ( // want `enum block sequences must be ordered`
 
 // InvalidJ
 //go:enum
-type InvalidJ uint
+type InvalidJ uint // want `enum spec sequences must start with either 0 or 1`
 
-const ( // want `enum block sequences must start with either 0 or 1`
+const (
 	InvalidJHello InvalidJ = iota + 2
 	InvalidJWorld
 )
 
 // InvalidK
 //go:enum
-type InvalidK uint
+type InvalidK uint // want `enum spec sequences must increment at most by one`
 
-const ( // want `enum block sequences must increment at most by one`
+const (
 	InvalidKHello InvalidK = iota
 	InvalidKWorld
 	InvalidKFoo InvalidK = 3
