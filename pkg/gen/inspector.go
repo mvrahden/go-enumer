@@ -12,7 +12,7 @@ import (
 	"golang.org/x/tools/go/packages"
 
 	"github.com/mvrahden/go-enumer/config"
-	"github.com/mvrahden/go-enumer/pkg/common"
+	"github.com/mvrahden/go-enumer/pkg/enumer"
 	"github.com/mvrahden/go-enumer/pkg/utils/slices"
 )
 
@@ -49,14 +49,14 @@ func (i inspector) Inspect(pkg *packages.Package) (*File, error) {
 
 func (i inspector) loadEnumTypes(pkg *packages.Package, out *File) error {
 	insp := goinspect.New(pkg.Syntax)
-	genFile := common.DetectGeneratedFile(pkg.Syntax) // hint: get the generated enumer file
+	genFile := enumer.DetectGeneratedFile(pkg.Syntax) // hint: get the generated enumer file
 
 	enumTypes, err := i.detectTypeSpecs(insp, pkg.TypesInfo, genFile)
 	if err != nil {
 		return err
 	}
 
-	idx, err := slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
+	idx, err := slices.RangeErr(enumTypes, func(v *enumer.EnumType, _ int) error {
 		mc := v.DetectMagicComment()
 		if mc == nil {
 			return errors.New("no magic comment") // hint: this should never happen
@@ -76,26 +76,26 @@ func (i inspector) loadEnumTypes(pkg *packages.Package, out *File) error {
 		return err
 	}
 
-	idx, err = slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
+	idx, err = slices.RangeErr(enumTypes, func(v *enumer.EnumType, _ int) error {
 		return v.ValidateConstBlock(pkg.Fset, pkg.TypesInfo)
 	})
 	if err != nil {
 		goto SPEC_IS_INVALID
 	}
 
-	idx, err = slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
+	idx, err = slices.RangeErr(enumTypes, func(v *enumer.EnumType, _ int) error {
 		return v.LoadSpec(pkg.Fset)
 	})
 	if err != nil {
 		goto SPEC_IS_INVALID
 	}
-	idx, err = slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
+	idx, err = slices.RangeErr(enumTypes, func(v *enumer.EnumType, _ int) error {
 		return v.ValidateSpec(pkg.Fset, pkg.TypesInfo)
 	})
 	if err != nil {
 		goto SPEC_IS_INVALID
 	}
-	idx, err = slices.RangeErr(enumTypes, func(v *common.EnumType, _ int) error {
+	idx, err = slices.RangeErr(enumTypes, func(v *enumer.EnumType, _ int) error {
 		return v.CrossValidateConstBlockWithSpec(pkg.Fset, pkg.TypesInfo)
 	})
 SPEC_IS_INVALID:
@@ -107,11 +107,11 @@ SPEC_IS_INVALID:
 	return nil
 }
 
-func (inspector) detectTypeSpecs(insp *goinspect.Inspector, typesInfo *types.Info, genFile *ast.File) ([]*common.EnumType, error) {
+func (inspector) detectTypeSpecs(insp *goinspect.Inspector, typesInfo *types.Info, genFile *ast.File) ([]*enumer.EnumType, error) {
 	var errs []error
-	var enumTypes []*common.EnumType
+	var enumTypes []*enumer.EnumType
 	insp.Preorder([]ast.Node{(*ast.GenDecl)(nil)}, func(n ast.Node) {
-		et, _, err := common.DetermineEnumType(n, typesInfo, genFile)
+		et, _, err := enumer.DetermineEnumType(n, typesInfo, genFile)
 		if err != nil {
 			typ := n.(*ast.GenDecl).Specs[0].(*ast.TypeSpec)
 			errs = append(errs, fmt.Errorf("%q type specification is invalid. err: %s", typ.Name, err))
@@ -127,10 +127,10 @@ func (inspector) detectTypeSpecs(insp *goinspect.Inspector, typesInfo *types.Inf
 	return enumTypes, nil
 }
 
-func (inspector) detectConstBlocks(insp *goinspect.Inspector, typesInfo *types.Info, genFile *ast.File, enumTypes []*common.EnumType) error {
+func (inspector) detectConstBlocks(insp *goinspect.Inspector, typesInfo *types.Info, genFile *ast.File, enumTypes []*enumer.EnumType) error {
 	var errs []error
 	insp.Preorder([]ast.Node{(*ast.GenDecl)(nil)}, func(n ast.Node) {
-		_, err := common.AssignEnumConstBlockToType(n, typesInfo, genFile, enumTypes)
+		_, err := enumer.AssignEnumConstBlockToType(n, typesInfo, genFile, enumTypes)
 		if err != nil {
 			errs = append(errs, err)
 		}
@@ -193,7 +193,7 @@ func (i inspector) determineImports(f *File) {
 
 func (i inspector) sortTypeSpecs(f *File) {
 	// sort all enums
-	f.TypeSpecs = slices.SortStable(f.TypeSpecs, func(s []*common.EnumType, i, j int) bool {
+	f.TypeSpecs = slices.SortStable(f.TypeSpecs, func(s []*enumer.EnumType, i, j int) bool {
 		return strings.Compare(s[i].Name().Name, s[j].Name().Name) < 0
 	})
 }

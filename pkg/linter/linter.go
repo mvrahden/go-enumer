@@ -9,7 +9,7 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 
 	"github.com/mvrahden/go-enumer/config"
-	"github.com/mvrahden/go-enumer/pkg/common"
+	"github.com/mvrahden/go-enumer/pkg/enumer"
 	"github.com/mvrahden/go-enumer/pkg/utils/slices"
 )
 
@@ -43,7 +43,7 @@ func run(pass *analysis.Pass, c *Config) (_ interface{}, err error) {
 
 	validateGenerateCommand(inspector, pass)
 
-	genFile := common.DetectGeneratedFile(pass.Files)
+	genFile := enumer.DetectGeneratedFile(pass.Files)
 
 	enumTypes := determineEnumTypes(inspector, pass, genFile)
 	if len(enumTypes) == 0 {
@@ -72,10 +72,10 @@ func validateGenerateCommand(inspector *inspector.Inspector, pass *analysis.Pass
 	// TODO
 }
 
-func determineEnumTypes(inspector *inspector.Inspector, pass *analysis.Pass, genFile *ast.File) []*common.EnumType {
-	var enumTypes []*common.EnumType
+func determineEnumTypes(inspector *inspector.Inspector, pass *analysis.Pass, genFile *ast.File) []*enumer.EnumType {
+	var enumTypes []*enumer.EnumType
 	inspector.Preorder([]ast.Node{(*ast.GenDecl)(nil)}, func(n ast.Node) {
-		et, pos, err := common.DetermineEnumType(n, pass.TypesInfo, genFile)
+		et, pos, err := enumer.DetermineEnumType(n, pass.TypesInfo, genFile)
 		if err != nil {
 			pass.Reportf(pos, err.Error())
 			return
@@ -88,8 +88,8 @@ func determineEnumTypes(inspector *inspector.Inspector, pass *analysis.Pass, gen
 	return enumTypes
 }
 
-func validateEnumTypes(pass *analysis.Pass, enumTypes []*common.EnumType) []*common.EnumType {
-	enumTypes = slices.Filter(enumTypes, func(v *common.EnumType, idx int) bool {
+func validateEnumTypes(pass *analysis.Pass, enumTypes []*enumer.EnumType) []*enumer.EnumType {
+	enumTypes = slices.Filter(enumTypes, func(v *enumer.EnumType, idx int) bool {
 		mc := v.DetectMagicComment()
 		err := v.ParseMagicComment(mc, &config.Options{TransformStrategy: "noop"})
 		if err != nil {
@@ -105,11 +105,11 @@ func validateEnumTypes(pass *analysis.Pass, enumTypes []*common.EnumType) []*com
 	})
 
 	// validate redundant source
-	enumTypes = slices.Filter(enumTypes, func(v *common.EnumType, idx int) bool {
+	enumTypes = slices.Filter(enumTypes, func(v *enumer.EnumType, idx int) bool {
 		if len(v.Config.FromSource) == 0 {
 			return true
 		}
-		sameSource := slices.Any(enumTypes[:idx], func(v2 *common.EnumType, _ int) bool {
+		sameSource := slices.Any(enumTypes[:idx], func(v2 *enumer.EnumType, _ int) bool {
 			return v.Config.FromSource == v2.Config.FromSource
 		})
 		if sameSource {
@@ -120,7 +120,7 @@ func validateEnumTypes(pass *analysis.Pass, enumTypes []*common.EnumType) []*com
 	})
 
 	// validate file source existence
-	enumTypes = slices.Filter(enumTypes, func(v *common.EnumType, idx int) bool {
+	enumTypes = slices.Filter(enumTypes, func(v *enumer.EnumType, idx int) bool {
 		err := v.ValidateEnumTypeConfig(pass.Fset)
 		if err != nil {
 			pass.Reportf(v.Config.Node.Pos(), err.Error())
@@ -132,17 +132,17 @@ func validateEnumTypes(pass *analysis.Pass, enumTypes []*common.EnumType) []*com
 	return enumTypes
 }
 
-func detectAndValidateEnumConstBlocksForTypes(inspector *inspector.Inspector, pass *analysis.Pass, genFile *ast.File, enumTypes []*common.EnumType) []*common.EnumType {
+func detectAndValidateEnumConstBlocksForTypes(inspector *inspector.Inspector, pass *analysis.Pass, genFile *ast.File, enumTypes []*enumer.EnumType) []*enumer.EnumType {
 	// Find relevant enum const blocks for enum types
 	inspector.Preorder([]ast.Node{(*ast.GenDecl)(nil)}, func(n ast.Node) {
-		pos, err := common.AssignEnumConstBlockToType(n, pass.TypesInfo, genFile, enumTypes)
+		pos, err := enumer.AssignEnumConstBlockToType(n, pass.TypesInfo, genFile, enumTypes)
 		if err != nil {
 			pass.Reportf(pos, err.Error())
 			return
 		}
 	})
 
-	return slices.Filter(enumTypes, func(v *common.EnumType, idx int) bool {
+	return slices.Filter(enumTypes, func(v *enumer.EnumType, idx int) bool {
 		err := v.ValidateConstBlock(pass.Fset, pass.TypesInfo)
 		if err != nil {
 			pass.Reportf(v.Node.Pos(), err.Error())
@@ -152,8 +152,8 @@ func detectAndValidateEnumConstBlocksForTypes(inspector *inspector.Inspector, pa
 	})
 }
 
-func loadAndValidateSpec(pass *analysis.Pass, enumTypes []*common.EnumType) []*common.EnumType {
-	enumTypes = slices.Filter(enumTypes, func(v *common.EnumType, idx int) bool {
+func loadAndValidateSpec(pass *analysis.Pass, enumTypes []*enumer.EnumType) []*enumer.EnumType {
+	enumTypes = slices.Filter(enumTypes, func(v *enumer.EnumType, idx int) bool {
 		err := v.LoadSpec(pass.Fset)
 		if err != nil {
 			pass.Reportf(v.Node.Pos(), err.Error())
@@ -161,7 +161,7 @@ func loadAndValidateSpec(pass *analysis.Pass, enumTypes []*common.EnumType) []*c
 		}
 		return true
 	})
-	enumTypes = slices.Filter(enumTypes, func(v *common.EnumType, idx int) bool {
+	enumTypes = slices.Filter(enumTypes, func(v *enumer.EnumType, idx int) bool {
 		err := v.ValidateSpec(pass.Fset, pass.TypesInfo)
 		if err != nil {
 			pass.Reportf(v.Node.Pos(), err.Error())
@@ -169,7 +169,7 @@ func loadAndValidateSpec(pass *analysis.Pass, enumTypes []*common.EnumType) []*c
 		}
 		return true
 	})
-	return slices.Filter(enumTypes, func(v *common.EnumType, idx int) bool {
+	return slices.Filter(enumTypes, func(v *enumer.EnumType, idx int) bool {
 		err := v.CrossValidateConstBlockWithSpec(pass.Fset, pass.TypesInfo)
 		if err != nil {
 			pass.Reportf(v.Node.Pos(), err.Error())

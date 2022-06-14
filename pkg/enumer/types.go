@@ -1,4 +1,4 @@
-package common
+package enumer
 
 import (
 	"encoding/csv"

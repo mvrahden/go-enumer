@@ -10,7 +10,7 @@ import (
 	"github.com/ettle/strcase"
 	"github.com/mvrahden/go-enumer/about"
 	"github.com/mvrahden/go-enumer/config"
-	"github.com/mvrahden/go-enumer/pkg/common"
+	"github.com/mvrahden/go-enumer/pkg/enumer"
 	"github.com/mvrahden/go-enumer/pkg/utils/slices"
 )
 
@@ -36,7 +36,7 @@ func (r *renderer) Render(f *File) ([]byte, error) {
 		return nil, fmt.Errorf("failed rendering file header. err: %w", err)
 	}
 
-	idx, err := slices.RangeErr(f.TypeSpecs, func(ts *common.EnumType, _ int) error {
+	idx, err := slices.RangeErr(f.TypeSpecs, func(ts *enumer.EnumType, _ int) error {
 		return r.renderForTypeSpec(buf, ts)
 	})
 	if err != nil {
@@ -61,7 +61,7 @@ func (r *renderer) renderFileHeader(buf *bytes.Buffer, f *File) error {
 	return headerTpl.ExecuteTemplate(buf, "header.go.tpl", map[string]any{"Header": data})
 }
 
-func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *common.EnumType) error {
+func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *enumer.EnumType) error {
 	if ts.HasFileSpec() {
 		ts.Config.TransformStrategy = "noop"
 	}
@@ -86,11 +86,11 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *common.EnumType) err
 		RequiresGeneratedUndefinedValue bool
 		IsFromCsvSource                 bool
 		HasAdditionalData               bool
-		AdditionalData                  *common.AdditionalData
+		AdditionalData                  *enumer.AdditionalData
 	}
 	enum := Enum{
 		Name: ts.Name().Name,
-		Values: slices.Map(ts.Spec.Values, func(v *common.EnumTypeSpecValue, idx int) EnumValue {
+		Values: slices.Map(ts.Spec.Values, func(v *enumer.EnumTypeSpecValue, idx int) EnumValue {
 			var constName string
 			if ts.HasSimpleBlockSpec() {
 				constName = v.ConstSpec.Node.Names[0].Name
@@ -99,7 +99,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *common.EnumType) err
 				Value:     v.ID,
 				String:    v.EnumValue,
 				ConstName: constName,
-				Position: slices.Reduce(ts.Spec.Values[0:idx], func(v *common.EnumTypeSpecValue, acc int) int {
+				Position: slices.Reduce(ts.Spec.Values[0:idx], func(v *enumer.EnumTypeSpecValue, acc int) int {
 					return acc + len(v.EnumValue)
 				}),
 				Length:             len(v.EnumValue),
@@ -107,7 +107,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *common.EnumType) err
 			}
 		}),
 		RequiresGeneratedUndefinedValue: ts.Config.SupportedFeatures.Contains(config.SupportUndefined) &&
-			slices.None(ts.Spec.Values, func(v *common.EnumTypeSpecValue, idx int) bool { return v.ID == 0 }),
+			slices.None(ts.Spec.Values, func(v *enumer.EnumTypeSpecValue, idx int) bool { return v.ID == 0 }),
 		IsFromCsvSource:   ts.HasFileSpec(),
 		HasAdditionalData: ts.Spec.AdditionalData != nil,
 		AdditionalData:    ts.Spec.AdditionalData,
@@ -121,7 +121,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *common.EnumType) err
 
 		data := TplData{
 			Enum: enum,
-			AggregatedValueStrings: slices.ReduceSeed(ts.Spec.Values, &bytes.Buffer{}, func(v *common.EnumTypeSpecValue, acc *bytes.Buffer) *bytes.Buffer {
+			AggregatedValueStrings: slices.ReduceSeed(ts.Spec.Values, &bytes.Buffer{}, func(v *enumer.EnumTypeSpecValue, acc *bytes.Buffer) *bytes.Buffer {
 				acc.WriteString(v.EnumValue)
 				return acc
 			}).String(),
@@ -139,7 +139,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *common.EnumType) err
 
 		data := TplData{
 			Enum: enum,
-			CountUniqueValues: slices.Count(ts.Spec.Values, func(v *common.EnumTypeSpecValue, idx int) bool {
+			CountUniqueValues: slices.Count(ts.Spec.Values, func(v *enumer.EnumTypeSpecValue, idx int) bool {
 				if idx == 0 {
 					return true
 				}
@@ -212,7 +212,7 @@ var tplFuncs = template.FuncMap{
 	"add": func(a, b int) int {
 		return a + b
 	},
-	"type": common.TypeToString,
+	"type": enumer.TypeToString,
 	"sub": func(a, b int) int {
 		return a - b
 	},
@@ -316,7 +316,7 @@ func getTransformStrategy(c *config.Options) func(string) string {
 	}
 }
 
-func (renderUtil) renderSerializers(buf *bytes.Buffer, ts *common.EnumType) error {
+func (renderUtil) renderSerializers(buf *bytes.Buffer, ts *enumer.EnumType) error {
 	type TplData struct {
 		Name              string
 		Serializers       []string
@@ -336,7 +336,7 @@ func (renderUtil) renderSerializers(buf *bytes.Buffer, ts *common.EnumType) erro
 	return nil
 }
 
-func (renderUtil) renderEntInterfaceSupport(buf *bytes.Buffer, ts *common.EnumType) error {
+func (renderUtil) renderEntInterfaceSupport(buf *bytes.Buffer, ts *enumer.EnumType) error {
 	type TplData struct {
 		Name                string
 		SupportEntInterface bool

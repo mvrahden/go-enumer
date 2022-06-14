@@ -9,12 +9,12 @@ import (
 
 	"golang.org/x/tools/go/analysis/analysistest"
 
-	"github.com/mvrahden/go-enumer/pkg/common"
+	"github.com/mvrahden/go-enumer/pkg/enumer"
 	"github.com/mvrahden/go-enumer/pkg/utils"
 )
 
 func init() {
-	common.ExtractCommentString = func(c *ast.Comment) string {
+	enumer.ExtractCommentString = func(c *ast.Comment) string {
 		// hint: strip any test artifacts
 		els := strings.Split(c.Text, " // want ")
 		return els[0]

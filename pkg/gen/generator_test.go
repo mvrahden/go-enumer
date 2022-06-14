@@ -13,7 +13,7 @@ import (
 
 	"github.com/mvrahden/go-enumer/about"
 	"github.com/mvrahden/go-enumer/config"
-	"github.com/mvrahden/go-enumer/pkg/common"
+	"github.com/mvrahden/go-enumer/pkg/enumer"
 )
 
 const (
@@ -131,6 +131,6 @@ func getExpectedOutputFile(t *testing.T, testdatadir string) string {
 	els := bytes.SplitN(buf, []byte("\n"), 2)
 	require.Len(t, els, 2)
 	firstLine := els[0]
-	require.True(t, common.GEN_ENUMER_FILE.Match(firstLine), "Must be a generated file!")
+	require.True(t, enumer.GEN_ENUMER_FILE.Match(firstLine), "Must be a generated file!")
 	return string(buf)
 }

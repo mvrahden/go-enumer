@@ -1,13 +1,13 @@
 package gen
 
 import (
-	"github.com/mvrahden/go-enumer/pkg/common"
+	"github.com/mvrahden/go-enumer/pkg/enumer"
 )
 
 type File struct {
 	Header    Header
 	Imports   []*Import
-	TypeSpecs []*common.EnumType
+	TypeSpecs []*enumer.EnumType
 }
 
 type Header struct {
