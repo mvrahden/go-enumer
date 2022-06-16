@@ -32,20 +32,19 @@ func TestE2E_Cli(t *testing.T) {
 	}
 	for idx, tC := range testcases {
 		t.Run(fmt.Sprintf("Generate (idx: %d %q)", idx, tC.desc), func(t *testing.T) {
-			t.Cleanup(cli.CleanUpPackage)
 
 			tmpDir := t.TempDir()
-			tmpFile := filepath.Join(tmpDir, tC.outFilename)
-			cli.PatchTargetFilenameFunc(t, tmpFile)
+			cli.PatchTargetFilenameFunc(t, tmpDir)
+			tmpFile := filepath.Join(tmpDir, tC.outFilename+".go")
 
-			defaultArgs := []string{"-dir=testdata/" + tC.dirName}
+			defaultArgs := []string{"-dir=testdata/" + tC.dirName, "-out=" + tC.outFilename}
 			err := cli.Execute(append(defaultArgs, tC.args...))
 			require.NoError(t, err)
 			require.FileExists(t, tmpFile)
 
 			actual, err := os.ReadFile(tmpFile)
 			require.NoError(t, err)
-			expected, err := os.ReadFile("testdata/" + tC.dirName + "/" + tC.outFilename)
+			expected, err := os.ReadFile(filepath.Join("testdata", tC.dirName, tC.outFilename))
 			require.NoError(t, err)
 			require.Equal(t, string(expected), string(actual))
 		})
@@ -70,7 +69,6 @@ func TestE2E_Errors(t *testing.T) {
 	}
 	for _, tC := range testcases {
 		t.Run(tC.desc, func(t *testing.T) {
-			t.Cleanup(cli.CleanUpPackage)
 			err := cli.Execute(tC.args)
 			require.EqualError(t, err, "failed generating code. err: "+tC.msg)
 		})

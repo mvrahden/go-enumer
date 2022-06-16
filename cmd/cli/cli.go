@@ -1,18 +1,16 @@
 package cli
 
 import (
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/mvrahden/go-enumer/config"
 	"github.com/mvrahden/go-enumer/pkg/gen"
-)
-
-var (
-	cArgs    config.Args
-	scanPath string
 )
 
 const (
@@ -20,14 +18,19 @@ const (
 	ArgumentKeySerializers       = "serializers"
 	ArgumentKeyTransformStrategy = "transform"
 	ArgumentKeyScanDirectory     = "dir"
+	ArgumentKeyOutputFile        = "out"
 )
 
-func init() {
-	// flag.StringVar(&cArgs.Output, "output", "", "the filename of the generated file; defaults to \"<typealias|snake>_enumer.go\".")
-	flag.StringVar(&cArgs.TransformStrategy, ArgumentKeyTransformStrategy, "noop", "string transformation (camel|pascal|kebab|snake|... see README.md); defaults to \"noop\" which applies no transormation to the enum values.")
-	flag.Var(&cArgs.Serializers, ArgumentKeySerializers, "a list of opt-in serializers (binary|json|sql|text|yaml).")
-	flag.Var(&cArgs.SupportedFeatures, ArgumentKeySupport, "a list of opt-in supported features (undefined|ignore-case|ent).")
-	flag.StringVar(&scanPath, ArgumentKeyScanDirectory, "", "directory of target package; defaults to CWD.")
+func parseFlags(args []string, cArgs *config.Args, scanPath, outputFile *string) error {
+	// setup flags
+	flags := flag.NewFlagSet("", flag.ContinueOnError)
+	flags.SetOutput(io.Discard)
+	flags.StringVar(outputFile, ArgumentKeyOutputFile, "types_enumr", "the filename of the generated file; defaults to \"types_enumer\" which results in \"types_enumer.go\".")
+	flags.StringVar(&cArgs.TransformStrategy, ArgumentKeyTransformStrategy, "noop", "string transformation (camel|pascal|kebab|snake|... see README.md); defaults to \"noop\" which applies no transormation to the enum values.")
+	flags.Var(&cArgs.Serializers, ArgumentKeySerializers, "a list of opt-in serializers (binary|json|sql|text|yaml).")
+	flags.Var(&cArgs.SupportedFeatures, ArgumentKeySupport, "a list of opt-in supported features (undefined|ignore-case|ent).")
+	flags.StringVar(scanPath, ArgumentKeyScanDirectory, "", "directory of target package; defaults to CWD.")
+	return flags.Parse(args)
 }
 
 type Generator interface {
@@ -35,10 +38,15 @@ type Generator interface {
 }
 
 func Execute(args []string) error {
-	_ = flag.CommandLine.Parse(args)
+	var cArgs config.Args
+	var scanPath, outputFile string
+	err := parseFlags(args, &cArgs, &scanPath, &outputFile)
+	if err != nil {
+		return fmt.Errorf("failed parsing arguments. err: %s", err)
+	}
 	cfg := config.LoadWith(&cArgs)
 
-	if err := validate(cfg); err != nil {
+	if err := validate(outputFile, cfg); err != nil {
 		return fmt.Errorf("invalid arguments. err: %s", err)
 	}
 
@@ -60,9 +68,9 @@ func Execute(args []string) error {
 		return fmt.Errorf("failed generating code. err: %s", err)
 	}
 
-	f, err := os.Create(targetFilename(targetDir, cfg))
+	f, err := os.Create(targetFilename(targetDir, outputFile, cfg))
 	if err != nil {
-		return fmt.Errorf("failed opening %q. err: %s", targetFilename(targetDir, cfg), err)
+		return fmt.Errorf("failed opening %q. err: %s", targetFilename(targetDir, outputFile, cfg), err)
 	}
 	defer f.Close()
 
@@ -73,14 +81,23 @@ func Execute(args []string) error {
 	return nil
 }
 
-var targetFilename = func(dir string, cfg *config.Options) string {
-	filename := "types_enumer.go"
+var targetFilename = func(dir, filename string, cfg *config.Options) string {
+	filename = fmt.Sprintf("%s.go", filename)
 	return filepath.Join(dir, filename)
 }
 
-func validate(cfg *config.Options) error {
+func validate(filename string, cfg *config.Options) error {
+	if len(filename) == 0 {
+		return errors.New("output file name cannot be empty")
+	}
+	if strings.ContainsAny(filename, " ") {
+		return errors.New("output file name contains spaces")
+	}
+	if strings.ContainsAny(filename, "\"") {
+		return errors.New("output file name contains forbidden characters")
+	}
 	if cfg.Serializers.Contains("yaml") && cfg.Serializers.Contains("yaml.v3") {
-		return fmt.Errorf("serializers %q and %q are cannot be applied together.", "yaml", "yaml.v3")
+		return fmt.Errorf("serializers %q and %q cannot be applied together", "yaml", "yaml.v3")
 	}
 	return nil
 }

@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"path/filepath"
 	"testing"
 
 	"github.com/mvrahden/go-enumer/config"
@@ -12,24 +11,37 @@ func TestCli(t *testing.T) {
 	t.Run("generate filename", func(t *testing.T) {
 		require.Equal(t,
 			"/path/to/types_enumer.go",
-			targetFilename("/path/to", &config.Options{}))
+			targetFilename("/path/to", "types_enumer", &config.Options{}))
 	})
 	t.Run("input validation fails", func(t *testing.T) {
-		t.Cleanup(CleanUpPackage)
 		testcases := []struct {
 			desc string
 			args []string
 			msg  string
 		}{
 			{
+				"on empty output file name",
+				[]string{"-out="},
+				"output file name cannot be empty",
+			},
+			{
+				"on spaces in output file name",
+				[]string{"-out=\"hello dude\""},
+				"output file name contains spaces",
+			},
+			{
+				"on spaces in output file name",
+				[]string{"-out=\"\""},
+				"output file name contains forbidden characters",
+			},
+			{
 				"on conflicting yaml serializers",
 				[]string{"-serializers=yaml,yaml.v3"},
-				"serializers \"yaml\" and \"yaml.v3\" are cannot be applied together.",
+				"serializers \"yaml\" and \"yaml.v3\" cannot be applied together",
 			},
 		}
 		for _, tC := range testcases {
 			t.Run(tC.desc, func(t *testing.T) {
-				t.Cleanup(CleanUpPackage)
 				err := Execute(tC.args)
 				require.EqualError(t, err, "invalid arguments. err: "+tC.msg)
 			})
@@ -37,13 +49,10 @@ func TestCli(t *testing.T) {
 	})
 }
 
-func PatchTargetFilenameFunc(t *testing.T, targetPath string) {
-	targetFilename = func(file string, cfg *config.Options) string {
-		return filepath.Clean(targetPath)
-	}
-}
+var targetFilenameFuncBackup = targetFilename
 
-func CleanUpPackage() {
-	cArgs = config.Args{}
-	scanPath = ""
+func PatchTargetFilenameFunc(t *testing.T, targetDirectory string) {
+	targetFilename = func(dir, file string, cfg *config.Options) string {
+		return targetFilenameFuncBackup(targetDirectory, file, cfg)
+	}
 }
