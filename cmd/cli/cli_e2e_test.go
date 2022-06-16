@@ -2,6 +2,7 @@ package cli_test
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -11,6 +12,11 @@ import (
 )
 
 func TestE2E_Cli(t *testing.T) {
+	cli.PatchDeleteOldGeneratedFileFunc(t)
+	t.Cleanup(func() {
+		cli.ResetDeleteOldGeneratedFileFunc(t)
+	})
+
 	testcases := []struct {
 		desc        string
 		dirName     string
@@ -38,7 +44,8 @@ func TestE2E_Cli(t *testing.T) {
 			tmpFile := filepath.Join(tmpDir, tC.outFilename+".go")
 
 			defaultArgs := []string{"-dir=testdata/" + tC.dirName, "-out=" + tC.outFilename}
-			err := cli.Execute(append(defaultArgs, tC.args...))
+			args := append(defaultArgs, tC.args...)
+			err := cli.Execute(args)
 			require.NoError(t, err)
 			require.FileExists(t, tmpFile)
 
@@ -51,6 +58,53 @@ func TestE2E_Cli(t *testing.T) {
 	}
 }
 
+func TestE2E_DeleteOldGeneratedFile(t *testing.T) {
+	t.Run("delete generated file from temp directory with various files", func(t *testing.T) {
+		tmpDir := t.TempDir()
+
+		// unrelated file - this file stays
+		err := os.WriteFile(filepath.Join(tmpDir, "testFile"), []byte("I'm not generated"), os.ModePerm)
+		require.NoError(t, err)
+
+		{ // write some files
+			buf, err := ioutil.ReadFile(filepath.Join("testdata", "greeting", "gen.golden"))
+			require.NoError(t, err)
+
+			// this file has a comment but is not a Go file - it stays
+			err = os.Mkdir(filepath.Join(tmpDir, "keepMe_Dir"), os.ModeDir)
+			require.NoError(t, err)
+
+			err = os.WriteFile(filepath.Join(tmpDir, "keepMe"), buf, os.ModePerm)
+			require.NoError(t, err)
+			// no/incomplete gen comment match - it stays
+			err = os.WriteFile(filepath.Join(tmpDir, "keepMe_0.go"), buf[2:], os.ModePerm)
+			require.NoError(t, err)
+			// < 78 bytes - it stays
+			err = os.WriteFile(filepath.Join(tmpDir, "keepMe_1.go"), buf[:77], os.ModePerm)
+			require.NoError(t, err)
+			// > 78 but < 85 bytes - it stays
+			err = os.WriteFile(filepath.Join(tmpDir, "keepMe_2.go"), buf[:81], os.ModePerm)
+			require.NoError(t, err)
+			// this is our TARGET (marked with x to ensure its read as last entry)
+			err = os.WriteFile(filepath.Join(tmpDir, "x_deleteMe.go"), buf[:100], os.ModePerm)
+			require.NoError(t, err)
+		}
+
+		defaultArgs := []string{"-dir=" + tmpDir}
+		args := append(defaultArgs)
+		fmt.Print(tmpDir)
+		err = cli.Execute(args)
+		require.ErrorContains(t, err, "no enums detected")
+
+		require.NoFileExists(t, filepath.Join(tmpDir, "deleteMe.go"))
+
+		require.DirExists(t, filepath.Join(tmpDir, "keepMe_Dir"))
+		for _, filename := range []string{"keepMe", "keepMe_0.go", "keepMe_1.go", "keepMe_2.go"} {
+			require.FileExists(t, filepath.Join(tmpDir, filename))
+		}
+	})
+}
+
 func TestE2E_Errors(t *testing.T) {
 	testcases := []struct {
 		desc string
@@ -61,7 +115,7 @@ func TestE2E_Errors(t *testing.T) {
 			"on no enums in CWD", nil, "no enums detected.",
 		},
 		{
-			"on no enums in given directory (wrong path)", []string{"-dir=testdata/nothing-here"}, "no enums detected.",
+			"on no enums in given directory (wrong path)", []string{"-dir=testdata/nothing-here"}, "no such directory",
 		},
 		{
 			"on invalid enum sequence", []string{"-dir=testdata/error_cases/non_continuous_sequence"}, "\"InvalidNonContinuousGreeting\" type specification is invalid. err: enum const block must not contain skipped rows",
@@ -70,7 +124,7 @@ func TestE2E_Errors(t *testing.T) {
 	for _, tC := range testcases {
 		t.Run(tC.desc, func(t *testing.T) {
 			err := cli.Execute(tC.args)
-			require.EqualError(t, err, "failed generating code. err: "+tC.msg)
+			require.ErrorContains(t, err, tC.msg)
 		})
 	}
 }

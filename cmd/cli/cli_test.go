@@ -49,6 +49,18 @@ func TestCli(t *testing.T) {
 	})
 }
 
+var deleteOldGeneratedFileFuncBackup = findAndDeleteOldGeneratedFile
+
+func PatchDeleteOldGeneratedFileFunc(t *testing.T) {
+	findAndDeleteOldGeneratedFile = func(dir string) error {
+		return nil
+	}
+}
+
+func ResetDeleteOldGeneratedFileFunc(t *testing.T) {
+	findAndDeleteOldGeneratedFile = deleteOldGeneratedFileFuncBackup
+}
+
 var targetFilenameFuncBackup = targetFilename
 
 func PatchTargetFilenameFunc(t *testing.T, targetDirectory string) {
