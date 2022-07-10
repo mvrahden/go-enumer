@@ -39,7 +39,7 @@ type AdditionalData struct {
 
 type AdditionalDataHeader struct {
 	Name string          // hint: the column name as-is (from CSV)
-	Type types.BasicKind // hint: the type infered by type syntax
+	Type types.BasicKind // hint: the type inferred by type syntax
 }
 
 type AdditionalDataCell struct {
