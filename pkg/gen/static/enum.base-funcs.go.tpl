@@ -34,7 +34,7 @@ func ({{ receiver $ts.Name }} {{ $ts.Name }}) String() string {
 	}
 {{- if $ts.RequiresGeneratedUndefinedValue }}
 {{- /* This block assures the proper serialization of the generated undefined Value */}}
-	if {{ receiver $ts.Name }} == {{ $ts.Name }}Undefined {
+	if {{ receiver $ts.Name }} == 0 {
 		return ""
 	}
 {{- end }}

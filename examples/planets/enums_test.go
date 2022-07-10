@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/mvrahden/go-enumer/pkg/utils"
-	"github.com/stretchr/testify/require"
 )
 
 func TestEnums(t *testing.T) {
@@ -57,10 +56,6 @@ func TestEnums(t *testing.T) {
 		})
 	})
 	t.Run("PlanetSupportUndefined", func(t *testing.T) {
-		t.Run(`generates "<type>Undefined" constant`, func(t *testing.T) {
-			// asserts that special const "<type>Undefined" is generated.
-			require.Equal(t, 0, int(PlanetSupportUndefinedUndefined))
-		})
 		t.Run("Serialization", func(t *testing.T) {
 			toPtr := utils.ToPointer[PlanetSupportUndefined]
 			cfg := utils.TestConfig{SupportUndefined: true}

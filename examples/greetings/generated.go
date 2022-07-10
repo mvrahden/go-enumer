@@ -18,9 +18,6 @@ var (
 const (
 	_GreetingString      = "Россия中國日本한국ČeskáRepublika𝜋"
 	_GreetingLowerString = "россия中國日本한국českárepublika𝜋"
-
-	// GreetingUndefined is the generated zero value of the Greeting enum.
-	GreetingUndefined Greeting = 0
 )
 
 var (
@@ -33,7 +30,6 @@ var (
 // Re-run the enumer command to generate an updated version of Greeting.
 func _GreetingNoOp() {
 	var x [1]struct{}
-	_ = x[GreetingUndefined-(0)]
 	_ = x[GreetingРоссия-(1)]
 	_ = x[Greeting中國-(2)]
 	_ = x[Greeting日本-(3)]
@@ -74,7 +70,7 @@ func (_g Greeting) String() string {
 	if !_g.IsValid() {
 		return fmt.Sprintf("Greeting(%d)", _g)
 	}
-	if _g == GreetingUndefined {
+	if _g == 0 {
 		return ""
 	}
 	idx := uint(_g) - 1

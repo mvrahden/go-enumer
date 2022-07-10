@@ -34,7 +34,7 @@ func TestEnums(t *testing.T) {
 				lower string
 			}
 			testCases := []testCase{
-				{GreetingUndefined, "", ""},
+				{0, "", ""}, // undefined use case
 				{GreetingРоссия, "Россия", "россия"},
 				{Greeting中國, "中國", "中國"},
 				{Greeting日本, "日本", "日本"},

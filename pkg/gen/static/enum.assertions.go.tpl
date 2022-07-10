@@ -6,9 +6,6 @@
 // Re-run the enumer command to generate an updated version of {{ $ts.Name }}.
 func _{{ $ts.Name }}NoOp() {
 	var x [1]struct{}
-{{- if $ts.RequiresGeneratedUndefinedValue }}
-	_ = x[{{ $ts.Name }}Undefined-(0)]
-{{- end }}
 {{- range $v := $ts.Values }}
 	_ = x[{{ $v.ConstName }}-({{ $v.Value }})]
 {{- end }}

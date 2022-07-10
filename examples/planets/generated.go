@@ -287,9 +287,6 @@ func (_p *Planet) UnmarshalYAML(unmarshal func(interface{}) error) error {
 const (
 	_PlanetSupportUndefinedString      = "MarsPlutoVenusMercuryJupiterSaturnUranusNeptune"
 	_PlanetSupportUndefinedLowerString = "marsplutovenusmercuryjupitersaturnuranusneptune"
-
-	// PlanetSupportUndefinedUndefined is the generated zero value of the PlanetSupportUndefined enum.
-	PlanetSupportUndefinedUndefined PlanetSupportUndefined = 0
 )
 
 var (
@@ -302,7 +299,6 @@ var (
 // Re-run the enumer command to generate an updated version of PlanetSupportUndefined.
 func _PlanetSupportUndefinedNoOp() {
 	var x [1]struct{}
-	_ = x[PlanetSupportUndefinedUndefined-(0)]
 	_ = x[PlanetSupportUndefinedMars-(1)]
 	_ = x[PlanetSupportUndefinedPluto-(2)]
 	_ = x[PlanetSupportUndefinedVenus-(3)]
@@ -345,7 +341,7 @@ func (_p PlanetSupportUndefined) String() string {
 	if !_p.IsValid() {
 		return fmt.Sprintf("PlanetSupportUndefined(%d)", _p)
 	}
-	if _p == PlanetSupportUndefinedUndefined {
+	if _p == 0 {
 		return ""
 	}
 	idx := uint(_p) - 1
