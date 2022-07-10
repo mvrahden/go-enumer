@@ -1,36 +1,37 @@
 # go-enumer <!-- omit in toc --> [![GoDoc](https://godoc.org/github.com/mvrahden/go-enumer?status.svg)](https://godoc.org/github.com/mvrahden/go-enumer) [![Go Report Card](https://goreportcard.com/badge/github.com/mvrahden/go-enumer)](https://goreportcard.com/report/github.com/mvrahden/go-enumer) [![GitHub Release](https://img.shields.io/github/release/mvrahden/go-enumer.svg)](https://github.com/mvrahden/go-enumer/releases)[![Build Status](https://travis-ci.com/mvrahden/go-enumer.svg?branch=master)](https://travis-ci.com/mvrahden/go-enumer)
 
-`go-enumer` is a tool to generate Go code to upgrade Go constants (of unsigned integer types) to enums.
-It adds useful common methods to the types, such as validation and various (de-)serialization.
+`go-enumer` is a tool to generate Go code upgrading specifically configured Go constants to enums.
+It adds useful common methods to these types, such as validation and various (de-)serialization.
 It is an opinionated remake of the long existing [enumer](https://github.com/dmarkham/enumer) package and therefore behaves different in practically all aspects.
 
-This remake of `go-enumer` is intended to be:
+`go-enumer` is intended to be:
 
 - strict by default (principle of least surprise)
 - flexible via opt-in
 
-> E.g. it prevents `undefined` values from being (de-)serialized by default,
-> but allows (de-)serialization from empty/undefined values if you configure it to do so.
+> E.g. it prevents `undefined` (or empty) values from being (de-)serialized by default.
+> But you can always choose to configure your enums to permit (de-)serialization from such values.
 
 ## Table of Contents <!-- omit in toc -->
 
 1. [Why `go-enumer`?](#why-go-enumer)
-2. [What's new?](#whats-new)
-   1. [Single pass screening](#single-pass-screening)
-   2. [Magic comment `//go:enum`](#magic-comment-goenum)
-   3. [Equivalent values](#equivalent-values)
-   4. [Handling of Name Prefixes](#handling-of-name-prefixes)
-   5. [Type Validation](#type-validation)
-   6. [CSV-File sources](#csv-file-sources)
-   7. [Supported features](#supported-features)
+2. [What's it all about?](#whats-it-all-about)
+   1. [Conventions](#conventions)
+   2. [Defaults and Zero-Values](#defaults-and-zero-values)
+   3. [Magic comment `//go:enum`](#magic-comment-goenum)
+   4. [Validation](#validation)
+   5. [Supported features](#supported-features)
       1. [The "undefined" feature](#the-undefined-feature)
       2. [Other supported features](#other-supported-features)
-3. [Generated functions and methods](#generated-functions-and-methods)
-4. [The string representation of the enum value](#the-string-representation-of-the-enum-value)
-   1. [Prefix auto-stripping](#prefix-auto-stripping)
-   2. [Transformers](#transformers)
-5. [Configuration Options](#configuration-options)
-6. [Inspiring projects](#inspiring-projects)
+3. [Simple Block Spec](#simple-block-spec)
+   1. [String Case Transformations](#string-case-transformations)
+   2. [Handling of Name Prefixes](#handling-of-name-prefixes)
+   3. [Alternative values](#alternative-values)
+4. [Filebased Spec](#filebased-spec)
+   1. [CSV-File sources](#csv-file-sources)
+5. [Generated functions and methods](#generated-functions-and-methods)
+6. [Configuration Options](#configuration-options)
+7. [Inspiring projects](#inspiring-projects)
 
 ## Why `go-enumer`?
 
@@ -38,84 +39,105 @@ First and foremost enums are a common way of handling sets of distinct and custo
 Many projects have use cases where enums might be useful, but Go has no built-in support for enums.
 Therefore this project aims to fill the gap, by making use of Go's features for type declaration and code generation.
 
-Regarding the aforementioned ancestor project [enumer](https://github.com/dmarkham/enumer), I found some unfortunate obstacles in regards to appliance configuration, strict case handling, validation and feature extensibility.
+In regards to the aforementioned ancestor project [enumer](https://github.com/dmarkham/enumer), I found some unfortunate obstacles like the configuration, strict case handling, validation and feature extensibility.
 Its scope, ambitions and constraints were clearly different, since it tried to be a "drop-in" replacement for the known "Stringer" utility.
 
-Starting from scratch, I decided it's best that `go-enumer` breaks with those restrictions while borrowing some of the great ideas.
+Starting from scratch, I decided it's best that `go-enumer` breaks with those restrictions while borrowing some of the neat ideas.
 
-## What's new?
+## What's it all about?
 
-`go-enumer` is an implementation with improved handling of default values and empty values (Zero Values).
-Additionally the type derivation (lookup) was improved and was given more freedom to preferences of case sensitivity.
-It furthermore introduces a clear and unified usage pattern on how to implement enums, by bringing its own easy to understand and hard to misuse way of defining them.
+`go-enumer` understands an enum as individual type with their sets of custom-defined, distinct values - let's refer to such sets of enum values as the **enum's spec** from now on.
+With `go-enumer` there are two possible ways to define enum specs.
+The first one we'll refer from now on as the *simple block spec*, which is straight forward and a suitable choice for small and uncomplicated enum sets.
+The second one we'll refer to as the *filebased spec*, which is much more advanced in its options and useful when you're reaching the *simple block spec's* limits.
 
-`go-enumer` defines an enum as a set custom-defined, distinct values which are implemented by defining a range of continuously incrementing constants of any unsigned integer type or any type alias deriving from those.
+### Conventions
+
+To define an enum spec, one first needs to define its distinct type – the **enum type**.
+To define an Enum type, you must follow the listed rules.
+Failing to do so will either lead to an unsuccessful detection or to a code generation error.
+
+- Every enum type must derive from an unsigned integer (`uint`, `uint8`, ...) type.
+- Every enum type must be marked with a magic comment `//go:enum` ([read here for more](#magic-comment-goenum)).
+- Every enum type must either have a *simple block spec* or a *filebased spec* associated.
+
+Not only the enum type, but also its spec must follow a set of basic rules.
 By convention, enum sets must:
 
-- be marked with a [magic comment](#magic-comment-goenum).
-- be of an unsigned integer type.
-- start at `1` or in defined edge cases with `0`.
-- consist of continuous linear increments of `1`.
+- start with **index** of `1` and in those cases with a **default value** at `0`.
+- consist of continuous linear increments of at most `1`.
+- contain unique **values**.
 
-Due to the nature of enums being distinct values, the majority of enum sequences will start at `1`, as you can see in the following snippet.
+Due to the nature of enums being distinct values, the majority of enum sequences don't require a default value and thus start at `1`.
+This is demonstrated in the following snippet with an enum type of a *simple block spec*.
 
 ```go
-//go:enum
-type Greeting uint
+//go:enum -transform=upper
+type Color uint
 
 const (
-  GreetingWorld Greeting = iota + 1
-  GreetingMars
+  ColorRed Color = iota + 1
+  ColorBlue
+  ColorGreen
 )
+/* yields:
+enum type: Color
+enum spec:
+Value "RED"   at Index 1
+Value "BLUE"  at Index 2
+Value "GREEN" at Index 3
+is invalid    at Index 0 and 4,...,max
+*/
 ```
 
-`go-enumer` gives a special semantic meaning to constants with the value `0`.
+### Defaults and Zero-Values
+
+`go-enumer` gives a special semantic meaning to specs starting with the value `0`.
 The **[Zero Value](https://go.dev/tour/basics/12)** of native integer types in Go is `0`.
-For enums it likewise means, that an enum of value `0` is by definition the zero value or the **default** of the enum set.
+For enums it likewise means, that an enum of value `0` is by definition the zero value.
+If the enum spec does not define a **default** (starts at `0`) an enum field is in an invalid state when its assigned value is zero.
 In some situations you may find yourself in the need of such a **default** value.
-Depending on whether your set of values needs a default value, you will chose your sequence to start at value `0` with the your default value being `0`.
-All the other values should be `>= 1`.
-(You may have multiple defaults, see section for [equivalent values](#equivalent-values))
+Depending on whether your spec needs a default value, you will chose your sequence to start at value `0` with the your default value being `0`.
+(You may have multiple defaults, see section for [alternative values](#alternative-values))
 
 ```go
 //go:enum
-type Greeting uint
+type UserRole uint
 
 const (
-  GreetingWorld Greeting = iota  // <- this is your default
-  GreetingMars
+	UserRoleAnonymous UserRole = iota // <- this is your default
+	UserRoleStandard
+	UserRoleAdmin
+	UserRoleUnknown = UserRoleAnonymous // <- this is your alternative default
 )
 ```
 
-If you want your default value to be robust against deserialization from zero values (like an empty string), then rest assured you do not need to do anything.
-However, if you need to also enable deserialization for your **default** enum value from a zero values please check out the section for ["undefined"-value](#the-undefined-value).
+The previous snippet defines an enum spec which can be deserialized from the following set of values `["Anonymous","Standard","Admin","Unknown"]` after successful code generation.
+If you want your default value to be robust against deserialization from `undefined` (resp. zero values), then rest assured you do not need to do anything.
+`go-enum` will naturally fail any attempt of unmarshalling from empty strings or `nil` if it was not explicitly instructed to do otherwise.
+In these cases the returned error will be of type `ErrNoValidEnum` which is part of the generated file and can be used via Go's unwrapping mechanism `errors.Is(err, mypkg.ErrNoValidEnum)`.
 
-If your enum set does not define a default value, but you still want to be able to deserialize empty values into an "undefined" value, please check out the section for ["undefined"-value](#the-undefined-value).
-`go-enumer` can generate this "undefined" value for you, as follows and makes it available to you.
-
-```go
-const (
-  GreetingUndefined Greeting = 0
-)
-```
-
-### Single pass screening
-
-Thanks to [magic comments](#magic-comment-goenumer) `go-enumer` only needs one single `//go:generate` directive to screen an entire package.
-It can now determine all enums of a package in a single pass, reducing redundant scans and therefore making the code generation much more efficient.
+If you need to also enable deserialization for your **default** enum value from a zero values please check out the section for ["undefined"-value](#the-undefined-value).
 
 ### Magic comment `//go:enum`
 
-The magic comment `//go:enum` serves as a marker to detect all enums.
-It also enables config **mixins**.
+`go-enumer` only needs one single `//go:generate` directive per package to screen the entire package thanks to the introduction of `//go:enum` magic comment.
+It acts as a marker of all enums.
+Now `go-enumer` can determine all enums of a package in a single pass, reducing redundant scans and therefore making the code generation (and your CI process) much more efficient.
+
+But the magic comment `//go:enum` does not exclusively serve as a marker to detect enums, it also enables config **mixins**.
 By supplying it with a finegrained configuration on an enum type level, we have the ability to overwrite the global `generate` configuration.
 
-The following example will generate `json` interfaces for practically all enums it will detect, except for this specific `Greeting` enum, where it will generate `json` and `yaml` interfaces.
+The following example will generate `json` interfaces for practically all enums it will detect, except for this specific `Greeting` enum, where it will generate both `json` and `yaml` interfaces.
 
 > The magic comment currently offers support for all configuration options, which are available on a global configuration level.
 
 ```go
-//go:generate github.com/mvrahden/go-enumer -serializers=json
+package mypackage
+
+//go:generate go run github.com/mvrahden/go-enumer -serializers=json
+
+/* ... */
 
 //go:enum -serializers=json,yaml
 type Greeting uint
@@ -126,58 +148,121 @@ const (
 )
 ```
 
-### Equivalent values
+### Validation
 
-Enums can contain values that are assigned multiple times – such values resemble **equivalent values**.
-These alternative values are shadowed by the dominant value, which is always the one which was assigned first.
+Each enum type will support two validation Methods `Validate() error` and `IsValid() bool`.
 
-### Handling of Name Prefixes
-
-In short: You can prefix constant names with their corresponding type alias name and `go-enumer` will automatically strip that off its value – meaning: it will turn `GreetingMars` (with type alias `Greeting`) into e.g. `"MARS"` (assuming an `upper` transformation was applied). It does not allow any other prefixes. This rule is in place to keep your source code concise. Please see [here](#prefix-auto-stripping) for further information.
-
-### Type Validation
-
-By defining enums on a linear scale, the validation time is of constant complexity.
-Type validation will be performed on every (de-)serialization.
-
-### CSV-File sources
-
-`go-enumer` can extract your enum definitions from CSV file sources if you target `-from=path/to.csv` in your enum's magic comment.
-You can even augment your enums with additional data columns.
-
-`go-enumer` can parse data and add typed Getter-funcs based on a column annotation syntax.
-It supports Go's built-in data types via the following syntax `<datatype>(your-column-name)`, e.g. `uint(area-in-square-meter)` or `float64(tolerance)`.
-If there's no explicit type annotated, `go-enumer` will assume a basic `string` type as a fallback.
-
-Have a look at [the Booking, Color or Project examples](examples/README.md) for further info.
+By defining enum specs on a linear scale, the validation complexity is reduced to a simple check of whether or not the value is within the extent of the scale.
+To ensure (de-)serialization success the type validation will be performed on every (de-)serialization operation.
 
 ### Supported features
 
-Supported features are targeted with the `support` flag.
+Supported features are targeted with the `-support=arg1,arg2,...` flag and can be used globally via `go:generate` or as a mixin via `go:enum`.
 
 #### The "undefined" feature
+
+> how to use? `-support=undefined`
 
 `go-enumer` returns with an error upon (de-)serialization of any value which is not explicitly defined in your set of enums with an `error` – this rule covers empty values as well.
 Therefore those sequences, that neither contain a default value nor an empty value must start with the integer value of `1`.
 
 The `undefined` feature is an opt-in, which enables the (de-)serialization of zero values.
 In case you applied the `undefined` feature, lookups with an empty value will resolve as an "undefined" constant, representing an empty string.
-The undefined constant is considered being a **valid** member of the enum set now.
-However it will not be represented in the list of possible values.
-If you do not have a **default** constant (with the value `0`) `go-enumer` will generate one for you.
-Your source code will now support an "undefined" value alongside your explicitly defined set of enums.
-However, **unknown** values will still fail upon serialization or deserialization.
+Any undefined value upon deserialization will be considered **valid** now and pass the [Validation](#validation).
+However it will not be represented in the list of possible values upon serialization.
 
-| Has Default Value | Supports Undefined | Enum Type can deserialize from undefined | Is Nullable |
-|:-----------------:|:------------------:|:----------------------------------------:|:-----------:|
-|        no         |         no         |                    no                    |     no      |
-|        yes        |         no         |                    no                    |     no      |
-|        yes        |        yes         |                   yes                    |     no      |
-|        no         |        yes         |                   yes                    |     yes     |
+In the case of `undefined` values, there are 4 cases that we can distinguish:
+
+| # | Has Default Value | Supports Undefined | Enum Type can deserialize from undefined |
+|:-:|:-----------------:|:------------------:|:----------------------------------------:|
+| 1 |        no         |         no         |                    no                    |
+| 2 |        yes        |         no         |                    no                    |
+| 3 |        yes        |        yes         |                   yes                    |
+| 4 |        no         |        yes         |                   yes                    |
+
+> Read the table as follows (e.g. for row `4`): "If my enum *has NO default* and it *DOES support undefined*
+> then it *CAN deserialize from undefined*"
 
 #### Other supported features
 
+> how to use? `-support=ent`
+
 With `ent` a method will be generated to return all valid Value strings. This allows you to use your enum type with the ent framework.
+
+## Simple Block Spec
+
+The simple block spec is a very primitive and intuitive way to generate enums.
+Simply define a `const`-block with the enums you want your enum spec to contain.
+The enum values will be derived from the constant names (less their type prefix).
+To allow some degree of customization while keeping your constant names readable
+you can apply [string case transformations](#string-case-transformations) to the values.
+
+### String Case Transformations
+
+`go-enumer` supports a range of string case transformations.
+These transformations are a feature exclusive to the *simple block spec*.
+You may configure a global transformation via the `generate` command and you may mixin deviating transformations case by case via `go:enum` magic comment.
+Here is an example with a `kebab` transformation.
+
+```go
+//go:enum -transform=kebab
+type MyType uint
+
+const (
+  MyTypeFoo MyType = iota + 1
+  MyTypeBar
+  MyTypeFooBar
+  // ...
+)
+// yields --> ["foo", "bar", "foo-bar"]
+```
+
+Please take examplary transformations from the following table:
+
+| Transformation Name | Resulting enum values     |
+|---------------------|---------------------------|
+| `noop` (default)    | ["Foo", "Bar", "FooBar"]  |
+| `camel`             | ["foo", "bar", "fooBar"]  |
+| `pascal`            | ["Foo", "Bar", "FooBar"]  |
+| `kebab`             | ["foo", "bar", "foo-bar"] |
+| `snake`             | ["foo", "bar", "foo_bar"] |
+| `lower`             | ["foo", "bar", "foobar"]  |
+| `upper`             | ["FOO", "BAR", "FOOBAR"]  |
+| `upper-kebab`       | ["FOO", "BAR", "FOO-BAR"] |
+| `upper-snake`       | ["FOO", "BAR", "FOO_BAR"] |
+| `whitespace`        | ["Foo", "Bar", "Foo Bar"] |
+
+**Note**: If you are missing a transformation please raise an issue and/or open a Pull Request.
+
+### Handling of Name Prefixes
+
+It is good practice with `go-enumer` to prefix enum constant names with their corresponding type name and `go-enumer` will automatically detect these prefixes and strip them off their values.
+Meaning: it will turn `GreetingMars` (with enum type `Greeting`) into e.g. `"MARS"` (assuming an `upper` transformation was applied).
+It does not support arbitrary prefixes and we do not encourage that due to a resulting degradation of code consistency.
+This rule is in place to keep your source code concise.
+Please see [here](#prefix-auto-stripping) for further information.
+
+### Alternative values
+
+Enum based on the *simple block spec* can contain indeces (enum IDs) that are assigned multiple times – such values resemble **Alternative values**.
+These alternative values are shadowed by the dominant value, which is always the constant which was assigned first to the index in the block.
+
+## Filebased Spec
+
+The *filebased spec* allows code generation for the enum values from a file source.
+The following sections describe the usage of the *filebased spec*
+
+### CSV-File sources
+
+`go-enumer` can extract your enum definitions from CSV file sources if you target `-from=path/to.csv` in your enum's magic comment.
+Filebased specs are taken as given and will not undergo any string case transformation.
+
+Filebased specs allow you also to augment your enums with additional data columns.
+`go-enumer` can parse data and add typed Getter-funcs based on a column annotation syntax.
+It supports Go's built-in data types via the following syntax `<datatype>(your-column-name)`, e.g. `uint(area-in-square-meter)` or `float64(tolerance)`.
+If there's no explicit type annotated, `go-enumer` will assume a basic `string` type as a fallback.
+
+Have a look at [the Booking, Color or Project examples](examples/README.md) for further info.
 
 ## Generated functions and methods
 
@@ -187,15 +272,15 @@ When `go-enumer` is applied to a type, it will generate:
 
   - Method `String()`: returns the string representation of the enum value. This makes the enum conform
     to the `Stringer` interface, so whenever you print an enum value, you'll get the string name instead of its numeric counterpart.
-  - Function `<Type>FromString(raw string)`: returns the enum value from its string representation. This is useful
+  - Function `<EnumType>FromString(raw string)`: returns the enum value from its string representation. This is useful
     when you need to read enum values from command line arguments, from a configuration file, or
     from a REST API request... In short, from those places where using the real enum value (an integer) would
     be almost meaningless or hard to trace or use by a human. `raw` string is case sensitive.
-  - Function `<Type>FromStringIgnoreCase(raw string)`: we can not always guarantee the case matching because some systems out of our reach
-    are insensitive to exact case matching. In these situations `<Type>FromStringIgnoreCase(raw string)` comes in handy.
-    It acts the same as `<Type>FromString(raw string)` with the little difference of `raw` being case insensitive.
-  - Function `<Type>Values()`: returns a slice with all the numeric values of the enum, ignoring any alternative values.
-  - Function `<Type>Strings()`: returns a slice with all the string representations of the enum.
+  - Function `<EnumType>FromStringIgnoreCase(raw string)`: we can not always guarantee the case matching because some systems out of our reach
+    are insensitive to exact case matching. In these situations `<EnumType>FromStringIgnoreCase(raw string)` comes in handy.
+    It acts the same as `<EnumType>FromString(raw string)` with the little difference of `raw` being case insensitive.
+  - Function `<EnumType>Values()`: returns a slice with all the numeric values of the enum, ignoring any alternative values.
+  - Function `<EnumType>Strings()`: returns a slice with all the string representations of the enum.
   - Method `IsValid()`: returns true if the current value is a value of the defined enum set.
   - Method `Validate()`: returns a wrapped error `ErrNoValidEnum` if the current value is not a valid value of the defined enum set.   
     It is being used upon serialization and deserialization, allowing for detecting enum errors via `errors.Is(err, ErrNoValidEnum)`.
@@ -214,202 +299,13 @@ When `go-enumer` is applied to a type, it will generate:
   - `yaml.v3` makes the enum conform to the `gopkg.in/yaml.v3.Marshaler` and `gopkg.in/yaml.v3.Unmarshaler` interfaces.
     **Note:** Supplying both yaml values (`yaml` and `yaml.v3`) will fail due to interface incompatibility.
 
-For example, if we have an enum type called `Pill`,
-
-> CAUTION: The following example does not use a type prefix.
-> Generally it is recommended, to **always** prefix your constants for improved understandability throughout your code base
-> \- especially for exported enums.
-
-```go
-//go:generate github.com/mvrahden/go-enumer -serializers=json
-
-//go:enum
-type Pill uint
-
-const (
-  Placebo Pill = iota
-  Aspirin
-  Ibuprofen
-  Paracetamol
-  Acetaminophen = Paracetamol
-)
-```
-
-executing `//go:generate github.com/mvrahden/go-enumer -serializers=json` will generate a new file with four basic package functions and five methods (of which two are for JSON (de-)serialization):
-
-```go
-func PillValues() []Pill {
-  //...
-}
-
-func PillStrings() []string {
-  //...
-}
-
-func PillFromString(s string) (Pill, error) {
-  //...
-}
-
-func PillFromStringIgnoreCase(s string) (Pill, error) {
-  //...
-}
-
-func (i Pill) String() string {
-  //...
-}
-
-func (i Pill) IsValid() bool {
-  //...
-}
-
-func (i Pill) Validate() error {
-  //...
-}
-
-func (i Pill) MarshalJSON() ([]byte, error) {
-  //...
-}
-
-func (i *Pill) UnmarshalJSON(data []byte) error {
-  //...
-}
-```
-
-From now on, we can:
-
-```go
-// Convert any Pill value to string
-var aspirinString string = Aspirin.String()
-// (or use it in any place where a Stringer is accepted)
-fmt.Println("I need ", Paracetamol) // Will print "I need Paracetamol"
-
-// Convert a string with the enum name to the corresponding enum value
-pill, err := PillFromString("Ibuprofen")
-if err != nil {
-    fmt.Println("Unrecognized pill: ", err)
-    return
-}
-// Now pill == Ibuprofen
-
-// Convert a string with the enum name, but degenerated string case
-// to the corresponding enum value
-pill, err := PillFromStringIgnoreCase("IbUpRoFeN")
-if err != nil {
-    fmt.Println("Unrecognized pill: ", err)
-    return
-}
-
-// Get all the values of the string
-allPills := PillValues()
-fmt.Println(allPills) // Will print [Placebo Aspirin Ibuprofen Paracetamol]
-
-// Check if a value belongs to the Pill enum values
-var notAPill Pill = 42
-if ok := notAPill.IsValid(); !ok {
-  fmt.Println(notAPill, "is not a value of the Pill enum")
-}
-if err := notAPill.Validate(); err != nil {
-  fmt.Printf("%s", err)
-}
-// Infer whether the error is a validation error
-if _, err := json.Marshal(notAPill); errors.Is(err, ErrNoValidEnum) {
-  fmt.Printf("this is not a valid enum")
-}
-
-// Marshal/unmarshal to/from json strings, either directly or automatically when
-// the enum is a field of a struct
-pillJSON, _ := Aspirin.MarshalJSON()
-// Now pillJSON == `"Aspirin"`
-```
-
-## The string representation of the enum value
-
-### Prefix auto-stripping
-
-When dealing with a lot of exported enum values of different type aliases in your project it can easily happen that you run into naming collisions.
-To avoid naming collisions while maintaining the same enum string, `go-enumer` automatically strips off the type alias name when determining any string values.
-Consider the following example, which will generate the same string values:
-
-```go
-//go:enum
-type Greeting uint
-
-const (
-  Россия Greeting = iota + 1
-  中國
-  日本
-  한국
-  ČeskáRepublika
-)
-
-//go:enum
-type GreetingWithPrefix uint
-
-const (
-  GreetingWithPrefixРоссия Greeting = iota + 1
-  GreetingWithPrefix中國
-  GreetingWithPrefix日本
-  GreetingWithPrefix한국
-  GreetingWithPrefixČeskáRepublika
-)
-```
-
-By default, `go-enumer` uses the same name of the enum value for generating the string representation (usually PascalCase in Go).
-
-```go
-//go:enum
-type Greeting uint
-
- ...
-
-fmt.Print(ČeskáRepublika) // name => "ČeskáRepublika"
-```
-
-Sometimes you need to use some other string representation format than PascalCase.
-To transform the string values from PascalCase to another format, you can use the `transform` flag.
-
-For example, the command `//go:generate github.com/mvrahden/go-enumer -transform=whitespace` would generate the following string representation:
-
-```go
-fmt.Print(ČeskáRepublika) // name => "Česká Republika"
-```
-
-**Note**: If you are missing a transformation please raise an issue and/or open a Pull Request.
-
-### Transformers
-
-Please take the example transformation from the following table for this example:
-
-```go
-//go:enum
-type MyType uint
-
-const (
-  FooBar MyType = iota
-  // ...
-)
-```
-
-| Transformer Name | Example (Stringer value) |
-|------------------|--------------------------|
-| noop (default)   | FooBar                   |
-| camel            | fooBar                   |
-| pascal           | FooBar                   |
-| kebab            | foo-bar                  |
-| snake            | foo_bar                  |
-| lower            | foobar                   |
-| upper            | FOOBAR                   |
-| upper-kebab      | FOO-BAR                  |
-| upper-snake      | FOO_BAR                  |
-| whitespace       | Foo Bar                  |
-
 ## Configuration Options
 
 You can add:
 
 - transformation with `transform` option, e.g. `transform=kebab`.
 - serializers with `serializers` option, e.g. `serializers=json,sql,...`.
-- supported features `support` option, e.g. `support=undefined,ent`
+- supported features via `support` option, e.g. `support=undefined,ent`
   - `undefined`, see ["undefined"-value](#the-undefined-value)
   - `ignore-case`, adds support for case-insensitive lookup
   - `ent`, adds interface support for [entgo.io](https://github.com/ent/ent)
