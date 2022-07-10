@@ -166,6 +166,10 @@ func (i inspector) determineImports(f *File) {
 	for _, ts := range f.TypeSpecs {
 		for _, v := range ts.Config.Serializers {
 			switch v {
+			case "bson":
+				f.Imports = append(f.Imports, &Import{Path: "go.mongodb.org/mongo-driver/bson"})
+				f.Imports = append(f.Imports, &Import{Path: "go.mongodb.org/mongo-driver/bson/bsontype"})
+				f.Imports = append(f.Imports, &Import{Path: "go.mongodb.org/mongo-driver/x/bsonx/bsoncore"})
 			case "gql":
 				f.Imports = append(f.Imports, &Import{Path: "io"})
 				f.Imports = append(f.Imports, &Import{Path: "strconv"})

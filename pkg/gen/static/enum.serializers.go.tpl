@@ -26,6 +26,37 @@ func ({{ receiver $ts.Name }} *{{ $ts.Name }}) UnmarshalBinary(text []byte) erro
 	return nil
 }
 {{ end }}
+{{- if contains $ts.Serializers "bson" }}
+// MarshalBSONValue implements the bson.ValueMarshaler interface for {{ $ts.Name }}.
+func ({{ receiver $ts.Name }} {{ $ts.Name }}) MarshalBSONValue() (bsontype.Type, []byte, error) {
+	if err := {{ receiver $ts.Name }}.Validate(); err != nil {
+		return 0, nil, fmt.Errorf("Cannot marshal value %q as {{ $ts.Name }}. %w", {{ receiver $ts.Name }}, err)
+	}
+	return bson.MarshalValue({{ receiver $ts.Name }}.String())
+}
+
+// UnmarshalBSONValue implements the bson.ValueUnmarshaler interface for {{ $ts.Name }}.
+func ({{ receiver $ts.Name }} *{{ $ts.Name }}) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	if t != bsontype.String {
+		return fmt.Errorf("{{ $ts.Name }} should be a string, got %q of Type %q", data, t)
+	}
+	str, data, ok := bsoncore.ReadString(data)
+	if !ok {
+		return fmt.Errorf("failed reading value as string, got %q", data)
+	}
+{{- if not $ts.SupportUndefined }}
+	if len(str) == 0 {
+		return fmt.Errorf("{{ $ts.Name }} cannot be derived from empty string")
+	}
+{{- end }}
+
+	*{{ receiver $ts.Name }}, ok = {{ $ts.Name }}FromString{{ if $ts.SupportIgnoreCase }}IgnoreCase{{ end }}(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a {{ $ts.Name }}", str)
+	}
+	return nil
+}
+{{ end }}
 {{- if contains $ts.Serializers "gql" }}
 // MarshalGQL implements the graphql.Marshaler interface for {{ $ts.Name }}.
 func ({{ receiver $ts.Name }} {{ $ts.Name }}) MarshalGQL(w io.Writer) {

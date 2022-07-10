@@ -9,6 +9,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 	"gopkg.in/yaml.v3"
 )
 
@@ -99,6 +101,21 @@ func assertSerializer[T any](t *testing.T, tC TestCase, serializer string) {
 			}
 			require.NoError(t, err)
 			require.Equal(t, tC.Expected.AsSerialized, string(j))
+		})
+
+	case "bson":
+		t.Run("MarshalBSONValue", func(t *testing.T) {
+			enum := tC.Enum.(interface {
+				MarshalBSONValue() (_ bsontype.Type, data []byte, err error)
+			})
+			typ, j, err := enum.MarshalBSONValue()
+			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, bsontype.String, typ)
+			require.NotNil(t, j)
 		})
 
 	case "gql":
@@ -203,6 +220,25 @@ func assertDeserializer[T any](t *testing.T, tC TestCase, cfg TestConfig, deseri
 			err := (any)(enum).(interface {
 				UnmarshalBinary(data []byte) error
 			}).UnmarshalBinary([]byte(tC.From))
+			if tC.Expected.IsInvalid {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tC.Enum, enum)
+		})
+
+	case "bson":
+		t.Run("UnmarshalBSONValue", func(t *testing.T) {
+			enum := zeroValuer[T]()
+			typ, buf, err := bson.MarshalValue(tC.From)
+			require.NoError(t, err)
+			require.NotNil(t, buf)
+			require.Equal(t, bsontype.String, typ)
+
+			err = (any)(enum).(interface {
+				UnmarshalBSONValue(t bsontype.Type, data []byte) error
+			}).UnmarshalBSONValue(bsontype.String, buf)
 			if tC.Expected.IsInvalid {
 				require.Error(t, err)
 				return

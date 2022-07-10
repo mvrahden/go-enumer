@@ -7,6 +7,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
+	"go.mongodb.org/mongo-driver/x/bsonx/bsoncore"
 	"io"
 	"strconv"
 )
@@ -137,6 +140,31 @@ func (_g *Greeting) UnmarshalBinary(text []byte) error {
 	str := string(text)
 
 	var ok bool
+	*_g, ok = GreetingFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a Greeting", str)
+	}
+	return nil
+}
+
+// MarshalBSONValue implements the bson.ValueMarshaler interface for Greeting.
+func (_g Greeting) MarshalBSONValue() (bsontype.Type, []byte, error) {
+	if err := _g.Validate(); err != nil {
+		return 0, nil, fmt.Errorf("Cannot marshal value %q as Greeting. %w", _g, err)
+	}
+	return bson.MarshalValue(_g.String())
+}
+
+// UnmarshalBSONValue implements the bson.ValueUnmarshaler interface for Greeting.
+func (_g *Greeting) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	if t != bsontype.String {
+		return fmt.Errorf("Greeting should be a string, got %q of Type %q", data, t)
+	}
+	str, data, ok := bsoncore.ReadString(data)
+	if !ok {
+		return fmt.Errorf("failed reading value as string, got %q", data)
+	}
+
 	*_g, ok = GreetingFromString(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a Greeting", str)
@@ -396,6 +424,31 @@ func (_g *GreetingWithDefault) UnmarshalBinary(text []byte) error {
 	str := string(text)
 
 	var ok bool
+	*_g, ok = GreetingWithDefaultFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a GreetingWithDefault", str)
+	}
+	return nil
+}
+
+// MarshalBSONValue implements the bson.ValueMarshaler interface for GreetingWithDefault.
+func (_g GreetingWithDefault) MarshalBSONValue() (bsontype.Type, []byte, error) {
+	if err := _g.Validate(); err != nil {
+		return 0, nil, fmt.Errorf("Cannot marshal value %q as GreetingWithDefault. %w", _g, err)
+	}
+	return bson.MarshalValue(_g.String())
+}
+
+// UnmarshalBSONValue implements the bson.ValueUnmarshaler interface for GreetingWithDefault.
+func (_g *GreetingWithDefault) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	if t != bsontype.String {
+		return fmt.Errorf("GreetingWithDefault should be a string, got %q of Type %q", data, t)
+	}
+	str, data, ok := bsoncore.ReadString(data)
+	if !ok {
+		return fmt.Errorf("failed reading value as string, got %q", data)
+	}
+
 	*_g, ok = GreetingWithDefaultFromString(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a GreetingWithDefault", str)

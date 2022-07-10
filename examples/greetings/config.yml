@@ -1,3 +1,3 @@
 ---
-serializers: [binary, gql, json, sql, text, yaml]
+serializers: [binary, bson, gql, json, sql, text, yaml]
 support: [undefined, ent]
