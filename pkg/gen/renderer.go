@@ -262,30 +262,14 @@ var (
 	noopCaseTransformer = func(value string) string {
 		return value
 	}
-	pascalCaseTransformer = func(value string) string {
-		return strcase.ToPascal(value)
-	}
-	camelCaseTransformer = func(value string) string {
-		return strcase.ToCamel(value)
-	}
-	kebabCaseTransformer = func(value string) string {
-		return strcase.ToKebab(value)
-	}
-	snakeCaseTransformer = func(value string) string {
-		return strcase.ToSnake(value)
-	}
-	lowerCaseTransformer = func(value string) string {
-		return strings.ToLower(value)
-	}
-	upperCaseTransformer = func(value string) string {
-		return strings.ToUpper(value)
-	}
-	upperSnakeCaseTransformer = func(value string) string {
-		return strcase.ToSNAKE(value)
-	}
-	upperKebabCaseTransformer = func(value string) string {
-		return strcase.ToKEBAB(value)
-	}
+	pascalCaseTransformer     = strcase.ToPascal
+	camelCaseTransformer      = strcase.ToCamel
+	kebabCaseTransformer      = strcase.ToKebab
+	snakeCaseTransformer      = strcase.ToSnake
+	lowerCaseTransformer      = strings.ToLower
+	upperCaseTransformer      = strings.ToUpper
+	upperSnakeCaseTransformer = strcase.ToSNAKE
+	upperKebabCaseTransformer = strcase.ToKEBAB
 	whitespaceCaseTransformer = func(value string) string {
 		return strcase.ToCase(value, strcase.Original, ' ')
 	}
