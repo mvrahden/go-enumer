@@ -202,10 +202,39 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *enumer.EnumType) err
 		}
 	}
 
-	if err := util.renderSerializers(buf, ts); err != nil {
-		return err
+	{ // serializers
+		type TplData struct {
+			Name              string
+			Serializers       []string
+			SupportIgnoreCase bool
+			SupportUndefined  bool
+		}
+		data := TplData{
+			Name:              enum.Name,
+			Serializers:       ts.Config.Serializers,
+			SupportIgnoreCase: ts.Config.SupportedFeatures.Contains(config.SupportIgnoreCase),
+			SupportUndefined:  ts.Config.SupportedFeatures.Contains(config.SupportUndefined),
+		}
+
+		if err := enumTpl.ExecuteTemplate(buf, "enum.serializers.go.tpl", map[string]any{"Type": data}); err != nil {
+			return err
+		}
 	}
-	return util.renderEntInterfaceSupport(buf, ts)
+
+	{ // misc (Ent Interface)
+		type TplData struct {
+			Name                string
+			SupportEntInterface bool
+		}
+		data := TplData{
+			Name:                ts.Name().Name,
+			SupportEntInterface: ts.Config.SupportedFeatures.Contains(config.SupportEntInterface),
+		}
+		if err := enumTpl.ExecuteTemplate(buf, "enum.misc.ent.go.tpl", map[string]any{"Type": data}); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 var tplFuncs = template.FuncMap{
@@ -298,39 +327,4 @@ func getTransformStrategy(c *config.Options) func(string) string {
 	default:
 		return noopCaseTransformer
 	}
-}
-
-func (renderUtil) renderSerializers(buf *bytes.Buffer, ts *enumer.EnumType) error {
-	type TplData struct {
-		Name              string
-		Serializers       []string
-		SupportIgnoreCase bool
-		SupportUndefined  bool
-	}
-	data := TplData{
-		Name:              ts.Name().Name,
-		Serializers:       ts.Config.Serializers,
-		SupportIgnoreCase: ts.Config.SupportedFeatures.Contains(config.SupportIgnoreCase),
-		SupportUndefined:  ts.Config.SupportedFeatures.Contains(config.SupportUndefined),
-	}
-
-	if err := enumTpl.ExecuteTemplate(buf, "enum.serializers.go.tpl", map[string]any{"Type": data}); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (renderUtil) renderEntInterfaceSupport(buf *bytes.Buffer, ts *enumer.EnumType) error {
-	type TplData struct {
-		Name                string
-		SupportEntInterface bool
-	}
-	data := TplData{
-		Name:                ts.Name().Name,
-		SupportEntInterface: ts.Config.SupportedFeatures.Contains(config.SupportEntInterface),
-	}
-	if err := enumTpl.ExecuteTemplate(buf, "enum.misc.ent.go.tpl", map[string]any{"Type": data}); err != nil {
-		return err
-	}
-	return nil
 }
