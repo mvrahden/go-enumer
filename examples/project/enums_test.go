@@ -19,13 +19,13 @@ func TestEnums(t *testing.T) {
 			utils.AssertMissingSerializationInterfacesFor[AccountState](t, []string{"binary", "gql", "text", "yaml", "yaml.v3"})
 		})
 		t.Run("Serialization", func(t *testing.T) {
-			cfg := utils.TestConfig{}
+			cfg := utils.TestConfig{HasDefault: true}
 			toPtr := utils.ToPointer[AccountState]
 			testCases := []utils.TestCase{
 				// hint: this 1st case is invalid upon deserialization,
 				// but valid upon serialization (as it is the default value
 				// but does not support "undefined")
-				{From: "", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "STAGED", IsInvalid: true, IsDefault: true}},
+				{From: "", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "STAGED", IsInvalid: true}},
 				{From: "NOT_A_ACCOUNT_STATE", Enum: toPtr(5), Expected: utils.Expected{AsSerialized: "AccountState(5)", IsInvalid: true}},
 				{From: "STAGED", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "STAGED"}},
 				{From: "PROVISIONED", Enum: toPtr(1), Expected: utils.Expected{AsSerialized: "PROVISIONED"}},
@@ -141,7 +141,7 @@ func TestEnums(t *testing.T) {
 			})
 		})
 		t.Run("Serialization", func(t *testing.T) {
-			cfg := utils.TestConfig{SupportUndefined: true}
+			cfg := utils.TestConfig{SupportUndefined: true, HasDefault: true}
 			toPtr := utils.ToPointer[UserRole]
 			testCases := []utils.TestCase{
 				{From: "", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "standard"}},

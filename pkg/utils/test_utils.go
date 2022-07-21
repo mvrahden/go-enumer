@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -53,12 +54,11 @@ type TestCase struct {
 type Expected struct {
 	AsSerialized string
 	IsInvalid    bool
-	IsDefault    bool
-	// _IsNillable  bool
 }
 
 type TestConfig struct {
 	SupportUndefined bool
+	HasDefault       bool
 }
 
 func AssertMissingSerializationInterfacesFor[T any](t *testing.T, missingSerializers []string) {
@@ -72,22 +72,22 @@ func AssertMissingSerializationInterfacesFor[T any](t *testing.T, missingSeriali
 
 func AssertSerializationInterfacesFor[T any](t *testing.T, idx int, tC TestCase, cfg TestConfig, serializers []string) {
 	t.Run(fmt.Sprintf("Serializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
-		assertSerializers[T](t, tC, serializers)
+		assertSerializers[T](t, tC, cfg, serializers)
 	})
 	t.Run(fmt.Sprintf("Deserializers (idx: %d from %q)", idx, tC.From), func(t *testing.T) {
 		assertDeserializers[T](t, tC, cfg, serializers)
 	})
 }
 
-func assertSerializers[T any](t *testing.T, tC TestCase, serializers []string) {
+func assertSerializers[T any](t *testing.T, tC TestCase, cfg TestConfig, serializers []string) {
 	for _, serializer := range serializers {
 		t.Run(fmt.Sprintf("serialize %q", serializer), func(t *testing.T) {
-			assertSerializer[T](t, tC, serializer)
+			assertSerializer[T](t, tC, cfg, serializer)
 		})
 	}
 }
 
-func assertSerializer[T any](t *testing.T, tC TestCase, serializer string) {
+func assertSerializer[T any](t *testing.T, tC TestCase, cfg TestConfig, serializer string) {
 	switch serializer {
 	case "binary":
 		t.Run("MarhsalBinary", func(t *testing.T) {
@@ -95,7 +95,7 @@ func assertSerializer[T any](t *testing.T, tC TestCase, serializer string) {
 				MarshalBinary() (data []byte, err error)
 			})
 			j, err := enum.MarshalBinary()
-			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
+			if tC.Expected.IsInvalid && isDefault(cfg.HasDefault, tC.Enum) {
 				require.Error(t, err)
 				return
 			}
@@ -108,14 +108,23 @@ func assertSerializer[T any](t *testing.T, tC TestCase, serializer string) {
 			enum := tC.Enum.(interface {
 				MarshalBSONValue() (_ bsontype.Type, data []byte, err error)
 			})
-			typ, j, err := enum.MarshalBSONValue()
-			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
+			typ, actual, err := enum.MarshalBSONValue()
+			if tC.Expected.IsInvalid && isDefault(cfg.HasDefault, tC.Enum) {
 				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
+			if cfg.SupportUndefined && !cfg.HasDefault {
+				// If expected is Zero Value
+				// we need Nullability
+				if isZero(tC.Enum) {
+					require.Equal(t, bsontype.Undefined, typ)
+					require.Equal(t, []byte(nil), actual)
+					return
+				}
+			}
 			require.Equal(t, bsontype.String, typ)
-			require.NotNil(t, j)
+			require.NotNil(t, actual)
 		})
 
 	case "gql":
@@ -136,7 +145,7 @@ func assertSerializer[T any](t *testing.T, tC TestCase, serializer string) {
 				MarshalJSON() ([]byte, error)
 			})
 			actual, err := enum.MarshalJSON()
-			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
+			if tC.Expected.IsInvalid && isDefault(cfg.HasDefault, tC.Enum) {
 				require.Error(t, err)
 				return
 			}
@@ -149,13 +158,21 @@ func assertSerializer[T any](t *testing.T, tC TestCase, serializer string) {
 			enum := tC.Enum.(interface {
 				Value() (driver.Value, error)
 			})
-			j, err := enum.Value()
-			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
+			actual, err := enum.Value()
+			if tC.Expected.IsInvalid && isDefault(cfg.HasDefault, tC.Enum) {
 				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
-			require.Equal(t, tC.Expected.AsSerialized, j)
+			if cfg.SupportUndefined && !cfg.HasDefault {
+				// If expected is Zero Value
+				// we need Nullability
+				if isZero(tC.Enum) {
+					require.Equal(t, nil, actual)
+					return
+				}
+			}
+			require.Equal(t, tC.Expected.AsSerialized, actual)
 		})
 
 	case "text":
@@ -163,13 +180,13 @@ func assertSerializer[T any](t *testing.T, tC TestCase, serializer string) {
 			enum := tC.Enum.(interface {
 				MarshalText() (text []byte, err error)
 			})
-			j, err := enum.MarshalText()
-			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
+			actual, err := enum.MarshalText()
+			if tC.Expected.IsInvalid && isDefault(cfg.HasDefault, tC.Enum) {
 				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
-			require.Equal(t, tC.Expected.AsSerialized, string(j))
+			require.Equal(t, tC.Expected.AsSerialized, string(actual))
 		})
 
 	case "yaml", "yaml.v3":
@@ -178,7 +195,7 @@ func assertSerializer[T any](t *testing.T, tC TestCase, serializer string) {
 				MarshalYAML() (any, error)
 			})
 			j, err := enum.MarshalYAML()
-			if tC.Expected.IsInvalid && !tC.Expected.IsDefault {
+			if tC.Expected.IsInvalid && isDefault(cfg.HasDefault, tC.Enum) {
 				require.Error(t, err)
 				return
 			}
@@ -202,6 +219,13 @@ func zeroValuer[T any]() *T {
 	var v T
 	return &v
 }
+
+func isZero(v any) bool {
+	val := reflect.ValueOf(v)
+	return val.IsValid() && val.Elem().IsZero()
+}
+
+func isDefault(hasDefault bool, v any) bool { return !(hasDefault && isZero(v)) }
 
 func assertDeserializers[T any](t *testing.T, tC TestCase, cfg TestConfig, deserializers []string) {
 	for _, deserializer := range deserializers {

@@ -145,7 +145,6 @@ func (_a Animal) MarshalGQL(w io.Writer) {
 func (_a *Animal) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -205,7 +204,6 @@ func (_a Animal) Value() (driver.Value, error) {
 func (_a *Animal) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -406,7 +404,6 @@ func (_b Bird) MarshalGQL(w io.Writer) {
 func (_b *Bird) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -466,7 +463,6 @@ func (_b Bird) Value() (driver.Value, error) {
 func (_b *Bird) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -670,7 +666,6 @@ func (_f Fish) MarshalGQL(w io.Writer) {
 func (_f *Fish) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -730,7 +725,6 @@ func (_f Fish) Value() (driver.Value, error) {
 func (_f *Fish) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -925,7 +919,6 @@ func (_m Mammal) MarshalGQL(w io.Writer) {
 func (_m *Mammal) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -985,7 +978,6 @@ func (_m Mammal) Value() (driver.Value, error) {
 func (_m *Mammal) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1183,7 +1175,6 @@ func (_r Reptile) MarshalGQL(w io.Writer) {
 func (_r *Reptile) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1243,7 +1234,6 @@ func (_r Reptile) Value() (driver.Value, error) {
 func (_r *Reptile) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:

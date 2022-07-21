@@ -204,16 +204,18 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *enumer.EnumType) err
 
 	{ // serializers
 		type TplData struct {
-			Name              string
-			Serializers       []string
-			SupportIgnoreCase bool
-			SupportUndefined  bool
+			Name                            string
+			RequiresGeneratedUndefinedValue bool
+			Serializers                     []string
+			SupportIgnoreCase               bool
+			SupportUndefined                bool
 		}
 		data := TplData{
-			Name:              enum.Name,
-			Serializers:       ts.Config.Serializers,
-			SupportIgnoreCase: ts.Config.SupportedFeatures.Contains(config.SupportIgnoreCase),
-			SupportUndefined:  ts.Config.SupportedFeatures.Contains(config.SupportUndefined),
+			Name:                            enum.Name,
+			RequiresGeneratedUndefinedValue: enum.RequiresGeneratedUndefinedValue,
+			Serializers:                     ts.Config.Serializers,
+			SupportIgnoreCase:               ts.Config.SupportedFeatures.Contains(config.SupportIgnoreCase),
+			SupportUndefined:                ts.Config.SupportedFeatures.Contains(config.SupportUndefined),
 		}
 
 		if err := enumTpl.ExecuteTemplate(buf, "enum.serializers.go.tpl", map[string]any{"Type": data}); err != nil {

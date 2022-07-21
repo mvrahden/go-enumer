@@ -148,7 +148,6 @@ func (_p PillAliased) MarshalGQL(w io.Writer) {
 func (_p *PillAliased) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -208,7 +207,6 @@ func (_p PillAliased) Value() (driver.Value, error) {
 func (_p *PillAliased) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -412,7 +410,6 @@ func (_p PillUnsigned) MarshalGQL(w io.Writer) {
 func (_p *PillUnsigned) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -472,7 +469,6 @@ func (_p PillUnsigned) Value() (driver.Value, error) {
 func (_p *PillUnsigned) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -676,7 +672,6 @@ func (_p PillUnsigned16) MarshalGQL(w io.Writer) {
 func (_p *PillUnsigned16) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -736,7 +731,6 @@ func (_p PillUnsigned16) Value() (driver.Value, error) {
 func (_p *PillUnsigned16) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -940,7 +934,6 @@ func (_p PillUnsigned32) MarshalGQL(w io.Writer) {
 func (_p *PillUnsigned32) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1000,7 +993,6 @@ func (_p PillUnsigned32) Value() (driver.Value, error) {
 func (_p *PillUnsigned32) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1204,7 +1196,6 @@ func (_p PillUnsigned64) MarshalGQL(w io.Writer) {
 func (_p *PillUnsigned64) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1264,7 +1255,6 @@ func (_p PillUnsigned64) Value() (driver.Value, error) {
 func (_p *PillUnsigned64) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1468,7 +1458,6 @@ func (_p PillUnsigned8) MarshalGQL(w io.Writer) {
 func (_p *PillUnsigned8) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1528,7 +1517,6 @@ func (_p PillUnsigned8) Value() (driver.Value, error) {
 func (_p *PillUnsigned8) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:

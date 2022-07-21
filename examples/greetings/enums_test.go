@@ -144,7 +144,7 @@ func TestEnums(t *testing.T) {
 			}
 		})
 		t.Run("Serialization", func(t *testing.T) {
-			cfg := utils.TestConfig{SupportUndefined: true}
+			cfg := utils.TestConfig{SupportUndefined: true, HasDefault: true}
 			toPtr := utils.ToPointer[GreetingWithDefault]
 			testCases := []utils.TestCase{
 				{From: "", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "World"}},

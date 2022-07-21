@@ -7,6 +7,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
+	"go.mongodb.org/mongo-driver/x/bsonx/bsoncore"
 	"io"
 	"strconv"
 )
@@ -144,6 +147,34 @@ func (_p *Planet) UnmarshalBinary(text []byte) error {
 	return nil
 }
 
+// MarshalBSONValue implements the bson.ValueMarshaler interface for Planet.
+func (_p Planet) MarshalBSONValue() (bsontype.Type, []byte, error) {
+	if err := _p.Validate(); err != nil {
+		return 0, nil, fmt.Errorf("Cannot marshal value %q as Planet. %w", _p, err)
+	}
+	return bson.MarshalValue(_p.String())
+}
+
+// UnmarshalBSONValue implements the bson.ValueUnmarshaler interface for Planet.
+func (_p *Planet) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	if t != bsontype.String {
+		return fmt.Errorf("Planet should be a string, got %q of Type %q", data, t)
+	}
+	str, data, ok := bsoncore.ReadString(data)
+	if !ok {
+		return fmt.Errorf("failed reading value as string, got %q", data)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("Planet cannot be derived from empty string")
+	}
+
+	*_p, ok = PlanetFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a Planet", str)
+	}
+	return nil
+}
+
 // MarshalGQL implements the graphql.Marshaler interface for Planet.
 func (_p Planet) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(_p.String()))
@@ -153,7 +184,6 @@ func (_p Planet) MarshalGQL(w io.Writer) {
 func (_p *Planet) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -213,7 +243,6 @@ func (_p Planet) Value() (driver.Value, error) {
 func (_p *Planet) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -419,6 +448,34 @@ func (_p *PlanetSupportUndefined) UnmarshalBinary(text []byte) error {
 	return nil
 }
 
+// MarshalBSONValue implements the bson.ValueMarshaler interface for PlanetSupportUndefined.
+func (_p PlanetSupportUndefined) MarshalBSONValue() (bsontype.Type, []byte, error) {
+	if err := _p.Validate(); err != nil {
+		return 0, nil, fmt.Errorf("Cannot marshal value %q as PlanetSupportUndefined. %w", _p, err)
+	}
+	if _p == 0 {
+		return bsontype.Undefined, nil, nil
+	}
+	return bson.MarshalValue(_p.String())
+}
+
+// UnmarshalBSONValue implements the bson.ValueUnmarshaler interface for PlanetSupportUndefined.
+func (_p *PlanetSupportUndefined) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	if t != bsontype.String && t != bsontype.Undefined {
+		return fmt.Errorf("PlanetSupportUndefined should be a string, got %q of Type %q", data, t)
+	}
+	str, data, ok := bsoncore.ReadString(data)
+	if !ok {
+		return fmt.Errorf("failed reading value as string, got %q", data)
+	}
+
+	*_p, ok = PlanetSupportUndefinedFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PlanetSupportUndefined", str)
+	}
+	return nil
+}
+
 // MarshalGQL implements the graphql.Marshaler interface for PlanetSupportUndefined.
 func (_p PlanetSupportUndefined) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(_p.String()))
@@ -474,6 +531,9 @@ func (_p *PlanetSupportUndefined) UnmarshalJSON(data []byte) error {
 func (_p PlanetSupportUndefined) Value() (driver.Value, error) {
 	if err := _p.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as PlanetSupportUndefined. %w", _p, err)
+	}
+	if _p == 0 {
+		return nil, nil
 	}
 	return _p.String(), nil
 }
@@ -672,6 +732,31 @@ func (_p *PlanetSupportUndefinedWithDefault) UnmarshalBinary(text []byte) error 
 	str := string(text)
 
 	var ok bool
+	*_p, ok = PlanetSupportUndefinedWithDefaultFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PlanetSupportUndefinedWithDefault", str)
+	}
+	return nil
+}
+
+// MarshalBSONValue implements the bson.ValueMarshaler interface for PlanetSupportUndefinedWithDefault.
+func (_p PlanetSupportUndefinedWithDefault) MarshalBSONValue() (bsontype.Type, []byte, error) {
+	if err := _p.Validate(); err != nil {
+		return 0, nil, fmt.Errorf("Cannot marshal value %q as PlanetSupportUndefinedWithDefault. %w", _p, err)
+	}
+	return bson.MarshalValue(_p.String())
+}
+
+// UnmarshalBSONValue implements the bson.ValueUnmarshaler interface for PlanetSupportUndefinedWithDefault.
+func (_p *PlanetSupportUndefinedWithDefault) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	if t != bsontype.String && t != bsontype.Undefined {
+		return fmt.Errorf("PlanetSupportUndefinedWithDefault should be a string, got %q of Type %q", data, t)
+	}
+	str, data, ok := bsoncore.ReadString(data)
+	if !ok {
+		return fmt.Errorf("failed reading value as string, got %q", data)
+	}
+
 	*_p, ok = PlanetSupportUndefinedWithDefaultFromString(str)
 	if !ok {
 		return fmt.Errorf("Value %q does not represent a PlanetSupportUndefinedWithDefault", str)
@@ -936,6 +1021,34 @@ func (_p *PlanetWithDefault) UnmarshalBinary(text []byte) error {
 	return nil
 }
 
+// MarshalBSONValue implements the bson.ValueMarshaler interface for PlanetWithDefault.
+func (_p PlanetWithDefault) MarshalBSONValue() (bsontype.Type, []byte, error) {
+	if err := _p.Validate(); err != nil {
+		return 0, nil, fmt.Errorf("Cannot marshal value %q as PlanetWithDefault. %w", _p, err)
+	}
+	return bson.MarshalValue(_p.String())
+}
+
+// UnmarshalBSONValue implements the bson.ValueUnmarshaler interface for PlanetWithDefault.
+func (_p *PlanetWithDefault) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	if t != bsontype.String {
+		return fmt.Errorf("PlanetWithDefault should be a string, got %q of Type %q", data, t)
+	}
+	str, data, ok := bsoncore.ReadString(data)
+	if !ok {
+		return fmt.Errorf("failed reading value as string, got %q", data)
+	}
+	if len(str) == 0 {
+		return fmt.Errorf("PlanetWithDefault cannot be derived from empty string")
+	}
+
+	*_p, ok = PlanetWithDefaultFromString(str)
+	if !ok {
+		return fmt.Errorf("Value %q does not represent a PlanetWithDefault", str)
+	}
+	return nil
+}
+
 // MarshalGQL implements the graphql.Marshaler interface for PlanetWithDefault.
 func (_p PlanetWithDefault) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(_p.String()))
@@ -945,7 +1058,6 @@ func (_p PlanetWithDefault) MarshalGQL(w io.Writer) {
 func (_p *PlanetWithDefault) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1005,7 +1117,6 @@ func (_p PlanetWithDefault) Value() (driver.Value, error) {
 func (_p *PlanetWithDefault) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:

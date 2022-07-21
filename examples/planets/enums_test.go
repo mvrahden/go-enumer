@@ -31,13 +31,13 @@ func TestEnums(t *testing.T) {
 	})
 	t.Run("PlanetWithDefault", func(t *testing.T) {
 		t.Run("Serialization", func(t *testing.T) {
-			cfg := utils.TestConfig{}
+			cfg := utils.TestConfig{HasDefault: true}
 			toPtr := utils.ToPointer[PlanetWithDefault]
 			testCases := []utils.TestCase{
 				// hint: this 1st case is invalid upon deserialization,
 				// but valid upon serialization (as it is the default value
 				// but does not support "undefined")
-				{From: "", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "Earth", IsInvalid: true, IsDefault: true}},
+				{From: "", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "Earth", IsInvalid: true}},
 				{From: "PlanetWithDefault(9)", Enum: toPtr(9), Expected: utils.Expected{AsSerialized: "PlanetWithDefault(9)", IsInvalid: true}},
 				{From: "Earth", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "Earth"}},
 				{From: "Mars", Enum: toPtr(PlanetWithDefaultMars), Expected: utils.Expected{AsSerialized: "Mars"}},
@@ -80,7 +80,7 @@ func TestEnums(t *testing.T) {
 	t.Run("PlanetSupportUndefinedWithDefault", func(t *testing.T) {
 		t.Run("Serialization", func(t *testing.T) {
 			toPtr := utils.ToPointer[PlanetSupportUndefinedWithDefault]
-			cfg := utils.TestConfig{SupportUndefined: true}
+			cfg := utils.TestConfig{SupportUndefined: true, HasDefault: true}
 			testCases := []utils.TestCase{
 				{From: "PlanetSupportUndefinedWithDefault(9)", Enum: toPtr(9), Expected: utils.Expected{AsSerialized: "PlanetSupportUndefinedWithDefault(9)", IsInvalid: true}},
 				{From: "", Enum: toPtr(0), Expected: utils.Expected{AsSerialized: "Earth"}},

@@ -32,12 +32,17 @@ func ({{ receiver $ts.Name }} {{ $ts.Name }}) MarshalBSONValue() (bsontype.Type,
 	if err := {{ receiver $ts.Name }}.Validate(); err != nil {
 		return 0, nil, fmt.Errorf("Cannot marshal value %q as {{ $ts.Name }}. %w", {{ receiver $ts.Name }}, err)
 	}
+{{- if $ts.RequiresGeneratedUndefinedValue }}
+	if {{ receiver $ts.Name }} == 0 {
+		return bsontype.Undefined, nil, nil
+	}
+{{- end }}
 	return bson.MarshalValue({{ receiver $ts.Name }}.String())
 }
 
 // UnmarshalBSONValue implements the bson.ValueUnmarshaler interface for {{ $ts.Name }}.
 func ({{ receiver $ts.Name }} *{{ $ts.Name }}) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
-	if t != bsontype.String {
+	if t != bsontype.String {{- if $ts.SupportUndefined }} && t != bsontype.Undefined {{- end }} {
 		return fmt.Errorf("{{ $ts.Name }} should be a string, got %q of Type %q", data, t)
 	}
 	str, data, ok := bsoncore.ReadString(data)
@@ -67,7 +72,9 @@ func ({{ receiver $ts.Name }} {{ $ts.Name }}) MarshalGQL(w io.Writer) {
 func ({{ receiver $ts.Name }} *{{ $ts.Name }}) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	{{- if $ts.SupportUndefined }}
 	case nil:
+	{{- end }}
 	case []byte:
 		str = string(v)
 	case string:
@@ -126,6 +133,11 @@ func ({{ receiver $ts.Name }} {{ $ts.Name }}) Value() (driver.Value, error) {
 	if err := {{ receiver $ts.Name }}.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as {{ $ts.Name }}. %w", {{ receiver $ts.Name }}, err)
 	}
+{{- if $ts.RequiresGeneratedUndefinedValue }}
+	if {{ receiver $ts.Name }} == 0 {
+		return nil, nil
+	}
+{{- end }}
 	return {{ receiver $ts.Name }}.String(), nil
 }
 
@@ -133,7 +145,9 @@ func ({{ receiver $ts.Name }} {{ $ts.Name }}) Value() (driver.Value, error) {
 func ({{ receiver $ts.Name }} *{{ $ts.Name }}) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
+	{{- if $ts.SupportUndefined }}
 	case nil:
+	{{- end }}
 	case []byte:
 		str = string(v)
 	case string:

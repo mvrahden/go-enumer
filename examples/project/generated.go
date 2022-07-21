@@ -150,7 +150,6 @@ func (_a AccountState) Value() (driver.Value, error) {
 func (_a *AccountState) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1068,7 +1067,6 @@ func (_c CountryCode) MarshalGQL(w io.Writer) {
 func (_c *CountryCode) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1128,7 +1126,6 @@ func (_c CountryCode) Value() (driver.Value, error) {
 func (_c *CountryCode) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1357,7 +1354,6 @@ func (_c Currency) MarshalGQL(w io.Writer) {
 func (_c *Currency) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -1417,7 +1413,6 @@ func (_c Currency) Value() (driver.Value, error) {
 func (_c *Currency) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -2443,7 +2438,6 @@ func (_t Timezone) MarshalGQL(w io.Writer) {
 func (_t *Timezone) UnmarshalGQL(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:
@@ -2503,7 +2497,6 @@ func (_t Timezone) Value() (driver.Value, error) {
 func (_t *Timezone) Scan(value interface{}) error {
 	var str string
 	switch v := value.(type) {
-	case nil:
 	case []byte:
 		str = string(v)
 	case string:

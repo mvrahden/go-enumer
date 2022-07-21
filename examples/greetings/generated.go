@@ -152,12 +152,15 @@ func (_g Greeting) MarshalBSONValue() (bsontype.Type, []byte, error) {
 	if err := _g.Validate(); err != nil {
 		return 0, nil, fmt.Errorf("Cannot marshal value %q as Greeting. %w", _g, err)
 	}
+	if _g == 0 {
+		return bsontype.Undefined, nil, nil
+	}
 	return bson.MarshalValue(_g.String())
 }
 
 // UnmarshalBSONValue implements the bson.ValueUnmarshaler interface for Greeting.
 func (_g *Greeting) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
-	if t != bsontype.String {
+	if t != bsontype.String && t != bsontype.Undefined {
 		return fmt.Errorf("Greeting should be a string, got %q of Type %q", data, t)
 	}
 	str, data, ok := bsoncore.ReadString(data)
@@ -227,6 +230,9 @@ func (_g *Greeting) UnmarshalJSON(data []byte) error {
 func (_g Greeting) Value() (driver.Value, error) {
 	if err := _g.Validate(); err != nil {
 		return nil, fmt.Errorf("Cannot serialize value %q as Greeting. %w", _g, err)
+	}
+	if _g == 0 {
+		return nil, nil
 	}
 	return _g.String(), nil
 }
@@ -441,7 +447,7 @@ func (_g GreetingWithDefault) MarshalBSONValue() (bsontype.Type, []byte, error) 
 
 // UnmarshalBSONValue implements the bson.ValueUnmarshaler interface for GreetingWithDefault.
 func (_g *GreetingWithDefault) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
-	if t != bsontype.String {
+	if t != bsontype.String && t != bsontype.Undefined {
 		return fmt.Errorf("GreetingWithDefault should be a string, got %q of Type %q", data, t)
 	}
 	str, data, ok := bsoncore.ReadString(data)
