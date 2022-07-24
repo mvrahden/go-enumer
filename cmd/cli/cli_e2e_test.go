@@ -43,8 +43,8 @@ func TestE2E_Cli(t *testing.T) {
 			cli.PatchTargetFilenameFunc(t, tmpDir)
 			tmpFile := filepath.Join(tmpDir, tC.outFilename+".go")
 
-			defaultArgs := []string{"-dir=testdata/" + tC.dirName, "-out=" + tC.outFilename}
-			args := append(defaultArgs, tC.args...)
+			args := []string{"-dir=testdata/" + tC.dirName, "-out=" + tC.outFilename}
+			args = append(args, tC.args...)
 			err := cli.Execute(args)
 			require.NoError(t, err)
 			require.FileExists(t, tmpFile)
@@ -90,9 +90,7 @@ func TestE2E_DeleteOldGeneratedFile(t *testing.T) {
 			require.NoError(t, err)
 		}
 
-		defaultArgs := []string{"-dir=" + tmpDir}
-		args := append(defaultArgs)
-		fmt.Print(tmpDir)
+		args := []string{"-dir=" + tmpDir}
 		err = cli.Execute(args)
 		require.ErrorContains(t, err, "no enums detected")
 

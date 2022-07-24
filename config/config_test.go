@@ -1,11 +1,18 @@
 package config
 
 import (
+	"flag"
 	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/require"
+)
+
+var (
+	// hint: interface assertions to ensure
+	// stringList is compatible with flag package.
+	_ flag.Value = &stringList{}
 )
 
 func TestConfigLoading(t *testing.T) {
@@ -67,7 +74,7 @@ func TestStringList(t *testing.T) {
 		require.True(t, stringList{"a", "b", "c"}.Contains("c"))
 	})
 	t.Run("Unique", func(t *testing.T) {
-		require.Equal(t, []string{"a", "b"}, stringList{"a", "b", "a"}.Unique())
+		require.Equal(t, []string{"a", "b"}, stringList{"a", "b", "a"}.ensureUnique())
 	})
 	t.Run("String", func(t *testing.T) {
 		require.Equal(t, "a,b,a", stringList{"a", "b", "a"}.String())

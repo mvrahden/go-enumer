@@ -5,6 +5,18 @@ import (
 	"strings"
 
 	env "github.com/ilyakaznacheev/cleanenv"
+	"github.com/mvrahden/go-enumer/pkg/utils/slices"
+)
+
+const (
+	SerializerBinary = "binary"
+	SerializerBSON   = "bson"
+	SerializerGQL    = "graphql"
+	SerializerJSON   = "json"
+	SerializerSQL    = "sql"
+	SerializerText   = "text"
+	SerializerYaml   = "yaml"
+	SerializerYamlV3 = "yaml.v3"
 )
 
 const (
@@ -30,28 +42,24 @@ func (o *Options) Clone() *Options {
 
 type stringList []string
 
-func (sl stringList) Sort() {
-	sort.Strings(sl)
-}
-
 func (sl stringList) Contains(s string) bool {
-	for _, v := range sl {
-		if s == v {
-			return true
-		}
-	}
-	return false
+	return slices.Any(sl, func(v string, idx int) bool {
+		return s == v
+	})
 }
 
-func (sl stringList) Unique() (u []string) {
-	sl.Sort()
-	for idx, v := range sl {
-		if idx > 0 && sl[idx-1] == v {
-			continue
+func (sl stringList) ensureUnique() []string {
+	sort.Strings(sl)
+	// collect unique values
+	return slices.Reduce(sl, func(v string, o []string) []string {
+		if len(o) == 0 {
+			return append(o, v)
 		}
-		u = append(u, v)
-	}
-	return u
+		if last := o[len(o)-1]; last != v {
+			return append(o, v)
+		}
+		return o
+	})
 }
 
 func (sl stringList) String() string {
@@ -81,6 +89,6 @@ func LoadFrom(file string) *Options {
 func loadFromFile(file string, cfg *Options) {
 	_ = env.ReadConfig(file, cfg)
 	_ = env.ReadEnv(cfg)
-	cfg.Serializers = cfg.Serializers.Unique()
-	cfg.SupportedFeatures = cfg.SupportedFeatures.Unique()
+	cfg.Serializers = cfg.Serializers.ensureUnique()
+	cfg.SupportedFeatures = cfg.SupportedFeatures.ensureUnique()
 }

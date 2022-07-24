@@ -166,18 +166,18 @@ func (i inspector) determineImports(f *File) {
 	for _, ts := range f.TypeSpecs {
 		for _, v := range ts.Config.Serializers {
 			switch v {
-			case "bson":
+			case config.SerializerBSON:
 				f.Imports = append(f.Imports, &Import{Path: "go.mongodb.org/mongo-driver/bson"})
 				f.Imports = append(f.Imports, &Import{Path: "go.mongodb.org/mongo-driver/bson/bsontype"})
 				f.Imports = append(f.Imports, &Import{Path: "go.mongodb.org/mongo-driver/x/bsonx/bsoncore"})
-			case "gql":
+			case config.SerializerGQL:
 				f.Imports = append(f.Imports, &Import{Path: "io"})
 				f.Imports = append(f.Imports, &Import{Path: "strconv"})
-			case "json":
+			case config.SerializerJSON:
 				f.Imports = append(f.Imports, &Import{Path: "encoding/json"})
-			case "sql":
+			case config.SerializerSQL:
 				f.Imports = append(f.Imports, &Import{Path: "database/sql/driver"})
-			case "yaml.v3":
+			case config.SerializerYamlV3:
 				f.Imports = append(f.Imports, &Import{Path: "gopkg.in/yaml.v3"})
 			}
 		}

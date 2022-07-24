@@ -152,8 +152,8 @@ func validate(filename string, cfg *config.Options) error {
 	if strings.ContainsAny(filename, "\"") {
 		return errors.New("output file name contains forbidden characters")
 	}
-	if cfg.Serializers.Contains("yaml") && cfg.Serializers.Contains("yaml.v3") {
-		return fmt.Errorf("serializers %q and %q cannot be applied together", "yaml", "yaml.v3")
+	if cfg.Serializers.Contains(config.SerializerYaml) && cfg.Serializers.Contains(config.SerializerYamlV3) {
+		return fmt.Errorf("serializers %q and %q cannot be applied together", config.SerializerYaml, config.SerializerYamlV3)
 	}
 	return nil
 }
