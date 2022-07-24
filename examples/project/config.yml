@@ -1,2 +1,2 @@
 ---
-serializers: [binary, gql, json, sql, text, yaml]
+serializers: [binary, graphql, json, sql, text, yaml]

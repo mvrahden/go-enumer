@@ -67,7 +67,7 @@ func TestEnums(t *testing.T) {
 				{From: "VITAMIN-C", Enum: toPtr(PillUnsignedVitaminC), Expected: utils.Expected{AsSerialized: "VITAMIN-C"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml.v3"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml.v3"}
 				utils.AssertSerializationInterfacesFor[PillUnsigned](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -130,7 +130,7 @@ func TestEnums(t *testing.T) {
 				{From: "VITAMIN-C", Enum: toPtr(PillAliasedVitaminC), Expected: utils.Expected{AsSerialized: "VITAMIN-C"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml.v3"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml.v3"}
 				utils.AssertSerializationInterfacesFor[PillAliased](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -193,7 +193,7 @@ func TestEnums(t *testing.T) {
 				{From: "VITAMIN-C", Enum: toPtr(PillUnsigned8VitaminC), Expected: utils.Expected{AsSerialized: "VITAMIN-C"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml.v3"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml.v3"}
 				utils.AssertSerializationInterfacesFor[PillUnsigned8](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -256,7 +256,7 @@ func TestEnums(t *testing.T) {
 				{From: "VITAMIN-C", Enum: toPtr(PillUnsigned16VitaminC), Expected: utils.Expected{AsSerialized: "VITAMIN-C"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml.v3"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml.v3"}
 				utils.AssertSerializationInterfacesFor[PillUnsigned16](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -319,7 +319,7 @@ func TestEnums(t *testing.T) {
 				{From: "VITAMIN-C", Enum: toPtr(PillUnsigned32VitaminC), Expected: utils.Expected{AsSerialized: "VITAMIN-C"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml.v3"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml.v3"}
 				utils.AssertSerializationInterfacesFor[PillUnsigned32](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -382,7 +382,7 @@ func TestEnums(t *testing.T) {
 				{From: "VITAMIN-C", Enum: toPtr(PillUnsigned64VitaminC), Expected: utils.Expected{AsSerialized: "VITAMIN-C"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml.v3"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml.v3"}
 				utils.AssertSerializationInterfacesFor[PillUnsigned64](t, idx, tC, cfg, serializers)
 			}
 		})

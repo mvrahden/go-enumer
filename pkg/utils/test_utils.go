@@ -127,7 +127,7 @@ func assertSerializer[T any](t *testing.T, tC TestCase, cfg TestConfig, serializ
 			require.NotNil(t, actual)
 		})
 
-	case "gql":
+	case "graphql":
 		t.Run("MarhsalGQL", func(t *testing.T) {
 			enum := tC.Enum.(interface {
 				MarshalGQL(w io.Writer)
@@ -271,7 +271,7 @@ func assertDeserializer[T any](t *testing.T, tC TestCase, cfg TestConfig, deseri
 			require.Equal(t, tC.Enum, enum)
 		})
 
-	case "gql":
+	case "graphql":
 		t.Run("UnmarshalGQL", func(t *testing.T) {
 			values := []any{tC.From, []byte(tC.From), stringer{tC.From}}
 			for _, v := range values {
@@ -404,7 +404,7 @@ func assertMissingSerializer[T any](t *testing.T, serializer string) {
 			})
 		})
 
-	case "gql":
+	case "graphql":
 		t.Run("MarhsalGQL", func(t *testing.T) {
 			var enum T
 			_, ok = (any)(enum).(interface {
@@ -460,7 +460,7 @@ func assertMissingDeserializer[T any](t *testing.T, deserializer string) {
 			})
 		})
 
-	case "gql":
+	case "graphql":
 		t.Run("UnmarshalGQL", func(t *testing.T) {
 			_, ok = (any)(zeroValuer[T]()).(interface {
 				UnmarshalGQL(value any) error

@@ -289,7 +289,8 @@ When `go-enumer` is applied to a type, it will generate:
   Valid values are:
 
   - `binary` makes the enum conform to the `encoding.BinaryMarshaler` and `encoding.BinaryUnmarshaler` interfaces.
-  - `gql` makes the enum conform to the `graphql.Marshaler` and `graphql.Unmarshaler` interfaces.
+  - `bson` makes the enum conform to the `bson.MarshalBSONValue` and `bson.UnmarshalBSONValue` interfaces.
+  - `graphql` makes the enum conform to the `graphql.Marshaler` and `graphql.Unmarshaler` interfaces.
   - `json` makes the enum conform to the `json.Marshaler` and `json.Unmarshaler` interfaces.
   - `sql` makes the enum conform to the `sql.Scanner` and `sql.Valuer` interfaces.
   - `text` makes the enum conform to the `encoding.TextMarshaler` and `encoding.TextUnmarshaler` interfaces.

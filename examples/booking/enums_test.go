@@ -86,7 +86,7 @@ func TestEnums(t *testing.T) {
 			}
 		})
 		t.Run("Missing Serializers", func(t *testing.T) {
-			utils.AssertMissingSerializationInterfacesFor[BookingState](t, []string{"binary", "gql", "json", "sql", "text"})
+			utils.AssertMissingSerializationInterfacesFor[BookingState](t, []string{"binary", "graphql", "json", "sql", "text"})
 		})
 		t.Run("Serialization", func(t *testing.T) {
 			cfg := utils.TestConfig{}
@@ -168,7 +168,7 @@ func TestEnums(t *testing.T) {
 			}
 		})
 		t.Run("Missing Serializers", func(t *testing.T) {
-			utils.AssertMissingSerializationInterfacesFor[BookingStateWithConfig](t, []string{"binary", "gql", "sql", "text"})
+			utils.AssertMissingSerializationInterfacesFor[BookingStateWithConfig](t, []string{"binary", "graphql", "sql", "text"})
 		})
 		t.Run("Serialization", func(t *testing.T) {
 			cfg := utils.TestConfig{}
@@ -250,7 +250,7 @@ func TestEnums(t *testing.T) {
 			}
 		})
 		t.Run("Missing Serializers", func(t *testing.T) {
-			utils.AssertMissingSerializationInterfacesFor[BookingStateWithConstants](t, []string{"binary", "gql", "json", "sql", "text"})
+			utils.AssertMissingSerializationInterfacesFor[BookingStateWithConstants](t, []string{"binary", "graphql", "json", "sql", "text"})
 		})
 		t.Run("Serialization", func(t *testing.T) {
 			cfg := utils.TestConfig{}

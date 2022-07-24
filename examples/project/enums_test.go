@@ -16,7 +16,7 @@ func TestEnums(t *testing.T) {
 			})
 		})
 		t.Run("Missing Serializers", func(t *testing.T) {
-			utils.AssertMissingSerializationInterfacesFor[AccountState](t, []string{"binary", "gql", "text", "yaml", "yaml.v3"})
+			utils.AssertMissingSerializationInterfacesFor[AccountState](t, []string{"binary", "graphql", "text", "yaml", "yaml.v3"})
 		})
 		t.Run("Serialization", func(t *testing.T) {
 			cfg := utils.TestConfig{HasDefault: true}
@@ -78,7 +78,7 @@ func TestEnums(t *testing.T) {
 				{From: "USA", Enum: toPtr(229), Expected: utils.Expected{AsSerialized: "USA"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml"}
 				utils.AssertSerializationInterfacesFor[CountryCode](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -103,7 +103,7 @@ func TestEnums(t *testing.T) {
 				{From: "AUD", Enum: toPtr(5), Expected: utils.Expected{AsSerialized: "AUD"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml"}
 				utils.AssertSerializationInterfacesFor[Currency](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -128,7 +128,7 @@ func TestEnums(t *testing.T) {
 				{From: "Europe/Mariehamn", Enum: toPtr(424), Expected: utils.Expected{AsSerialized: "Europe/Mariehamn"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml"}
 				utils.AssertSerializationInterfacesFor[Timezone](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -152,7 +152,7 @@ func TestEnums(t *testing.T) {
 				{From: "admin", Enum: toPtr(UserRoleAdmin), Expected: utils.Expected{AsSerialized: "admin"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml"}
 				utils.AssertSerializationInterfacesFor[UserRole](t, idx, tC, cfg, serializers)
 			}
 		})

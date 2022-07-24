@@ -24,7 +24,7 @@ func TestEnums(t *testing.T) {
 				{From: "Neptune", Enum: toPtr(PlanetNeptune), Expected: utils.Expected{AsSerialized: "Neptune"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml"}
 				utils.AssertSerializationInterfacesFor[Planet](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -50,7 +50,7 @@ func TestEnums(t *testing.T) {
 				{From: "Neptune", Enum: toPtr(PlanetWithDefaultNeptune), Expected: utils.Expected{AsSerialized: "Neptune"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml"}
 				utils.AssertSerializationInterfacesFor[PlanetWithDefault](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -72,7 +72,7 @@ func TestEnums(t *testing.T) {
 				{From: "Neptune", Enum: toPtr(PlanetSupportUndefinedNeptune), Expected: utils.Expected{AsSerialized: "Neptune"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml"}
 				utils.AssertSerializationInterfacesFor[PlanetSupportUndefined](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -95,7 +95,7 @@ func TestEnums(t *testing.T) {
 				{From: "Neptune", Enum: toPtr(PlanetSupportUndefinedWithDefaultNeptune), Expected: utils.Expected{AsSerialized: "Neptune"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "gql", "json", "sql", "text", "yaml"}
+				serializers := []string{"binary", "graphql", "json", "sql", "text", "yaml"}
 				utils.AssertSerializationInterfacesFor[PlanetSupportUndefinedWithDefault](t, idx, tC, cfg, serializers)
 			}
 		})

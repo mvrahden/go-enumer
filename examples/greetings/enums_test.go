@@ -80,7 +80,7 @@ func TestEnums(t *testing.T) {
 				{From: "𝜋", Enum: toPtr(Greeting𝜋), Expected: utils.Expected{AsSerialized: "𝜋"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "bson", "gql", "json", "sql", "text", "yaml"}
+				serializers := []string{"binary", "bson", "graphql", "json", "sql", "text", "yaml"}
 				utils.AssertSerializationInterfacesFor[Greeting](t, idx, tC, cfg, serializers)
 			}
 		})
@@ -158,7 +158,7 @@ func TestEnums(t *testing.T) {
 				{From: "𝜋", Enum: toPtr(GreetingWithDefault𝜋), Expected: utils.Expected{AsSerialized: "𝜋"}},
 			}
 			for idx, tC := range testCases {
-				serializers := []string{"binary", "bson", "gql", "json", "sql", "text", "yaml"}
+				serializers := []string{"binary", "bson", "graphql", "json", "sql", "text", "yaml"}
 				utils.AssertSerializationInterfacesFor[GreetingWithDefault](t, idx, tC, cfg, serializers)
 			}
 		})

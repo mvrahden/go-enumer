@@ -62,7 +62,7 @@ func ({{ receiver $ts.Name }} *{{ $ts.Name }}) UnmarshalBSONValue(t bsontype.Typ
 	return nil
 }
 {{ end }}
-{{- if contains $ts.Serializers "gql" }}
+{{- if contains $ts.Serializers "graphql" }}
 // MarshalGQL implements the graphql.Marshaler interface for {{ $ts.Name }}.
 func ({{ receiver $ts.Name }} {{ $ts.Name }}) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote({{ receiver $ts.Name }}.String()))
