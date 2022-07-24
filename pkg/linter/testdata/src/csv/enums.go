@@ -19,8 +19,17 @@ const (
 )
 
 //go:enum -from=source_c.csv
-type Color4 uint // want `\"Color4Hello\" fails on assertion \(reason: assertion failed\)`
+type Color4 uint // want `\"Color4Redundant1\" is a redundant constant`
 
 const (
-	Color4Hello Color4 = 1 // assert "white"
+	Color4Redundant1 Color4 = 2
+	Color4Redundant2 Color4 = 2
+)
+
+//go:enum -from=source_d.csv
+type Color5 uint // want `\"Color5Green\" fails on assertion (reason: assertion failed)`
+
+const (
+	Color5White Color5 = 1 // assert "White"
+	Color5Green Color5 = 3 // assert "Red"
 )
