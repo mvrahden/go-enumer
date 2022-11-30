@@ -21,14 +21,14 @@ func init() {
 	}
 }
 
-func TestAll(t *testing.T) {
+func Test_Linter_All(t *testing.T) {
 	wd := utils.Must(os.Getwd())
 
 	testdata := filepath.Join(wd, "testdata")
 	analysistest.Run(t, testdata, New(&Config{}), "basic", "enums", "nonenums")
 }
 
-func TestCsv(t *testing.T) {
+func Test_Linter_Csv(t *testing.T) {
 	wd := utils.Must(os.Getwd())
 
 	testdata := filepath.Join(wd, "testdata")

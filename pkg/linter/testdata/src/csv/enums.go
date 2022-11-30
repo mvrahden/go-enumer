@@ -27,7 +27,7 @@ const (
 )
 
 //go:enum -from=source_d.csv
-type Color5 uint // want `\"Color5Green\" fails on assertion (reason: assertion failed)`
+type Color5 uint // want `\"Color5Green\" fails on assertion \(reason: assertion failed\)`
 
 const (
 	Color5White Color5 = 1 // assert "White"
