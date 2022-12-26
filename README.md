@@ -18,7 +18,7 @@ It is an opinionated remake of the long existing [enumer](https://github.com/dma
 2. [What's it all about?](#whats-it-all-about)
    1. [Conventions](#conventions)
    2. [Defaults and Zero-Values](#defaults-and-zero-values)
-   3. [Magic comment `//go:enum`](#magic-comment-goenum)
+   3. [Comment directive `//go:enum`](#comment-directive-goenum)
    4. [Validation](#validation)
    5. [Supported features](#supported-features)
       1. [The "undefined" feature](#the-undefined-feature)
@@ -31,7 +31,8 @@ It is an opinionated remake of the long existing [enumer](https://github.com/dma
    1. [CSV-File sources](#csv-file-sources)
 5. [Generated functions and methods](#generated-functions-and-methods)
 6. [Configuration Options](#configuration-options)
-7. [Inspiring projects](#inspiring-projects)
+7. [Caveats](#caveats)
+8. [Inspiring projects](#inspiring-projects)
 
 ## Why `go-enumer`?
 
@@ -58,7 +59,7 @@ To define an Enum type, you must follow the listed rules.
 Failing to do so will either lead to an unsuccessful detection or to a code generation error.
 
 - Every enum type must derive from an unsigned integer (`uint`, `uint8`, ...) type.
-- Every enum type must be marked with a magic comment `//go:enum` ([read here for more](#magic-comment-goenum)).
+- Every enum type must be marked with a comment directive `//go:enum` ([read here for more](#comment-directive-goenum)).
 - Every enum type must either have a *simple block spec* or a *filebased spec* associated.
 
 Not only the enum type, but also its spec must follow a set of basic rules.
@@ -119,18 +120,18 @@ In these cases the returned error will be of type `ErrNoValidEnum` which is part
 
 If you need to also enable deserialization for your **default** enum value from a zero values please check out the section for ["undefined"-value](#the-undefined-feature).
 
-### Magic comment `//go:enum`
+### Comment directive `//go:enum`
 
-`go-enumer` only needs one single `//go:generate` directive per package to screen the entire package thanks to the introduction of `//go:enum` magic comment.
+`go-enumer` only needs one single `//go:generate` directive per package to screen the entire package thanks to the introduction of `//go:enum` comment directive.
 It acts as a marker of all enums.
 Now `go-enumer` can determine all enums of a package in a single pass, reducing redundant scans and therefore making the code generation (and your CI process) much more efficient.
 
-But the magic comment `//go:enum` does not exclusively serve as a marker to detect enums, it also enables config **mixins**.
+But the `//go:enum` directive does not exclusively serve as a marker to detect enums, it also enables config **mixins**.
 By supplying it with a finegrained configuration on an enum type level, we have the ability to overwrite the global `generate` configuration.
 
 The following example will generate `json` interfaces for practically all enums it will detect, except for this specific `Greeting` enum, where it will generate both `json` and `yaml` interfaces.
 
-> The magic comment currently offers support for all configuration options, which are available on a global configuration level.
+> The comment directive currently offers support for all configuration options, which are available on a global configuration level.
 
 ```go
 package mypackage
@@ -201,7 +202,7 @@ you can apply [string case transformations](#string-case-transformations) to the
 
 `go-enumer` supports a range of string case transformations.
 These transformations are a feature exclusive to the *simple block spec*.
-You may configure a global transformation via the `generate` command and you may mixin deviating transformations case by case via `go:enum` magic comment.
+You may configure a global transformation via the `generate` command and you may mixin deviating transformations case by case via `go:enum` comment directive.
 Here is an example with a `kebab` transformation.
 
 ```go
@@ -253,7 +254,7 @@ The following sections describe the usage of the *filebased spec*
 
 ### CSV-File sources
 
-`go-enumer` can extract your enum definitions from CSV file sources if you target `-from=path/to.csv` in your enum's magic comment.
+`go-enumer` can extract your enum definitions from CSV file sources if you target `-from=path/to.csv` in your enum's comment directive.
 Filebased specs are taken as given and will not undergo any string case transformation.
 
 Filebased specs allow you also to augment your enums with additional data columns.
@@ -309,6 +310,15 @@ You can add:
   - `undefined`, see ["undefined"-value](#the-undefined-feature)
   - `ignore-case`, adds support for case-insensitive lookup
   - `ent`, adds interface support for [entgo.io](https://github.com/ent/ent)
+
+## Caveats
+
+Following is a list of known issues:
+
+- **Skipped calls to `UnmarshalJSON`**:  
+  When using `encoding/json` the enum unmarshaling will not be triggered if there's no `key`-`value` pair for the enum within the JSON payload.
+  This will lead to a zero value enum instead of a deserialized enum.
+  If no subsequent validation is performed and no default value is defined this will cause a failing validation upon subsequent serialization.
 
 ## Inspiring projects
 
