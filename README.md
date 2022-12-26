@@ -1,4 +1,4 @@
-# go-enumer <!-- omit in toc --> [![GoDoc](https://godoc.org/github.com/mvrahden/go-enumer?status.svg)](https://godoc.org/github.com/mvrahden/go-enumer) [![Go Report Card](https://goreportcard.com/badge/github.com/mvrahden/go-enumer)](https://goreportcard.com/report/github.com/mvrahden/go-enumer) [![GitHub Release](https://img.shields.io/github/release/mvrahden/go-enumer.svg)](https://github.com/mvrahden/go-enumer/releases)[![Build Status](https://travis-ci.com/mvrahden/go-enumer.svg?branch=master)](https://travis-ci.com/mvrahden/go-enumer)
+# go-enumer <!-- omit in toc -->
 
 `go-enumer` is a tool to generate Go code upgrading specifically configured Go constants to enums.
 It adds useful common methods to these types, such as validation and various (de-)serialization.
@@ -105,10 +105,10 @@ Depending on whether your spec needs a default value, you will chose your sequen
 type UserRole uint
 
 const (
-	UserRoleAnonymous UserRole = iota // <- this is your default
-	UserRoleStandard
-	UserRoleAdmin
-	UserRoleUnknown = UserRoleAnonymous // <- this is your alternative default
+  UserRoleAnonymous UserRole = iota // <- this is your default
+  UserRoleStandard
+  UserRoleAdmin
+  UserRoleUnknown = UserRoleAnonymous // <- this is your alternative default
 )
 ```
 
@@ -117,7 +117,7 @@ If you want your default value to be robust against deserialization from `undefi
 `go-enum` will naturally fail any attempt of unmarshalling from empty strings or `nil` if it was not explicitly instructed to do otherwise.
 In these cases the returned error will be of type `ErrNoValidEnum` which is part of the generated file and can be used via Go's unwrapping mechanism `errors.Is(err, mypkg.ErrNoValidEnum)`.
 
-If you need to also enable deserialization for your **default** enum value from a zero values please check out the section for ["undefined"-value](#the-undefined-value).
+If you need to also enable deserialization for your **default** enum value from a zero values please check out the section for ["undefined"-value](#the-undefined-feature).
 
 ### Magic comment `//go:enum`
 
@@ -238,9 +238,8 @@ Please take examplary transformations from the following table:
 
 It is good practice with `go-enumer` to prefix enum constant names with their corresponding type name and `go-enumer` will automatically detect these prefixes and strip them off their values.
 Meaning: it will turn `GreetingMars` (with enum type `Greeting`) into e.g. `"MARS"` (assuming an `upper` transformation was applied).
-It does not support arbitrary prefixes and we do not encourage that due to a resulting degradation of code consistency.
+It does not support arbitrary prefixes and we do not encourage that due to a resulting noisyness of code.
 This rule is in place to keep your source code concise.
-Please see [here](#prefix-auto-stripping) for further information.
 
 ### Alternative values
 
@@ -282,7 +281,7 @@ When `go-enumer` is applied to a type, it will generate:
   - Function `<EnumType>Values()`: returns a slice with all the numeric values of the enum, ignoring any alternative values.
   - Function `<EnumType>Strings()`: returns a slice with all the string representations of the enum.
   - Method `IsValid()`: returns true if the current value is a value of the defined enum set.
-  - Method `Validate()`: returns a wrapped error `ErrNoValidEnum` if the current value is not a valid value of the defined enum set.   
+  - Method `Validate()`: returns a wrapped error `ErrNoValidEnum` if the current value is not a valid value of the defined enum set.
     It is being used upon serialization and deserialization, allowing for detecting enum errors via `errors.Is(err, ErrNoValidEnum)`.
 
 - The flag `serializers` in addition with any of the following values, additional methods for serialization are added.
@@ -294,7 +293,7 @@ When `go-enumer` is applied to a type, it will generate:
   - `json` makes the enum conform to the `json.Marshaler` and `json.Unmarshaler` interfaces.
   - `sql` makes the enum conform to the `sql.Scanner` and `sql.Valuer` interfaces.
   - `text` makes the enum conform to the `encoding.TextMarshaler` and `encoding.TextUnmarshaler` interfaces.
-    **Note:** If you use your enum values as keys in a map and you encode the map as _JSON_,
+    **Note:** If you use your enum values as keys in a map and you encode the map as *JSON*,
     you need this flag set to true to properly convert the map keys to json (strings). If not, the numeric values will be used instead
   - `yaml` makes the enum conform to the `gopkg.in/yaml.v2.Marshaler` and `gopkg.in/yaml.v2.Unmarshaler` interfaces.
   - `yaml.v3` makes the enum conform to the `gopkg.in/yaml.v3.Marshaler` and `gopkg.in/yaml.v3.Unmarshaler` interfaces.
@@ -307,7 +306,7 @@ You can add:
 - transformation with `transform` option, e.g. `transform=kebab`.
 - serializers with `serializers` option, e.g. `serializers=json,sql,...`.
 - supported features via `support` option, e.g. `support=undefined,ent`
-  - `undefined`, see ["undefined"-value](#the-undefined-value)
+  - `undefined`, see ["undefined"-value](#the-undefined-feature)
   - `ignore-case`, adds support for case-insensitive lookup
   - `ent`, adds interface support for [entgo.io](https://github.com/ent/ent)
 
