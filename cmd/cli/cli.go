@@ -28,17 +28,13 @@ func parseFlags(args []string, cArgs *config.Args, scanPath, outputFile *string,
 	// setup flags
 	flags := flag.NewFlagSet("", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
-	flags.StringVar(outputFile, ArgumentKeyOutputFile, "types_enumr", "the filename of the generated file; defaults to \"types_enumer\" which results in \"types_enumer.go\".")
+	flags.StringVar(outputFile, ArgumentKeyOutputFile, "types_enumer", "the filename of the generated file; defaults to \"types_enumer\" which results in \"types_enumer.go\".")
 	flags.StringVar(&cArgs.TransformStrategy, ArgumentKeyTransformStrategy, "noop", "string transformation (camel|pascal|kebab|snake|... see README.md); defaults to \"noop\" which applies no transormation to the enum values.")
 	flags.Var(&cArgs.Serializers, ArgumentKeySerializers, "a list of opt-in serializers (binary|json|sql|text|yaml).")
 	flags.Var(&cArgs.SupportedFeatures, ArgumentKeySupport, "a list of opt-in supported features (undefined|ignore-case|ent).")
 	flags.StringVar(scanPath, ArgumentKeyScanDirectory, "", "directory of target package; defaults to CWD.")
 	flags.BoolVar(keepFile, ArgumentKeyKeepFile, false, "for testing purposes: prevents deleting existing enumer file; defaults to `false`.")
 	return flags.Parse(args)
-}
-
-type Generator interface {
-	Generate(targetPkg string) ([]byte, error)
 }
 
 func Execute(args []string) error {
@@ -131,7 +127,7 @@ var findAndDeleteOldGeneratedFile = func(dir string) error {
 		if errors.Is(err, io.EOF) {
 			continue
 		}
-		if err != nil && !errors.Is(err, io.EOF) {
+		if err != nil {
 			return fmt.Errorf("failed reading first %d bytes of file %q", buf.Len(), fse.Name())
 		}
 		if enumer.GEN_ENUMER_FILE.Match(buf.Bytes()) {

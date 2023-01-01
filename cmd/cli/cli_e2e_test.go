@@ -11,11 +11,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestE2E_Cli(t *testing.T) {
+func TestE2E_CLI(t *testing.T) {
 	cli.PatchDeleteOldGeneratedFileFunc(t)
-	t.Cleanup(func() {
-		cli.ResetDeleteOldGeneratedFileFunc(t)
-	})
 
 	testcases := []struct {
 		desc        string
@@ -43,7 +40,9 @@ func TestE2E_Cli(t *testing.T) {
 			cli.PatchTargetFilenameFunc(t, tmpDir)
 			tmpFile := filepath.Join(tmpDir, tC.outFilename+".go")
 
-			args := []string{"-dir=testdata/" + tC.dirName, "-out=" + tC.outFilename}
+			args := []string{
+				"-dir=" + filepath.Join("testdata", tC.dirName),
+				"-out=" + tC.outFilename}
 			args = append(args, tC.args...)
 			err := cli.Execute(args)
 			require.NoError(t, err)
