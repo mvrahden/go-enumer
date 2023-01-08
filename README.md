@@ -1,7 +1,7 @@
 # go-enumer <!-- omit in toc -->
 
-`go-enumer` is a tool to generate Go code upgrading specifically configured Go constants to enums.
-It adds useful common methods to these types, such as validation and various (de-)serialization.
+`go-enumer` is a tool to generate Go code upgrading Go constants to enums or extracting a enum definition from CSV files and turning it to Go enums.
+It adds useful methods to these types, such as validation and various (de-)serialization.
 It is an opinionated remake of the long existing [enumer](https://github.com/dmarkham/enumer) package and therefore behaves different in practically all aspects.
 
 `go-enumer` is intended to be:
