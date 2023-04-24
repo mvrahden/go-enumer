@@ -251,7 +251,7 @@ These alternative values are shadowed by the dominant value, which is always the
 ## Filebased Spec
 
 The *filebased spec* allows code generation for the enum values from a file source.
-The following sections describe the usage of the *filebased spec*
+The following sections describe the usage of the *filebased spec*.
 
 ### CSV-File sources
 
