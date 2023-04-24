@@ -27,6 +27,10 @@ func DetectGeneratedFile(files []*ast.File) (genFile *ast.File) {
 	return files[genFileIdx]
 }
 
+// DetermineEnumType evaluates given node for enum types.
+// If the given node is not fulfilling the requirements for a possible enum type declaration it
+// returns zero values.
+// If the given node violates the requirements for a eum declaration it will return an error and the token position.
 func DetermineEnumType(node ast.Node, typesInfo *types.Info, genFile *ast.File) (*EnumType, token.Pos, error) {
 	decl, ok := node.(*ast.GenDecl)
 	if !ok || decl.Tok != token.TYPE {
@@ -80,6 +84,10 @@ func DetermineEnumType(node ast.Node, typesInfo *types.Info, genFile *ast.File) 
 	return &EnumType{Node: decl}, -1, nil
 }
 
+// AssignEnumConstBlockToType evaluates the current node for a possible const block spec/enum values.
+// If the given node does not fulfill the requirements for a possible const block spec, it returns zero values.
+// If the given node violates the requirements for possible const block spec, it returns an error and the token position.
+// It otherwise determines all const block values and assigns them to relevant enumtype from the given slice of enum types.
 func AssignEnumConstBlockToType(node ast.Node, typesInfo *types.Info, genFile *ast.File, enumTypes []*EnumType) (token.Pos, error) {
 	decl, ok := node.(*ast.GenDecl)
 	if !ok || decl.Tok != token.CONST {
@@ -134,7 +142,7 @@ func AssignEnumConstBlockToType(node ast.Node, typesInfo *types.Info, genFile *a
 		}
 		if relevantEnumType.ConstBlock != nil {
 			// another block was assigned already
-			// we want them to be in
+			// but we want all of them to be assigned in one common block
 			return decl.Pos(), errors.New("enum constants must be defined in a common block")
 		}
 	}
