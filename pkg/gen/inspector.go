@@ -164,7 +164,7 @@ func (i inspector) determineImports(f *File) {
 
 	// we add all imports (also duplicates)
 	for _, ts := range f.TypeSpecs {
-		for _, v := range ts.Config.Serializers {
+		for _, v := range ts.Config.Options.Serializers {
 			switch v {
 			case config.SerializerBSON:
 				f.Imports = append(f.Imports, &Import{Path: "go.mongodb.org/mongo-driver/bson"})

@@ -23,7 +23,7 @@ import (
 type EnumTypeConfig struct {
 	Node *ast.Comment
 
-	*config.Options
+	Options    *config.Options
 	FromSource string
 }
 
@@ -100,9 +100,9 @@ func (e *EnumType) ParseMagicComment(mc *ast.Comment, opts *config.Options) erro
 		var f flag.FlagSet
 		f.SetOutput(io.Discard) // silence flagset StdErr output
 
-		f.StringVar(&cfg.TransformStrategy, "transform", cfg.TransformStrategy, "")
-		f.Var(&cfg.Serializers, "serializers", "")
-		f.Var(&cfg.SupportedFeatures, "support", "")
+		f.StringVar(&cfg.Options.TransformStrategy, "transform", cfg.Options.TransformStrategy, "")
+		f.Var(&cfg.Options.Serializers, "serializers", "")
+		f.Var(&cfg.Options.SupportedFeatures, "support", "")
 		f.StringVar(&cfg.FromSource, "from", "", "")
 		err := f.Parse(args)
 		if err != nil {

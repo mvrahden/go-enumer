@@ -63,7 +63,7 @@ func (r *renderer) renderFileHeader(buf *bytes.Buffer, f *File) error {
 
 func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *enumer.EnumType) error {
 	if ts.HasFileSpec() {
-		ts.Config.TransformStrategy = "noop"
+		ts.Config.Options.TransformStrategy = "noop"
 	}
 
 	util := newRenderUtil(ts.Config.Options)
@@ -106,7 +106,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *enumer.EnumType) err
 				IsAlternativeValue: v.IsAlternative,
 			}
 		}),
-		RequiresGeneratedUndefinedValue: ts.Config.SupportedFeatures.Contains(config.SupportUndefined) &&
+		RequiresGeneratedUndefinedValue: ts.Config.Options.SupportedFeatures.Contains(config.SupportUndefined) &&
 			slices.None(ts.Spec.Values, func(v *enumer.EnumTypeSpecValue, idx int) bool { return v.ID == 0 }),
 		IsFromCsvSource:   ts.HasFileSpec(),
 		HasAdditionalData: ts.Spec.AdditionalData != nil,
@@ -194,7 +194,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *enumer.EnumType) err
 		}
 		data := TplData{
 			Enum:             enum,
-			SupportUndefined: ts.Config.SupportedFeatures.Contains(config.SupportUndefined),
+			SupportUndefined: ts.Config.Options.SupportedFeatures.Contains(config.SupportUndefined),
 		}
 
 		if err := enumTpl.ExecuteTemplate(buf, "enum.lookup-funcs.go.tpl", map[string]any{"Type": data}); err != nil {
@@ -213,9 +213,9 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *enumer.EnumType) err
 		data := TplData{
 			Name:                            enum.Name,
 			RequiresGeneratedUndefinedValue: enum.RequiresGeneratedUndefinedValue,
-			Serializers:                     ts.Config.Serializers,
-			SupportIgnoreCase:               ts.Config.SupportedFeatures.Contains(config.SupportIgnoreCase),
-			SupportUndefined:                ts.Config.SupportedFeatures.Contains(config.SupportUndefined),
+			Serializers:                     ts.Config.Options.Serializers,
+			SupportIgnoreCase:               ts.Config.Options.SupportedFeatures.Contains(config.SupportIgnoreCase),
+			SupportUndefined:                ts.Config.Options.SupportedFeatures.Contains(config.SupportUndefined),
 		}
 
 		if err := enumTpl.ExecuteTemplate(buf, "enum.serializers.go.tpl", map[string]any{"Type": data}); err != nil {
@@ -230,7 +230,7 @@ func (r *renderer) renderForTypeSpec(buf *bytes.Buffer, ts *enumer.EnumType) err
 		}
 		data := TplData{
 			Name:                ts.Name().Name,
-			SupportEntInterface: ts.Config.SupportedFeatures.Contains(config.SupportEntInterface),
+			SupportEntInterface: ts.Config.Options.SupportedFeatures.Contains(config.SupportEntInterface),
 		}
 		if err := enumTpl.ExecuteTemplate(buf, "enum.misc.ent.go.tpl", map[string]any{"Type": data}); err != nil {
 			return err
