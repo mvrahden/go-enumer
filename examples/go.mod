@@ -5,7 +5,7 @@ go 1.20
 replace github.com/mvrahden/go-enumer => ./..
 
 require (
-	github.com/mvrahden/go-enumer v0.9.2-0.20230611101305-7a4f651216d0
+	github.com/mvrahden/go-enumer v0.9.2
 	github.com/stretchr/testify v1.8.4
 	go.mongodb.org/mongo-driver v1.11.7
 	gopkg.in/yaml.v3 v3.0.1
