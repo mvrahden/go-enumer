@@ -62,6 +62,7 @@ func DetermineEnumType(node ast.Node, typesInfo *types.Info, genFile *ast.File) 
 			typ, ok = typesInfo.TypeOf(ts.Type).Underlying().(*types.Basic)
 		}
 		if !ok || typ.Kind() < types.Uint || typ.Kind() > types.Uint64 {
+			// TODO: evaluate if this error return is correct at this point (we still don't know if it is an enum spec)
 			return nil, node.Pos(), errors.New("enum types must be of any unsigned integer type") // not a type spec
 		}
 
