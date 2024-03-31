@@ -1,5 +1,7 @@
 # go-enumer <!-- omit in toc -->
 
+[![Go](https://github.com/mvrahden/go-enumer/actions/workflows/go.yaml/badge.svg)](https://github.com/mvrahden/go-enumer/actions/workflows/go.yaml)
+
 `go-enumer` is a tool to generate Go code upgrading Go constants to enums.
 It can also extract an enum definition from CSV files and turn it into Go enums.
 It adds useful methods to these types, such as validation and various (de-)serialization.
